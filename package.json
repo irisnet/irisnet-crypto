@@ -1,0 +1,43 @@
+{
+  "name": "cosmos-crypto",
+  "version": "1.0.0",
+  "description": "cosmos-crypto-js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/irisnet/cosmos-crypto-js.git"
+  },
+  "keywords": [
+    "cosmos",
+    "javascript",
+    "crypto",
+    "blockChain"
+  ],
+  "author": "Wenxi Cheng <vincent@bianjie.ai>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/irisnet/cosmos-crypto-js/issues"
+  },
+  "homepage": "https://github.com/irisnet/cosmos-crypto-js#readme",
+  "dependencies": {
+    "axios": "^0.17.1",
+    "bignumber.js": "^5.0.0",
+    "cosmos-sdk": "^1.5.1",
+    "ethereumjs-tx": "^1.3.0",
+    "ethereumjs-util": "^5.1.2",
+    "js-crc": "^0.2.0",
+    "js-wire": "https://github.com/tendermint/js-wire.git",
+    "ripemd160": "^2.0.1",
+    "sha256": "^0.2.0",
+    "text-encoding": "^0.6.4",
+    "tweetnacl": "^1.0.0",
+    "web3": "git+https://github.com/ethereum/web3.js.git"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^4.1.0"
+  }
+}
