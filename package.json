@@ -1,14 +1,14 @@
 {
-  "name": "cosmos-crypto",
+  "name": "iris-crypto-js",
   "version": "1.0.0",
-  "description": "cosmos-crypto-js",
+  "description": "iris-crypto-js",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/irisnet/cosmos-crypto-js.git"
+    "url": "git+https://github.com/irisnet/iris-crypto-js.git"
   },
   "keywords": [
     "cosmos",
@@ -19,9 +19,9 @@
   "author": "Wenxi Cheng <vincent@bianjie.ai>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/irisnet/cosmos-crypto-js/issues"
+    "url": "https://github.com/irisnet/iris-crypto-js/issues"
   },
-  "homepage": "https://github.com/irisnet/cosmos-crypto-js#readme",
+  "homepage": "https://github.com/irisnet/iris-crypto-js#readme",
   "dependencies": {
     "axios": "^0.17.1",
     "bignumber.js": "^5.0.0",
