@@ -148,7 +148,7 @@ Transaction = function (bk, address) {
 TransactionPagenation = function (bk, address, pageNumber, pageSize) {
     switch (bk) {
         case "cosmos":
-            return CosmosKeyPair.Transaction(address, pageNumber, pageSize);
+            return CosmosKeyPair.TransactionPagenation(address, pageNumber, pageSize);
     }
 };
 
