@@ -166,6 +166,7 @@ Transaction = function (addr) {
 TransactionPagenation = function (addr, pageNumber, pageSize) {
     return new Promise(function (resolve, reject) {
         request.get(bianjieUrl + '/tx/coin/'+ addr + "/" + pageNumber + "/pageSize" + ").then(list => {
+            
             resolve(list.data)
         })
     })
@@ -289,7 +290,7 @@ module.exports = {
     Init: Init,
     TransactionHash:TransactionHash,
     Transaction: Transaction,
-	TransactionPagenation：TransactionPagenation，
+	TransactionPagenation: TransactionPagenation，
     Validators: Validators,
     IsValidAddress: IsValidAddress,
     IsValidPrivate: IsValidPrivate
