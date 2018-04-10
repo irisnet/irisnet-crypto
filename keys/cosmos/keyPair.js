@@ -289,6 +289,7 @@ module.exports = {
     Init: Init,
     TransactionHash:TransactionHash,
     Transaction: Transaction,
+	TransactionPagenation：TransactionPagenation，
     Validators: Validators,
     IsValidAddress: IsValidAddress,
     IsValidPrivate: IsValidPrivate
