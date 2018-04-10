@@ -259,6 +259,7 @@ module.exports = {
     Balance: Balance,
     Init: Init,
     Transaction: Transaction,
+	TransactionPagenation: TransactionPagenation,
     IsValidAddress: IsValidAddress,
     IsValidPrivate: IsValidPrivate
 };
