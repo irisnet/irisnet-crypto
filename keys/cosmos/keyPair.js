@@ -163,9 +163,9 @@ Transaction = function (addr) {
     })
 }
 
-TransactionPagenation = function (addr, pageNumber, pageSize) {
+TransactionPagenation = function (addr, type, pageNumber, pageSize) {
     return new Promise(function (resolve, reject) {
-        request.get(bianjieUrl + '/tx/coin/'+ addr + "/" + pageNumber + "/" + pageSize).then(list => {
+        request.get(bianjieUrl + '/tx/coin/'+ addr + "/" + type + "/" + pageNumber + "/" + pageSize).then(list => {
             
             resolve(list.data)
         })
