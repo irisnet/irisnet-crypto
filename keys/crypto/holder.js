@@ -145,10 +145,10 @@ Transaction = function (bk, address) {
     }
 };
 
-TransactionPagenation = function (bk, address, type,pageNumber, pageSize) {
+TransactionPagenation = function (bk, address, direction,pageNumber, pageSize) {
     switch (bk) {
         case "cosmos":
-            return CosmosKeyPair.TransactionPagenation(address, type, pageNumber, pageSize);
+            return CosmosKeyPair.TransactionPagenation(address, direction, pageNumber, pageSize);
     }
 };
 
