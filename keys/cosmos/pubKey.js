@@ -1,12 +1,32 @@
 let RIPEMD160 = require('ripemd160');
-let TypeEd25519 = 1;
-let TypeSecp256k1 = 2;
-Address_Ed25519 = function (pubKey,type) {
-    //TODO: will be modified in the future, detail view in https://github.com/tendermint/go-crypto/blob/master/pub_key.go
-    //we append the algorithm,type byte,pubKey length to the addr to help with recovery
-    let encodedPubkey = new Buffer([type, 1, pubKey.length].concat(Array.from(pubKey)));
-    return new RIPEMD160().update(encodedPubkey).digest('hex');
+let Hex = require("../hex");
+const sha256 = require('sha256');
+Address_Ed25519 = function (pubKey, type) {
+
+    let prefix = nameToPrefix("tendermint/PubKeyEd25519");
+    prefix = prefix.concat(pubKey.length);
+    let encodeBytes = prefix.concat(Array.from(pubKey));
+    return new RIPEMD160().update(new Buffer(encodeBytes)).digest('hex');
 };
+
 module.exports = {
     Address_Ed25519: Address_Ed25519
 };
+
+function nameToPrefix(name) {
+    let a = sha256(name);
+    let b = Hex.hexToBytes(a);
+    while (b[0] === 0) {
+        b = b.slice(1, b.length - 1)
+    }
+    b = b.slice(3, b.length - 1);
+    while (b[0] === 0) {
+        b = b.slice(1, b.length - 1)
+    }
+    b = b.slice(0, 4);
+    b[3] = b[3] & 0xF8;
+    b[3] = b[3] | 2;
+    return b
+
+
+}
