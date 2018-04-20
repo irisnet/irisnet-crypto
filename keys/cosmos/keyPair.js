@@ -183,7 +183,7 @@ TransactionHash = function (hash) {
 }
 TxStake=function (addr) {
     return new Promise(function (resolve, reject) {
-        request.get(bianjieUrl+ '/account/'+ addr+'/tx/stake').then(list => {
+        request.get(bianjieUrl+'/txs/stake?address='+addr+"&page=1&size=100").then(list => {
             resolve(list.data)
         })
     })
