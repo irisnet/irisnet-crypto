@@ -9,6 +9,7 @@ let Nacl = require("tweetnacl");
 let client;
 let gaiaUrl;
 let bianjieUrl;
+let rainbowUrl;
 let MODEL = require('./client/model');
 const request = require('axios')
 //algo must be a supported algorithm now: ed25519, secp256k1
@@ -163,10 +164,10 @@ Transaction = function (addr) {
     })
 }
 
-TransactionPagenation = function (addr, direction, pageNumber, pageSize) {
+TransactionPagenation = function (addr, direction, pageNumber, pageSize,startTime,endTime,sort) {
     return new Promise(function (resolve, reject) {
-        request.get(bianjieUrl + '/txs/coin?type='+ direction + "&address=" + addr +  
-                                "&page=" + pageNumber + "&size=" + pageSize).
+        request.get(rainbowUrl + '/txs?address='+ addr+'&tx_type='+ direction +
+            "&page=" + pageNumber + "&per_page=" + pageSize +"&start_time="+startTime+"&end_time="+endTime+"&sort="+sort).
         then(list => {
             
             resolve(list.data)
@@ -279,6 +280,7 @@ IsValidPrivate = function (privateKey) {
 Init = function (url) {
     gaiaUrl = url.gaia;
     bianjieUrl=url.bianjie;
+    rainbowUrl = url.rainbow;
     client = require('cosmos-sdk')(url.gaia);
 };
 
