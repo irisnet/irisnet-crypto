@@ -163,7 +163,13 @@ Transaction = function (addr) {
         })
     })
 }
-
+GetAllAssets = function(addr){
+    return new Promise(function (resolve, reject) {
+        request.get(rainbowUrl + 'shares/delegator/'+ addr).then(list = > {
+            resolve(list.data)
+        })
+    })
+}
 TransactionPagenation = function (addr, direction, pageNumber, pageSize,startTime,endTime,sort) {
     return new Promise(function (resolve, reject) {
         request.get(rainbowUrl + '/txs?address='+ addr+'&tx_type='+ direction +
@@ -294,8 +300,9 @@ module.exports = {
     Init: Init,
     TransactionHash:TransactionHash,
     Transaction: Transaction,
-	TransactionPagenation: TransactionPagenation,
+    GetAllAssets: GetAllAssets,
+    TransactionPagenation: TransactionPagenation,
     Validators: Validators,
     IsValidAddress: IsValidAddress,
-    IsValidPrivate: IsValidPrivate
+    IsValidPrivate: IsValidPrivate,
 };

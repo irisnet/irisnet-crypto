@@ -144,7 +144,12 @@ Transaction = function (bk, address) {
             return CosmosKeyPair.Transaction(address);
     }
 };
-
+GetAllAssets = function (bk, address) {
+    switch (bk) {
+        case "cosmos":
+            return CosmosKeyPair.GetAllAssets(address);
+    }
+};
 TransactionPagenation = function (bk, address, direction,pageNumber, pageSize,startTime,endTime,sort) {
     switch (bk) {
         case "cosmos":
@@ -259,7 +264,8 @@ module.exports = {
     Balance: Balance,
     Init: Init,
     Transaction: Transaction,
-	TransactionPagenation: TransactionPagenation,
+    GetAllAssets: GetAllAssets,
+    TransactionPagenation: TransactionPagenation,
     IsValidAddress: IsValidAddress,
-    IsValidPrivate: IsValidPrivate
+    IsValidPrivate: IsValidPrivate,
 };
