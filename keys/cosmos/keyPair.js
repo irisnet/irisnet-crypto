@@ -165,7 +165,7 @@ Transaction = function (addr) {
 }
 GetAllAssets = function(addr){
     return new Promise(function (resolve, reject) {
-        request.get(rainbowUrl + 'shares/delegator/'+ addr).then(list = > {
+        request.get(rainbowUrl + 'shares/delegator/'+ addr).then(list => {
             resolve(list.data)
         })
     })
