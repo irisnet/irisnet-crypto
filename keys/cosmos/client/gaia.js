@@ -1,3 +1,4 @@
+'use strict'
 const REQUEST = require('axios');
 const MODEL = require("./model");
 const MODE = {DEV: 1, PRO: 2};

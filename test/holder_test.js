@@ -1,3 +1,4 @@
+'use strict'
 const Holder = require("../keys/crypto/holder");
 const chai = require('chai');
 const assert = chai.assert;

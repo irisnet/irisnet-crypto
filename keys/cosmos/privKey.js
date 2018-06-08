@@ -1,3 +1,4 @@
+'use strict'
 let Sha256 = require("sha256");
 let Hex = require("../hex");
 GenSeedEd25519FromSecret = function (secret) {

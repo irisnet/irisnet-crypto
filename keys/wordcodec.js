@@ -1,3 +1,4 @@
+'use strict'
 let CRC = require("./cosmos/crc");
 let BigNumber = require('bignumber.js');
 byteArrayToLong = function (byteArray) {

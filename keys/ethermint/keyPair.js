@@ -1,3 +1,4 @@
+'use strict'
 let EthUtil = require('ethereumjs-util');
 let EthereumTx = require('ethereumjs-tx');
 const Web3 = require("web3");

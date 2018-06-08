@@ -1,3 +1,5 @@
+
+'use strict'
 let Wordcodec = require("../wordcodec");
 let Nacl = require("tweetnacl");
 let Hex = require("../hex");

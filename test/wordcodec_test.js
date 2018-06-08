@@ -1,3 +1,4 @@
+'use strict'
 const Wordcodec = require("../keys/wordcodec");
 const chai = require('chai');
 const assert = chai.assert;

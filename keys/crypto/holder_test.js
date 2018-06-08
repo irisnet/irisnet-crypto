@@ -1,3 +1,4 @@
+'use strict'
 let Holder = require("./holder");
 Holder.Init(
     {

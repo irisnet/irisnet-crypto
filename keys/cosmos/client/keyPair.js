@@ -1,3 +1,4 @@
+'use strict'
 let gaia = require("./gaia");
 const MODEL = require("./model");
 let client;
