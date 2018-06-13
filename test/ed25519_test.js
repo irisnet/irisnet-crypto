@@ -1,4 +1,3 @@
-'use strict'
 const Nacl = require("tweetnacl");
 const Encoding = require("text-encoding");
 const chai = require('chai');

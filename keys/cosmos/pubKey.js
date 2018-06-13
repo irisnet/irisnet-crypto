@@ -1,4 +1,3 @@
-'use strict'
 let RIPEMD160 = require('ripemd160');
 let TypeEd25519 = 1;
 let TypeSecp256k1 = 2;

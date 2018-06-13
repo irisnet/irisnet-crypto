@@ -1,4 +1,3 @@
-'use strict'
 module.exports = {
     hexToBytes: hexToBytes,
     bytesToHex: bytesToHex

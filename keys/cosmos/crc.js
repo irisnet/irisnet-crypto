@@ -1,4 +1,3 @@
-'use strict'
 let Crc32 = require('js-crc').crc32;
 
 byte = function (b) {

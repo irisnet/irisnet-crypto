@@ -1,4 +1,3 @@
-'use strict'
 const Encoding = require("text-encoding");
 const PubKey = require("../pubKey");
 const Hex = require("../../hex");

@@ -1,4 +1,3 @@
-'use strict'
 let NameEd25519 = "ed25519";
 let NameSecp256k1 = "secp256k1";
 const TypeEd25519 = 1;
