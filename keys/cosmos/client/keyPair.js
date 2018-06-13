@@ -4,7 +4,7 @@ const MODEL = require("./model");
 let client;
 let urlList;
 let account = '';
-let Create = function (model) {
+Create = function (model) {
     let key = new client.Key();
     return new Promise(function (resolve) {
         key.generate(model.name, model.password, function (result) {
@@ -22,15 +22,15 @@ let Create = function (model) {
 
 };
 
-let Recover = function (secret) {
+Recover = function (secret) {
 
 };
 
-let Import = function (secret, algo) {
+Import = function (secret, algo) {
 
 };
 
-let Sign = function (tx) {
+Sign = function (tx) {
     account = new MODEL.Account(tx.name, tx.password, tx.addr);
     this.Init(urlList);
     let amts = [new MODEL.Coin(tx.count, "fermion")];
@@ -45,7 +45,7 @@ let Sign = function (tx) {
 
 };
 
-let Balance = function (addr) {
+Balance = function (addr) {
     return new Promise(function (resolve,reject) {
         client.queryAccount(addr, function (info) {
             resolve(info.data.coins[0].amount)
@@ -56,15 +56,15 @@ let Balance = function (addr) {
 
 }
 
-let IsValidAddress = function (address) {
+IsValidAddress = function (address) {
     return /^[0-9a-fA-F]{40}$/i.test(address);
 };
 
-let IsValidPrivate = function (privateKey) {
+IsValidPrivate = function (privateKey) {
     return /^[0-9a-fA-F]{128}$/i.test(privateKey);
 };
 
-let Init = function (url) {
+Init = function (url) {
     urlList = url;
     client = new gaia.Client(account, url.gaia, url.tendermint);
     client.setDevMode();

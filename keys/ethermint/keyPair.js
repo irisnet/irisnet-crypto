@@ -7,7 +7,7 @@ const BigNumber = require('bignumber.js');
 const Ether = new BigNumber(10e+17);
 
 let web3;
-let Import = function (secret) {
+Import = function (secret) {
     let publicKey = EthUtil.privateToPublic(secret);
     let addr = EthUtil.publicToAddress(publicKey);
     return {
@@ -17,7 +17,7 @@ let Import = function (secret) {
     };
 };
 
-let Sign = function (rawTx, privateKey) {
+Sign = function (rawTx, privateKey) {
     let addr = EthUtil.privateToAddress(privateKey);
     rawTx.nonce = web3.eth.getTransactionCount('0x' + Hex.bytesToHex(addr));
     let tx = new EthereumTx(rawTx);
@@ -26,7 +26,7 @@ let Sign = function (rawTx, privateKey) {
     return this.SendRawTransaction("0x" + serializedTx.toString('hex'));
 };
 
-let SendRawTransaction = function (serializedTx) {
+SendRawTransaction = function (serializedTx) {
     return new Promise(function (resolve) {
         web3.eth.sendRawTransaction(serializedTx, function (err, hash) {
             let result;
@@ -38,21 +38,21 @@ let SendRawTransaction = function (serializedTx) {
     });
 };
 
-let Balance = function (addr, url) {
+Balance = function (addr, url) {
     return new Promise(function (resolve) {
         let ret = new BigNumber(web3.eth.getBalance(addr));
         resolve(parseFloat(ret.dividedBy(Ether)).toFixed(2));
     });
 };
 
-let IsValidAddress = function (address) {
+IsValidAddress = function (address) {
     return EthUtil.isValidAddress(address);
 };
 
-let IsValidPrivate = function (privateKey) {
+IsValidPrivate = function (privateKey) {
     return EthUtil.isValidPrivate(new Buffer(Hex.hexToBytes(privateKey)));
 };
-let Init = function (url) {
+Init = function (url) {
     web3 = new Web3(new Web3.providers.HttpProvider(url.ethermint));
 };
 

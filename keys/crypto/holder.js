@@ -15,7 +15,7 @@ const BigNumber = require('bignumber.js');
  * @param {string} language: brain wallet language, now supported: chinese_simplified,japanese,spanish,english(default)
  * @returns {{address: string, phrase: string, key: *|key|{privateKey, publicKey}|string|string|string}}
  */
-let Create = function (bk, algo, language) {
+Create = function (bk, algo, language) {
     let secret = Nacl.randomBytes(16);
     let keyPair;
     switch (bk) {
@@ -41,7 +41,7 @@ let Create = function (bk, algo, language) {
  * @param {string} language: brain wallet language, now supported: chinese_simplified,japanese,spanish,english(default)
  * @returns {{address: string, phrase: string, key: *|key|{privateKey, publicKey}|string|string|string}}
  */
-let Recover = function (bk, seedphrase, language) {
+Recover = function (bk, seedphrase, language) {
     let words = seedphrase.split(" ");
     let secret;
     try {
@@ -72,7 +72,7 @@ let Recover = function (bk, seedphrase, language) {
  * @param {string} privateKey: privateKey(hex)
  * @returns {{address: string, key: *|key|{privateKey, publicKey}|string|string|string}}
  */
-let Import = function (bk, privateKey) {
+Import = function (bk, privateKey) {
     privateKey = Hex.hexToBytes(privateKey);
     let keyPair;
     switch (bk) {
@@ -100,7 +100,7 @@ let Import = function (bk, privateKey) {
  * @returns {*}
  * @constructor
  */
-let Sign = function (bk, tx, privateKey) {
+Sign = function (bk, tx, privateKey) {
     privateKey = Hex.hexToBytes(privateKey);
     switch (bk) {
         case "cosmos":
@@ -124,7 +124,7 @@ let Sign = function (bk, tx, privateKey) {
  * @returns {*}
  * @constructor
  */
-let SendRawTransaction = function (bk, serializedTx) {
+SendRawTransaction = function (bk, serializedTx) {
     switch (bk) {
         case "cosmos":
             break;
@@ -140,19 +140,19 @@ let SendRawTransaction = function (bk, serializedTx) {
  * @returns []
  * @constructor
  */
-let Transaction = function (bk, address) {
+Transaction = function (bk, address) {
     switch (bk) {
         case "cosmos":
             return CosmosKeyPair.Transaction(address);
     }
 };
-let GetAllAssets = function (bk, address) {
+GetAllAssets = function (bk, address) {
     switch (bk) {
         case "cosmos":
             return CosmosKeyPair.GetAllAssets(address);
     }
 };
-let TransactionPagenation = function (bk, address, direction,pageNumber, pageSize,startTime,endTime,sort) {
+TransactionPagenation = function (bk, address, direction,pageNumber, pageSize,startTime,endTime,sort) {
     switch (bk) {
         case "cosmos":
             return CosmosKeyPair.TransactionPagenation(address, direction, pageNumber, pageSize,startTime,endTime,sort);
@@ -166,7 +166,7 @@ let TransactionPagenation = function (bk, address, direction,pageNumber, pageSiz
  * @returns {*}
  * @constructor
  */
-let TransactionHash = function (bk, hash) {
+TransactionHash = function (bk, hash) {
     switch (bk) {
         case "cosmos":
             return CosmosKeyPair.TransactionHash(hash);
@@ -180,7 +180,7 @@ let TransactionHash = function (bk, hash) {
  * @returns {*}
  * @constructor
  */
-let TxStake = function (bk, address) {
+TxStake = function (bk, address) {
     switch (bk) {
         case "cosmos":
             return CosmosKeyPair.TxStake(address);
@@ -194,7 +194,7 @@ let TxStake = function (bk, address) {
  * @returns {*}
  * @constructor
  */
-let Balance = function (bk, address) {
+Balance = function (bk, address) {
     switch (bk) {
         case "cosmos":
             return CosmosKeyPair.Balance(address);
@@ -210,7 +210,7 @@ let Balance = function (bk, address) {
  * @returns {*}
  * @constructor
  */
-let Validators = function (bk, address) {
+Validators = function (bk, address) {
     switch (bk) {
         case "cosmos":
             return CosmosKeyPair.Validators(address);
@@ -224,7 +224,7 @@ let Validators = function (bk, address) {
  * @returns {boolean}
  * @constructor
  */
-let IsValidAddress = function (bk, address) {
+IsValidAddress = function (bk, address) {
     switch (bk) {
         case "cosmos":
             return CosmosKeyPair.IsValidAddress(address);
@@ -240,7 +240,7 @@ let IsValidAddress = function (bk, address) {
  * @returns {boolean}
  * @constructor
  */
-let IsValidPrivate = function (bk, privateKey) {
+IsValidPrivate = function (bk, privateKey) {
     switch (bk) {
         case "cosmos":
             return CosmosKeyPair.IsValidPrivate(privateKey);
@@ -249,7 +249,7 @@ let IsValidPrivate = function (bk, privateKey) {
     }
 };
 
-let Init = function (urlList) {
+Init = function (urlList) {
     CosmosKeyPair.Init(urlList);
     EthermintKeyPair.Init(urlList);
 };

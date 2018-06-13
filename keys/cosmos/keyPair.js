@@ -14,7 +14,7 @@ let rainbowUrl;
 let MODEL = require('./client/model');
 const request = require('axios')
 //algo must be a supported algorithm now: ed25519, secp256k1
-let Create = function (secret, algo) {
+Create = function (secret, algo) {
     let pub;
     let addr;
     let privateKey;
@@ -46,7 +46,7 @@ let Create = function (secret, algo) {
     };
 };
 
-let Recover = function (secret) {
+Recover = function (secret) {
     let type = secret.slice(secret.length - 1, secret.length)[0];
     secret = secret.slice(0, secret.length - 1);
 
@@ -76,7 +76,7 @@ let Recover = function (secret) {
     };
 };
 
-let Import = function (secret, algo) {
+Import = function (secret, algo) {
     let pub;
     let addr;
     let privateKey;
@@ -99,7 +99,7 @@ let Import = function (secret, algo) {
     };
 };
 
-let Balance = function (addr) {
+Balance = function (addr) {
     return new Promise(function (resolve, reject) {
         client.queryAccount(addr).then(info => {
             resolve(info.data.coins)
@@ -109,7 +109,7 @@ let Balance = function (addr) {
     });
 };
 
-let Sign = function (tx, privateKey) {
+Sign = function (tx, privateKey) {
 
     let amts = [new MODEL.Coin(tx.count, tx.type)];
     let fee = new MODEL.Coin(tx.fees, "fermion");
@@ -120,7 +120,7 @@ let Sign = function (tx, privateKey) {
     });
 };
 
-let Validators = function (addr) {
+Validators = function (addr) {
     return new Promise(function (resolve, reject) {
         request.get(gaiaUrl + '/query/stake/candidates').then(v => {
             let length = v.data.data.length;
@@ -137,7 +137,7 @@ let Validators = function (addr) {
         })
     })
 }
-let Candidate = function (addr, pubkey) {
+Candidate = function (addr, pubkey) {
     return new Promise(function (resolve, reject) {
         request.get(gaiaUrl + '/query/stake/candidate/' + pubkey).then(list => {
             this.Delegator(addr, pubkey, list.data.data).then(v => {
@@ -146,7 +146,7 @@ let Candidate = function (addr, pubkey) {
         })
     })
 }
-let Delegator = function (addr, pubkey, list) {
+Delegator = function (addr, pubkey, list) {
     return new Promise(function (resolve, reject) {
         request.get(gaiaUrl + '/query/stake/delegator/' + addr + '/' + pubkey).then(v => {
             list.yShares = v.data.data.Shares;
@@ -157,21 +157,21 @@ let Delegator = function (addr, pubkey, list) {
         })
     })
 }
-let Transaction = function (addr) {
+Transaction = function (addr) {
     return new Promise(function (resolve, reject) {
         request.get(bianjieUrl + '/tx/coin/'+ addr).then(list => {
             resolve(list.data)
         })
     })
 }
-let GetAllAssets = function(addr){
+GetAllAssets = function(addr){
     return new Promise(function (resolve, reject) {
         request.get(rainbowUrl +"/shares/delegator/"+ addr).then(list => {
             resolve(list.data)
         })
     })
 }
-let TransactionPagenation = function (addr, direction, pageNumber, pageSize,startTime,endTime,sort) {
+TransactionPagenation = function (addr, direction, pageNumber, pageSize,startTime,endTime,sort) {
     return new Promise(function (resolve, reject) {
         request.get(rainbowUrl + '/txs?address='+ addr+'&tx_type='+ direction +
             "&page=" + pageNumber + "&per_page=" + pageSize +"&start_time="+startTime+"&end_time="+endTime+"&sort="+sort).
@@ -182,14 +182,14 @@ let TransactionPagenation = function (addr, direction, pageNumber, pageSize,star
     })
 }
 
-let TransactionHash = function (hash) {
+TransactionHash = function (hash) {
     return new Promise(function (resolve, reject) {
         request.get(gaiaUrl+ '/tx/'+ hash).then(list => {
             resolve(list.data)
         })
     })
 }
-let TxStake=function (addr) {
+TxStake=function (addr) {
     return new Promise(function (resolve, reject) {
         request.get(bianjieUrl+'/txs/stake?address='+addr+"&page=1&size=100").then(list => {
             resolve(list.data)
@@ -197,7 +197,7 @@ let TxStake=function (addr) {
     })
 }
 
-var transfer = function (tx, amts, fees, privateKey) {
+transfer = function (tx, amts, fees, privateKey) {
     return new Promise(function (resolve, reject) {
         //获取交易序号
         client.queryNonce(tx.from).then(function (result) {
@@ -258,7 +258,7 @@ var transfer = function (tx, amts, fees, privateKey) {
     });
 
 };
-let ByteTx = function (tx, resolve, privateKey) {
+ByteTx = function (tx, resolve, privateKey) {
 
     client.request("POST", "/byteTx", JSON.stringify(tx)).then(function (signTx) {
         tx = tx.tx;
@@ -273,18 +273,18 @@ let ByteTx = function (tx, resolve, privateKey) {
 /**
  * @return {boolean}
  */
-let IsValidAddress = function (address) {
+IsValidAddress = function (address) {
     return /^[0-9a-fA-F]{40}$/i.test(address);
 };
 
 /**
  * @return {boolean}
  */
-let IsValidPrivate = function (privateKey) {
+IsValidPrivate = function (privateKey) {
     return /^[0-9a-fA-F]{128}$/i.test(privateKey);
 };
 
-let Init = function (url) {
+Init = function (url) {
     gaiaUrl = url.gaia;
     bianjieUrl=url.bianjie;
     rainbowUrl = url.rainbow;

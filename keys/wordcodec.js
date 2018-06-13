@@ -1,7 +1,7 @@
 'use strict'
 let CRC = require("./cosmos/crc");
 let BigNumber = require('bignumber.js');
-let byteArrayToLong = function (byteArray) {
+byteArrayToLong = function (byteArray) {
     console.log(typeof (byteArray[0]));
     let value = 0;
     for (let i = byteArray.length - 1; i >= 0; i--) {
@@ -10,7 +10,7 @@ let byteArrayToLong = function (byteArray) {
     return value;
 };
 
-let bytesToLong = function (byteArray) {
+bytesToLong = function (byteArray) {
     let s = 0;
     let d = new BigNumber(0);
     for (let i = byteArray.length; i > 0; i--) {
@@ -20,7 +20,7 @@ let bytesToLong = function (byteArray) {
     return d;
 };
 
-let longToBytes = function (long, number) {
+longToBytes = function (long, number) {
     let bytes = new Array(number);
     let s = 8 * (number - 1);
     for (let i = 0; i < number; i++) {
@@ -32,19 +32,19 @@ let longToBytes = function (long, number) {
     return bytes;
 };
 
-let wordlenFromBytes = function (numBytes) {
+wordlenFromBytes = function (numBytes) {
     // 2048 words per bank, which is 2^11.
     // 8 bits per byte, and we add +10 so it rounds up
     return (8 * numBytes + 10) / 11
 };
 
-let bytelenFromWords = function (numWords) {
+bytelenFromWords = function (numWords) {
     // calculate the max number of complete bytes we could store in this word
     return (11 * numWords) / 8;
 };
 
 //language must be a supported language now: chinese_simplified,japanese,spanish,english(default)
-let BytesToWords = function (raw, language) {
+BytesToWords = function (raw, language) {
     let wordArray;
     switch (language) {
         case "chinese_simplified":
@@ -74,7 +74,7 @@ let BytesToWords = function (raw, language) {
 };
 
 //language must be a supported language now: chinese_simplified,japanese,spanish,english(default)
-let WordsToBytes = function (words, language) {
+WordsToBytes = function (words, language) {
     if (!words || words.length <= 0) {
         return
     }
