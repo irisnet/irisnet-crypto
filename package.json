@@ -1,6 +1,6 @@
 {
   "name": "irisnet-crypto",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "irisnet-crypto",
   "main": "index.js",
   "scripts": {
@@ -34,7 +34,8 @@
     "sha256": "^0.2.0",
     "text-encoding": "^0.6.4",
     "tweetnacl": "^1.0.0",
-    "web3": "git+https://github.com/ethereum/web3.js.git"
+    "web3": "git+https://github.com/ethereum/web3.js.git",
+    "blockchain-rpc": "git+https://github.com/irisnet/blockchain-rpc.git#develop"
   },
   "devDependencies": {
     "chai": "^4.1.2",
