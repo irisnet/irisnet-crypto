@@ -46,8 +46,8 @@ Create = function (secret, algo) {
 };
 
 Recover = function (secret) {
-    let type = secret.slice(secret.length - 1, secret.length)[0];
-    secret = secret.slice(0, secret.length - 1);
+    let type = secret.slice(0, 1)[0];
+    secret = secret.slice(1, secret.length);
 
     let pub;
     let addr;
