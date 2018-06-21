@@ -13,8 +13,14 @@ let rainbowUrl;
 let MODEL = require('./client/model');
 const request = require('axios');
 let thrift = require('thrift');
-let service = require('irishub-rpc/codegen/gen-nodejs/IRISHubService');
+let irisService = require('irishub-rpc/codegen/gen-nodejs/IRISHubService');
 let candidatelist = require('irishub-rpc/codegen/gen-nodejs/model_candidateList_types');
+let transport = thrift.TBufferedTransport;
+let protocol = thrift.TJSONProtocol;
+let irisConnection = thrift.createXHRConnection("192.168.150.160", "9080", {path: "/irishub"}, {
+    transport: transport,
+    protocol: protocol
+});
 //algo must be a supported algorithm now: ed25519, secp256k1
 Create = function (secret, algo) {
     let pub;
@@ -124,15 +130,8 @@ Sign = function (tx, privateKey) {
 
 Validators = function (addr, page, perPage) {
     return new Promise(function (resolve, reject) {
-        var transport = thrift.TBufferedTransport;
-        var protocol = thrift.TJSONProtocol;
-        var connection = thrift.createXHRConnection("192.168.150.160", "9080", {path: "/irishub"}, {
-            transport: transport,
-            protocol: protocol
-        });
-
-        var client = thrift.createClient(service, connection);
-        var args = candidatelist.CandidateListRequest;
+        let client = thrift.createClient(irisService, irisConnection);
+        let args = new candidatelist.CandidateListRequest();
         args.address = addr;
         args.page = 1;
         args.perPage = 10;
