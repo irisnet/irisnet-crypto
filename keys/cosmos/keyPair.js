@@ -11,7 +11,10 @@ let gaiaUrl;
 let bianjieUrl;
 let rainbowUrl;
 let MODEL = require('./client/model');
-const request = require('axios')
+const request = require('axios');
+let thrift = require('thrift');
+let service = require('irishub-rpc/codegen/gen-nodejs/IRISHubService');
+let candidatelist = require('irishub-rpc/codegen/gen-nodejs/model_candidateList_types');
 //algo must be a supported algorithm now: ed25519, secp256k1
 Create = function (secret, algo) {
     let pub;
@@ -119,21 +122,42 @@ Sign = function (tx, privateKey) {
     });
 };
 
-Validators = function (addr) {
+Validators = function (addr, page, perPage) {
     return new Promise(function (resolve, reject) {
-        request.get(gaiaUrl + '/query/stake/candidates').then(v => {
-            let length = v.data.data.length;
-            let i = 0;
-            v.data.data.forEach(item => {
-                this.Candidate(addr, item.data).then(list => {
-                    ++i;
-                    item.model = list;
-                    if (i == length) {
-                        resolve(v.data.data);
-                    }
-                })
-            })
+        var transport = thrift.TBufferedTransport;
+        var protocol = thrift.TJSONProtocol;
+        var connection = thrift.createXHRConnection("192.168.150.160", "9080", {path: "/irishub"}, {
+            transport: transport,
+            protocol: protocol
+        });
+
+        var client = thrift.createClient(service, connection);
+        var args = candidatelist.CandidateListRequest;
+        args.address = addr;
+        args.page = 1;
+        args.perPage = 10;
+
+        client.GetCandidateList(args, function (err, response) {
+            if (err) {
+                reject(err);
+            }
+            console.log(response);
+            resolve(response);
         })
+
+        // request.get(gaiaUrl + '/query/stake/candidates').then(v => {
+        //     let length = v.data.data.length;
+        //     let i = 0;
+        //     v.data.data.forEach(item => {
+        //         this.Candidate(addr, item.data).then(list => {
+        //             ++i;
+        //             item.model = list;
+        //             if (i == length) {
+        //                 resolve(v.data.data);
+        //             }
+        //         })
+        //     })
+        // })
     })
 }
 Candidate = function (addr, pubkey) {
@@ -158,24 +182,23 @@ Delegator = function (addr, pubkey, list) {
 }
 Transaction = function (addr) {
     return new Promise(function (resolve, reject) {
-        request.get(bianjieUrl + '/tx/coin/'+ addr).then(list => {
+        request.get(bianjieUrl + '/tx/coin/' + addr).then(list => {
             resolve(list.data)
         })
     })
 }
-GetAllAssets = function(addr){
+GetAllAssets = function (addr) {
     return new Promise(function (resolve, reject) {
-        request.get(rainbowUrl +"/shares/delegator/"+ addr).then(list => {
+        request.get(rainbowUrl + "/shares/delegator/" + addr).then(list => {
             resolve(list.data)
         })
     })
 }
-TransactionPagenation = function (addr, direction, pageNumber, pageSize,startTime,endTime,sort) {
+TransactionPagenation = function (addr, direction, pageNumber, pageSize, startTime, endTime, sort) {
     return new Promise(function (resolve, reject) {
-        request.get(rainbowUrl + '/txs?address='+ addr+'&tx_type='+ direction +
-            "&page=" + pageNumber + "&per_page=" + pageSize +"&start_time="+startTime+"&end_time="+endTime+"&sort="+sort).
-        then(list => {
-            
+        request.get(rainbowUrl + '/txs?address=' + addr + '&tx_type=' + direction +
+            "&page=" + pageNumber + "&per_page=" + pageSize + "&start_time=" + startTime + "&end_time=" + endTime + "&sort=" + sort).then(list => {
+
             resolve(list.data)
         })
     })
@@ -183,14 +206,14 @@ TransactionPagenation = function (addr, direction, pageNumber, pageSize,startTim
 
 TransactionHash = function (hash) {
     return new Promise(function (resolve, reject) {
-        request.get(gaiaUrl+ '/tx/'+ hash).then(list => {
+        request.get(gaiaUrl + '/tx/' + hash).then(list => {
             resolve(list.data)
         })
     })
 }
-TxStake=function (addr) {
+TxStake = function (addr) {
     return new Promise(function (resolve, reject) {
-        request.get(bianjieUrl+'/txs/stake?address='+addr+"&page=1&size=100").then(list => {
+        request.get(bianjieUrl + '/txs/stake?address=' + addr + "&page=1&size=100").then(list => {
             resolve(list.data)
         })
     })
@@ -285,7 +308,7 @@ IsValidPrivate = function (privateKey) {
 
 Init = function (url) {
     gaiaUrl = url.gaia;
-    bianjieUrl=url.bianjie;
+    bianjieUrl = url.bianjie;
     rainbowUrl = url.rainbow;
     client = require('cosmos-sdk')(url.gaia);
 };
@@ -296,9 +319,9 @@ module.exports = {
     Import: Import,
     Balance: Balance,
     Sign: Sign,
-    TxStake:TxStake,
+    TxStake: TxStake,
     Init: Init,
-    TransactionHash:TransactionHash,
+    TransactionHash: TransactionHash,
     Transaction: Transaction,
     GetAllAssets: GetAllAssets,
     TransactionPagenation: TransactionPagenation,
