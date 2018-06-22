@@ -20,9 +20,16 @@ let chainService = require('blockchain-rpc/codegen/gen-nodejs/BlockChainService'
 let candidatelist = require('irishub-rpc/codegen/gen-nodejs/model_candidateList_types');
 let candidateDetail = require('irishub-rpc/codegen/gen-nodejs/model_candidateDetail_types');
 let delegatorCandidate = require('irishub-rpc/codegen/gen-nodejs/model_delegatorCandidateList_types');
+let delegatorShares = require('irishub-rpc/codegen/gen-nodejs/model_totalShare_types');
+
 let sequence = require('blockchain-rpc/codegen/gen-nodejs/model_sequence_types');
 let buildTx = require('blockchain-rpc/codegen/gen-nodejs/model_buildTx_types');
 let common = require('blockchain-rpc/codegen/gen-nodejs/model_common_types');
+
+let commonBalance = require('blockchain-rpc/codegen/gen-nodejs/model_balance_types');
+let txList = require('blockchain-rpc/codegen/gen-nodejs/model_txList_types');
+let txDetail = require('blockchain-rpc/codegen/gen-nodejs/model_txDetail_types');
+
 let transport = thrift.TBufferedTransport;
 let protocol = thrift.TJSONProtocol;
 let irisConnection = thrift.createXHRConnection("192.168.150.160", "9080",
@@ -125,22 +132,75 @@ Import = function (secret, algo) {
     };
 };
 
-Balance = function (addr) {
-    return new Promise(function (resolve, reject) {
-        client.queryAccount(addr).then(info => {
-            resolve(info.data.coins)
-        }).catch(e => {
-            reject('')
-        })
-    });
-};
-
 Sign = function (tx, privateKey) {
     // let amts = [new MODEL.Coin(tx.count, tx.type)];
     // let fee = new MODEL.Coin(tx.fees, "fermion");
     return new Promise(function (resolve) {
         this.transfer(tx, privateKey).then(model => {
             resolve(model)
+        })
+    });
+};
+
+Balance = function (addr) {
+    return new Promise(function (resolve, reject) {
+        let args = new commonBalance.BalanceRequest();
+        args.address = addr;
+        chainClient.GetBalance(args, function (err, response) {
+            if (err) {
+                reject(err);
+            }
+            resolve(response)
+        });
+    });
+};
+
+DelegatorShares = function(addr) {
+    return new Promise(function (resolve, reject) {
+        let args = new delegatorShares.TotalShareRequest();
+        args.address = addr;
+
+        irisClient.GetDelegatorTotalShares(args, function (err, response) {
+            if (err) {
+                reject(err);
+            }
+            resolve(response);
+        })
+    })
+};
+
+TxList = function(addr, page, perPage, type, startTime, endTime, sort, q, status) {
+    return new Promise(function (resolve, reject) {
+        let args = new txList.TxListRequest();
+        args.address = addr;
+        args.page = page;
+        args.perPage = perPage;
+        args.type = type;
+        args.startTime = startTime;
+        args.endTime = endTime;
+        args.sort = sort;
+        args.q = q;
+        args.status = status;
+        
+        chainClient.GetTxList(args, function (err, response) {
+            if (err) {
+                reject(err);
+            }
+            resolve(response);
+        })
+    });
+};
+
+TxDetail = function(txHash) {
+    return new Promise(function (resolve, reject) {
+        let args = new txDetail.TxDetailRequest();
+        args.txHash = txHash;
+
+        chainClient.GetTxDetail(args, function (err, res) {
+            if (err) {
+                reject(err);
+            }
+            resolve(res);
         })
     });
 };
@@ -160,7 +220,7 @@ Validators = function (addr, page, perPage, sort, q) {
             resolve(response);
         })
     })
-}
+};
 
 Validator = function (addr, pubKey) {
     return new Promise(function (resolve, reject) {
@@ -175,7 +235,7 @@ Validator = function (addr, pubKey) {
             resolve(response);
         })
     });
-}
+};
 
 DelegatorCandidateList = function (addr, page, perPage, sort, q) {
     return new Promise(function (resolve, reject) {
@@ -192,66 +252,66 @@ DelegatorCandidateList = function (addr, page, perPage, sort, q) {
             resolve(response);
         })
     });
-}
+};
 
-Candidate = function (addr, pubkey) {
-    return new Promise(function (resolve, reject) {
-        request.get(gaiaUrl + '/query/stake/candidate/' + pubkey).then(list => {
-            this.Delegator(addr, pubkey, list.data.data).then(v => {
-                resolve(v);
-            })
-        })
-    })
-}
-Delegator = function (addr, pubkey, list) {
-    return new Promise(function (resolve, reject) {
-        request.get(gaiaUrl + '/query/stake/delegator/' + addr + '/' + pubkey).then(v => {
-            list.yShares = v.data.data.Shares;
-            resolve(list)
-        }).catch(error => {
-            list.yShares = 0;
-            resolve(list)
-        })
-    })
-}
-Transaction = function (addr) {
-    return new Promise(function (resolve, reject) {
-        request.get(bianjieUrl + '/tx/coin/' + addr).then(list => {
-            resolve(list.data)
-        })
-    })
-}
-GetAllAssets = function (addr) {
-    return new Promise(function (resolve, reject) {
-        request.get(rainbowUrl + "/shares/delegator/" + addr).then(list => {
-            resolve(list.data)
-        })
-    })
-}
-TransactionPagenation = function (addr, direction, pageNumber, pageSize, startTime, endTime, sort) {
-    return new Promise(function (resolve, reject) {
-        request.get(rainbowUrl + '/txs?address=' + addr + '&tx_type=' + direction +
-            "&page=" + pageNumber + "&per_page=" + pageSize + "&start_time=" + startTime + "&end_time=" + endTime + "&sort=" + sort).then(list => {
+// Candidate = function (addr, pubkey) {
+//     return new Promise(function (resolve, reject) {
+//         request.get(gaiaUrl + '/query/stake/candidate/' + pubkey).then(list => {
+//             this.Delegator(addr, pubkey, list.data.data).then(v => {
+//                 resolve(v);
+//             })
+//         })
+//     })
+// };
+// Delegator = function (addr, pubkey, list) {
+//     return new Promise(function (resolve, reject) {
+//         request.get(gaiaUrl + '/query/stake/delegator/' + addr + '/' + pubkey).then(v => {
+//             list.yShares = v.data.data.Shares;
+//             resolve(list)
+//         }).catch(error => {
+//             list.yShares = 0;
+//             resolve(list)
+//         })
+//     })
+// };
+// Transaction = function (addr) {
+//     return new Promise(function (resolve, reject) {
+//         request.get(bianjieUrl + '/tx/coin/' + addr).then(list => {
+//             resolve(list.data)
+//         })
+//     })
+// };
+// GetAllAssets = function (addr) {
+//     return new Promise(function (resolve, reject) {
+//         request.get(rainbowUrl + "/shares/delegator/" + addr).then(list => {
+//             resolve(list.data)
+//         })
+//     })
+// };
+// TransactionPagenation = function (addr, direction, pageNumber, pageSize, startTime, endTime, sort) {
+//     return new Promise(function (resolve, reject) {
+//         request.get(rainbowUrl + '/txs?address=' + addr + '&tx_type=' + direction +
+//             "&page=" + pageNumber + "&per_page=" + pageSize + "&start_time=" + startTime + "&end_time=" + endTime + "&sort=" + sort).then(list => {
+//
+//             resolve(list.data)
+//         })
+//     })
+// };
 
-            resolve(list.data)
-        })
-    })
-}
-
-TransactionHash = function (hash) {
-    return new Promise(function (resolve, reject) {
-        request.get(gaiaUrl + '/tx/' + hash).then(list => {
-            resolve(list.data)
-        })
-    })
-}
-TxStake = function (addr) {
-    return new Promise(function (resolve, reject) {
-        request.get(bianjieUrl + '/txs/stake?address=' + addr + "&page=1&size=100").then(list => {
-            resolve(list.data)
-        })
-    })
-}
+// TransactionHash = function (hash) {
+//     return new Promise(function (resolve, reject) {
+//         request.get(gaiaUrl + '/tx/' + hash).then(list => {
+//             resolve(list.data)
+//         })
+//     })
+// };
+// TxStake = function (addr) {
+//     return new Promise(function (resolve, reject) {
+//         request.get(bianjieUrl + '/txs/stake?address=' + addr + "&page=1&size=100").then(list => {
+//             resolve(list.data)
+//         })
+//     })
+// };
 
 getSequence = function (addr) {
     return new Promise(function (resolve, reject) {
@@ -266,7 +326,7 @@ getSequence = function (addr) {
             resolve(nonce);
         });
     })
-}
+};
 
 transfer = function (tx, privateKey) {
     return new Promise(function (resolve, reject) {
@@ -308,17 +368,17 @@ transfer = function (tx, privateKey) {
     });
 };
 
-ByteTx = function (tx, resolve, privateKey) {
-
-    client.request("POST", "/byteTx", JSON.stringify(tx)).then(function (signTx) {
-        tx = tx.tx;
-        tx.data.signature.Sig = new MODEL.Sig("ed25519", Hex.bytesToHex(Nacl.sign.detached(new Uint8Array(Hex.hexToBytes(signTx)), new Uint8Array(privateKey))));
-        let key = Nacl.sign.keyPair.fromSecretKey(new Uint8Array(privateKey));
-        let pub = key.publicKey;
-        tx.data.signature.Pubkey = new MODEL.Pubkey("ed25519", Hex.bytesToHex(pub));
-        client.postTx(JSON.stringify(tx)).then(result => resolve(result));
-    });
-}
+// ByteTx = function (tx, resolve, privateKey) {
+//
+//     client.request("POST", "/byteTx", JSON.stringify(tx)).then(function (signTx) {
+//         tx = tx.tx;
+//         tx.data.signature.Sig = new MODEL.Sig("ed25519", Hex.bytesToHex(Nacl.sign.detached(new Uint8Array(Hex.hexToBytes(signTx)), new Uint8Array(privateKey))));
+//         let key = Nacl.sign.keyPair.fromSecretKey(new Uint8Array(privateKey));
+//         let pub = key.publicKey;
+//         tx.data.signature.Pubkey = new MODEL.Pubkey("ed25519", Hex.bytesToHex(pub));
+//         client.postTx(JSON.stringify(tx)).then(result => resolve(result));
+//     });
+// };
 
 /**
  * @return {boolean}
