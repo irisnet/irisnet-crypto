@@ -10,6 +10,8 @@ let client;
 let gaiaUrl;
 let bianjieUrl;
 let rainbowUrl;
+let apiServerIP;
+let apiServerPort;
 let MODEL = require('./client/model');
 const request = require('axios');
 let thrift = require('thrift');
@@ -17,7 +19,11 @@ let irisService = require('irishub-rpc/codegen/gen-nodejs/IRISHubService');
 let candidatelist = require('irishub-rpc/codegen/gen-nodejs/model_candidateList_types');
 let transport = thrift.TBufferedTransport;
 let protocol = thrift.TJSONProtocol;
-let irisConnection = thrift.createXHRConnection("192.168.150.160", "9080", {path: "/irishub"}, {
+let irisConnection = thrift.createXHRConnection("192.168.150.160", "9080",
+    {path: "/irishub",
+    timeout:2000,
+    timeoutHandler:function(){console.log("timeout now")}
+    }, {
     transport: transport,
     protocol: protocol
 });
@@ -310,6 +316,8 @@ Init = function (url) {
     bianjieUrl = url.bianjie;
     rainbowUrl = url.rainbow;
     client = require('cosmos-sdk')(url.gaia);
+    apiServerIP = url.apiServerIP;
+    apiServerPort = url.apiServerPort;
 };
 
 module.exports = {
