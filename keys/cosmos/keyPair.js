@@ -14,13 +14,25 @@ let MODEL = require('./client/model');
 const request = require('axios');
 let thrift = require('thrift');
 let irisService = require('irishub-rpc/codegen/gen-nodejs/IRISHubService');
+let chainService = require('blockchain-rpc/codegen/gen-nodejs/BlockChainService');
 let candidatelist = require('irishub-rpc/codegen/gen-nodejs/model_candidateList_types');
+let candidateDetail = require('irishub-rpc/codegen/gen-nodejs/model_candidateDetail_types');
+let delegatorCandidate = require('irishub-rpc/codegen/gen-nodejs/model_delegatorCandidateList_types');
+let sequence = require('blockchain-rpc/codegen/gen-nodejs/model_sequence_types');
+let buildTx = require('blockchain-rpc/codegen/gen-nodejs/model_buildTx_types');
+let common = require('blockchain-rpc/codegen/gen-nodejs/model_common_types');
 let transport = thrift.TBufferedTransport;
 let protocol = thrift.TJSONProtocol;
 let irisConnection = thrift.createXHRConnection("192.168.150.160", "9080", {path: "/irishub"}, {
     transport: transport,
     protocol: protocol
 });
+let chainConnection = thrift.createXHRConnection("192.168.150.160", "9080", {path: "/blockchain"}, {
+    transport: transport,
+    protocol: protocol
+});
+let chainClient = thrift.createClient(chainService, chainConnection);
+let irisClient = thrift.createClient(irisService, irisConnection);
 //algo must be a supported algorithm now: ed25519, secp256k1
 Create = function (secret, algo) {
     let pub;
@@ -118,47 +130,64 @@ Balance = function (addr) {
 };
 
 Sign = function (tx, privateKey) {
-
-    let amts = [new MODEL.Coin(tx.count, tx.type)];
-    let fee = new MODEL.Coin(tx.fees, "fermion");
+    // let amts = [new MODEL.Coin(tx.count, tx.type)];
+    // let fee = new MODEL.Coin(tx.fees, "fermion");
     return new Promise(function (resolve) {
-        this.transfer(tx, amts, fee, privateKey).then(model => {
+        this.transfer(tx, privateKey).then(model => {
             resolve(model)
         })
     });
 };
 
-Validators = function (addr, page, perPage) {
+Validators = function (addr, page, perPage, sort, q) {
     return new Promise(function (resolve, reject) {
-        let client = thrift.createClient(irisService, irisConnection);
         let args = new candidatelist.CandidateListRequest();
         args.address = addr;
-        args.page = 1;
-        args.perPage = 10;
-
-        client.GetCandidateList(args, function (err, response) {
+        args.page = page;
+        args.perPage = perPage;
+        args.sort = sort;
+        args.q = q;
+        irisClient.GetCandidateList(args, function (err, response) {
             if (err) {
                 reject(err);
             }
-            console.log(response);
             resolve(response);
         })
-
-        // request.get(gaiaUrl + '/query/stake/candidates').then(v => {
-        //     let length = v.data.data.length;
-        //     let i = 0;
-        //     v.data.data.forEach(item => {
-        //         this.Candidate(addr, item.data).then(list => {
-        //             ++i;
-        //             item.model = list;
-        //             if (i == length) {
-        //                 resolve(v.data.data);
-        //             }
-        //         })
-        //     })
-        // })
     })
 }
+
+Validator = function (addr, pubKey) {
+    return new Promise(function (resolve, reject) {
+        let args = new candidateDetail.CandidateDetailRequest();
+        args.address = addr;
+        args.pubKey = pubKey;
+
+        irisClient.GetCandidateDetail(args, function (err, response) {
+            if (err) {
+                reject(err);
+            }
+            resolve(response);
+        })
+    });
+}
+
+DelegatorCandidateList = function (addr, page, perPage, sort, q) {
+    return new Promise(function (resolve, reject) {
+        let args = new delegatorCandidate.DelegatorCandidateListRequest();
+        args.address = addr;
+        args.page = page;
+        args.perPage = perPage;
+        args.sort = sort;
+        args.q = q;
+        irisClient.GetDelegatorCandidateList(args, function (err, response) {
+            if (err) {
+                reject(err);
+            }
+            resolve(response);
+        })
+    });
+}
+
 Candidate = function (addr, pubkey) {
     return new Promise(function (resolve, reject) {
         request.get(gaiaUrl + '/query/stake/candidate/' + pubkey).then(list => {
@@ -218,67 +247,61 @@ TxStake = function (addr) {
     })
 }
 
-transfer = function (tx, amts, fees, privateKey) {
+getSequence = function (addr) {
+    return new Promise(function (resolve, reject) {
+        let args = new sequence.SequenceRequest();
+        args.address = addr;
+        let nonce = 0;
+        chainClient.GetSequence(args, function (err, response) {
+            if (err) {
+                reject(err)
+            }
+            nonce = parseInt(response.sequence.toString());
+            resolve(nonce);
+        });
+    })
+}
+
+transfer = function (tx, privateKey) {
     return new Promise(function (resolve, reject) {
         //获取交易序号
-        client.queryNonce(tx.from).then(function (result) {
-            // nonce default 1
-            let nonce = 1;
-            if (!isNaN(result.data)) {
-                nonce = result.data + 1;
-            }
-            return nonce;
-        }).catch(function () {
-            // nonce values 1 when error
-            return 1;
-        }).then(nonce => {
+        this.getSequence(tx.from).then(nonce => {
+            // build tx
+            let txArgs = new buildTx.BuildTxRequest();
+            txArgs.sequence = nonce + 1;
+            txArgs.amount = [new common.Coin({amount: tx.count, denom: tx.type})];
+            txArgs.fee = new common.Fee({amount: tx.fees, denom: "fermion"});
             if (tx.typeGate === 'delegate') {
-                let From = new MODEL.Actor("", "sigs", tx.from);
-                let delegateTx = {
-                    pub_key: tx.pub_key,
-                    amount: amts[0],
-                    sequence: nonce,
-                    from: From
-                }
-                client.buildDelegate(JSON.stringify(delegateTx))
-                    .then(function (tx) {
-                        tx = {tx};
-                        ByteTx(tx, resolve, privateKey)
-                    }).catch(error => {
-                    console.log(error);
-                })
-
-            } else if (tx.typeGate === 'unbond') {
-                let From = new MODEL.Actor("", "sigs", tx.from);
-                let delegateTx = {
-                    pub_key: tx.pub_key,
-                    amount: amts[0].amount,
-                    sequence: nonce,
-                    from: From
-                }
-                client.buildUnbond(JSON.stringify(delegateTx))
-                    .then(function (tx) {
-                        tx = {tx};
-                        ByteTx(tx, resolve, privateKey)
-                    }).catch(error => {
-                    console.log(error);
-                })
-
+                txArgs.receiver = new common.Address({addr: tx.pub_key});
             } else {
-                let To = new MODEL.Actor("", "sigs", tx.to);
-                let From = new MODEL.Actor("", "sigs", tx.from);
-                //构建交易
-                let sendTnput = new MODEL.SendTnput(From, To, amts, nonce, fees);
-                client.buildSend(JSON.stringify(sendTnput)).then(function (tx) {
-                    tx = {tx};
-                    ByteTx(tx, resolve, privateKey)
-                })
+                txArgs.receiver = new common.Address({addr: tx.to});
             }
+            txArgs.sender = new common.Address({addr: tx.from});
+            chainClient.BuildTx(txArgs, function (err, response) {
+                console.log(err);
+                console.log(response);
+                if (err) {
+                    reject(err);
+                }
+                let PostTx = response.ext;
+                let signTx = response.data;
+                PostTx.data.signature.Sig = new MODEL.Sig("ed25519", Hex.bytesToHex(Nacl.sign.detached(new Uint8Array(Hex.hexToBytes(signTx)), new Uint8Array(privateKey))));
+                let key = Nacl.sign.keyPair.fromSecretKey(new Uint8Array(privateKey));
+                let pub = key.publicKey;
+                PostTx.data.signature.Pubkey = new MODEL.Pubkey("ed25519", Hex.bytesToHex(pub));
+                chainClient.PostTx(JSON.stringify(tx), function (err, response) {
+                    if (err) {
+                        reject(err);
+                    }
+                    resolve(response);
+                })
+            })
+        })
 
-        });
+
     });
-
 };
+
 ByteTx = function (tx, resolve, privateKey) {
 
     client.request("POST", "/byteTx", JSON.stringify(tx)).then(function (signTx) {
@@ -325,6 +348,8 @@ module.exports = {
     GetAllAssets: GetAllAssets,
     TransactionPagenation: TransactionPagenation,
     Validators: Validators,
+    Validator: Validator,
+    DelegatorCandidateList: DelegatorCandidateList,
     IsValidAddress: IsValidAddress,
     IsValidPrivate: IsValidPrivate,
 };
