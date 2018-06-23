@@ -19,7 +19,7 @@ let irisService = require('irishub-rpc/codegen/gen-nodejs/IRISHubService');
 let candidatelist = require('irishub-rpc/codegen/gen-nodejs/model_candidateList_types');
 let transport = thrift.TBufferedTransport;
 let protocol = thrift.TJSONProtocol;
-let irisConnection = thrift.createXHRConnection("192.168.150.160", "9080",
+let irisConnection = thrift.createXHRConnection(apiServerIP, apiServerPort,
     {path: "/irishub",
     timeout:2000,
     timeoutHandler:function(){console.log("timeout now")}
