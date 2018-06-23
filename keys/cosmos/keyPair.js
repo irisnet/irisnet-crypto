@@ -253,7 +253,58 @@ DelegatorCandidateList = function (addr, page, perPage, sort, q) {
         })
     });
 };
+getSequence = function (addr) {
+    return new Promise(function (resolve, reject) {
+        let args = new sequence.SequenceRequest();
+        args.address = addr;
+        let nonce = 0;
+        chainClient.GetSequence(args, function (err, response) {
+            if (!err) {
+                nonce = parseInt(response.sequence.toString());
+            }
+            resolve(nonce);
+        });
+    })
+}
 
+transfer = function (tx, privateKey) {
+    return new Promise(function (resolve, reject) {
+        //获取交易序号
+        this.getSequence(tx.from).then(nonce => {
+            // build tx
+            let txArgs = new buildTx.BuildTxRequest();
+            txArgs.sequence = nonce + 1;
+            txArgs.amount = [new common.Coin({amount: tx.count, denom: tx.type})];
+            txArgs.fee = new common.Fee({amount: tx.fees, denom: "fermion"});
+            if (tx.typeGate === 'delegate') {
+                txArgs.receiver = new common.Address({addr: tx.pub_key});
+            } else {
+                txArgs.receiver = new common.Address({addr: tx.to});
+            }
+            txArgs.sender = new common.Address({addr: tx.from});
+            txArgs.txType = tx.typeGate;
+            chainClient.BuildTx(txArgs, function (err, response) {
+                if (err) {
+                    reject(err);
+                }
+                let readyTx = JSON.parse(response.ext.toString());
+                let signTx = Hex.bytesToHex(response.data);
+                readyTx.data.signature.Sig = new MODEL.Sig("ed25519", Hex.bytesToHex(Nacl.sign.detached(new Uint8Array(Hex.hexToBytes(signTx)), new Uint8Array(privateKey))));
+                let key = Nacl.sign.keyPair.fromSecretKey(new Uint8Array(privateKey));
+                let pub = key.publicKey;
+                readyTx.data.signature.Pubkey = new MODEL.Pubkey("ed25519", Hex.bytesToHex(pub));
+                let postTx = new postTxTypes.PostTxRequest();
+                postTx.tx = new Buffer(JSON.stringify(readyTx));
+                chainClient.PostTx(postTx, function (err, response) {
+                    if (err) {
+                        reject(err);
+                    }
+                    resolve(response);
+                })
+            })
+        })
+    });
+};
 // Candidate = function (addr, pubkey) {
 //     return new Promise(function (resolve, reject) {
 //         request.get(gaiaUrl + '/query/stake/candidate/' + pubkey).then(list => {
