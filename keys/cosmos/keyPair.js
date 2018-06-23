@@ -40,7 +40,7 @@ let irisConnection = thrift.createXHRConnection(apiServerIP, apiServerPort,
     transport: transport,
     protocol: protocol
 });
-let chainConnection = thrift.createXHRConnection("192.168.150.160", "9080", {path: "/blockchain"}, {
+let chainConnection = thrift.createXHRConnection(apiServerIP, apiServerPort, {path: "/blockchain"}, {
     transport: transport,
     protocol: protocol
 });
@@ -305,64 +305,64 @@ transfer = function (tx, privateKey) {
         })
     });
 };
-// Candidate = function (addr, pubkey) {
-//     return new Promise(function (resolve, reject) {
-//         request.get(gaiaUrl + '/query/stake/candidate/' + pubkey).then(list => {
-//             this.Delegator(addr, pubkey, list.data.data).then(v => {
-//                 resolve(v);
-//             })
-//         })
-//     })
-// };
-// Delegator = function (addr, pubkey, list) {
-//     return new Promise(function (resolve, reject) {
-//         request.get(gaiaUrl + '/query/stake/delegator/' + addr + '/' + pubkey).then(v => {
-//             list.yShares = v.data.data.Shares;
-//             resolve(list)
-//         }).catch(error => {
-//             list.yShares = 0;
-//             resolve(list)
-//         })
-//     })
-// };
-// Transaction = function (addr) {
-//     return new Promise(function (resolve, reject) {
-//         request.get(bianjieUrl + '/tx/coin/' + addr).then(list => {
-//             resolve(list.data)
-//         })
-//     })
-// };
-// GetAllAssets = function (addr) {
-//     return new Promise(function (resolve, reject) {
-//         request.get(rainbowUrl + "/shares/delegator/" + addr).then(list => {
-//             resolve(list.data)
-//         })
-//     })
-// };
-// TransactionPagenation = function (addr, direction, pageNumber, pageSize, startTime, endTime, sort) {
-//     return new Promise(function (resolve, reject) {
-//         request.get(rainbowUrl + '/txs?address=' + addr + '&tx_type=' + direction +
-//             "&page=" + pageNumber + "&per_page=" + pageSize + "&start_time=" + startTime + "&end_time=" + endTime + "&sort=" + sort).then(list => {
-//
-//             resolve(list.data)
-//         })
-//     })
-// };
+Candidate = function (addr, pubkey) {
+    return new Promise(function (resolve, reject) {
+        request.get(gaiaUrl + '/query/stake/candidate/' + pubkey).then(list => {
+            this.Delegator(addr, pubkey, list.data.data).then(v => {
+                resolve(v);
+            })
+        })
+    })
+};
+Delegator = function (addr, pubkey, list) {
+    return new Promise(function (resolve, reject) {
+        request.get(gaiaUrl + '/query/stake/delegator/' + addr + '/' + pubkey).then(v => {
+            list.yShares = v.data.data.Shares;
+            resolve(list)
+        }).catch(error => {
+            list.yShares = 0;
+            resolve(list)
+        })
+    })
+};
+Transaction = function (addr) {
+    return new Promise(function (resolve, reject) {
+        request.get(bianjieUrl + '/tx/coin/' + addr).then(list => {
+            resolve(list.data)
+        })
+    })
+};
+GetAllAssets = function (addr) {
+    return new Promise(function (resolve, reject) {
+        request.get(rainbowUrl + "/shares/delegator/" + addr).then(list => {
+            resolve(list.data)
+        })
+    })
+};
+TransactionPagenation = function (addr, direction, pageNumber, pageSize, startTime, endTime, sort) {
+    return new Promise(function (resolve, reject) {
+        request.get(rainbowUrl + '/txs?address=' + addr + '&tx_type=' + direction +
+            "&page=" + pageNumber + "&per_page=" + pageSize + "&start_time=" + startTime + "&end_time=" + endTime + "&sort=" + sort).then(list => {
 
-// TransactionHash = function (hash) {
-//     return new Promise(function (resolve, reject) {
-//         request.get(gaiaUrl + '/tx/' + hash).then(list => {
-//             resolve(list.data)
-//         })
-//     })
-// };
-// TxStake = function (addr) {
-//     return new Promise(function (resolve, reject) {
-//         request.get(bianjieUrl + '/txs/stake?address=' + addr + "&page=1&size=100").then(list => {
-//             resolve(list.data)
-//         })
-//     })
-// };
+            resolve(list.data)
+        })
+    })
+};
+
+TransactionHash = function (hash) {
+    return new Promise(function (resolve, reject) {
+        request.get(gaiaUrl + '/tx/' + hash).then(list => {
+            resolve(list.data)
+        })
+    })
+};
+TxStake = function (addr) {
+    return new Promise(function (resolve, reject) {
+        request.get(bianjieUrl + '/txs/stake?address=' + addr + "&page=1&size=100").then(list => {
+            resolve(list.data)
+        })
+    })
+};
 
 getSequence = function (addr) {
     return new Promise(function (resolve, reject) {
