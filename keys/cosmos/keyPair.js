@@ -169,7 +169,7 @@ DelegatorShares = function(addr) {
     })
 };
 
-TxList = function(addr, page, perPage, type, startTime, endTime, sort, q, status) {
+TxList = function(addr,type, page, perPage,startTime, endTime, sort, q, status) {
     return new Promise(function (resolve, reject) {
         let args = new txList.TxListRequest();
         args.address = addr;
@@ -468,6 +468,7 @@ module.exports = {
     TransactionPagenation: TransactionPagenation,
     Validators: Validators,
     Validator: Validator,
+    TxList:TxList,
     DelegatorCandidateList: DelegatorCandidateList,
     IsValidAddress: IsValidAddress,
     IsValidPrivate: IsValidPrivate,
