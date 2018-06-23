@@ -156,7 +156,12 @@ TransactionPagenation = function (bk, address, direction,pageNumber, pageSize,st
             return CosmosKeyPair.TransactionPagenation(address, direction, pageNumber, pageSize,startTime,endTime,sort);
     }
 };
-
+TxList = function (bk, address, direction,pageNumber, pageSize,startTime,endTime,sort) {
+    switch (bk) {
+        case "cosmos":
+            return CosmosKeyPair.TransactionPagenation(address, direction, pageNumber, pageSize,startTime,endTime,sort);
+    }
+};
 /**
  * get transaction by hash
  * @param {string} bk: blockchain type
@@ -263,6 +268,7 @@ module.exports = {
     SendRawTransaction: SendRawTransaction,
     Balance: Balance,
     Init: Init,
+    TxList:TxList,
     Transaction: Transaction,
     GetAllAssets: GetAllAssets,
     TransactionPagenation: TransactionPagenation,
