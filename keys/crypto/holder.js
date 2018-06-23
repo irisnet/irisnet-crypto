@@ -159,7 +159,7 @@ TransactionPagenation = function (bk, address, direction,pageNumber, pageSize,st
 TxList = function (bk, address, direction,pageNumber, pageSize,startTime,endTime,sort) {
     switch (bk) {
         case "cosmos":
-            return CosmosKeyPair.TransactionPagenation(address, direction, pageNumber, pageSize,startTime,endTime,sort);
+            return CosmosKeyPair.TxList(address, direction, pageNumber, pageSize,startTime,endTime,sort);
     }
 };
 /**
