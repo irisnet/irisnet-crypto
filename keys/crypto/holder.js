@@ -211,7 +211,12 @@ IsValidPrivate = function (bk, privateKey) {
 Init = function (urlList) {
     CosmosKeyPair.Init(urlList);
 };
-
+DelegatorShares = function (bk, address) {
+    switch (bk) {
+        case "cosmos":
+            return CosmosKeyPair.DelegatorShares(address);
+    }
+};
 module.exports = {
     Create: Create,
     Recover: Recover,
@@ -226,4 +231,6 @@ module.exports = {
     Transaction: Transaction,
     IsValidAddress: IsValidAddress,
     IsValidPrivate: IsValidPrivate,
+    DelegatorShares: DelegatorShares,
+
 };
