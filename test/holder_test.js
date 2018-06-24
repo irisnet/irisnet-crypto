@@ -3,6 +3,7 @@ const chai = require('chai');
 const bech32 = require('bech32');
 const assert = chai.assert;
 const Bank = require("../keys/cosmos/x/bank");
+const Hex = require("../keys/hex");
 Holder.Init(
     {
         "gaia": 'http://192.168.150.111:8999',
@@ -18,6 +19,14 @@ describe('holder test', function () {
             let address = "1EC2E86065D5EF88A3ED65B8B3A43210FAD9C7B2"
             Holder.Balance("cosmos",address).then(result => {
                 console.log("Acc:" + JSON.stringify(result));
+            })
+        });
+    });
+
+    describe('Validators', function () {
+        it('Validators', function () {
+            Holder.Validators("cosmos").then(result => {
+                console.log(JSON.stringify(result));
             })
         });
     });
@@ -38,6 +47,53 @@ describe('holder test', function () {
                     "gas"  :gas
                 }
                 Holder.Transfer("cosmos",tx).then(result => {
+                    console.log("hash:" + result.hash);
+                } )
+            }
+
+        });
+    });
+
+    describe('Delegate', function () {
+        it('Delegate', function () {
+            let account = Holder.Import("cosmos", "93af640b13a89d643a5c5715a9347ab4a3272ef23ed97854b91b9619c8319df1049605b7d0014bc14d5630e34f688fda8b14d46bc8e917887d1bab28bbf475d8");
+            let amts = new Bank.Coin(10, "steak");
+            let fee = [new Bank.Coin(0, "iris")];
+            let gas = 200000;
+
+            if (account) {
+                let tx = {
+                    "fromAcc" : account,
+                    "to" :"1EC2E86065D5EF88A3ED65B8B3A43210FAD9C7B2",
+                    "amts" :amts,
+                    "fees" :fee,
+                    "gas"  :gas
+                }
+                Holder.Delegate("cosmos",tx).then(result => {
+                    console.log("hash:" + result.hash);
+                } )
+            }
+
+        });
+    });
+
+    describe('Unbond', function () {
+        it('Unbond', function () {
+            let account = Holder.Import("cosmos", "93af640b13a89d643a5c5715a9347ab4a3272ef23ed97854b91b9619c8319df1049605b7d0014bc14d5630e34f688fda8b14d46bc8e917887d1bab28bbf475d8");
+            // TODO
+            let shares = "1";
+            let fee = [new Bank.Coin(0, "iris")];
+            let gas = 200000;
+
+            if (account) {
+                let tx = {
+                    "fromAcc" : account,
+                    "to" :"1EC2E86065D5EF88A3ED65B8B3A43210FAD9C7B2",
+                    "amts" :shares,
+                    "fees" :fee,
+                    "gas"  :gas
+                }
+                Holder.Unbond("cosmos",tx).then(result => {
                     console.log("hash:" + result.hash);
                 } )
             }
@@ -115,6 +171,15 @@ describe('holder test', function () {
             let addrByte = bech32.toWords(Buffer.from("1EC2E86065D5EF88A3ED65B8B3A43210FAD9C7B2", 'hex'))
             let bech32Acc = bech32.encode("cosmosaccaddr",addrByte)
             assert.deepEqual(bech32Acc, "cosmosaccaddr1rmpwscr96hhc3gldvkut8fpjzradn3ajvrmlgd");
+        });
+        it('bech32 decode', function () {
+            let bech32Str = "cosmosaccaddr1rmpwscr96hhc3gldvkut8fpjzradn3ajvrmlgd"
+            let key = bech32.decode(bech32Str)
+            console.log(Hex.bytesToHex(bech32.fromWords(key.words)))
+        });
+        it('Recover', function () {
+            let account = Holder.Recover("cosmos", "wolf fat basic another cloth crucial bargain addict illness another plate erase garlic truck artist abandon", "english");
+            console.log(account)
         });
     });
 });

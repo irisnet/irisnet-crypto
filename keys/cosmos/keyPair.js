@@ -159,6 +159,30 @@ Transfer = function (tx) {
     });
 };
 
+Delegate = function (tx) {
+    return new Promise(function (resolve,reject) {
+        iris.Delegate(tx.fromAcc,tx.to,tx.amts,tx.fees,tx.gas).then(resp => {
+            resolve(resp)
+        })
+    });
+};
+
+Unbond = function (tx) {
+    return new Promise(function (resolve,reject) {
+        iris.Unbond(tx.fromAcc,tx.to,tx.amts,tx.fees,tx.gas).then(resp => {
+            resolve(resp)
+        })
+    });
+};
+
+Validators = function () {
+    return new Promise(function (resolve,reject) {
+        iris.Validators().then(resp => {
+            resolve(resp)
+        })
+    });
+};
+
 // Balance = function (addr) {
 //     return new Promise(function (resolve, reject) {
 //         let args = new commonBalance.BalanceRequest();
@@ -222,23 +246,23 @@ TxDetail = function(txHash) {
     });
 };
 
-Validators = function (addr, page, perPage, sort, q) {
-    return new Promise(function (resolve, reject) {
-        let args = new candidatelist.CandidateListRequest();
-        args.address = addr;
-        args.page = page;
-        args.perPage = perPage;
-        args.sort = sort;
-        args.q = q;
-		console.log(args)
-        irisClient.GetCandidateList(args, function (err, response) {
-            if (err) {
-                reject(err);
-            }
-            resolve(response);
-        })
-    })
-};
+// Validators = function (addr, page, perPage, sort, q) {
+//     return new Promise(function (resolve, reject) {
+//         let args = new candidatelist.CandidateListRequest();
+//         args.address = addr;
+//         args.page = page;
+//         args.perPage = perPage;
+//         args.sort = sort;
+//         args.q = q;
+// 		console.log(args)
+//         irisClient.GetCandidateList(args, function (err, response) {
+//             if (err) {
+//                 reject(err);
+//             }
+//             resolve(response);
+//         })
+//     })
+// };
 
 Validator = function (addr, pubKey) {
     return new Promise(function (resolve, reject) {
@@ -493,4 +517,6 @@ module.exports = {
     IsValidAddress: IsValidAddress,
     IsValidPrivate: IsValidPrivate,
     Transfer: Transfer,
+    Delegate: Delegate,
+    Unbond: Unbond,
 };
