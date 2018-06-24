@@ -115,6 +115,22 @@ Sign = function (bk, tx, privateKey) {
     }
 };
 
+Transfer = function(bk, tx,privateKey){
+    switch (bk) {
+        case "cosmos":
+            return CosmosKeyPair.Transfer(tx)
+        case "ethermint":
+            let Ether = new BigNumber(10e+17);
+            let rawTx = {
+                gasPrice: tx.fees,
+                value: new BigNumber(tx.count).times(Ether),
+                gasLimit: 21000,
+                to: tx.to
+            };
+            return EthermintKeyPair.Sign(rawTx, privateKey);
+    }
+}
+
 /**
  * send signed tx
  * @param {string} bk: blockchain type
@@ -274,4 +290,5 @@ module.exports = {
     TransactionPagenation: TransactionPagenation,
     IsValidAddress: IsValidAddress,
     IsValidPrivate: IsValidPrivate,
+    Transfer: Transfer,
 };

@@ -45,6 +45,8 @@ let chainConnection = thrift.createXHRConnection("47.104.155.125", "9081", {path
 });
 let chainClient = thrift.createClient(chainService, chainConnection);
 let irisClient = thrift.createClient(irisService, irisConnection);
+
+let iris;
 //algo must be a supported algorithm now: ed25519, secp256k1
 Create = function (secret, algo) {
     let pub;
@@ -143,16 +145,32 @@ Sign = function (tx, privateKey) {
 
 Balance = function (addr) {
     return new Promise(function (resolve, reject) {
-        let args = new commonBalance.BalanceRequest();
-        args.address = addr;
-        chainClient.GetBalance(args, function (err, response) {
-            if (err) {
-                reject(err);
-            }
-            resolve(response)
-        });
+        iris.QueryAccount(addr).then(info => {
+            resolve(info.value.coins)
+        })
     });
 };
+
+Transfer = function (tx) {
+    return new Promise(function (resolve,reject) {
+        iris.Transfer(tx.fromAcc,tx.to,tx.amts,tx.fees,tx.gas).then(resp => {
+            resolve(resp)
+        })
+    });
+};
+
+// Balance = function (addr) {
+//     return new Promise(function (resolve, reject) {
+//         let args = new commonBalance.BalanceRequest();
+//         args.address = addr;
+//         chainClient.GetBalance(args, function (err, response) {
+//             if (err) {
+//                 reject(err);
+//             }
+//             resolve(response)
+//         });
+//     });
+// };
 
 DelegatorShares = function(addr) {
     return new Promise(function (resolve, reject) {
@@ -453,6 +471,7 @@ Init = function (url) {
     client = require('cosmos-sdk')(url.gaia);
     apiServerIP = url.apiServerIP;
     apiServerPort = url.apiServerPort;
+    iris = require('./client/iris')(url.iris,"fuxi");
 };
 
 module.exports = {
@@ -473,4 +492,5 @@ module.exports = {
     DelegatorCandidateList: DelegatorCandidateList,
     IsValidAddress: IsValidAddress,
     IsValidPrivate: IsValidPrivate,
+    Transfer: Transfer,
 };

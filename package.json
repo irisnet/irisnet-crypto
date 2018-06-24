@@ -37,7 +37,9 @@
     "thrift": "git+https://github.com/shineabel/thrift.git",
     "web3": "git+https://github.com/ethereum/web3.js.git",
     "blockchain-rpc": "git+https://github.com/irisnet/blockchain-rpc.git#develop",
-    "irishub-rpc": "git+https://github.com/irisnet/irishub-rpc.git#develop"
+    "irishub-rpc": "git+https://github.com/irisnet/irishub-rpc.git#develop",
+    "bech32":"^1.1.3",
+    "base64-node":"^1.0.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",
