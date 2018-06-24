@@ -213,10 +213,10 @@ Balance = function (bk, address) {
  * @returns {*}
  * @constructor
  */
-Validators = function (bk, address) {
+Validators = function (bk, address, page, perPage, sort, q) {
     switch (bk) {
         case "cosmos":
-            return CosmosKeyPair.Validators(address);
+            return CosmosKeyPair.Validators(address,page, perPage, sort, q);
     }
 };
 

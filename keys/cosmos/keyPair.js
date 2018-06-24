@@ -33,9 +33,8 @@ let txDetail = require('blockchain-rpc/codegen/gen-nodejs/model_txDetail_types')
 let transport = thrift.TBufferedTransport;
 let protocol = thrift.TJSONProtocol;
 let irisConnection = thrift.createXHRConnection("47.104.155.125", "9081",
-    {path: "/irishub",
-        timeout:2000,
-        timeoutHandler:function(){console.log("timeout now")}
+    {path: "/irishub"
+        
     }, {
         transport: transport,
         protocol: protocol
@@ -213,6 +212,7 @@ Validators = function (addr, page, perPage, sort, q) {
         args.perPage = perPage;
         args.sort = sort;
         args.q = q;
+		console.log(args)
         irisClient.GetCandidateList(args, function (err, response) {
             if (err) {
                 reject(err);
