@@ -473,4 +473,6 @@ module.exports = {
     DelegatorCandidateList: DelegatorCandidateList,
     IsValidAddress: IsValidAddress,
     IsValidPrivate: IsValidPrivate,
+    DelegatorShares: DelegatorShares,
+
 };

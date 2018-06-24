@@ -256,7 +256,12 @@ Init = function (urlList) {
     CosmosKeyPair.Init(urlList);
     EthermintKeyPair.Init(urlList);
 };
-
+DelegatorShares = function (bk, address) {
+    switch (bk) {
+        case "cosmos":
+            return CosmosKeyPair.DelegatorShares(address);
+    }
+};
 module.exports = {
     Create: Create,
     Recover: Recover,
@@ -274,4 +279,6 @@ module.exports = {
     TransactionPagenation: TransactionPagenation,
     IsValidAddress: IsValidAddress,
     IsValidPrivate: IsValidPrivate,
+    DelegatorShares: DelegatorShares,
+
 };
