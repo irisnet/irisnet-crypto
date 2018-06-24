@@ -130,25 +130,26 @@ let StdSignature = class StdSignature{
 }
 
 let StdTx = class StdTx{
-    constructor(msg,fee,signatures){
-        this.msg = msg;
+    constructor(msg,fee,signatures,type){
+        this.msg = JSON.stringify(msg);
         this.fee = fee;
         this.signatures = signatures
+        this.type = type
     }
 }
 
-let BuildTx = function(acc,toAddress,coins,fee,gas){
+let BuildAndSignTx = function(acc,toAddress,coins,fee,gas){
     var stdFee = new StdFee(fee,gas)
     var msg = new MsgSend(acc.address,toAddress,coins);
     var signMsg = new StdSignMsg(acc.chain_id,acc.account_number,acc.sequence,stdFee,msg)
     var signbyte = privKey.Sign(acc.private_key,signMsg.Bytes())
     var signs = [new StdSignature(Hex.hexToBytes(acc.public_key),signbyte,acc.account_number,acc.sequence)]
-    var stdTx = new StdTx(signMsg.msg,signMsg.fee,signs)
+    var stdTx = new StdTx(signMsg.msg,signMsg.fee,signs,"transfer")
     return stdTx
 }
 
 module.exports = {
-    BuildTx:BuildTx,
+    BuildAndSignTx:BuildAndSignTx,
     Coin:Coin,
     Input:Input,
     Output:Output,
