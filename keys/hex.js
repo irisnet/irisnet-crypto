@@ -1,6 +1,7 @@
 module.exports = {
     hexToBytes: hexToBytes,
-    bytesToHex: bytesToHex
+    bytesToHex: bytesToHex,
+    stringToHex :stringToHex
 };
 
 function hexToBytes(hex) {
@@ -18,4 +19,12 @@ function bytesToHex(bytes) {
         hex.push((bytes[i] & 0xF).toString(16));
     }
     return hex.join("");
+}
+
+function stringToHex(str){
+    let bytes = [];
+    for(var i = 0; i < str.length; i++){
+        bytes.push(str.charCodeAt(i).toString(16));
+    }
+    return bytes.join("");
 }

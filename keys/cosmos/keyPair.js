@@ -10,6 +10,7 @@ let client;
 let gaiaUrl;
 let bianjieUrl;
 let rainbowUrl;
+let iris;
 let MODEL = require('./client/model');
 const request = require('axios')
 //algo must be a supported algorithm now: ed25519, secp256k1
@@ -100,14 +101,13 @@ Import = function (secret, algo) {
 
 Balance = function (addr) {
     return new Promise(function (resolve, reject) {
-        client.queryAccount(addr).then(info => {
-            resolve(info.data.coins)
-        }).catch(e => {
-            reject('')
+        iris.QueryAccount(addr).then(info => {
+            resolve(info.value.coins)
         })
     });
 };
 
+// TODO delete
 Sign = function (tx, privateKey) {
 
     let amts = [new MODEL.Coin(tx.count, tx.type)];
@@ -115,6 +115,14 @@ Sign = function (tx, privateKey) {
     return new Promise(function (resolve) {
         this.transfer(tx, amts, fee, privateKey).then(model => {
             resolve(model)
+        })
+    });
+};
+
+Transfer = function (tx) {
+    return new Promise(function (resolve,reject) {
+        iris.Transfer(tx.fromAcc,tx.to,tx.amts,tx.fees,tx.gas).then(resp => {
+            resolve(resp)
         })
     });
 };
@@ -196,6 +204,7 @@ TxStake=function (addr) {
     })
 }
 
+// TODO delete
 transfer = function (tx, amts, fees, privateKey) {
     return new Promise(function (resolve, reject) {
         //获取交易序号
@@ -257,6 +266,7 @@ transfer = function (tx, amts, fees, privateKey) {
     });
 
 };
+// TODO delete
 ByteTx = function (tx, resolve, privateKey) {
 
     client.request("POST", "/byteTx", JSON.stringify(tx)).then(function (signTx) {
@@ -288,6 +298,7 @@ Init = function (url) {
     bianjieUrl=url.bianjie;
     rainbowUrl = url.rainbow;
     client = require('cosmos-sdk')(url.gaia);
+    iris = require('./client/iris')(url.iris,"fuxi");
 };
 
 module.exports = {
@@ -305,4 +316,5 @@ module.exports = {
     Validators: Validators,
     IsValidAddress: IsValidAddress,
     IsValidPrivate: IsValidPrivate,
+    Transfer: Transfer,
 };
