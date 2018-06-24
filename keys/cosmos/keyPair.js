@@ -212,7 +212,6 @@ Validators = function (addr, page, perPage, sort, q) {
         args.perPage = perPage;
         args.sort = sort;
         args.q = q;
-		console.log(args)
         irisClient.GetCandidateList(args, function (err, response) {
             if (err) {
                 reject(err);
@@ -253,19 +252,6 @@ DelegatorCandidateList = function (addr, page, perPage, sort, q) {
         })
     });
 };
-getSequence = function (addr) {
-    return new Promise(function (resolve, reject) {
-        let args = new sequence.SequenceRequest();
-        args.address = addr;
-        let nonce = 0;
-        chainClient.GetSequence(args, function (err, response) {
-            if (!err) {
-                nonce = parseInt(response.sequence.toString());
-            }
-            resolve(nonce);
-        });
-    })
-}
 
 transfer = function (tx, privateKey) {
     return new Promise(function (resolve, reject) {
@@ -332,22 +318,7 @@ Transaction = function (addr) {
         })
     })
 };
-GetAllAssets = function (addr) {
-    return new Promise(function (resolve, reject) {
-        request.get(rainbowUrl + "/shares/delegator/" + addr).then(list => {
-            resolve(list.data)
-        })
-    })
-};
-TransactionPagenation = function (addr, direction, pageNumber, pageSize, startTime, endTime, sort) {
-    return new Promise(function (resolve, reject) {
-        request.get(rainbowUrl + '/txs?address=' + addr + '&tx_type=' + direction +
-            "&page=" + pageNumber + "&per_page=" + pageSize + "&start_time=" + startTime + "&end_time=" + endTime + "&sort=" + sort).then(list => {
 
-            resolve(list.data)
-        })
-    })
-};
 
 TransactionHash = function (hash) {
     return new Promise(function (resolve, reject) {
@@ -379,57 +350,6 @@ getSequence = function (addr) {
     })
 };
 
-transfer = function (tx, privateKey) {
-    return new Promise(function (resolve, reject) {
-        //获取交易序号
-        this.getSequence(tx.from).then(nonce => {
-            // build tx
-            let txArgs = new buildTx.BuildTxRequest();
-            txArgs.sequence = nonce + 1;
-            txArgs.amount = [new common.Coin({amount: tx.count, denom: tx.type})];
-            txArgs.fee = new common.Fee({amount: tx.fees, denom: "fermion"});
-            if (tx.typeGate === 'delegate') {
-                txArgs.receiver = new common.Address({addr: tx.pub_key});
-            } else {
-                txArgs.receiver = new common.Address({addr: tx.to});
-            }
-            txArgs.sender = new common.Address({addr: tx.from});
-            chainClient.BuildTx(txArgs, function (err, response) {
-                console.log(err);
-                console.log(response);
-                if (err) {
-                    reject(err);
-                }
-                let PostTx = response.ext;
-                let signTx = response.data;
-                PostTx.data.signature.Sig = new MODEL.Sig("ed25519", Hex.bytesToHex(Nacl.sign.detached(new Uint8Array(Hex.hexToBytes(signTx)), new Uint8Array(privateKey))));
-                let key = Nacl.sign.keyPair.fromSecretKey(new Uint8Array(privateKey));
-                let pub = key.publicKey;
-                PostTx.data.signature.Pubkey = new MODEL.Pubkey("ed25519", Hex.bytesToHex(pub));
-                chainClient.PostTx(JSON.stringify(tx), function (err, response) {
-                    if (err) {
-                        reject(err);
-                    }
-                    resolve(response);
-                })
-            })
-        })
-
-
-    });
-};
-
-// ByteTx = function (tx, resolve, privateKey) {
-//
-//     client.request("POST", "/byteTx", JSON.stringify(tx)).then(function (signTx) {
-//         tx = tx.tx;
-//         tx.data.signature.Sig = new MODEL.Sig("ed25519", Hex.bytesToHex(Nacl.sign.detached(new Uint8Array(Hex.hexToBytes(signTx)), new Uint8Array(privateKey))));
-//         let key = Nacl.sign.keyPair.fromSecretKey(new Uint8Array(privateKey));
-//         let pub = key.publicKey;
-//         tx.data.signature.Pubkey = new MODEL.Pubkey("ed25519", Hex.bytesToHex(pub));
-//         client.postTx(JSON.stringify(tx)).then(result => resolve(result));
-//     });
-// };
 
 /**
  * @return {boolean}
@@ -465,8 +385,6 @@ module.exports = {
     Init: Init,
     TransactionHash: TransactionHash,
     Transaction: Transaction,
-    GetAllAssets: GetAllAssets,
-    TransactionPagenation: TransactionPagenation,
     Validators: Validators,
     Validator: Validator,
     TxList:TxList,

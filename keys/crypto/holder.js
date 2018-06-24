@@ -3,7 +3,6 @@ let Nacl = require("tweetnacl");
 let Hex = require("../hex");
 
 let CosmosKeyPair = require("../cosmos/keyPair");
-let EthermintKeyPair = require("../ethermint/keyPair");
 
 const BigNumber = require('bignumber.js');
 /**
@@ -77,9 +76,6 @@ Import = function (bk, privateKey) {
         case "cosmos":
             keyPair = CosmosKeyPair.Import(privateKey);
             break;
-        case "ethermint":
-            keyPair = EthermintKeyPair.Import(privateKey);
-            break;
     }
     if (keyPair) {
         return {
@@ -103,33 +99,9 @@ Sign = function (bk, tx, privateKey) {
     switch (bk) {
         case "cosmos":
             return CosmosKeyPair.Sign(tx, privateKey);
-        case "ethermint":
-            let Ether = new BigNumber(10e+17);
-            let rawTx = {
-                gasPrice: tx.fees,
-                value: new BigNumber(tx.count).times(Ether),
-                gasLimit: 21000,
-                to: tx.to
-            };
-            return EthermintKeyPair.Sign(rawTx, privateKey);
     }
 };
 
-/**
- * send signed tx
- * @param {string} bk: blockchain type
- * @param {byte} serializedTx
- * @returns {*}
- * @constructor
- */
-SendRawTransaction = function (bk, serializedTx) {
-    switch (bk) {
-        case "cosmos":
-            break;
-        case "ethermint":
-            return EthermintKeyPair.SendRawTransaction(serializedTx);
-    }
-};
 
 /**
  * get transaction record
@@ -144,18 +116,8 @@ Transaction = function (bk, address) {
             return CosmosKeyPair.Transaction(address);
     }
 };
-GetAllAssets = function (bk, address) {
-    switch (bk) {
-        case "cosmos":
-            return CosmosKeyPair.GetAllAssets(address);
-    }
-};
-TransactionPagenation = function (bk, address, direction,pageNumber, pageSize,startTime,endTime,sort) {
-    switch (bk) {
-        case "cosmos":
-            return CosmosKeyPair.TransactionPagenation(address, direction, pageNumber, pageSize,startTime,endTime,sort);
-    }
-};
+
+
 TxList = function (bk, address, direction,pageNumber, pageSize,startTime,endTime,sort) {
     switch (bk) {
         case "cosmos":
@@ -201,8 +163,6 @@ Balance = function (bk, address) {
     switch (bk) {
         case "cosmos":
             return CosmosKeyPair.Balance(address);
-        case "ethermint":
-            return EthermintKeyPair.Balance(address);
     }
 };
 
@@ -231,8 +191,6 @@ IsValidAddress = function (bk, address) {
     switch (bk) {
         case "cosmos":
             return CosmosKeyPair.IsValidAddress(address);
-        case "ethermint":
-            return EthermintKeyPair.IsValidAddress(address);
     }
 };
 
@@ -247,14 +205,11 @@ IsValidPrivate = function (bk, privateKey) {
     switch (bk) {
         case "cosmos":
             return CosmosKeyPair.IsValidPrivate(privateKey);
-        case "ethermint":
-            return EthermintKeyPair.IsValidPrivate(privateKey);
     }
 };
 
 Init = function (urlList) {
     CosmosKeyPair.Init(urlList);
-    EthermintKeyPair.Init(urlList);
 };
 
 module.exports = {
@@ -265,13 +220,10 @@ module.exports = {
     TxStake: TxStake,
     TransactionHash: TransactionHash,
     Validators: Validators,
-    SendRawTransaction: SendRawTransaction,
     Balance: Balance,
     Init: Init,
     TxList:TxList,
     Transaction: Transaction,
-    GetAllAssets: GetAllAssets,
-    TransactionPagenation: TransactionPagenation,
     IsValidAddress: IsValidAddress,
     IsValidPrivate: IsValidPrivate,
 };
