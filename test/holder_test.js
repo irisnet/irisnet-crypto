@@ -1,15 +1,50 @@
 const Holder = require("../keys/crypto/holder");
 const chai = require('chai');
+const bech32 = require('bech32');
 const assert = chai.assert;
+const Bank = require("../keys/cosmos/x/bank");
 Holder.Init(
     {
         "gaia": 'http://192.168.150.111:8999',
         "tendermint": "http://192.168.150.138:8080/tendermint",
-        "ethermint": "http://192.168.150.125:8555"
+        "ethermint": "http://192.168.150.125:8555",
+        "iris": "http://localhost:1317"
     }
 );
 
 describe('holder test', function () {
+    describe('Balance', function () {
+        it('Balance', function () {
+            let address = "1EC2E86065D5EF88A3ED65B8B3A43210FAD9C7B2"
+            Holder.Balance("cosmos",address).then(result => {
+                console.log("Acc:" + JSON.stringify(result));
+            })
+        });
+    });
+
+    describe('Transfer', function () {
+        it('Transfer', function () {
+            let account = Holder.Import("cosmos", "625f0968c78d95857629ea4b4cbafe2f3f949a92e82dda09b5fbe9fbc70d50cc62f3621a751f0431b69b965d41ec480f1b9a4b6f14a1f6c0d17158281a980f74");
+            let amts = [new Bank.Coin(10, "iris")];
+            let fee = [new Bank.Coin(0, "iris")];
+            let gas = 200000;
+
+            if (account) {
+                let tx = {
+                    "fromAcc" : account,
+                    "to" :"3A058A8B5468AE0EA2D2517CE3BAFDD281E50C2F",
+                    "amts" :amts,
+                    "fees" :fee,
+                    "gas"  :gas
+                }
+                Holder.Transfer("cosmos",tx).then(result => {
+                    console.log("hash:" + result.hash);
+                } )
+            }
+
+        });
+    });
+
     describe('account create and recover', function () {
         it('cosmos create and recover', function () {
             let account = Holder.Create("cosmos", "ed25519", "english");
@@ -73,6 +108,13 @@ describe('holder test', function () {
         it('ethermint private key isValid false', function () {
             let isValid = Holder.IsValidPrivate("ethermint", "1766825d2b29f8702cac708e0ba01bf0565e0b7a438cdd657ca64953d02b64ff4");
             assert.deepEqual(isValid, false);
+        });
+    });
+    describe('bech32 is Valid', function () {
+        it('bech32 encode', function () {
+            let addrByte = bech32.toWords(Buffer.from("1EC2E86065D5EF88A3ED65B8B3A43210FAD9C7B2", 'hex'))
+            let bech32Acc = bech32.encode("cosmosaccaddr",addrByte)
+            assert.deepEqual(bech32Acc, "cosmosaccaddr1rmpwscr96hhc3gldvkut8fpjzradn3ajvrmlgd");
         });
     });
 });
