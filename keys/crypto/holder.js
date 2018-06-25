@@ -102,84 +102,6 @@ Sign = function (bk, tx, privateKey) {
     }
 };
 
-
-/**
- * get transaction record
- * @param {string} bk: blockchain type
- * @param {string} address: account address(hex)
- * @returns []
- * @constructor
- */
-Transaction = function (bk, address) {
-    switch (bk) {
-        case "cosmos":
-            return CosmosKeyPair.Transaction(address);
-    }
-};
-
-
-TxList = function (bk, address, direction,pageNumber, pageSize,startTime,endTime,sort) {
-    switch (bk) {
-        case "cosmos":
-            return CosmosKeyPair.TxList(address, direction, pageNumber, pageSize,startTime,endTime,sort);
-    }
-};
-/**
- * get transaction by hash
- * @param {string} bk: blockchain type
- * @param {string} hash: transaction hash
- * @returns {*}
- * @constructor
- */
-TransactionHash = function (bk, hash) {
-    switch (bk) {
-        case "cosmos":
-            return CosmosKeyPair.TransactionHash(hash);
-    }
-};
-
-/**
- * get stake record ,查询委托记录
- * @param {string} bk: blockchain type
- * @param {string} address: account address(hex)
- * @returns {*}
- * @constructor
- */
-TxStake = function (bk, address) {
-    switch (bk) {
-        case "cosmos":
-            return CosmosKeyPair.TxStake(address);
-    }
-};
-
-/**
- * get account balance
- * @param {string} bk: blockchain type
- * @param {string} address: account address(hex)
- * @returns {*}
- * @constructor
- */
-Balance = function (bk, address) {
-    switch (bk) {
-        case "cosmos":
-            return CosmosKeyPair.Balance(address);
-    }
-};
-
-/**
- * get all validators
- * @param {string} bk: blockchain type
- * @param {string} address: account address(hex)
- * @returns {*}
- * @constructor
- */
-Validators = function (bk, address, page, perPage, sort, q) {
-    switch (bk) {
-        case "cosmos":
-            return CosmosKeyPair.Validators(address,page, perPage, sort, q);
-    }
-};
-
 /**
  * validate address
  * @param {string} bk: blockchain type
@@ -217,13 +139,7 @@ module.exports = {
     Recover: Recover,
     Import: Import,
     Sign: Sign,
-    TxStake: TxStake,
-    TransactionHash: TransactionHash,
-    Validators: Validators,
-    Balance: Balance,
     Init: Init,
-    TxList:TxList,
-    Transaction: Transaction,
     IsValidAddress: IsValidAddress,
     IsValidPrivate: IsValidPrivate,
 };

@@ -14,37 +14,7 @@ let apiServerIP;
 let apiServerPort;
 let MODEL = require('./client/model');
 const request = require('axios');
-let thrift = require('thrift');
-let irisService = require('irishub-rpc/codegen/gen-nodejs/IRISHubService');
-let chainService = require('blockchain-rpc/codegen/gen-nodejs/BlockChainService');
-let candidatelist = require('irishub-rpc/codegen/gen-nodejs/model_candidateList_types');
-let candidateDetail = require('irishub-rpc/codegen/gen-nodejs/model_candidateDetail_types');
-let delegatorCandidate = require('irishub-rpc/codegen/gen-nodejs/model_delegatorCandidateList_types');
-let delegatorShares = require('irishub-rpc/codegen/gen-nodejs/model_totalShare_types');
 
-let sequence = require('blockchain-rpc/codegen/gen-nodejs/model_sequence_types');
-let buildTx = require('blockchain-rpc/codegen/gen-nodejs/model_buildTx_types');
-let common = require('blockchain-rpc/codegen/gen-nodejs/model_common_types');
-
-let commonBalance = require('blockchain-rpc/codegen/gen-nodejs/model_balance_types');
-let txList = require('blockchain-rpc/codegen/gen-nodejs/model_txList_types');
-let txDetail = require('blockchain-rpc/codegen/gen-nodejs/model_txDetail_types');
-
-let transport = thrift.TBufferedTransport;
-let protocol = thrift.TJSONProtocol;
-let irisConnection = thrift.createXHRConnection("47.104.155.125", "9081",
-    {path: "/irishub"
-        
-    }, {
-        transport: transport,
-        protocol: protocol
-    });
-let chainConnection = thrift.createXHRConnection("47.104.155.125", "9081", {path: "/blockchain"}, {
-    transport: transport,
-    protocol: protocol
-});
-let chainClient = thrift.createClient(chainService, chainConnection);
-let irisClient = thrift.createClient(irisService, irisConnection);
 //algo must be a supported algorithm now: ed25519, secp256k1
 Create = function (secret, algo) {
     let pub;
@@ -141,117 +111,6 @@ Sign = function (tx, privateKey) {
     });
 };
 
-Balance = function (addr) {
-    return new Promise(function (resolve, reject) {
-        let args = new commonBalance.BalanceRequest();
-        args.address = addr;
-        chainClient.GetBalance(args, function (err, response) {
-            if (err) {
-                reject(err);
-            }
-            resolve(response)
-        });
-    });
-};
-
-DelegatorShares = function(addr) {
-    return new Promise(function (resolve, reject) {
-        let args = new delegatorShares.TotalShareRequest();
-        args.address = addr;
-
-        irisClient.GetDelegatorTotalShares(args, function (err, response) {
-            if (err) {
-                reject(err);
-            }
-            resolve(response);
-        })
-    })
-};
-
-TxList = function(addr,type, page, perPage,startTime, endTime, sort, q, status) {
-    return new Promise(function (resolve, reject) {
-        let args = new txList.TxListRequest();
-        args.address = addr;
-        args.page = page;
-        args.perPage = perPage;
-        args.type = type;
-        args.startTime = startTime;
-        args.endTime = endTime;
-        args.sort = sort;
-        args.q = q;
-        args.status = status;
-
-        chainClient.GetTxList(args, function (err, response) {
-            if (err) {
-                reject(err);
-            }
-            resolve(response);
-        })
-    });
-};
-
-TxDetail = function(txHash) {
-    return new Promise(function (resolve, reject) {
-        let args = new txDetail.TxDetailRequest();
-        args.txHash = txHash;
-
-        chainClient.GetTxDetail(args, function (err, res) {
-            if (err) {
-                reject(err);
-            }
-            resolve(res);
-        })
-    });
-};
-
-Validators = function (addr, page, perPage, sort, q) {
-    return new Promise(function (resolve, reject) {
-        let args = new candidatelist.CandidateListRequest();
-        args.address = addr;
-        args.page = page;
-        args.perPage = perPage;
-        args.sort = sort;
-        args.q = q;
-        irisClient.GetCandidateList(args, function (err, response) {
-            if (err) {
-                reject(err);
-            }
-            resolve(response);
-        })
-    })
-};
-
-Validator = function (addr, pubKey) {
-    return new Promise(function (resolve, reject) {
-        let args = new candidateDetail.CandidateDetailRequest();
-        args.address = addr;
-        args.pubKey = pubKey;
-
-        irisClient.GetCandidateDetail(args, function (err, response) {
-            if (err) {
-                reject(err);
-            }
-            resolve(response);
-        })
-    });
-};
-
-DelegatorCandidateList = function (addr, page, perPage, sort, q) {
-    return new Promise(function (resolve, reject) {
-        let args = new delegatorCandidate.DelegatorCandidateListRequest();
-        args.address = addr;
-        args.page = page;
-        args.perPage = perPage;
-        args.sort = sort;
-        args.q = q;
-        irisClient.GetDelegatorCandidateList(args, function (err, response) {
-            if (err) {
-                reject(err);
-            }
-            resolve(response);
-        })
-    });
-};
 
 transfer = function (tx, privateKey) {
     return new Promise(function (resolve, reject) {
@@ -291,49 +150,6 @@ transfer = function (tx, privateKey) {
         })
     });
 };
-Candidate = function (addr, pubkey) {
-    return new Promise(function (resolve, reject) {
-        request.get(gaiaUrl + '/query/stake/candidate/' + pubkey).then(list => {
-            this.Delegator(addr, pubkey, list.data.data).then(v => {
-                resolve(v);
-            })
-        })
-    })
-};
-Delegator = function (addr, pubkey, list) {
-    return new Promise(function (resolve, reject) {
-        request.get(gaiaUrl + '/query/stake/delegator/' + addr + '/' + pubkey).then(v => {
-            list.yShares = v.data.data.Shares;
-            resolve(list)
-        }).catch(error => {
-            list.yShares = 0;
-            resolve(list)
-        })
-    })
-};
-Transaction = function (addr) {
-    return new Promise(function (resolve, reject) {
-        request.get(bianjieUrl + '/tx/coin/' + addr).then(list => {
-            resolve(list.data)
-        })
-    })
-};
-
-
-TransactionHash = function (hash) {
-    return new Promise(function (resolve, reject) {
-        request.get(gaiaUrl + '/tx/' + hash).then(list => {
-            resolve(list.data)
-        })
-    })
-};
-TxStake = function (addr) {
-    return new Promise(function (resolve, reject) {
-        request.get(bianjieUrl + '/txs/stake?address=' + addr + "&page=1&size=100").then(list => {
-            resolve(list.data)
-        })
-    })
-};
 
 getSequence = function (addr) {
     return new Promise(function (resolve, reject) {
@@ -366,7 +182,6 @@ IsValidPrivate = function (privateKey) {
 };
 
 Init = function (url) {
-    console.log(url)
     gaiaUrl = url.gaia;
     bianjieUrl = url.bianjie;
     rainbowUrl = url.rainbow;
@@ -379,16 +194,8 @@ module.exports = {
     Create: Create,
     Recover: Recover,
     Import: Import,
-    Balance: Balance,
     Sign: Sign,
-    TxStake: TxStake,
     Init: Init,
-    TransactionHash: TransactionHash,
-    Transaction: Transaction,
-    Validators: Validators,
-    Validator: Validator,
-    TxList:TxList,
-    DelegatorCandidateList: DelegatorCandidateList,
     IsValidAddress: IsValidAddress,
     IsValidPrivate: IsValidPrivate,
 };
