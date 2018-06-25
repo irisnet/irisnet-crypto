@@ -64,7 +64,7 @@ describe('holder test', function () {
             if (account) {
                 let tx = {
                     "fromAcc" : account,
-                    "to" :"1EC2E86065D5EF88A3ED65B8B3A43210FAD9C7B2",
+                    "to" :"3A058A8B5468AE0EA2D2517CE3BAFDD281E50C2F",
                     "amts" :amts,
                     "fees" :fee,
                     "gas"  :gas
