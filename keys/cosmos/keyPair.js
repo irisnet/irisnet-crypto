@@ -197,7 +197,6 @@ module.exports = {
     Sign: Sign,
     Init: Init,
     IsValidAddress: IsValidAddress,
-    IsValidPrivate: IsValidPrivate,
-    DelegatorShares: DelegatorShares,
+    IsValidPrivate: IsValidPrivate
 
 };
