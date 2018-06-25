@@ -64,8 +64,8 @@ Create = function (secret, algo) {
 };
 
 Recover = function (secret) {
-    let type = secret.slice(0, 1)[0];
-    secret = secret.slice(1, secret.length);
+    let type = secret.slice(secret.length - 1, secret.length)[0];
+    secret = secret.slice(0, secret.length - 1);
 
     let pub;
     let addr;
@@ -137,23 +137,27 @@ transfer = function (tx, privateKey) {
             txArgs.amount = [new common.Coin({amount: tx.count, denom: tx.type})];
             txArgs.fee = new common.Fee({amount: tx.fees, denom: "fermion"});
             if (tx.typeGate === 'delegate') {
-                txArgs.receiver = new common.Address({addr: tx.pub_key});
+                txArgs.receiver = new common.Address({addr: tx.pub_key, app:"sigs"});
             } else {
-                txArgs.receiver = new common.Address({addr: tx.to});
+                txArgs.receiver = new common.Address({addr: tx.to, app:"sigs"});
             }
-            txArgs.sender = new common.Address({addr: tx.from});
+            txArgs.sender = new common.Address({addr: tx.from, app: "sigs"});
             txArgs.txType = tx.typeGate;
             chainClient.BuildTx(txArgs, function (err, response) {
                 if (err) {
                     reject(err);
                 }
                 let readyTx = JSON.parse(response.ext.toString());
-                let signTx = Hex.bytesToHex(response.data);
+                console.log(response.ext.toString());
+                console.log(response.data.toString());
+                let signTx = response.data.toString();
+                signTx = signTx.replace(/"/g,"");
                 readyTx.data.signature.Sig = new MODEL.Sig("ed25519", Hex.bytesToHex(Nacl.sign.detached(new Uint8Array(Hex.hexToBytes(signTx)), new Uint8Array(privateKey))));
                 let key = Nacl.sign.keyPair.fromSecretKey(new Uint8Array(privateKey));
                 let pub = key.publicKey;
                 readyTx.data.signature.Pubkey = new MODEL.Pubkey("ed25519", Hex.bytesToHex(pub));
                 let postTx = new postTxTypes.PostTxRequest();
+                console.log(JSON.stringify(readyTx));
                 postTx.tx = new Buffer(JSON.stringify(readyTx));
                 chainClient.PostTx(postTx, function (err, response) {
                     if (err) {
