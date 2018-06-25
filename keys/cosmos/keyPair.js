@@ -16,6 +16,7 @@ let MODEL = require('./client/model');
 const request = require('axios');
 
 let thrift = require('thrift');
+let chainService = require('blockchain-rpc/codegen/gen-nodejs/BlockChainService');
 
 let sequence = require('blockchain-rpc/codegen/gen-nodejs/model_sequence_types');
 let buildTx = require('blockchain-rpc/codegen/gen-nodejs/model_buildTx_types');
