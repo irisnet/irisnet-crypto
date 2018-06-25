@@ -15,6 +15,21 @@ let apiServerPort;
 let MODEL = require('./client/model');
 const request = require('axios');
 
+let thrift = require('thrift');
+
+let sequence = require('blockchain-rpc/codegen/gen-nodejs/model_sequence_types');
+let buildTx = require('blockchain-rpc/codegen/gen-nodejs/model_buildTx_types');
+let common = require('blockchain-rpc/codegen/gen-nodejs/model_common_types');
+
+let transport = thrift.TBufferedTransport;
+let protocol = thrift.TJSONProtocol;
+
+let chainConnection = thrift.createXHRConnection("47.104.155.125", "9081", {path: "/blockchain"}, {
+    transport: transport,
+    protocol: protocol
+});
+let chainClient = thrift.createClient(chainService, chainConnection);
+
 //algo must be a supported algorithm now: ed25519, secp256k1
 Create = function (secret, algo) {
     let pub;
