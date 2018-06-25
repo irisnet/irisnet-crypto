@@ -198,4 +198,6 @@ module.exports = {
     Init: Init,
     IsValidAddress: IsValidAddress,
     IsValidPrivate: IsValidPrivate,
+    DelegatorShares: DelegatorShares,
+
 };
