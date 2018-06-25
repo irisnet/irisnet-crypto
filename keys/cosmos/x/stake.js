@@ -12,14 +12,6 @@ let DelegateMsg = class DelegateMsg {
     }
 };
 
-let UnbondMsg = class DelegateMsg {
-    constructor(delegator_addr, validator_addr, shares) {
-        this.delegator_addr = delegator_addr;
-        this.validator_addr = validator_addr;
-        this.shares = shares;
-    }
-};
-
 DelegateMsg.prototype.GetSignBytes = function () {
     let delegatorAddrByte = Bech32.toWords(Buffer.from(this.delegator_addr, 'hex'));
     let delegatorAddr = Bech32.encode("cosmosaccaddr", delegatorAddrByte);
@@ -30,10 +22,18 @@ DelegateMsg.prototype.GetSignBytes = function () {
     let msg = {
         "delegator_addr": delegatorAddr,
         "validator_addr": validatorAddr,
-        "shares": this.shares
+        "bond": this.bond
     };
     return Base64.encode(JSON.stringify((msg)))
 
+};
+
+let UnbondMsg = class DelegateMsg {
+    constructor(delegator_addr, validator_addr, shares) {
+        this.delegator_addr = delegator_addr;
+        this.validator_addr = validator_addr;
+        this.shares = shares;
+    }
 };
 
 UnbondMsg.prototype.GetSignBytes = function () {
@@ -46,7 +46,7 @@ UnbondMsg.prototype.GetSignBytes = function () {
     let msg = {
         "delegator_addr": delegatorAddr,
         "validator_addr": validatorAddr,
-        "bond": this.bond
+        "shares": this.shares
     };
     return Base64.encode(JSON.stringify((msg)))
 

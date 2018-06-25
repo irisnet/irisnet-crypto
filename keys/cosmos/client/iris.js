@@ -39,83 +39,78 @@ class Client {
 
 Object.assign(Client.prototype, {
     QueryAccount : function (address) {
-        let client = this;
-        return new Promise(function (resolve, reject){
+        return new Promise((resolve, reject) => {
             let addrByte = Bech32.toWords(Buffer.from(address, 'hex'));
             let Bech32Acc = Bech32.encode("cosmosaccaddr",addrByte);
-            let url = client.urls.QueryAccount + Bech32Acc;
-            client.req("GET", url).then(result => resolve(result))
+            let url = this.urls.QueryAccount + Bech32Acc;
+            this.req("GET", url).then(result => resolve(result))
         })
 
     },
     Transfer : function (fromAcc,toAddress, amts,fees,gas) {
-        let client = this;
-        return new Promise(function (resolve, reject){
+        return new Promise((resolve, reject) => {
             //①查询账户信息(获取seq.accNum)
             //②构造交易内容
             //③交易签名
             //④发送交易
-            client.QueryAccount(fromAcc.address).then(function (acc) {
+            this.QueryAccount(fromAcc.address).then((acc) => {
                 let account = acc.value;
-                account.chain_id = client.chainId;
+                account.chain_id = this.chainId;
                 account.address = fromAcc.address;
                 account.public_key = fromAcc.publicKey;
                 account.private_key = fromAcc.privateKey;
                 return account;
             }).then(account => {
-                let url = client.urls.Transfer;
+                let url = this.urls.Transfer;
                 let tx = Bank.BuildAndSignTx(account,toAddress,amts,fees,gas);
-                client.req("POST", url,JSON.stringify(tx)).then(result => resolve(result))
+                this.req("POST", url,JSON.stringify(tx)).then(result => resolve(result))
             })
         })
     },
     Delegate : function (fromAcc,validatorAddr, amts,fees,gas) {
-        let client = this;
-        return new Promise(function (resolve, reject){
+        return new Promise((resolve, reject) => {
             //①查询账户信息(获取seq.accNum)
             //②构造交易内容
             //③交易签名
             //④发送交易
-            client.QueryAccount(fromAcc.address).then(function (acc) {
+            this.QueryAccount(fromAcc.address).then((acc) => {
                 let account = acc.value;
-                account.chain_id = client.chainId;
+                account.chain_id = this.chainId;
                 account.address = fromAcc.address;
                 account.public_key = fromAcc.publicKey;
                 account.private_key = fromAcc.privateKey;
                 return account;
             }).then(account => {
-                let url = client.urls.Transfer;
+                let url = this.urls.Transfer;
                 let tx = Stake.Delegate(account,validatorAddr,amts,fees,gas);
-                client.req("POST", url,JSON.stringify(tx)).then(result => resolve(result))
+                this.req("POST", url,JSON.stringify(tx)).then(result => resolve(result))
             })
         })
     },
     Unbond : function (fromAcc,validatorAddr, shares,fees,gas) {
-        let client = this;
-        return new Promise(function (resolve, reject){
+        return new Promise((resolve, reject) => {
             //①查询账户信息(获取seq.accNum)
             //②构造交易内容
             //③交易签名
             //④发送交易
-            client.QueryAccount(fromAcc.address).then(function (acc) {
+            this.QueryAccount(fromAcc.address).then((acc) => {
                 let account = acc.value;
-                account.chain_id = client.chainId;
+                account.chain_id = this.chainId;
                 account.address = fromAcc.address;
                 account.public_key = fromAcc.publicKey;
                 account.private_key = fromAcc.privateKey;
                 return account;
             }).then(account => {
-                let url = client.urls.Transfer;
+                let url = this.urls.Transfer;
                 let tx = Stake.Unbond(account,validatorAddr,shares,fees,gas);
-                client.req("POST", url,JSON.stringify(tx)).then(result => resolve(result))
+                this.req("POST", url,JSON.stringify(tx)).then(result => resolve(result))
             })
         })
     },
     Validators : function () {
-        let client = this;
-        return new Promise(function (resolve, reject){
-            let url = client.urls.Validators;
-            client.req("GET", url).then(result => {
+        return new Promise((resolve, reject) => {
+            let url = this.urls.Validators;
+            this.req("GET", url).then(result => {
                 result.forEach(function (item,index) {
                     let ownKey = Bech32.decode(item.owner);
                     item.owner = Hex.bytesToHex(Bech32.fromWords(ownKey.words)).toUpperCase();

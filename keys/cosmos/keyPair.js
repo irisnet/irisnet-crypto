@@ -495,6 +495,7 @@ Init = function (url) {
     client = require('cosmos-sdk')(url.gaia);
     apiServerIP = url.apiServerIP;
     apiServerPort = url.apiServerPort;
+    //TODO
     iris = require('./client/iris')(url.iris,"fuxi");
 };
 
