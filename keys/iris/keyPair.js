@@ -18,10 +18,7 @@ const request = require('axios');
 let thrift = require('thrift');
 let chainService = require('blockchain-rpc/codegen/gen-nodejs/BlockChainService');
 
-let sequence = require('blockchain-rpc/codegen/gen-nodejs/model_sequence_types');
-let buildTx = require('blockchain-rpc/codegen/gen-nodejs/model_buildTx_types');
-let common = require('blockchain-rpc/codegen/gen-nodejs/model_common_types');
-let postTxTypes  = require('blockchain-rpc/codegen/gen-nodejs/model_postTx_types');
+let blockChainThriftModel = require('blockchain-rpc/codegen/gen-nodejs/model_types');
 
 let transport = thrift.TBufferedTransport;
 let protocol = thrift.TJSONProtocol;
@@ -135,17 +132,17 @@ transfer = function (tx, privateKey) {
         //获取交易序号
         this.getSequence(tx.from).then(nonce => {
             // build tx
-            let txArgs = new buildTx.BuildTxRequest();
+            let txArgs = new blockChainThriftModel.BuildTxRequest();
             // tx.typeGate = "coin"
             txArgs.sequence = nonce + 1;
-            txArgs.amount = [new common.Coin({amount: tx.count, denom: tx.type})];
-            txArgs.fee = new common.Fee({amount: tx.fees, denom: "fermion"});
+            txArgs.amount = [new blockChainThriftModel.Coin({amount: tx.count, denom: tx.type})];
+            txArgs.fee = new blockChainThriftModel.Fee({amount: tx.fees, denom: "fermion"});
             if (tx.typeGate === 'delegate'|| tx.typeGate === 'unbond') {
-                txArgs.receiver = new common.Address({addr: tx.pub_key, app:"sigs"});
+                txArgs.receiver = new blockChainThriftModel.Address({addr: tx.pub_key, app:"sigs"});
             } else if(tx.typeGate === 'coin') {
-                txArgs.receiver = new common.Address({addr: tx.to, app:"sigs"});
+                txArgs.receiver = new blockChainThriftModel.Address({addr: tx.to, app:"sigs"});
             }
-            txArgs.sender = new common.Address({addr: tx.from, app: "sigs"});
+            txArgs.sender = new blockChainThriftModel.Address({addr: tx.from, app: "sigs"});
             txArgs.txType = tx.typeGate;
             chainClient.BuildTx(txArgs, function (err, response) {
                 if (err) {
@@ -158,7 +155,7 @@ transfer = function (tx, privateKey) {
                 let key = Nacl.sign.keyPair.fromSecretKey(new Uint8Array(privateKey));
                 let pub = key.publicKey;
                 readyTx.data.signature.Pubkey = new MODEL.Pubkey("ed25519", Hex.bytesToHex(pub));
-                let postTx = new postTxTypes.PostTxRequest();
+                let postTx = new blockChainThriftModel.PostTxRequest();
                 postTx.tx = new Buffer(JSON.stringify(readyTx));
                 chainClient.PostTx(postTx, function (err, response) {
                     if (err) {
@@ -173,7 +170,7 @@ transfer = function (tx, privateKey) {
 
 getSequence = function (addr) {
     return new Promise(function (resolve, reject) {
-        let args = new sequence.SequenceRequest();
+        let args = new blockChainThriftModel.SequenceRequest();
         args.address = addr;
         let nonce = 0;
         chainClient.GetSequence(args, function (err, response) {
