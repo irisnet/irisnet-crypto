@@ -21,6 +21,7 @@ let chainService = require('blockchain-rpc/codegen/gen-nodejs/BlockChainService'
 let sequence = require('blockchain-rpc/codegen/gen-nodejs/model_sequence_types');
 let buildTx = require('blockchain-rpc/codegen/gen-nodejs/model_buildTx_types');
 let common = require('blockchain-rpc/codegen/gen-nodejs/model_common_types');
+let postTxTypes  = require('blockchain-rpc/codegen/gen-nodejs/model_postTx_types');
 
 let transport = thrift.TBufferedTransport;
 let protocol = thrift.TJSONProtocol;
@@ -118,6 +119,7 @@ Import = function (secret, algo) {
 };
 
 Sign = function (tx, privateKey) {
+
     // let amts = [new MODEL.Coin(tx.count, tx.type)];
     // let fee = new MODEL.Coin(tx.fees, "fermion");
     return new Promise(function (resolve) {
@@ -134,12 +136,13 @@ transfer = function (tx, privateKey) {
         this.getSequence(tx.from).then(nonce => {
             // build tx
             let txArgs = new buildTx.BuildTxRequest();
+            // tx.typeGate = "coin"
             txArgs.sequence = nonce + 1;
             txArgs.amount = [new common.Coin({amount: tx.count, denom: tx.type})];
             txArgs.fee = new common.Fee({amount: tx.fees, denom: "fermion"});
-            if (tx.typeGate === 'delegate') {
+            if (tx.typeGate === 'delegate'|| tx.typeGate === 'unbond') {
                 txArgs.receiver = new common.Address({addr: tx.pub_key, app:"sigs"});
-            } else {
+            } else if(tx.typeGate === 'coin') {
                 txArgs.receiver = new common.Address({addr: tx.to, app:"sigs"});
             }
             txArgs.sender = new common.Address({addr: tx.from, app: "sigs"});
@@ -149,8 +152,6 @@ transfer = function (tx, privateKey) {
                     reject(err);
                 }
                 let readyTx = JSON.parse(response.ext.toString());
-                console.log(response.ext.toString());
-                console.log(response.data.toString());
                 let signTx = response.data.toString();
                 signTx = signTx.replace(/"/g,"");
                 readyTx.data.signature.Sig = new MODEL.Sig("ed25519", Hex.bytesToHex(Nacl.sign.detached(new Uint8Array(Hex.hexToBytes(signTx)), new Uint8Array(privateKey))));
@@ -158,7 +159,6 @@ transfer = function (tx, privateKey) {
                 let pub = key.publicKey;
                 readyTx.data.signature.Pubkey = new MODEL.Pubkey("ed25519", Hex.bytesToHex(pub));
                 let postTx = new postTxTypes.PostTxRequest();
-                console.log(JSON.stringify(readyTx));
                 postTx.tx = new Buffer(JSON.stringify(readyTx));
                 chainClient.PostTx(postTx, function (err, response) {
                     if (err) {
@@ -178,7 +178,8 @@ getSequence = function (addr) {
         let nonce = 0;
         chainClient.GetSequence(args, function (err, response) {
             if (err) {
-                reject(err)
+                resolve(nonce)
+                return
             }
             nonce = parseInt(response.sequence.toString());
             resolve(nonce);
