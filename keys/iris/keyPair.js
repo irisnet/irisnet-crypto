@@ -7,11 +7,7 @@ let PrivKey = require("./privKey");
 let Hex = require("../hex");
 let Nacl = require("tweetnacl");
 let client;
-let gaiaUrl;
-let bianjieUrl;
-let rainbowUrl;
-let apiServerIP;
-let apiServerPort;
+
 let MODEL = require('./client/model');
 const request = require('axios');
 
@@ -200,12 +196,7 @@ IsValidPrivate = function (privateKey) {
 };
 
 Init = function (url) {
-    gaiaUrl = url.gaia;
-    bianjieUrl = url.bianjie;
-    rainbowUrl = url.rainbow;
     client = require('cosmos-sdk')(url.gaia);
-    apiServerIP = url.apiServerIP;
-    apiServerPort = url.apiServerPort;
 };
 
 module.exports = {
