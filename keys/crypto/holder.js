@@ -2,7 +2,7 @@ let Wordcodec = require("../wordcodec");
 let Nacl = require("tweetnacl");
 let Hex = require("../hex");
 
-let CosmosKeyPair = require("../cosmos/keyPair");
+let IrisnetKeyPair = require("../iris/keyPair");
 
 const BigNumber = require('bignumber.js');
 /**
@@ -16,8 +16,8 @@ Create = function (bk, algo, language) {
     let secret = Nacl.randomBytes(16);
     let keyPair;
     switch (bk) {
-        case "cosmos":
-            keyPair = CosmosKeyPair.Create(secret, algo);
+        case "iris":
+            keyPair = IrisnetKeyPair.Create(secret, algo);
     }
     if (keyPair) {
         let seed = Wordcodec.BytesToWords(keyPair.secret, language);
@@ -50,8 +50,8 @@ Recover = function (bk, seedphrase, language) {
     }
     let keyPair;
     switch (bk) {
-        case "cosmos":
-            keyPair = CosmosKeyPair.Recover(secret);
+        case "iris":
+            keyPair = IrisnetKeyPair.Recover(secret);
     }
     if (keyPair) {
         return {
@@ -73,8 +73,8 @@ Import = function (bk, privateKey) {
     privateKey = Hex.hexToBytes(privateKey);
     let keyPair;
     switch (bk) {
-        case "cosmos":
-            keyPair = CosmosKeyPair.Import(privateKey);
+        case "iris":
+            keyPair = IrisnetKeyPair.Import(privateKey);
             break;
     }
     if (keyPair) {
@@ -97,8 +97,8 @@ Import = function (bk, privateKey) {
 Sign = function (bk, tx, privateKey) {
     privateKey = Hex.hexToBytes(privateKey);
     switch (bk) {
-        case "cosmos":
-            return CosmosKeyPair.Sign(tx, privateKey);
+        case "iris":
+            return IrisnetKeyPair.Sign(tx, privateKey);
     }
 };
 
@@ -111,8 +111,8 @@ Sign = function (bk, tx, privateKey) {
  */
 IsValidAddress = function (bk, address) {
     switch (bk) {
-        case "cosmos":
-            return CosmosKeyPair.IsValidAddress(address);
+        case "iris":
+            return IrisnetKeyPair.IsValidAddress(address);
     }
 };
 
@@ -125,13 +125,13 @@ IsValidAddress = function (bk, address) {
  */
 IsValidPrivate = function (bk, privateKey) {
     switch (bk) {
-        case "cosmos":
-            return CosmosKeyPair.IsValidPrivate(privateKey);
+        case "iris":
+            return IrisnetKeyPair.IsValidPrivate(privateKey);
     }
 };
 
 Init = function (urlList) {
-    CosmosKeyPair.Init(urlList);
+    IrisnetKeyPair.Init(urlList);
 };
 
 module.exports = {
