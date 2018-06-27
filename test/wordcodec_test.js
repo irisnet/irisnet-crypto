@@ -1,4 +1,4 @@
-const Wordcodec = require("../keys/wordcodec");
+const Wordcodec = require("../common/wordcodec");
 const chai = require('chai');
 const assert = chai.assert;
 const beforeByte = [159, 234, 141, 161, 146, 27, 203, 127, 68, 163, 187, 242, 22, 2, 29, 62, 1];
