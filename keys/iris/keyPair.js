@@ -17,7 +17,7 @@ let chainService = require('blockchain-rpc/codegen/gen-nodejs/BlockChainService'
 let blockChainThriftModel = require('blockchain-rpc/codegen/gen-nodejs/model_types');
 
 let transport = thrift.TBufferedTransport;
-let protocol = thrift.TJSONProtocol;
+let protocol = thrift.TBinaryProtocol;
 
 let chainConnection = thrift.createXHRConnection("47.104.155.125", "9081", {path: "/blockchain"}, {
     transport: transport,
