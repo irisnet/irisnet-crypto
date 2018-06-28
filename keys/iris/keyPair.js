@@ -122,27 +122,31 @@ Sign = function (tx, privateKey) {
     });
 };
 
-
 transfer = function (tx, privateKey) {
     return new Promise(function (resolve, reject) {
         //获取交易序号
         this.getSequence(tx.from).then(nonce => {
             // build tx
             let txArgs = new blockChainThriftModel.BuildTxRequest();
+            let txObj = {};
             // tx.typeGate = "coin"
-            txArgs.sequence = nonce + 1;
-            txArgs.amount = [new blockChainThriftModel.Coin({amount: tx.count, denom: tx.type})];
-            txArgs.fee = new blockChainThriftModel.Fee({amount: tx.fees, denom: "fermion"});
+            console.log(nonce)
+            txObj.sequence = nonce + 1;
+            txObj.amount = [new blockChainThriftModel.Coin({amount: tx.count, denom: tx.type})];
+            txObj.fee = new blockChainThriftModel.Fee({amount: tx.fees, denom: "fermion"});
             if (tx.typeGate === 'delegate'|| tx.typeGate === 'unbond') {
-                txArgs.receiver = new blockChainThriftModel.Address({addr: tx.pub_key, app:"sigs"});
+                txObj.receiver = new blockChainThriftModel.Address({addr: tx.pub_key, app:"sigs"});
             } else if(tx.typeGate === 'coin') {
-                txArgs.receiver = new blockChainThriftModel.Address({addr: tx.to, app:"sigs"});
+                txObj.receiver = new blockChainThriftModel.Address({addr: tx.to, app:"sigs"});
             }
-            txArgs.sender = new blockChainThriftModel.Address({addr: tx.from, app: "sigs"});
-            txArgs.txType = tx.typeGate;
+            txObj.sender = new blockChainThriftModel.Address({addr: tx.from, app: "sigs"});
+            txObj.type = tx.typeGate;
+
+            txArgs.tx = txObj;
             chainClient.BuildTx(txArgs, function (err, response) {
                 if (err) {
                     reject(err);
+                    return
                 }
                 let readyTx = JSON.parse(response.ext.toString());
                 let signTx = response.data.toString();
