@@ -185,19 +185,20 @@ getSequence = function (addr) {
 };
 
 
-/**
- * @return {boolean}
- */
+
 IsValidAddress = function (address) {
     return /^[0-9a-fA-F]{40}$/i.test(address);
 };
 
-/**
- * @return {boolean}
- */
+
 IsValidPrivate = function (privateKey) {
     return /^[0-9a-fA-F]{128}$/i.test(privateKey);
 };
+
+BlockChainSupportList = function(){
+  //TODO(shine)返回客户端已支持的区块链列表
+  return ["Iris"];
+}
 
 Init = function (url) {
     client = require('cosmos-sdk')(url.gaia);
@@ -210,6 +211,6 @@ module.exports = {
     Sign: Sign,
     Init: Init,
     IsValidAddress: IsValidAddress,
-    IsValidPrivate: IsValidPrivate
-
+    IsValidPrivate: IsValidPrivate,
+    BlockChainSupportList:BlockChainSupportList
 };
