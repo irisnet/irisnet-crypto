@@ -6,7 +6,7 @@ const blockChainThriftModel = require("blockchain-rpc/codegen/gen-nodejs/model_t
 describe('CryPto test', function () {
     describe('bech32 is Valid', function () {
         it('test create and recover', function () {
-            let crypto = Irisnet.Crypto.getCrypto(Constants.Chains.IRIS);
+            let crypto = Irisnet.getCrypto(Irisnet.Constants.Chains.IRIS);
             let keyPair = crypto.create("english");
             let keyPair2 = crypto.recover(keyPair.phrase,"english");
             console.log(JSON.stringify(keyPair))
@@ -14,7 +14,7 @@ describe('CryPto test', function () {
         });
 
         it('test import', function () {
-            let crypto = Irisnet.Crypto.getCrypto(Constants.Chains.IRIS);
+            let crypto = Irisnet.getCrypto(Irisnet.Constants.Chains.IRIS);
             let account = crypto.import("833a2457add0d23c840edb115e07069465ca04942406f799ea7128c3bc9b842f515fbd60f777a55d2c59069892b6e72e57fdc96da4b608cd07c86306d0ab6439")
             assert.deepEqual(account, {
                     address: '4B0647A2FECBBB752C8C5134963EB0DF159E8501',
@@ -45,7 +45,7 @@ describe('CryPto test', function () {
                "type":"transfer"
            });
 
-           let builder = Irisnet.Builder.getBuilder("iris");
+           let builder = Irisnet.getBuilder("iris");
            let sigMsg = builder.buildSignMsg(tx);
            console.log(sigMsg)
         });
@@ -69,7 +69,7 @@ describe('CryPto test', function () {
                 "type":"delegate"
             });
 
-            let builder = Irisnet.Builder.getBuilder("iris");
+            let builder = Irisnet.getBuilder("iris");
             let sigMsg = builder.buildSignMsg(tx);
             console.log(sigMsg)
         });
@@ -93,7 +93,7 @@ describe('CryPto test', function () {
                 "type":Irisnet.Constants.TxType.TRANSFER
             });
 
-            let builder = Irisnet.Builder.getBuilder("iris");
+            let builder = Irisnet.getBuilder("iris");
             let stdTx = builder.buildAndSignTx(tx,"625f0968c78d95857629ea4b4cbafe2f3f949a92e82dda09b5fbe9fbc70d50cc62f3621a751f0431b69b965d41ec480f1b9a4b6f14a1f6c0d17158281a980f74");
             console.log(JSON.stringify(stdTx))
         });
@@ -117,7 +117,7 @@ describe('CryPto test', function () {
                 "type":Irisnet.Constants.TxType.DELEGATE
             });
 
-            let builder = Irisnet.Builder.getBuilder("iris");
+            let builder = Irisnet.getBuilder("iris");
             let stdTx = builder.buildAndSignTx(tx,"93af640b13a89d643a5c5715a9347ab4a3272ef23ed97854b91b9619c8319df1049605b7d0014bc14d5630e34f688fda8b14d46bc8e917887d1bab28bbf475d8");
             console.log(JSON.stringify(stdTx))
         });
