@@ -71,12 +71,12 @@ describe('CryPto test', function () {
 
             let builder = Irisnet.getBuilder("iris");
             let sigMsg = builder.buildSignMsg(tx);
-            console.log(sigMsg)
+            console.log(JSON.stringify(sigMsg))
         });
 
         it('test transfer', function () {
             let tx = new blockChainThriftModel.Tx({
-                "sequence":29,
+                "sequence":30,
                 "ext":0,
                 "sender":{
                     "chain":"fuxi",
@@ -96,6 +96,7 @@ describe('CryPto test', function () {
             let builder = Irisnet.getBuilder("iris");
             let stdTx = builder.buildAndSignTx(tx,"625f0968c78d95857629ea4b4cbafe2f3f949a92e82dda09b5fbe9fbc70d50cc62f3621a751f0431b69b965d41ec480f1b9a4b6f14a1f6c0d17158281a980f74");
             console.log(JSON.stringify(stdTx))
+            //TODO 将stdTx提交到iris-hub[/tx/send]
         });
 
         it('test delegate', function () {
@@ -120,6 +121,7 @@ describe('CryPto test', function () {
             let builder = Irisnet.getBuilder("iris");
             let stdTx = builder.buildAndSignTx(tx,"93af640b13a89d643a5c5715a9347ab4a3272ef23ed97854b91b9619c8319df1049605b7d0014bc14d5630e34f688fda8b14d46bc8e917887d1bab28bbf475d8");
             console.log(JSON.stringify(stdTx))
+            //TODO 将stdTx提交到iris-hub[/tx/send]
         });
     });
 });

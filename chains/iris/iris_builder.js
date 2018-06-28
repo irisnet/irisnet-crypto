@@ -25,14 +25,14 @@ class IrisBuilder extends Builder {
 
         switch (req.type) {
             case Constants.TxType.TRANSFER: {
-                return Bank.getTransferSignMsg(req.acc, req.to, req.coins, req.fee, req.gas)
+                return Bank.getTransferSignMsg(req.acc, req.to, req.coins, req.fees, req.gas)
             }
             case Constants.TxType.DELEGATE: {
-                return Stake.getDelegateSignMsg(req.acc, req.to, req.coins[0], req.fee, req.gas)
+                return Stake.getDelegateSignMsg(req.acc, req.to, req.coins[0], req.fees, req.gas)
             }
             case Constants.TxType.UNBOND: {
                 let share = req.coins[0].amount;
-                return Stake.getUnbondSignMsg(req.acc, req.to, share, req.fee, req.gas)
+                return Stake.getUnbondSignMsg(req.acc, req.to, share, req.fees, req.gas)
             }
             default: {
                 throw new Error("not exist tx type");
