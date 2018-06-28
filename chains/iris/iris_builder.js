@@ -15,7 +15,7 @@ class IrisBuilder extends Builder {
     /**
      * (冷钱包)
      *
-     * 构造需要签名的交易内容,得到签名对象后，调用Bytes()方法获取签名字符串
+     * 构造需要签名的交易内容,得到签名对象后，调用GetSignBytes()方法获取签名字符串
      *
      * @param tx {blockChainThriftModel.Tx} 请求内容
      * @returns {StdSignMsg}

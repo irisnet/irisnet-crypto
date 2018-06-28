@@ -27,8 +27,10 @@ class Crypto {
     static getCrypto(chain) {
         switch (chain) {
             case Constants.Chains.IRIS: {
-                let crypto = require('./chains/iris/iris_crypto')();
-                return crypto
+                return require('./chains/iris/iris_crypto')();
+            }
+            case Constants.Chains.ETHERMINT: {
+                return require('./chains/ethermint/ethermint_crypto')();
             }
             default: {
                 throw new Error("not correct chain");

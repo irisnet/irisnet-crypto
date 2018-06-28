@@ -1,7 +1,6 @@
 'use strict';
 const Crypto = require("../../crypto");
-const EthUtil = require('ethereumjs-util');
-const Hex = require("../../common/hex");
+const Old = require('old');
 const EthermintKeypair = require('../../common/ethermint_keypair');
 
 class EthermintCrypto extends Crypto {
@@ -30,4 +29,4 @@ class EthermintCrypto extends Crypto {
     }
 }
 
-module.exports = old(EthermintCrypto);
+module.exports = Old(EthermintCrypto);

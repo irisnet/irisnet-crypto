@@ -19,8 +19,10 @@ class Builder {
     static getBuilder(chainName) {
         switch (chainName) {
             case Constants.Chains.IRIS: {
-                let builder = require('./chains/iris/iris_builder')();
-                return builder
+                return require('./chains/iris/iris_builder')();
+            }
+            case Constants.Chains.ETHERMINT: {
+                return require('./chains/ethermint/ethermint_builder')();
             }
             default: {
                 return new Builder();

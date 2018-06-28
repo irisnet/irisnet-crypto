@@ -3,6 +3,8 @@
 const bech32 = require('../../../common/bech32');
 const base64 = require('base64-node');
 
+const SignMsg = require("../../sign_msg");
+
 // don't need to deal with
 let MarshalJSON = function (msg) {
     return msg
@@ -89,8 +91,9 @@ class StdFee {
 }
 
 
-class StdSignMsg {
+class StdSignMsg extends SignMsg{
     constructor(chainID, accnum, sequence, fee, msg) {
+        super();
         this.chainID = chainID;
         this.accnum = [accnum];
         this.sequence = [sequence];
