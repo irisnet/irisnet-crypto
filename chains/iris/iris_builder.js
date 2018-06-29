@@ -21,7 +21,7 @@ class IrisBuilder extends Builder {
      * @returns {StdSignMsg}
      */
     buildSignMsg(tx) {
-        let req = convert(tx);
+        let req = super.buildParam(tx);
 
         switch (req.type) {
             case Constants.TxType.TRANSFER: {
@@ -50,7 +50,7 @@ class IrisBuilder extends Builder {
      * @param publicKey {string} 交易发送方公钥(hex编码)
      * @returns {StdTx} 交易
      */
-    buildTx(tx,signByte,publicKey) {
+    buildTx(tx, signByte, publicKey) {
         let signMsg = this.buildSignMsg(tx);
         let signs = [new Bank.StdSignature(Hex.hexToBytes(publicKey), signByte, signMsg.accnum[0], signMsg.sequence[0])];
         let stdTx = new Bank.StdTx(signMsg.msg, signMsg.fee, signs, tx.type);
@@ -74,36 +74,6 @@ class IrisBuilder extends Builder {
         let signs = [new Bank.StdSignature(Hex.hexToBytes(keypair.publicKey), signbyte, signMsg.accnum[0], signMsg.sequence[0])];
         let stdTx = new Bank.StdTx(signMsg.msg, signMsg.fee, signs, tx.type);
         return stdTx
-    }
-}
-
-let convert = function (tx) {
-    if (!tx.amount || tx.amount.length == 0) {
-        throw new Error("amount not empty");
-    }
-    let coins = [];
-    tx.amount.forEach(function (item, index, arr) {
-        coins.push(new Bank.Coin(item.amount, item.denom));
-    });
-    let fees = [];
-    fees.push(new Bank.Coin(tx.fee.amount, tx.fee.denom));
-
-    return {
-        "acc": new Account(tx.sender.addr, tx.sender.chain, tx.ext, tx.sequence),
-        "to": tx.receiver.addr,
-        "coins": coins,
-        "fees": fees,
-        "gas": tx.gas,
-        "type": tx.type
-    }
-}
-
-class Account {
-    constructor(address, chain_id, account_number, sequence) {
-        this.address = address;
-        this.chain_id = chain_id;
-        this.account_number = account_number;
-        this.sequence = sequence
     }
 }
 

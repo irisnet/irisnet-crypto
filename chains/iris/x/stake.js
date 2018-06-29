@@ -1,6 +1,7 @@
 'use strict';
 
 const bech32 = require('../../../common/bech32');
+const Constants = require('../../../common/constants');
 const Base64 = require('base64-node');
 const Bank = require('./bank');
 
@@ -11,9 +12,9 @@ class DelegateMsg {
         this.bond = bond;
     }
 
-    GetSignBytes(){
-        let delegatorAddr = bech32.toBech32("cosmosaccaddr", this.delegator_addr)
-        let validatorAddr = bech32.toBech32("cosmosvaladdr", this.validator_addr);
+    GetSignBytes() {
+        let delegatorAddr = bech32.toBech32(Constants.IrisNetConfig.PREFIX_BECH32_ACCADDR, this.delegator_addr)
+        let validatorAddr = bech32.toBech32(Constants.IrisNetConfig.PREFIX_BECH32_VALADDR, this.validator_addr);
 
         let msg = {
             "delegator_addr": delegatorAddr,
@@ -31,9 +32,9 @@ class UnbondMsg {
         this.shares = shares;
     }
 
-    GetSignBytes(){
-        let delegatorAddr = bech32.toBech32("cosmosaccaddr", this.delegator_addr);
-        let validatorAddr = bech32.toBech32("cosmosvaladdr", this.delegator_addr);
+    GetSignBytes() {
+        let delegatorAddr = bech32.toBech32(Constants.IrisNetConfig.PREFIX_BECH32_ACCADDR, this.delegator_addr);
+        let validatorAddr = bech32.toBech32(Constants.IrisNetConfig.PREFIX_BECH32_VALADDR, this.validator_addr);
 
         let msg = {
             "delegator_addr": delegatorAddr,
@@ -60,8 +61,7 @@ let getUnbondSignMsg = function (acc, validatorAddr, shares, fee, gas) {
 };
 
 
-
 module.exports = {
-  getDelegateSignMsg,
-  getUnbondSignMsg,
+    getDelegateSignMsg,
+    getUnbondSignMsg,
 };

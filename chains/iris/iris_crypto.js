@@ -3,6 +3,9 @@ const Crypto = require("../../crypto");
 const Old = require('old');
 const CosmosKeypair = require('../../common/cosmos_keypair');
 const Wordcodec = require('../../common/wordcodec');
+const Hex = require('../../common/hex');
+const Bech32 = require('../../common/bech32');
+const Constants = require('../../common/constants');
 
 
 class IrisCrypto extends Crypto {
@@ -10,6 +13,11 @@ class IrisCrypto extends Crypto {
         super()
     }
 
+    /**
+     *
+     * @param language
+     * @returns {*}
+     */
     create(language) {
         let keyPair = CosmosKeypair.create();
         if (keyPair) {
@@ -47,7 +55,7 @@ class IrisCrypto extends Crypto {
     }
 
     import(privateKey) {
-        let keyPair= CosmosKeypair.import(privateKey);
+        let keyPair = CosmosKeypair.import(privateKey);
         if (keyPair) {
             return {
                 "address": keyPair.address,
@@ -63,6 +71,15 @@ class IrisCrypto extends Crypto {
 
     isValidPrivate(privateKey) {
         return CosmosKeypair.isValidPrivate(privateKey);
+    }
+
+    getAddress(publicKey, encoding) {
+        let pubKey = Hex.hexToBytes(publicKey);
+        let address = CosmosKeypair.getAddress(pubKey);
+        if (encoding == Constants.IrisNetConfig.ENCODING_BECH32) {
+            address = Bech32.toBech32(Constants.IrisNetConfig.PREFIX_BECH32_ACCADDR, address)
+        }
+        return address;
     }
 }
 

@@ -26,6 +26,11 @@ class EthermintKeypair {
         tx.sign(new Buffer(privateKey));
         return tx.sig;
     }
+
+    static getAddress(publicKey){
+        let addr = EthUtil.pubToAddress(publicKey)
+        return Hex.bytesToHex(addr);
+    }
 }
 
 module.exports = EthermintKeypair;

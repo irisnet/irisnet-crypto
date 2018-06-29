@@ -2,6 +2,7 @@ const Irisnet = require('../index');
 const chai = require('chai');
 const assert = chai.assert;
 const blockChainThriftModel = require("blockchain-rpc/codegen/gen-nodejs/model_types")
+const bech32 = require("../common/bech32")
 
 describe('CryPto test', function () {
     describe('bech32 is Valid', function () {
@@ -11,6 +12,10 @@ describe('CryPto test', function () {
             let keyPair2 = crypto.recover(keyPair.phrase,"english");
             console.log(JSON.stringify(keyPair))
             assert.deepEqual(keyPair, keyPair2);
+        });
+
+        it('bech32', function () {
+            console.log(bech32.fromBech32("cosmosvalpub1zcjduc3qq6kdcv6lstrfm8ym2t34uzh2k6ezrsakwjuj5fgt4r56nxhshnms402hfv"));
         });
 
         it('test import', function () {
@@ -76,7 +81,7 @@ describe('CryPto test', function () {
 
         it('test transfer', function () {
             let tx = new blockChainThriftModel.Tx({
-                "sequence":30,
+                "sequence":31,
                 "ext":0,
                 "sender":{
                     "chain":"fuxi",
