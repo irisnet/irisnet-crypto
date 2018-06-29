@@ -1,7 +1,7 @@
 'use strict';
 
 class SignMsg {
-    GetSignBytes(){
+    GetSignBytes() {
         throw new Error("not implement");
     }
 }

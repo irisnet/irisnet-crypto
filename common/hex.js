@@ -27,4 +27,4 @@ class Hex {
     }
 }
 
-module.exports = Hex
+module.exports = Hex;

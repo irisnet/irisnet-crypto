@@ -15,11 +15,11 @@ class CosmosKeypair {
     }
 
     static sign(private_key, msg) {
-        let msgHex = Hex.stringToHex(JSON.stringify(msg))
-        let sigByte = Hex.hexToBytes(msgHex)
-        let msgArr = new Uint8Array(sigByte)
-        let prikeyArr = new Uint8Array(Hex.hexToBytes(private_key))
-        let sig = Nacl.sign.detached(msgArr, prikeyArr)
+        let msgHex = Hex.stringToHex(JSON.stringify(msg));
+        let sigByte = Hex.hexToBytes(msgHex);
+        let msgArr = new Uint8Array(sigByte);
+        let prikeyArr = new Uint8Array(Hex.hexToBytes(private_key));
+        let sig = Nacl.sign.detached(msgArr, prikeyArr);
         return Hex.hexToBytes(Hex.bytesToHex(sig))
     }
 

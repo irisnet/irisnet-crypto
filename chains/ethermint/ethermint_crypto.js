@@ -27,6 +27,10 @@ class EthermintCrypto extends Crypto {
     isValidPrivate(privateKey) {
         return EthermintKeypair.isValidPrivate(new Buffer(Hex.hexToBytes(privateKey)));
     }
+
+    getAddress(publicKey) {
+        return EthermintKeypair.getAddress(publicKey);
+    }
 }
 
 module.exports = Old(EthermintCrypto);

@@ -1,6 +1,7 @@
 'use strict';
 
 const bech32 = require('../../../common/bech32');
+const Constants = require('../../../common/constants');
 const base64 = require('base64-node');
 
 const SignMsg = require("../../sign_msg");
@@ -23,8 +24,8 @@ class Input {
         this.coins = coins;
     }
 
-    GetSignBytes(){
-        let bech32Acc = bech32.toBech32("cosmosaccaddr", this.address)
+    GetSignBytes() {
+        let bech32Acc = bech32.toBech32(Constants.IrisNetConfig.PREFIX_BECH32_ACCADDR, this.address)
         let msg = {
             "address": bech32Acc,
             "coins": this.coins
@@ -39,8 +40,8 @@ class Output {
         this.coins = coins;
     }
 
-    GetSignBytes(){
-        let bech32Acc = bech32.toBech32("cosmosaccaddr", this.address);
+    GetSignBytes() {
+        let bech32Acc = bech32.toBech32(Constants.IrisNetConfig.PREFIX_BECH32_ACCADDR, this.address);
         let msg = {
             "address": bech32Acc,
             "coins": this.coins
@@ -55,7 +56,7 @@ class MsgSend {
         this.outputs = [new Output(to, coins)];
     }
 
-    GetSignBytes(){
+    GetSignBytes() {
         let inputs = [];
         let outputs = [];
         this.inputs.forEach(function (item, index, arr) {
@@ -77,21 +78,21 @@ class StdFee {
     constructor(amount, gas) {
         this.amount = amount;
         if (!gas) {
-            gas = 20000
+            gas = Constants.IrisNetConfig.MAXGAS;
         }
         this.gas = gas;
     }
 
-    GetSignBytes(){
+    GetSignBytes() {
         if (!this.amount || this.amount.length == 0) {
-            this.amount = [new Coin(0, "iris")]
+            this.amount = [new Coin(0, "")]
         }
         return base64.encode((JSON.stringify((this))))
     }
 }
 
 
-class StdSignMsg extends SignMsg{
+class StdSignMsg extends SignMsg {
     constructor(chainID, accnum, sequence, fee, msg) {
         super();
         this.chainID = chainID;
@@ -101,7 +102,7 @@ class StdSignMsg extends SignMsg{
         this.msg = msg
     }
 
-    GetSignBytes(){
+    GetSignBytes() {
         let tx = {
             "chain_id": this.chainID,
             "account_numbers": this.accnum,
