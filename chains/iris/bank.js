@@ -1,10 +1,10 @@
 'use strict';
 
-const bech32 = require('../../../common/bech32');
-const Constants = require('../../../common/constants');
+const bech32 = require('../../util/bech32');
+const Constants = require('./constants');
 const base64 = require('base64-node');
 
-const SignMsg = require("../../sign_msg");
+const SignMsg = require("../sign_msg");
 
 // don't need to deal with
 let MarshalJSON = function (msg) {

@@ -1,7 +1,7 @@
 'use strict';
 const Crypto = require("../../crypto");
 const Old = require('old');
-const EthermintKeypair = require('../../common/ethermint_keypair');
+const EthermintKeypair = require('./ethermint_keypair');
 
 class EthermintCrypto extends Crypto {
     constructor() {
