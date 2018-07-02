@@ -1,7 +1,7 @@
 'use strict';
 
-const bech32 = require('../../../common/bech32');
-const Constants = require('../../../common/constants');
+const bech32 = require('../../util/bech32');
+const Constants = require('./constants');
 const Base64 = require('base64-node');
 const Bank = require('./bank');
 

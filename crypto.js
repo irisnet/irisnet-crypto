@@ -1,6 +1,6 @@
 'use strict';
 
-const Constants = require('./common/constants');
+const Constants = require('./util/constants');
 
 class Crypto {
 
@@ -57,12 +57,11 @@ class Crypto {
     }
 
     /**
-     * 通过公钥获取地址
+     * 通过公钥获取地址(bech32)
      *
      * @param (publicKey:string('hex')} 公钥
-     * @param (encoding:string} 编码(constants.IrisNetConfig.ENCODING_BECH32 | constants.IrisNetConfig.ENCODING_HEX)
      */
-    getAddress(publicKey,encoding) {
+    getAddress(publicKey) {
         throw new Error("not implement");
     }
 

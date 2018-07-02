@@ -1,6 +1,6 @@
 'use strict';
 
-const Constants = require('./common/constants');
+const Constants = require('./util/constants');
 
 class Builder {
 
@@ -10,9 +10,9 @@ class Builder {
      * 构造需要签名的交易内容,得到签名对象后，调用GetSignBytes()方法获取签名字符串
      *
      * @param tx {blockChainThriftModel.Tx} 请求内容
-     * @returns {StdSignMsg}
+     * @returns {*}
      */
-    buildSignMsg(tx) {
+    buildTx(tx) {
         throw new Error("not implement");
     }
 
@@ -22,12 +22,11 @@ class Builder {
      *
      * 根据请求内容构造交易并对交易进行签名
      *
-     * @param tx {blockChainThriftModel.Tx} 请求内容
-     * @param signByte {[]byte} 签名后的byte数组
-     * @param publicKey {string} 交易发送方公钥(hex编码)
+     * @param tx {*}
+     * @param privateKey {string} 交易发送方私钥(hex编码)，冷钱包提供
      * @returns {StdTx} 交易
      */
-    buildTx(tx,signMsg,publicKey) {
+    signTx(tx,privateKey) {
         throw new Error("not implement");
     }
 
@@ -79,9 +78,6 @@ class Builder {
             throw new Error("sender not empty");
         }
 
-        if (!tx.sender.chain || tx.sender.chain.length == 0) {
-            throw new Error("chain not empty");
-        }
 
         if (!tx.sequence) {
             throw new Error("sequence not empty");

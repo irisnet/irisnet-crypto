@@ -9,22 +9,25 @@ const SignMsg = require("../sign_msg");
 
 
 class EthermintBuilder extends Builder {
-    buildSignMsg(tx) {
+    buildTx(tx) {
         let req = super.buildParam(tx);
         let ether = new BigNumber(10e+17);
         let rawTx = new EthermintMsg(req.fees[0].amount, new BigNumber(req.coins[0].amount).times(ether), 21000, req.to, req.acc.sequence);
         return rawTx;
     }
 
-    buildTx(tx, signMsg, publicKey) {
-        throw new Error("not implement");
+    signTx(tx,privateKey) {
+        let ethereumTx = new EthereumTx(tx);
+        ethereumTx.sign(new Buffer(privateKey));
+        let serializedTx = ethereumTx.serialize();
+        return serializedTx.toString('hex');
     }
 
     buildAndSignTx(tx, privateKey) {
-        let rawTx = this.buildSignMsg(tx);
+        let rawTx = this.buildTx(tx);
         let ethereumTx = new EthereumTx(rawTx);
         ethereumTx.sign(new Buffer(privateKey));
-        let serializedTx = ethereumTx.serialize()
+        let serializedTx = ethereumTx.serialize();
         return serializedTx.toString('hex');
     }
 }

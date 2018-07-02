@@ -1,6 +1,6 @@
 const EthUtil = require('ethereumjs-util');
 const EthereumTx = require('ethereumjs-tx');
-const Hex = require("./hex");
+const Hex = require("../../util/hex");
 
 class EthermintKeypair {
     static Import(secret){

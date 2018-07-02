@@ -1,7 +1,7 @@
 'use strict';
 
 const TypeEd25519 = 1;
-const Hex = require("./hex");
+const Hex = require("../../util/hex");
 const Sha256 = require("sha256");
 const Nacl = require("tweetnacl");
 const RIPEMD160 = require('ripemd160');
