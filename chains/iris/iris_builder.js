@@ -1,5 +1,5 @@
 'use strict';
-const Builder = require("../../builder");
+const Builder = require("../../builder").Builder;
 const Old = require('old');
 const Constants = require('./constants');
 const Bank = require('./bank');

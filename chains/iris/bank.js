@@ -1,10 +1,9 @@
 'use strict';
 
-const bech32 = require('../../util/bech32');
+const Bech32 = require('../../util/bech32');
 const Constants = require('./constants');
-const base64 = require('base64-node');
-
-const SignMsg = require("../sign_msg");
+const Base64 = require('base64-node');
+const SignMsg = require("../../builder").SignMsg;
 
 // don't need to deal with
 let MarshalJSON = function (msg) {
@@ -25,7 +24,7 @@ class Input {
     }
 
     GetSignBytes() {
-        let bech32Acc = bech32.toBech32(Constants.IrisNetConfig.PREFIX_BECH32_ACCADDR, this.address)
+        let bech32Acc = Bech32.toBech32(Constants.IrisNetConfig.PREFIX_BECH32_ACCADDR, this.address)
         let msg = {
             "address": bech32Acc,
             "coins": this.coins
@@ -41,7 +40,7 @@ class Output {
     }
 
     GetSignBytes() {
-        let bech32Acc = bech32.toBech32(Constants.IrisNetConfig.PREFIX_BECH32_ACCADDR, this.address);
+        let bech32Acc = Bech32.toBech32(Constants.IrisNetConfig.PREFIX_BECH32_ACCADDR, this.address);
         let msg = {
             "address": bech32Acc,
             "coins": this.coins
@@ -69,7 +68,7 @@ class MsgSend {
             "inputs": inputs,
             "outputs": outputs
         };
-        return base64.encode(JSON.stringify((msg)))
+        return Base64.encode(JSON.stringify((msg)))
     }
 }
 
@@ -87,7 +86,7 @@ class StdFee {
         if (!this.amount || this.amount.length == 0) {
             this.amount = [new Coin(0, "")]
         }
-        return base64.encode((JSON.stringify((this))))
+        return Base64.encode((JSON.stringify((this))))
     }
 }
 
@@ -99,7 +98,7 @@ class StdSignMsg extends SignMsg {
         this.accnum = [accnum];
         this.sequence = [sequence];
         this.fee = fee;
-        this.msg = msg
+        this.msg = msg;
     }
 
     GetSignBytes() {
