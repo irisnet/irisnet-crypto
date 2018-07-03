@@ -1,6 +1,6 @@
 'use strict';
 
-const Constants = require('./util/constants');
+const Constants = require('./constants');
 
 class Crypto {
 

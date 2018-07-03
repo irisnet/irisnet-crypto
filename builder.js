@@ -1,6 +1,6 @@
 'use strict';
 
-const Constants = require('./util/constants');
+const Constants = require('./constants');
 
 class Builder {
 
@@ -121,4 +121,10 @@ class Account {
     }
 }
 
-module.exports = Builder;
+class SignMsg {
+    GetSignBytes() {
+        throw new Error("not implement");
+    }
+}
+
+module.exports = {Builder,SignMsg};
