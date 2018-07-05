@@ -19,11 +19,11 @@ let blockChainThriftModel = require('blockchain-rpc/codegen/gen-nodejs/model_typ
 let transport = thrift.TBufferedTransport;
 let protocol = thrift.TJSONProtocol;
 
-let chainConnection = thrift.createXHRConnection("47.104.155.125", "9081", {path: "/blockchain"}, {
-    transport: transport,
-    protocol: protocol
-});
-let chainClient = thrift.createClient(chainService, chainConnection);
+let APIServerIP;
+let APIServerPort;
+
+var chainConnection ;
+var chainClient;
 
 //algo must be a supported algorithm now: ed25519, secp256k1
 Create = function (secret, algo) {
@@ -205,6 +205,13 @@ BlockChainSupportList = function(){
 
 Init = function (url) {
     client = require('cosmos-sdk')(url.gaia);
+	APIServerIP = url.apiServerIP;
+	APIServerPort = url.apiServerPort;
+	chainConnection = thrift.createXHRConnection(APIServerIP, APIServerPort, {path: "/blockchain"}, {
+      transport: transport,
+      protocol: protocol
+    });
+    chainClient = thrift.createClient(chainService, chainConnection);
 };
 
 module.exports = {
