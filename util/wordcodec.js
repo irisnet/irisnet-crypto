@@ -1,4 +1,4 @@
-let CRC = require("./iris/crc");
+let CRC = require("./crc");
 let BigNumber = require('bignumber.js');
 byteArrayToLong = function (byteArray) {
     console.log(typeof (byteArray[0]));
