@@ -5,8 +5,6 @@ const BigNumber = require('bignumber.js');
 const EthereumTx = require('ethereumjs-tx');
 const Old = require('old');
 
-const SignMsg = require("../sign_msg");
-
 
 class EthermintBuilder extends Builder {
     buildTx(tx) {
@@ -32,7 +30,7 @@ class EthermintBuilder extends Builder {
     }
 }
 
-class EthermintMsg extends SignMsg {
+class EthermintMsg extends Builder.SignMsg {
     constructor(gasPrice, value, gasLimit, to, nonce) {
         super();
         this.gasPrice = gasPrice;
