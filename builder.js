@@ -79,9 +79,9 @@ class Builder {
         }
 
 
-        if (!tx.sequence) {
+        /*if (!tx.sequence) {
             throw new Error("sequence not empty");
-        }
+        }*/
 
         let convert = function (tx) {
             let coins = [];
