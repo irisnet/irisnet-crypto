@@ -24,7 +24,12 @@ class CosmosKeypair {
     }
 
     static getAddress(publicKey) {
-        return new RIPEMD160().update(new Buffer(publicKey)).digest('hex').toUpperCase();
+        let prefix = nameToPrefix("tendermint/PubKeyEd25519");
+        prefix = prefix.concat(publicKey.length);
+        let encodeBytes = prefix.concat(Array.from(publicKey));
+
+        let addr = new RIPEMD160().update(new Buffer(encodeBytes));
+        return addr.digest('hex').toUpperCase();
     }
 
     static create() {
@@ -95,6 +100,23 @@ class CosmosKeypair {
     static isValidPrivate(privateKey) {
         return /^[0-9a-fA-F]{128}$/i.test(privateKey);
     }
+}
+
+
+function nameToPrefix(name) {
+    let a = Sha256(name);
+    let b = Hex.hexToBytes(a);
+    while (b[0] === 0) {
+        b = b.slice(1, b.length - 1)
+    }
+    b = b.slice(3, b.length - 1);
+    while (b[0] === 0) {
+        b = b.slice(1, b.length - 1)
+    }
+    b = b.slice(0, 4);
+    b[3] = b[3] & 0xF8;
+    b[3] = b[3] | 2;
+    return b
 }
 
 module.exports = CosmosKeypair;

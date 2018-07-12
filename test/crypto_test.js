@@ -14,7 +14,7 @@ describe('CryPto test', function () {
         });
 
         it('bech32', function () {
-            console.log(bech32.fromBech32("cosmosvalpub1zcjduc3qq6kdcv6lstrfm8ym2t34uzh2k6ezrsakwjuj5fgt4r56nxhshnms402hfv"));
+            console.log(bech32.fromBech32("cosmosaccaddr1jln05xuzjks3a4ef9kjsz8y4gcvx5g4qr8wvdy"));
         });
 
         it('test import', function () {
@@ -29,10 +29,16 @@ describe('CryPto test', function () {
             );
         });
 
+        it('test recover', function () {
+            let crypto = Irisnet.getCrypto(Irisnet.Constants.COMM.Chains.IRIS);
+            let account = crypto.recover("left nuclear extra remind doctor hand stand gift bulb elbow real affair either symbol apology abandon");
+            console.log(JSON.stringify(account))
+        });
+
         it('test transfer', function () {
             let tx = new blockChainThriftModel.Tx({
-                "sequence":34,
-                "ext":0,
+                "sequence":"0",
+                "ext":2,
                 "sender":{
                     "chain":"fuxi",
                     "app":"v0.2.0",
@@ -43,7 +49,7 @@ describe('CryPto test', function () {
                     "app":"v0.2.0",
                     "addr":"3A058A8B5468AE0EA2D2517CE3BAFDD281E50C2F"
                 },
-                "amount":[new blockChainThriftModel.Coin({denom: "iris",amount: 10})],
+                "amount":[new blockChainThriftModel.Coin({denom: "iris",amount: 1})],
                 "fee":new blockChainThriftModel.Fee({denom: "iris",amount: 0}),
                 "type":Irisnet.Constants.IRIS.TxType.TRANSFER
             });
@@ -104,6 +110,20 @@ describe('CryPto test', function () {
             let stdTx = builder.buildAndSignTx(tx,"93af640b13a89d643a5c5715a9347ab4a3272ef23ed97854b91b9619c8319df1049605b7d0014bc14d5630e34f688fda8b14d46bc8e917887d1bab28bbf475d8");
             console.log(JSON.stringify(stdTx))
             //TODO 将stdTx提交到iris-hub[/tx/send]
+        });
+
+        it('test getAddress', function () {
+            let crypto = Irisnet.getCrypto(Irisnet.Constants.COMM.Chains.IRIS);
+            let addrBech32 = crypto.getAddress("b6be55dab3f686e2e60c0e5272a45905d4ec826dfd72334e8def519542cee915");
+            let addr = bech32.fromBech32(addrBech32);
+            assert.deepEqual(addr, "33FA54A78EDE1B22A55185DB06438078D7226436");
+        });
+
+        it('test create', function () {
+            let crypto = Irisnet.getCrypto(Irisnet.Constants.COMM.Chains.IRIS);
+            let keypair = crypto.create();
+            let keypair2 = crypto.recover(keypair.phrase);
+            assert.deepEqual(keypair, keypair2);
         });
     });
 });
