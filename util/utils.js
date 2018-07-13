@@ -20,8 +20,7 @@ let sortObjectKeys = function (obj) {
         }else if (obj[k] != null && typeof(obj[k]) === "object"){
             tmp[k] = sortObjectKeys(obj[k]);
         }else {
-            //TODO : string ？
-            tmp[k] = new String(obj[k]);
+            tmp[k] = new String(obj[k]).toString();
         }
     });
     return tmp;

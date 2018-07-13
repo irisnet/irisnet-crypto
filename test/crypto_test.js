@@ -5,6 +5,7 @@ const blockChainThriftModel = require("blockchain-rpc/codegen/gen-nodejs/model_t
 const bech32 = require("../util/bech32");
 const utils = require("../util/utils");
 const bank = require("../chains/iris/bank");
+const Hex = require("../util/hex");
 
 describe('CryPto test', function () {
     describe('irisnet-crypto', function () {
@@ -118,6 +119,36 @@ describe('CryPto test', function () {
             let s = JSON.stringify(utils.sortObjectKeys(msg));
             let expected = '{"inputs":[{"address":"input","coins":[{"amount":"10","denom":"atom"}]}],"outputs":[{"address":"output","coins":[{"amount":"10","denom":"atom"}]}]}';
             assert.deepEqual(s, expected);
+        });
+
+        //冷钱包
+        it('test signMsg', function () {
+            let tx = new blockChainThriftModel.Tx({
+                "sequence":0,
+                "ext":0,
+                "sender":{
+                    "chain":"fuxi-develop",
+                    "app":"v0.2.0",
+                    "addr":"1EC2E86065D5EF88A3ED65B8B3A43210FAD9C7B2"
+                },
+                "receiver":{
+                    "chain":"iris",
+                    "app":"v0.2.0",
+                    "addr":"3A058A8B5468AE0EA2D2517CE3BAFDD281E50C2F"
+                },
+                "amount":[new blockChainThriftModel.Coin({denom: "atom",amount: 10})],
+                "fee":new blockChainThriftModel.Fee({denom: "",amount: 0}),
+                "type":Irisnet.Constants.IRIS.TxType.TRANSFER,
+                "memo":new blockChainThriftModel.Memo({id: 0,text: "test"})
+            });
+
+            let builder = Irisnet.getBuilder(Irisnet.Constants.COMM.Chains.IRIS);
+            let signMsg = builder.buildTx(tx);
+            let msgBytes = JSON.stringify(signMsg.msg.GetSignBytes());
+            console.log(msgBytes);
+            let msgHex = Hex.stringToHex(msgBytes);
+            let sigByte = Hex.hexToBytes(msgHex);
+            console.log(sigByte.toString());
         });
 
     });

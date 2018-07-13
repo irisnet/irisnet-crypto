@@ -31,7 +31,7 @@ class IrisBuilder extends Builder {
         let msg;
         switch (req.type) {
             case Constants.TxType.TRANSFER: {
-                msg = Bank.getTransferSignMsg(req.acc, req.to, req.coins, req.fees, req.gas);
+                msg = Bank.getTransferSignMsg(req.acc, req.to, req.coins, req.fees, req.gas, req.memo);
                 break;
             }
             case Constants.TxType.DELEGATE: {

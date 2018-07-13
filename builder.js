@@ -109,17 +109,23 @@ class Builder {
                 "amount":tx.fee.amount,
             });
 
-            return {
-                "acc": new Account(tx.sender.addr, tx.sender.chain, tx.ext, tx.sequence),
-                "to": tx.receiver.addr,
-                "coins": coins,
-                "fees": fees,
-                "gas": tx.gas,
-                "type": tx.type
-            }
+            let fromAcc = new Account(tx.sender.addr, tx.sender.chain, tx.ext, tx.sequence);
+            return new Request(fromAcc,tx.receiver.addr,coins,fees,tx.gas,tx.memo.text,tx.type);
         };
 
         return convert(tx);
+    }
+}
+
+class Request {
+    constructor(acc, to, coins, fees,gas,memo,type) {
+        this.acc = acc;
+        this.to = to;
+        this.coins = coins;
+        this.fees = fees;
+        this.gas = gas;
+        this.memo = memo;
+        this.type = type
     }
 }
 
