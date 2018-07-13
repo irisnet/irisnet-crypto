@@ -10,7 +10,7 @@ let sortObjectKeys = function (obj) {
         if(Array.isArray(obj[k])){
             let p = [];
             obj[k].forEach(function (item) {
-                if (obj[k] != null && typeof(item) === "object"){
+                if (item != null && typeof(item) === "object"){
                     p.push(sortObjectKeys(item));
                 } else {
                     p.push(item);
