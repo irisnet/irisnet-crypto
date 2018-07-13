@@ -78,6 +78,10 @@ class Builder {
             throw new Error("sender not empty");
         }
 
+        if (!tx.receiver || tx.receiver.length == 0) {
+            throw new Error("sender not empty");
+        }
+
 
         /*if (!tx.sequence) {
             throw new Error("sequence not empty");
@@ -86,6 +90,12 @@ class Builder {
         let convert = function (tx) {
             let coins = [];
             tx.amount.forEach(function (item) {
+                if (!item.denom || item.denom.length == 0) {
+                    throw new Error("denom not empty");
+                }
+                if (item.amount < 0) {
+                    throw new Error("amount must > 0");
+                }
                 coins.push({
                     "denom":item.denom,
                     "amount":item.amount,
@@ -93,6 +103,7 @@ class Builder {
             });
 
             let fees = [];
+
             fees.push({
                 "denom":tx.fee.denom,
                 "amount":tx.fee.amount,
@@ -121,10 +132,25 @@ class Account {
     }
 }
 
-class SignMsg {
+/**
+ * 校验器接口
+ *
+ */
+class Validator {
+    ValidateBasic() {
+        throw new Error("not implement");
+    }
+}
+
+/**
+ * 签名消息接口
+ *
+ */
+
+class SignMsg extends Validator{
     GetSignBytes() {
         throw new Error("not implement");
     }
 }
 
-module.exports = {Builder,SignMsg};
+module.exports = {Builder,SignMsg,Validator};

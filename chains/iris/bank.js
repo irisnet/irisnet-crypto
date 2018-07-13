@@ -3,22 +3,23 @@
 const Bech32 = require('../../util/bech32');
 const Constants = require('./constants');
 const Base64 = require('base64-node');
-const SignMsg = require("../../builder").SignMsg;
+const Builder = require("../../builder");
 
 // don't need to deal with
 let MarshalJSON = function (msg) {
     return msg
 };
 
-class Coin {
+class Coin{
     constructor(amount, denom) {
         this.denom = denom;
         this.amount = amount;
     }
 }
 
-class Input {
+class Input extends Builder.Validator {
     constructor(address, coins) {
+        super();
         this.address = address;
         this.coins = coins;
     }
@@ -31,10 +32,21 @@ class Input {
         };
         return MarshalJSON(msg)
     }
+
+    ValidateBasic() {
+        if(!this.address || this.address.length ==0){
+            throw new Error("address is empty");
+        }
+
+        if(!this.coins || this.coins.size == 0){
+            throw new Error("coins is empty");
+        }
+    }
 }
 
-class Output {
+class Output extends Builder.Validator{
     constructor(address, coins) {
+        super();
         this.address = address;
         this.coins = coins;
     }
@@ -47,10 +59,21 @@ class Output {
         };
         return MarshalJSON(msg)
     }
+
+    ValidateBasic() {
+        if(!this.address || this.address.length ==0){
+            throw new Error("address is empty");
+        }
+
+        if(!this.coins || this.coins.size == 0){
+            throw new Error("coins is empty");
+        }
+    }
 }
 
-class MsgSend {
+class MsgSend extends Builder.Validator{
     constructor(from, to, coins) {
+        super();
         this.inputs = [new Input(from, coins)];
         this.outputs = [new Output(to, coins)];
     }
@@ -58,10 +81,10 @@ class MsgSend {
     GetSignBytes() {
         let inputs = [];
         let outputs = [];
-        this.inputs.forEach(function (item, index, arr) {
+        this.inputs.forEach(function (item) {
             inputs.push(item.GetSignBytes())
         });
-        this.outputs.forEach(function (item, index, arr) {
+        this.outputs.forEach(function (item) {
             outputs.push(item.GetSignBytes())
         });
         let msg = {
@@ -69,6 +92,24 @@ class MsgSend {
             "outputs": outputs
         };
         return Base64.encode(JSON.stringify((msg)))
+    }
+
+    ValidateBasic() {
+        if(this.inputs.size <= 0) {
+            throw new Error("sender is  empty");
+        }
+        if(this.outputs.size <= 0) {
+            throw new Error("sender is  empty");
+        }
+
+        this.inputs.forEach(function (input) {
+           input.ValidateBasic();
+        });
+
+        this.outputs.forEach(function (output) {
+            output.ValidateBasic();
+        })
+
     }
 }
 
@@ -91,7 +132,7 @@ class StdFee {
 }
 
 
-class StdSignMsg extends SignMsg {
+class StdSignMsg extends Builder.SignMsg {
     constructor(chainID, accnum, sequence, fee, msg) {
         super();
         this.chainID = chainID;
@@ -111,6 +152,19 @@ class StdSignMsg extends SignMsg {
             "alt_bytes": null
         };
         return MarshalJSON(tx)
+    }
+
+    ValidateBasic() {
+        if (!this.chainID || this.chainID.length == 0){
+            throw new Error("chainID is  empty");
+        }
+        if (!this.accnum || this.chainID.size == 0){
+            throw new Error("accountNumber is  empty");
+        }
+        if (!this.sequence || this.sequence.size == 0){
+            throw new Error("accountNumber is  empty");
+        }
+        this.msg.ValidateBasic();
     }
 }
 

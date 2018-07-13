@@ -47,6 +47,7 @@ class IrisBuilder extends Builder {
                 throw new Error("not exist tx type");
             }
         }
+        msg.ValidateBasic();
         return {
             msg : msg,
             type:req.type
