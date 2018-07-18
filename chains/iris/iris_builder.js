@@ -21,12 +21,12 @@ class IrisBuilder extends Builder {
         let req = super.buildParam(tx);
 
         //如果tx中交易地址是bech32格式，转化为Hex格式
-        if (!IrisKeypair.isValidAddress(req.acc.address)){
-            req.acc.address = Bech32.fromBech32(req.acc.address);
-        }
-        if (!IrisKeypair.isValidAddress(req.to)){
-            req.to = Bech32.fromBech32(req.to);
-        }
+        // if (!IrisKeypair.isValidAddress(req.acc.address)){
+        //     req.acc.address = Bech32.fromBech32(req.acc.address);
+        // }
+        // if (!IrisKeypair.isValidAddress(req.to)){
+        //     req.to = Bech32.fromBech32(req.to);
+        // }
 
         let msg;
         switch (req.type) {
@@ -63,7 +63,8 @@ class IrisBuilder extends Builder {
      */
     signTx(tx,privateKey) {
         let signMsg = tx.msg;
-        let signbyte = IrisKeypair.sign(privateKey, signMsg.GetSignBytes());
+        let sig = signMsg.GetSignBytes();
+        let signbyte = IrisKeypair.sign(privateKey, sig);
         let keypair = IrisKeypair.import(privateKey);
         let signs = [new Bank.StdSignature(Hex.hexToBytes(keypair.publicKey), signbyte, signMsg.accnum[0], signMsg.sequence[0])];
         let stdTx = new Bank.StdTx(signMsg.msg, signMsg.fee, signs, tx.type);

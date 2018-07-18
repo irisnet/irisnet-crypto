@@ -110,7 +110,8 @@ class Builder {
             });
 
             let fromAcc = new Account(tx.sender.addr, tx.sender.chain, tx.ext, tx.sequence);
-            return new Request(fromAcc,tx.receiver.addr,coins,fees,tx.gas,tx.memo.text,tx.type);
+            let memo = tx.memo ? tx.memo.text : '';
+            return new Request(fromAcc,tx.receiver.addr,coins,fees,tx.gas,memo,tx.type);
         };
 
         return convert(tx);

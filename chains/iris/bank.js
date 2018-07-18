@@ -21,9 +21,9 @@ class Input extends Builder.Validator {
     }
 
     GetSignBytes() {
-        let bech32Acc = Bech32.toBech32(Constants.IrisNetConfig.PREFIX_BECH32_ACCADDR, this.address);
+        //let bech32Acc = Bech32.toBech32(Constants.IrisNetConfig.PREFIX_BECH32_ACCADDR, this.address);
         let msg = {
-            "address": bech32Acc,
+            "address": this.address,
             "coins": this.coins
         };
         return Utils.sortObjectKeys(msg)
@@ -48,9 +48,9 @@ class Output extends Builder.Validator {
     }
 
     GetSignBytes() {
-        let bech32Acc = Bech32.toBech32(Constants.IrisNetConfig.PREFIX_BECH32_ACCADDR, this.address);
+        //let bech32Acc = Bech32.toBech32(Constants.IrisNetConfig.PREFIX_BECH32_ACCADDR, this.address);
         let msg = {
-            "address": bech32Acc,
+            "address": this.address,
             "coins": this.coins
         };
         return Utils.sortObjectKeys(msg)
@@ -123,7 +123,7 @@ class StdFee {
     }
 
     GetSignBytes() {
-        if (!this.amount || this.amount.length === 0) {
+        if (!this.amount || this.amount.length === 0 || this.amount === 0) {
             this.amount = [new Coin(0, "")]
         }
         //return Base64.encode((JSON.stringify((this))))
