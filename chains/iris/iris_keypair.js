@@ -7,18 +7,17 @@ const Bip39 = require('bip39');
 const Random = require('randombytes');
 const Secp256k1 = require('secp256k1');
 const Bignum = require('bignum');
+const Constants = require('./constants');
 
-const BIP44Prefix        = "44'/118'/";
-const FullFundraiserPath = BIP44Prefix + "0'/0/0";
-const SignatureSecp256k1_prefix = "tendermint/SignatureSecp256k1";
-const PubKeySecp256k1_prefix = "tendermint/PubKeySecp256k1";
+const SignatureSecp256k1_prefix = AminoPrefix(Constants.AminoKey.SignatureSecp256k1_prefix);
+const PubKeySecp256k1_prefix = AminoPrefix(Constants.AminoKey.PubKeySecp256k1_prefix);
 
 class CosmosKeypair {
 
     static getPrivateKeyFromSecret(mnemonicS) {
         let seed = Bip39.mnemonicToSeed(mnemonicS);
         let master = ComputeMastersFromSeed(seed);
-        let derivedPriv = DerivePrivateKeyForPath(master.secret,master.chainCode,FullFundraiserPath);
+        let derivedPriv = DerivePrivateKeyForPath(master.secret,master.chainCode,Constants.AminoKey.FullFundraiserPath);
         return derivedPriv;
     }
 
@@ -34,7 +33,7 @@ class CosmosKeypair {
 
         let sig = Secp256k1.sign(sig32,prikeyArr);
         let signature = Buffer.from(Serialize(sig.signature));
-        let prefix = nameToPrefix(SignatureSecp256k1_prefix);
+        let prefix = SignatureSecp256k1_prefix;
         prefix = Buffer.from(prefix.concat(signature.length));
         signature = Buffer.concat([prefix,signature]);
 
@@ -63,7 +62,7 @@ class CosmosKeypair {
 
         //构造公钥
         let pubKey = Secp256k1.publicKeyCreate(secretKey);
-        let prefix = nameToPrefix(PubKeySecp256k1_prefix);
+        let prefix = PubKeySecp256k1_prefix;
         prefix = Buffer.from(prefix.concat(pubKey.length));
         pubKey = Buffer.concat([prefix,pubKey]);
 
@@ -80,7 +79,7 @@ class CosmosKeypair {
         let secretKey = this.getPrivateKeyFromSecret(mnemonic);
         //构造公钥
         let pubKey = Secp256k1.publicKeyCreate(secretKey);
-        let prefix = nameToPrefix(PubKeySecp256k1_prefix);
+        let prefix = PubKeySecp256k1_prefix;
         prefix = Buffer.from(prefix.concat(pubKey.length));
         pubKey = Buffer.concat([prefix,pubKey]);
 
@@ -96,7 +95,7 @@ class CosmosKeypair {
         let secretBytes = Buffer.from(secretKey,"hex");
         //构造公钥
         let pubKey = Secp256k1.publicKeyCreate(secretBytes);
-        let prefix = nameToPrefix(PubKeySecp256k1_prefix);
+        let prefix = PubKeySecp256k1_prefix;
         prefix = Buffer.from(prefix.concat(pubKey.length));
         pubKey = Buffer.concat([prefix,pubKey]);
         return {
@@ -111,12 +110,12 @@ class CosmosKeypair {
     }
 
     static isValidPrivate(privateKey) {
-        return /^[0-9a-fA-F]{128}$/i.test(privateKey);
+        return /^[0-9a-fA-F]{32}$/i.test(privateKey);
     }
 }
 
 
-function nameToPrefix(name) {
+function AminoPrefix(name) {
     let a = Sha256(name);
     let b = Hex.hexToBytes(a);
     while (b[0] === 0) {
