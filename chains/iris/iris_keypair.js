@@ -8,9 +8,7 @@ const Random = require('randombytes');
 const Secp256k1 = require('secp256k1');
 const Bignum = require('bignum');
 const Constants = require('./constants');
-
-const SignatureSecp256k1_prefix = AminoPrefix(Constants.AminoKey.SignatureSecp256k1_prefix);
-const PubKeySecp256k1_prefix = AminoPrefix(Constants.AminoKey.PubKeySecp256k1_prefix);
+const Codec = require('./amino');
 
 class CosmosKeypair {
 
@@ -22,20 +20,18 @@ class CosmosKeypair {
     }
 
     static sign(private_key, msg) {
+
+        //将签名字符串使用Sha256构造32位byte数组
         let sigByte = Buffer.from(JSON.stringify(msg));
-
-        console.log(JSON.stringify(sigByte));
-
         let sig32 = Buffer.from(Sha256(sigByte,{ asBytes: true }));
+
+        //对数据签名
         let prikeyArr = new Uint8Array(Hex.hexToBytes(private_key));
-
-
-
         let sig = Secp256k1.sign(sig32,prikeyArr);
         let signature = Buffer.from(Serialize(sig.signature));
-        let prefix = SignatureSecp256k1_prefix;
-        prefix = Buffer.from(prefix.concat(signature.length));
-        signature = Buffer.concat([prefix,signature]);
+
+        //将签名结果加上amino编码前缀(irishub反序列化需要)
+        signature = Codec.MarshalBinary(Constants.AminoKey.SignatureSecp256k1_prefix,signature);
 
         console.log(JSON.stringify(signature));
         return signature
@@ -43,6 +39,7 @@ class CosmosKeypair {
 
     static getAddress(publicKey) {
         if (publicKey.length > 33){
+            //去掉amino编码前缀
             publicKey = publicKey.slice(5,publicKey.length)
         }
         let hmac = Sha256(publicKey);
@@ -62,9 +59,8 @@ class CosmosKeypair {
 
         //构造公钥
         let pubKey = Secp256k1.publicKeyCreate(secretKey);
-        let prefix = PubKeySecp256k1_prefix;
-        prefix = Buffer.from(prefix.concat(pubKey.length));
-        pubKey = Buffer.concat([prefix,pubKey]);
+        //将公钥加上amino编码前缀(irishub反序列化需要)
+        pubKey = Codec.MarshalBinary(Constants.AminoKey.PubKeySecp256k1_prefix,pubKey);
 
         return {
             "secret": mnemonicS,
@@ -79,9 +75,8 @@ class CosmosKeypair {
         let secretKey = this.getPrivateKeyFromSecret(mnemonic);
         //构造公钥
         let pubKey = Secp256k1.publicKeyCreate(secretKey);
-        let prefix = PubKeySecp256k1_prefix;
-        prefix = Buffer.from(prefix.concat(pubKey.length));
-        pubKey = Buffer.concat([prefix,pubKey]);
+        //将公钥加上amino编码前缀(irishub反序列化需要)
+        pubKey = Codec.MarshalBinary(Constants.AminoKey.PubKeySecp256k1_prefix,pubKey);
 
         return {
             "secret": mnemonic,
@@ -95,9 +90,8 @@ class CosmosKeypair {
         let secretBytes = Buffer.from(secretKey,"hex");
         //构造公钥
         let pubKey = Secp256k1.publicKeyCreate(secretBytes);
-        let prefix = PubKeySecp256k1_prefix;
-        prefix = Buffer.from(prefix.concat(pubKey.length));
-        pubKey = Buffer.concat([prefix,pubKey]);
+        //将公钥加上amino编码前缀(irishub反序列化需要)
+        pubKey = Codec.MarshalBinary(Constants.AminoKey.PubKeySecp256k1_prefix,pubKey);
         return {
             "address": this.getAddress(pubKey),
             "privateKey": secretKey,
@@ -112,21 +106,6 @@ class CosmosKeypair {
     static isValidPrivate(privateKey) {
         return /^[0-9a-fA-F]{32}$/i.test(privateKey);
     }
-}
-
-
-function AminoPrefix(name) {
-    let a = Sha256(name);
-    let b = Hex.hexToBytes(a);
-    while (b[0] === 0) {
-        b = b.slice(1, b.length - 1)
-    }
-    b = b.slice(3, b.length - 1);
-    while (b[0] === 0) {
-        b = b.slice(1, b.length - 1)
-    }
-    b = b.slice(0, 4);
-    return b
 }
 
 function ComputeMastersFromSeed(seed) {
