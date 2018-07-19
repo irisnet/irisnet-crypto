@@ -1,6 +1,6 @@
 {
   "name": "irisnet-crypto",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "irisnet-crypto",
   "main": "index.js",
   "scripts": {
@@ -23,18 +23,20 @@
   },
   "homepage": "https://github.com/irisnet/irisnet-crypto#readme",
   "dependencies": {
-    "axios": "^0.17.1",
     "bignumber.js": "^5.0.0",
-    "cosmos-sdk": "^1.5.1",
     "ethereumjs-tx": "^1.3.0",
     "ethereumjs-util": "^5.1.2",
     "js-crc": "^0.2.0",
-    "js-wire": "https://github.com/tendermint/js-wire.git",
     "ripemd160": "^2.0.1",
     "sha256": "^0.2.0",
+    "old": "^0.2.0",
     "text-encoding": "^0.6.4",
     "tweetnacl": "^1.0.0",
-    "web3": "git+https://github.com/ethereum/web3.js.git"
+    "thrift": "git+https://github.com/irisnet/thrift.git#browser_thrift",
+    "web3": "git+https://github.com/ethereum/web3.js.git",
+    "blockchain-rpc": "git+https://github.com/irisnet/blockchain-rpc.git#develop",
+    "bech32": "^1.1.3",
+    "base64-node": "^1.0.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",

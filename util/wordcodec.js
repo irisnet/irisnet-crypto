@@ -1,4 +1,4 @@
-let CRC = require("./cosmos/crc");
+let CRC = require("./crc");
 let BigNumber = require('bignumber.js');
 byteArrayToLong = function (byteArray) {
     console.log(typeof (byteArray[0]));
