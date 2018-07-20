@@ -168,7 +168,7 @@ class StdSignMsg extends Builder.SignMsg {
             throw new Error("accountNumber is  empty");
         }
         if (this.sequence < 0) {
-            throw new Error("accountNumber is  empty");
+            throw new Error("sequence is  empty");
         }
         this.msgs.forEach(function (msg) {
             msg.ValidateBasic();
@@ -186,12 +186,22 @@ class StdSignature {
 }
 
 class StdTx {
-    constructor(msg, fee, signatures, type) {
-        this.msg = JSON.stringify(msg);//TODO
+    constructor(msgs, fee, signatures, type, memo) {
+        //this.msgs = JSON.stringify(msg);//TODO
+        let fmtMsgs = function (msgs) {
+            let msgS = [];
+            msgs.forEach(function (msg) {
+                msgS.push(JSON.stringify(msg))
+            });
+            return msgS
+        }
+        this.msgs = fmtMsgs(msgs);
         this.fee = fee;
         this.signatures = signatures;
-        this.type = type
+        this.type = type;
+        this.memo = memo
     }
+
 }
 
 
