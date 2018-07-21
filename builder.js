@@ -1,6 +1,7 @@
 'use strict';
 
 const Constants = require('./constants');
+const Utils = require('./util/utils');
 
 class Builder {
 
@@ -70,30 +71,25 @@ class Builder {
      * @returns {{acc, to, coins, fees, gas, type}}
      */
     buildParam(tx){
-        if (!tx.amount || tx.amount.length == 0) {
+        if (Utils.isEmpty(tx.amount)) {
             throw new Error("amount not empty");
         }
 
-        if (!tx.sender.addr || tx.sender.addr.length == 0) {
+        if (Utils.isEmpty(tx.sender.addr)) {
             throw new Error("sender not empty");
         }
 
-        if (!tx.receiver || tx.receiver.length == 0) {
+        if (Utils.isEmpty(tx.receiver)) {
             throw new Error("sender not empty");
         }
-
-
-        /*if (!tx.sequence) {
-            throw new Error("sequence not empty");
-        }*/
 
         let convert = function (tx) {
             let coins = [];
             tx.amount.forEach(function (item) {
-                if (!item.denom || item.denom.length == 0) {
+                if (Utils.isEmpty(item.denom)) {
                     throw new Error("denom not empty");
                 }
-                if (item.amount < 0) {
+                if (Utils.isEmpty(item.amount)) {
                     throw new Error("amount must > 0");
                 }
                 coins.push({
@@ -109,17 +105,24 @@ class Builder {
                 "amount":tx.fee.amount,
             });
 
-            return {
-                "acc": new Account(tx.sender.addr, tx.sender.chain, tx.ext, tx.sequence),
-                "to": tx.receiver.addr,
-                "coins": coins,
-                "fees": fees,
-                "gas": tx.gas,
-                "type": tx.type
-            }
+            let fromAcc = new Account(tx.sender.addr, tx.sender.chain, tx.ext, tx.sequence);
+            let memo = tx.memo ? tx.memo.text : '';
+            return new Request(fromAcc,tx.receiver.addr,coins,fees,tx.gas,memo,tx.type);
         };
 
         return convert(tx);
+    }
+}
+
+class Request {
+    constructor(acc, to, coins, fees,gas,memo,type) {
+        this.acc = acc;
+        this.to = to;
+        this.coins = coins;
+        this.fees = fees;
+        this.gas = gas;
+        this.memo = memo;
+        this.type = type
     }
 }
 

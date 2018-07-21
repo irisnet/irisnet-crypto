@@ -18,11 +18,9 @@ class IrisCrypto extends Crypto {
     create(language) {
         let keyPair = IrisKeypair.create();
         if (keyPair) {
-            let seed = Wordcodec.BytesToWords(keyPair.secret, language);
-            let phrase = seed.toString().replace(/,/g, " ");
             return {
                 address: keyPair.address,
-                phrase: phrase,
+                phrase: keyPair.secret,
                 privateKey: keyPair.privateKey,
                 publicKey: keyPair.publicKey
             };
@@ -30,14 +28,12 @@ class IrisCrypto extends Crypto {
         return keyPair;
     }
 
-    recover(seedphrase, language) {
-        let words = seedphrase.split(" ");
-        let secret =Wordcodec.WordsToBytes(words, language);
+    recover(secret, language) {
         let keyPair = IrisKeypair.recover(secret)
         if (keyPair) {
             return {
                 address: keyPair.address,
-                phrase: seedphrase,
+                phrase: secret,
                 privateKey: keyPair.privateKey,
                 publicKey: keyPair.publicKey
             };

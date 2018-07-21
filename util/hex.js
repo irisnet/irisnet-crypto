@@ -15,7 +15,7 @@ class Hex {
             hex.push((bytes[i] >>> 4).toString(16));
             hex.push((bytes[i] & 0xF).toString(16));
         }
-        return hex.join("");
+        return hex.join("").toUpperCase();
     }
 
     static stringToHex(str){

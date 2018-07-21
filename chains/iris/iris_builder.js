@@ -21,26 +21,31 @@ class IrisBuilder extends Builder {
         let req = super.buildParam(tx);
 
         //如果tx中交易地址是bech32格式，转化为Hex格式
-        if (!IrisKeypair.isValidAddress(req.acc.address)){
-            req.acc.address = Bech32.fromBech32(req.acc.address);
-        }
-        if (!IrisKeypair.isValidAddress(req.to)){
-            req.to = Bech32.fromBech32(req.to);
-        }
+        // if (!IrisKeypair.isValidAddress(req.acc.address)){
+        //     req.acc.address = Bech32.fromBech32(req.acc.address);
+        // }
+        // if (!IrisKeypair.isValidAddress(req.to)){
+        //     req.to = Bech32.fromBech32(req.to);
+        // }
 
         let msg;
         switch (req.type) {
             case Constants.TxType.TRANSFER: {
-                msg = Bank.getTransferSignMsg(req.acc, req.to, req.coins, req.fees, req.gas);
+                msg = Bank.GetTransferSignMsg(req.acc, req.to, req.coins, req.fees, req.gas, req.memo);
                 break;
             }
             case Constants.TxType.DELEGATE: {
-                msg = Stake.getDelegateSignMsg(req.acc, req.to, req.coins[0], req.fees, req.gas);
+                msg = Stake.GetDelegateSignMsg(req.acc, req.to, req.coins[0], req.fees, req.gas);
                 break;
             }
-            case Constants.TxType.UNBOND: {
+            case Constants.TxType.BEGINUNBOND: {
                 let share = req.coins[0].amount;
-                msg = Stake.getUnbondSignMsg(req.acc, req.to, share, req.fees, req.gas);
+                msg = Stake.GetBeginUnbondingMsg(req.acc, req.to, share, req.fees, req.gas);
+                break;
+            }
+            case Constants.TxType.COMPLETEUNBOND: {
+                let share = req.coins[0].amount;
+                msg = Stake.GetCompleteUnbondingMsg(req.acc, req.to, share, req.fees, req.gas);
                 break;
             }
             default: {
@@ -63,10 +68,11 @@ class IrisBuilder extends Builder {
      */
     signTx(tx,privateKey) {
         let signMsg = tx.msg;
-        let signbyte = IrisKeypair.sign(privateKey, signMsg.GetSignBytes());
+        let sig = signMsg.GetSignBytes();
+        let signbyte = IrisKeypair.sign(privateKey, sig);
         let keypair = IrisKeypair.import(privateKey);
-        let signs = [new Bank.StdSignature(Hex.hexToBytes(keypair.publicKey), signbyte, signMsg.accnum[0], signMsg.sequence[0])];
-        let stdTx = new Bank.StdTx(signMsg.msg, signMsg.fee, signs, tx.type);
+        let signs = [new Bank.StdSignature(Hex.hexToBytes(keypair.publicKey), signbyte, signMsg.accnum, signMsg.sequence)];
+        let stdTx = new Bank.StdTx(signMsg.msgs, signMsg.fee, signs, tx.type,signMsg.memo);
         return stdTx
     }
 
@@ -83,8 +89,8 @@ class IrisBuilder extends Builder {
         let signMsg = this.buildTx(tx).msg;
         let signbyte = IrisKeypair.sign(privateKey, signMsg.GetSignBytes());
         let keypair = IrisKeypair.import(privateKey);
-        let signs = [new Bank.StdSignature(Hex.hexToBytes(keypair.publicKey), signbyte, signMsg.accnum[0], signMsg.sequence[0])];
-        let stdTx = new Bank.StdTx(signMsg.msg, signMsg.fee, signs, tx.type);
+        let signs = [Bank.NewStdSignature(Hex.hexToBytes(keypair.publicKey), signbyte, signMsg.accnum, signMsg.sequence)];
+        let stdTx = Bank.NewStdTx(signMsg.msgs, signMsg.fee, signs, tx.type,signMsg.memo);
         return stdTx
     }
 }

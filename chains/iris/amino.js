@@ -1,0 +1,58 @@
+'use strict';
+
+const Hex = require("../../util/hex");
+const Sha256 = require("sha256");
+const Constants = require('./constants');
+
+/**
+ * 处理amino编码（目前支持序列化）
+ *
+ */
+class Codec {
+    constructor(){
+        this._keyMap = {};
+    }
+
+    /**
+     * 注册消息的amino前缀
+     *
+     * @param key amino前缀
+     */
+    RegisterConcrete(key){
+        this._keyMap[key] = this._aminoPrefix(key)
+    }
+
+    /**
+     * 给消息加上amino前缀
+     *
+     * @param key amino前缀
+     * @param message 编码msg
+     * @returns { Array }
+     */
+    MarshalBinary(key,message){
+        let prefixBytes = this._keyMap[key];
+        prefixBytes = Buffer.from(prefixBytes.concat(message.length));
+        prefixBytes = Buffer.concat([prefixBytes,message]);
+        return prefixBytes
+    }
+
+    _aminoPrefix(name) {
+        let a = Sha256(name);
+        let b = Hex.hexToBytes(a);
+        while (b[0] === 0) {
+            b = b.slice(1, b.length - 1)
+        }
+        b = b.slice(3, b.length - 1);
+        while (b[0] === 0) {
+            b = b.slice(1, b.length - 1)
+        }
+        b = b.slice(0, 4);//注意和go-amino v0.6.2以前的不一样
+        return b
+    }
+}
+
+let codec = new Codec();
+codec.RegisterConcrete(Constants.AminoKey.SignatureSecp256k1_prefix);
+codec.RegisterConcrete(Constants.AminoKey.PubKeySecp256k1_prefix);
+
+module.exports = codec;

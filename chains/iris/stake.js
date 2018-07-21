@@ -1,12 +1,10 @@
 'use strict';
 
-const bech32 = require('../../util/bech32');
-const Constants = require('./constants').IrisNetConfig;
-const Base64 = require('base64-node');
 const Bank = require('./bank');
 const Builder = require("../../builder");
+const Utils = require('../../util/utils');
 
-class DelegateMsg extends Builder.Validator{
+class DelegateMsg extends Builder.SignMsg{
     constructor(delegator_addr, validator_addr, bond) {
         super();
         this.delegator_addr = delegator_addr;
@@ -15,30 +13,35 @@ class DelegateMsg extends Builder.Validator{
     }
 
     GetSignBytes() {
-        let delegatorAddr = bech32.toBech32(Constants.PREFIX_BECH32_ACCADDR, this.delegator_addr)
-        let validatorAddr = bech32.toBech32(Constants.PREFIX_BECH32_VALADDR, this.validator_addr);
+        //let delegatorAddr = bech32.toBech32(Constants.PREFIX_BECH32_ACCADDR, this.delegator_addr)
+        //let validatorAddr = bech32.toBech32(Constants.PREFIX_BECH32_VALADDR, this.validator_addr);
 
         let msg = {
-            "delegator_addr": delegatorAddr,
-            "validator_addr": validatorAddr,
+            "delegator_addr": this.delegator_addr,
+            "validator_addr": this.validator_addr,
             "bond": this.bond
         };
-        return Base64.encode(JSON.stringify((msg)))
+        return Utils.sortObjectKeys(msg)
+        //return Base64.encode(JSON.stringify((msg)))
     }
 
     ValidateBasic() {
-        if (!this.delegator_addr || this.delegator_addr.length ==0){
+        if (Utils.isEmpty(this.delegator_addr)){
             throw new Error("delegator_addr is empty");
         }
 
-        if (!this.validator_addr || this.validator_addr.length ==0){
+        if (Utils.isEmpty(this.validator_addr)){
             throw new Error("validator_addr is empty");
+        }
+
+        if (Utils.isEmpty(this.bond)){
+            throw new Error("bond must great than 0");
         }
     }
 
 }
 
-class UnbondMsg extends Builder.Validator{
+class BeginUnbondingMsg extends Builder.Validator{
     constructor(delegator_addr, validator_addr, shares) {
         super();
         this.delegator_addr = delegator_addr;
@@ -47,49 +50,84 @@ class UnbondMsg extends Builder.Validator{
     }
 
     GetSignBytes() {
-        let delegatorAddr = bech32.toBech32(Constants.PREFIX_BECH32_ACCADDR, this.delegator_addr);
-        let validatorAddr = bech32.toBech32(Constants.PREFIX_BECH32_VALADDR, this.validator_addr);
+        //let delegatorAddr = bech32.toBech32(Constants.PREFIX_BECH32_ACCADDR, this.delegator_addr);
+        //let validatorAddr = bech32.toBech32(Constants.PREFIX_BECH32_VALADDR, this.validator_addr);
 
         let msg = {
-            "delegator_addr": delegatorAddr,
-            "validator_addr": validatorAddr,
-            "shares": this.shares
+            "delegator_addr": this.delegator_addr,
+            "validator_addr": this.validator_addr,
+            "shares_amount" : this.shares
         };
-        return Base64.encode(JSON.stringify((msg)))
+        //return Base64.encode(JSON.stringify((msg)))
+        return Utils.sortObjectKeys(msg)
     }
 
     ValidateBasic() {
-        if (!this.delegator_addr || this.delegator_addr.length ==0){
+        if (Utils.isEmpty(this.delegator_addr)){
             throw new Error("delegator_addr is empty");
         }
 
-        if (!this.validator_addr || this.validator_addr.length ==0){
+        if (Utils.isEmpty(this.validator_addr)){
             throw new Error("validator_addr is empty");
         }
 
-        if (this.shares < 0 ){
-            throw new Error("shares must > 0");
+        if (Utils.isEmpty(this.shares)){
+            throw new Error("shares must great than 0");
         }
     }
 }
 
+class CompleteUnbondingMsg extends Builder.Validator{
+    constructor(delegator_addr, validator_addr) {
+        super();
+        this.delegator_addr = delegator_addr;
+        this.validator_addr = validator_addr;
+    }
 
-let getDelegateSignMsg = function (acc, validatorAddr, coins, fee, gas) {
-    let stdFee = new Bank.StdFee(fee, gas);
-    let msg = new DelegateMsg(acc.address, validatorAddr, coins);
-    let signMsg = new Bank.StdSignMsg(acc.chain_id, acc.account_number, acc.sequence, stdFee, msg);
-    return signMsg;
-};
+    GetSignBytes() {
+        //let delegatorAddr = bech32.toBech32(Constants.PREFIX_BECH32_ACCADDR, this.delegator_addr);
+        //let validatorAddr = bech32.toBech32(Constants.PREFIX_BECH32_VALADDR, this.validator_addr);
 
-let getUnbondSignMsg = function (acc, validatorAddr, shares, fee, gas) {
-    let stdFee = new Bank.StdFee(fee, gas);
-    let msg = new UnbondMsg(acc.address, validatorAddr, shares);
-    let signMsg = new Bank.StdSignMsg(acc.chain_id, acc.account_number, acc.sequence, stdFee, msg);
-    return signMsg;
-};
+        let msg = {
+            "delegator_addr": this.delegator_addr,
+            "validator_addr": this.validator_addr
+        };
+        //return Base64.encode(JSON.stringify((msg)))
+        return Utils.sortObjectKeys(msg)
+    }
 
+    ValidateBasic() {
+        if (Utils.isEmpty(this.delegator_addr)){
+            throw new Error("delegator_addr is empty");
+        }
 
-module.exports = {
-    getDelegateSignMsg,
-    getUnbondSignMsg,
+        if (Utils.isEmpty(this.validator_addr)){
+            throw new Error("validator_addr is empty");
+        }
+
+    }
+}
+
+module.exports = class Stake {
+    static GetDelegateSignMsg(acc, validatorAddr, coins, fee, gas) {
+        let stdFee = Bank.NewStdFee(fee, gas);
+        let msg = new DelegateMsg(acc.address, validatorAddr, coins);
+        let signMsg = Bank.NewStdSignMsg(acc.chain_id, acc.account_number, acc.sequence, stdFee, msg);
+        return signMsg;
+    }
+
+    static GetBeginUnbondingMsg(acc, validatorAddr, shares, fee, gas) {
+        let stdFee = Bank.NewStdFee(fee, gas);
+        let msg = new BeginUnbondingMsg(acc.address, validatorAddr, shares);
+        let signMsg = Bank.NewStdSignMsg(acc.chain_id, acc.account_number, acc.sequence, stdFee, msg);
+        return signMsg;
+    }
+
+    static GetCompleteUnbondingMsg(acc, validatorAddr, shares, fee, gas) {
+        let stdFee = Bank.NewStdFee(fee, gas);
+        let msg = new CompleteUnbondingMsg(acc.address, validatorAddr);
+        let signMsg = Bank.NewStdSignMsg(acc.chain_id, acc.account_number, acc.sequence, stdFee, msg);
+        return signMsg;
+    };
+
 };
