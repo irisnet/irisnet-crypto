@@ -32,7 +32,7 @@
     "old": "^0.2.0",
     "text-encoding": "^0.6.4",
     "tweetnacl": "^1.0.0",
-    "thrift": "git+https://github.com/shineabel/thrift.git",
+    "thrift": "git+https://github.com/irisnet/thrift.git#browser_thrift",
     "web3": "git+https://github.com/ethereum/web3.js.git",
     "blockchain-rpc": "git+https://github.com/irisnet/blockchain-rpc.git#develop",
     "bech32": "^1.1.3",
