@@ -1,6 +1,7 @@
 'use strict';
 
 const Constants = require('./constants');
+const Utils = require('./util/utils');
 
 class Builder {
 
@@ -70,30 +71,25 @@ class Builder {
      * @returns {{acc, to, coins, fees, gas, type}}
      */
     buildParam(tx){
-        if (!tx.amount || tx.amount.length == 0) {
+        if (Utils.isEmpty(tx.amount)) {
             throw new Error("amount not empty");
         }
 
-        if (!tx.sender.addr || tx.sender.addr.length == 0) {
+        if (Utils.isEmpty(tx.sender.addr)) {
             throw new Error("sender not empty");
         }
 
-        if (!tx.receiver || tx.receiver.length == 0) {
+        if (Utils.isEmpty(tx.receiver)) {
             throw new Error("sender not empty");
         }
-
-
-        /*if (!tx.sequence) {
-            throw new Error("sequence not empty");
-        }*/
 
         let convert = function (tx) {
             let coins = [];
             tx.amount.forEach(function (item) {
-                if (!item.denom || item.denom.length == 0) {
+                if (Utils.isEmpty(item.denom)) {
                     throw new Error("denom not empty");
                 }
-                if (item.amount < 0) {
+                if (Utils.isEmpty(item.amount)) {
                     throw new Error("amount must > 0");
                 }
                 coins.push({

@@ -31,16 +31,21 @@ class IrisBuilder extends Builder {
         let msg;
         switch (req.type) {
             case Constants.TxType.TRANSFER: {
-                msg = Bank.getTransferSignMsg(req.acc, req.to, req.coins, req.fees, req.gas, req.memo);
+                msg = Bank.GetTransferSignMsg(req.acc, req.to, req.coins, req.fees, req.gas, req.memo);
                 break;
             }
             case Constants.TxType.DELEGATE: {
-                msg = Stake.getDelegateSignMsg(req.acc, req.to, req.coins[0], req.fees, req.gas);
+                msg = Stake.GetDelegateSignMsg(req.acc, req.to, req.coins[0], req.fees, req.gas);
                 break;
             }
-            case Constants.TxType.UNBOND: {
+            case Constants.TxType.BEGINUNBOND: {
                 let share = req.coins[0].amount;
-                msg = Stake.getUnbondSignMsg(req.acc, req.to, share, req.fees, req.gas);
+                msg = Stake.GetBeginUnbondingMsg(req.acc, req.to, share, req.fees, req.gas);
+                break;
+            }
+            case Constants.TxType.COMPLETEUNBOND: {
+                let share = req.coins[0].amount;
+                msg = Stake.GetCompleteUnbondingMsg(req.acc, req.to, share, req.fees, req.gas);
                 break;
             }
             default: {
@@ -84,8 +89,8 @@ class IrisBuilder extends Builder {
         let signMsg = this.buildTx(tx).msg;
         let signbyte = IrisKeypair.sign(privateKey, signMsg.GetSignBytes());
         let keypair = IrisKeypair.import(privateKey);
-        let signs = [new Bank.StdSignature(Hex.hexToBytes(keypair.publicKey), signbyte, signMsg.accnum, signMsg.sequence)];
-        let stdTx = new Bank.StdTx(signMsg.msgs, signMsg.fee, signs, tx.type,signMsg.memo);
+        let signs = [Bank.NewStdSignature(Hex.hexToBytes(keypair.publicKey), signbyte, signMsg.accnum, signMsg.sequence)];
+        let stdTx = Bank.NewStdTx(signMsg.msgs, signMsg.fee, signs, tx.type,signMsg.memo);
         return stdTx
     }
 }

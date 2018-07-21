@@ -40,7 +40,7 @@ describe('CryPto test', function () {
 
         it('test transfer', function () {
             let tx = new blockChainThriftModel.Tx({
-                "sequence":1,
+                "sequence":3,
                 "ext":0,
                 "sender":{
                     "chain":"fuxi-1001",
@@ -86,8 +86,8 @@ describe('CryPto test', function () {
 
             let builder = Irisnet.getBuilder(Irisnet.Constants.COMM.Chains.IRIS);
             let signMsg = builder.buildTx(tx);
-            console.log(JSON.stringify(signMsg))
-            let stdTx = builder.signTx(signMsg,"625f0968c78d95857629ea4b4cbafe2f3f949a92e82dda09b5fbe9fbc70d50cc62f3621a751f0431b69b965d41ec480f1b9a4b6f14a1f6c0d17158281a980f74");
+            console.log(JSON.stringify(signMsg));
+            let stdTx = builder.signTx(signMsg,"E9B05BF448FFDFC91EB2149BD5309342DCFC87FC3FBB3DE16256585FB407363A");
             console.log(JSON.stringify(stdTx))
             //TODO 将stdTx提交到iris-hub[/tx/send]
         });
@@ -96,7 +96,7 @@ describe('CryPto test', function () {
             let tx = new blockChainThriftModel.Tx({"sequence":2,"amount":[{"amount":-1,"denom":"iris"}],"fee":{"amount":0,"denom":"iris"},"receiver":{"chain":"fuxi-develop","app":"sigs","addr":"507405661F2DB1940941FA0A6B3642015A015387"},"sender":{"chain":"fuxi-develop","app":"sigs","addr":"9778915A4BF434C86A62C2FF45C2FCAE84AF458B"},"type":"delegate","ext":2});
 
             let builder = Irisnet.getBuilder(Irisnet.Constants.COMM.Chains.IRIS);
-            let stdTx = builder.buildAndSignTx(tx,"2233230fa9326b52b33178273a6b356479933dd71f64c9409c5edc76d425f63ff9e164fb91f7f6ebb02d85fa0491a4e81eb9245680940c4ecf30324ab04ae6cd");
+            let stdTx = builder.buildAndSignTx(tx,"E9B05BF448FFDFC91EB2149BD5309342DCFC87FC3FBB3DE16256585FB407363A");
             console.log(JSON.stringify(stdTx))
             //TODO 将stdTx提交到iris-hub[/tx/send]
         });
@@ -117,10 +117,33 @@ describe('CryPto test', function () {
         });
 
         it('test sortObjectKeys', function () {
-            let msg = new bank.MsgSend("input","output",[new bank.Coin(10,"atom")]);
+            let msg = bank.NewMsgSend("input","output",[bank.NewCoin(10,"atom")]);
             let s = JSON.stringify(utils.sortObjectKeys(msg));
             let expected = '{"inputs":[{"address":"input","coins":[{"amount":"10","denom":"atom"}]}],"outputs":[{"address":"output","coins":[{"amount":"10","denom":"atom"}]}]}';
             assert.deepEqual(s, expected);
+        });
+
+        it('test Utils', function () {
+            let msg1 = null;
+            assert.deepEqual(utils.isEmpty(msg1),true);
+
+            let msg2;
+            assert.deepEqual(utils.isEmpty(msg2),true);
+
+            let msg3 = "";
+            assert.deepEqual(utils.isEmpty(msg3),true);
+
+            let msg4 = [];
+            assert.deepEqual(utils.isEmpty(msg4),true);
+
+            let msg5 = {};
+            assert.deepEqual(utils.isEmpty(msg5),true);
+
+            let msg6 = 0;
+            assert.deepEqual(utils.isEmpty(msg6),true);
+
+            let msg7 = {};
+            assert.deepEqual(utils.isEmpty(msg7.a),true)
         });
 
         //冷钱包

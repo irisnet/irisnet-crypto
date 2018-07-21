@@ -30,11 +30,11 @@ class Input extends Builder.Validator {
     }
 
     ValidateBasic() {
-        if (!this.address || this.address.length === 0) {
+        if (Utils.isEmpty(this.address)) {
             throw new Error("address is empty");
         }
 
-        if (!this.coins || this.coins.size === 0) {
+        if (Utils.isEmpty(this.coins)) {
             throw new Error("coins is empty");
         }
     }
@@ -57,11 +57,11 @@ class Output extends Builder.Validator {
     }
 
     ValidateBasic() {
-        if (!this.address || this.address.length === 0) {
+        if (Utils.isEmpty(this.address)) {
             throw new Error("address is empty");
         }
 
-        if (!this.coins || this.coins.size == 0) {
+        if (Utils.isEmpty(this.coins)) {
             throw new Error("coins is empty");
         }
     }
@@ -94,10 +94,10 @@ class MsgSend extends Builder.Validator {
     }
 
     ValidateBasic() {
-        if (this.inputs.size <= 0) {
+        if (Utils.isEmpty(this.inputs)) {
             throw new Error("sender is  empty");
         }
-        if (this.outputs.size <= 0) {
+        if (Utils.isEmpty(this.outputs)) {
             throw new Error("sender is  empty");
         }
 
@@ -112,7 +112,6 @@ class MsgSend extends Builder.Validator {
     }
 }
 
-
 class StdFee {
     constructor(amount, gas) {
         this.amount = amount;
@@ -123,7 +122,7 @@ class StdFee {
     }
 
     GetSignBytes() {
-        if (!this.amount || this.amount.length === 0 || this.amount === 0) {
+        if (Utils.isEmpty(this.amount)) {
             this.amount = [new Coin(0, "")]
         }
         //return Base64.encode((JSON.stringify((this))))
@@ -161,7 +160,7 @@ class StdSignMsg extends Builder.SignMsg {
     }
 
     ValidateBasic() {
-        if (!this.chainID || this.chainID.length === 0) {
+        if (Utils.isEmpty(this.chainID)) {
             throw new Error("chainID is  empty");
         }
         if (this.accnum < 0) {
@@ -194,7 +193,7 @@ class StdTx {
                 msgS.push(JSON.stringify(msg))
             });
             return msgS
-        }
+        };
         this.msgs = fmtMsgs(msgs);
         this.fee = fee;
         this.signatures = signatures;
@@ -204,22 +203,31 @@ class StdTx {
 
 }
 
+module.exports = class Bank{
+    static GetTransferSignMsg(acc, toAddress, coins, fee, gas, memo) {
+        let stdFee = new StdFee(fee, gas);
+        let msg = new MsgSend(acc.address, toAddress, coins);
+        let signMsg = new StdSignMsg(acc.chain_id, acc.account_number, acc.sequence, stdFee, msg, memo);
+        return signMsg
+    }
 
-let getTransferSignMsg = function (acc, toAddress, coins, fee, gas, memo) {
-    let stdFee = new StdFee(fee, gas);
-    let msg = new MsgSend(acc.address, toAddress, coins);
-    let signMsg = new StdSignMsg(acc.chain_id, acc.account_number, acc.sequence, stdFee, msg, memo);
-    return signMsg
-};
+    static NewStdSignature(pub_key, signature, account_number, sequence){
+        return new StdSignature(pub_key, signature, account_number, sequence)
+    }
 
-module.exports = {
-    getTransferSignMsg,
-    Coin,
-    Input,
-    Output,
-    MsgSend,
-    StdFee,
-    StdSignMsg,
-    StdSignature,
-    StdTx,
+    static NewStdTx(msgs, fee, signatures, type, memo){
+        return new StdTx(msgs, fee, signatures, type, memo)
+    }
+
+    static NewMsgSend(from, to, coins){
+        return new MsgSend(from, to, coins)
+    }
+
+    static NewStdFee(amount, gas){
+        return new StdFee(amount, gas)
+    }
+
+    static NewStdSignMsg(chainID, accnum, sequence, fee, msg, memo){
+        return new StdSignMsg(chainID, accnum, sequence, fee, msg, memo)
+    }
 };

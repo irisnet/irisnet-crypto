@@ -32,8 +32,6 @@ class CosmosKeypair {
 
         //将签名结果加上amino编码前缀(irishub反序列化需要)
         signature = Codec.MarshalBinary(Constants.AminoKey.SignatureSecp256k1_prefix,signature);
-
-        console.log(JSON.stringify(Array.from(signature)));
         return Array.from(signature)
     }
 
