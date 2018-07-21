@@ -79,7 +79,7 @@ class Builder {
             throw new Error("sender not empty");
         }
 
-        if (Utils.isEmpty(tx.receiver)) {
+        if (Utils.isEmpty(tx.receiver.addr)) {
             throw new Error("sender not empty");
         }
 

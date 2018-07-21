@@ -20,13 +20,13 @@ class IrisBuilder extends Builder {
     buildTx(tx) {
         let req = super.buildParam(tx);
 
-        //如果tx中交易地址是bech32格式，转化为Hex格式
-        // if (!IrisKeypair.isValidAddress(req.acc.address)){
-        //     req.acc.address = Bech32.fromBech32(req.acc.address);
-        // }
-        // if (!IrisKeypair.isValidAddress(req.to)){
-        //     req.to = Bech32.fromBech32(req.to);
-        // }
+        //将from和to由hex编码转化为bech32编码
+        if (Hex.isHex(req.acc.address)) {
+            req.acc.address = Bech32.toBech32(Constants.IrisNetConfig.PREFIX_BECH32_ACCADDR, req.acc.address);
+        }
+        if (Hex.isHex(req.to)) {
+            req.to =  Bech32.toBech32(Constants.IrisNetConfig.PREFIX_BECH32_ACCADDR,req.to)
+        }
 
         let msg;
         switch (req.type) {
@@ -71,8 +71,8 @@ class IrisBuilder extends Builder {
         let sig = signMsg.GetSignBytes();
         let signbyte = IrisKeypair.sign(privateKey, sig);
         let keypair = IrisKeypair.import(privateKey);
-        let signs = [new Bank.StdSignature(Hex.hexToBytes(keypair.publicKey), signbyte, signMsg.accnum, signMsg.sequence)];
-        let stdTx = new Bank.StdTx(signMsg.msgs, signMsg.fee, signs, tx.type,signMsg.memo);
+        let signs = [Bank.NewStdSignature(Hex.hexToBytes(keypair.publicKey), signbyte, signMsg.accnum, signMsg.sequence)];
+        let stdTx = Bank.NewStdTx(signMsg.msgs, signMsg.fee, signs, tx.type,signMsg.memo);
         return stdTx
     }
 

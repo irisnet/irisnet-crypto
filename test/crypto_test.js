@@ -40,7 +40,7 @@ describe('CryPto test', function () {
 
         it('test transfer', function () {
             let tx = new blockChainThriftModel.Tx({
-                "sequence":3,
+                "sequence":7,
                 "ext":0,
                 "sender":{
                     "chain":"fuxi-1001",
@@ -101,12 +101,6 @@ describe('CryPto test', function () {
             //TODO 将stdTx提交到iris-hub[/tx/send]
         });
 
-        it('test getAddress', function () {
-            let crypto = Irisnet.getCrypto(Irisnet.Constants.COMM.Chains.IRIS);
-            let addrBech32 = crypto.getAddress("b6be55dab3f686e2e60c0e5272a45905d4ec826dfd72334e8def519542cee915");
-            let addr = bech32.fromBech32(addrBech32);
-            assert.deepEqual(addr, "33FA54A78EDE1B22A55185DB06438078D7226436");
-        });
 
         it('test create', function () {
             let crypto = Irisnet.getCrypto(Irisnet.Constants.COMM.Chains.IRIS);
@@ -121,29 +115,6 @@ describe('CryPto test', function () {
             let s = JSON.stringify(utils.sortObjectKeys(msg));
             let expected = '{"inputs":[{"address":"input","coins":[{"amount":"10","denom":"atom"}]}],"outputs":[{"address":"output","coins":[{"amount":"10","denom":"atom"}]}]}';
             assert.deepEqual(s, expected);
-        });
-
-        it('test Utils', function () {
-            let msg1 = null;
-            assert.deepEqual(utils.isEmpty(msg1),true);
-
-            let msg2;
-            assert.deepEqual(utils.isEmpty(msg2),true);
-
-            let msg3 = "";
-            assert.deepEqual(utils.isEmpty(msg3),true);
-
-            let msg4 = [];
-            assert.deepEqual(utils.isEmpty(msg4),true);
-
-            let msg5 = {};
-            assert.deepEqual(utils.isEmpty(msg5),true);
-
-            let msg6 = 0;
-            assert.deepEqual(utils.isEmpty(msg6),true);
-
-            let msg7 = {};
-            assert.deepEqual(utils.isEmpty(msg7.a),true)
         });
 
         //冷钱包

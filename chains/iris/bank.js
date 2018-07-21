@@ -230,4 +230,8 @@ module.exports = class Bank{
     static NewStdSignMsg(chainID, accnum, sequence, fee, msg, memo){
         return new StdSignMsg(chainID, accnum, sequence, fee, msg, memo)
     }
+
+    static NewCoin(amount, denom){
+        return new Coin(amount, denom)
+    }
 };

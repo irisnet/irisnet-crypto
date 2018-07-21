@@ -25,6 +25,11 @@ class Hex {
         }
         return bytes.join("");
     }
+
+    static isHex(str){
+        str = str.replace("0x","");
+        return /^[0-9a-fA-F]*$/i.test(str);
+    }
 }
 
 module.exports = Hex;

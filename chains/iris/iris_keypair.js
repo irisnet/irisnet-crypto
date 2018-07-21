@@ -14,8 +14,8 @@ class CosmosKeypair {
 
     static getPrivateKeyFromSecret(mnemonicS) {
         let seed = Bip39.mnemonicToSeed(mnemonicS);
-        let master = ComputeMastersFromSeed(seed);
-        let derivedPriv = DerivePrivateKeyForPath(master.secret,master.chainCode,Constants.AminoKey.FullFundraiserPath);
+        let master = Hd.ComputeMastersFromSeed(seed);
+        let derivedPriv = Hd.DerivePrivateKeyForPath(master.secret,master.chainCode,Constants.AminoKey.FullFundraiserPath);
         return derivedPriv;
     }
 
@@ -28,7 +28,7 @@ class CosmosKeypair {
         //对数据签名
         let prikeyArr = new Uint8Array(Hex.hexToBytes(private_key));
         let sig = Secp256k1.sign(sig32,prikeyArr);
-        let signature = Buffer.from(Serialize(sig.signature));
+        let signature = Buffer.from(Hd.Serialize(sig.signature));
 
         //将签名结果加上amino编码前缀(irishub反序列化需要)
         signature = Codec.MarshalBinary(Constants.AminoKey.SignatureSecp256k1_prefix,signature);
@@ -102,84 +102,88 @@ class CosmosKeypair {
     }
 
     static isValidPrivate(privateKey) {
-        return /^[0-9a-fA-F]{32}$/i.test(privateKey);
+        return /^[0-9a-fA-F]{64}$/i.test(privateKey);
     }
 }
 
-function ComputeMastersFromSeed(seed) {
-    let masterSecret = Buffer.from("Bitcoin seed");
-    let master = i64(masterSecret,seed);
-    return master
-}
-function DerivePrivateKeyForPath(privKeyBytes, chainCode, path) {
-    let data = privKeyBytes;
-    let parts = path.split("/");
-    parts.forEach(function (part) {
-        let harden = part.slice(part.length-1,part.length) === "'";
-        if (harden) {
-            part = part.slice(0,part.length -1);
+class Hd {
+
+    static ComputeMastersFromSeed(seed) {
+        let masterSecret = Buffer.from("Bitcoin seed");
+        let master = Hd.I64(masterSecret,seed);
+        return master
+    }
+
+    static DerivePrivateKeyForPath(privKeyBytes, chainCode, path) {
+        let data = privKeyBytes;
+        let parts = path.split("/");
+        parts.forEach(function (part) {
+            let harden = part.slice(part.length-1,part.length) === "'";
+            if (harden) {
+                part = part.slice(0,part.length -1);
+            }
+            let idx = parseInt(part)
+            let json = Hd.DerivePrivateKey(data, chainCode, idx, harden);
+            data = json.data;
+            chainCode = json.chainCode;
+        });
+        let derivedKey = data;
+        return derivedKey
+    }
+
+    static I64(key , data) {
+        let createHmac = require('create-hmac');
+        let hmac = createHmac('sha512', key);
+        hmac.update(data); //optional encoding parameter
+        let i = hmac.digest(); // synchronously get result with optional encoding parameter
+        return {
+            secret : i.slice(0,32),
+            chainCode : i.slice(32,i.length)
         }
-        let idx = parseInt(part)
-        let json = derivePrivateKey(data, chainCode, idx, harden);
-        data = json.data;
-        chainCode = json.chainCode;
-    });
-    let derivedKey = data;
-    return derivedKey
-}
-
-function i64(key , data) {
-    let createHmac = require('create-hmac');
-    let hmac = createHmac('sha512', key);
-    hmac.update(data); //optional encoding parameter
-    let i = hmac.digest(); // synchronously get result with optional encoding parameter
-    return {
-        secret : i.slice(0,32),
-        chainCode : i.slice(32,i.length)
     }
-}
 
-function derivePrivateKey(privKeyBytes, chainCode, index, harden) {
-    let data;
-    let indexBuffer = Buffer.from([index]);
-    if(harden){
-        indexBuffer = Bignum(index).or(Bignum(0x80000000)).toBuffer();
-        let privKeyBuffer = Buffer.from(privKeyBytes);
-        data = Buffer.from([0]);
-        data = Buffer.concat([data,privKeyBuffer]);
-    }else{
-        const pubKey = Secp256k1.publicKeyCreate(privKeyBytes);
-        // TODO
-        if (index ==0){
-            indexBuffer = Buffer.from([0,0,0,0]);
+    static DerivePrivateKey(privKeyBytes, chainCode, index, harden) {
+        let data;
+        let indexBuffer = Buffer.from([index]);
+        if(harden){
+            indexBuffer = Bignum(index).or(Bignum(0x80000000)).toBuffer();
+            let privKeyBuffer = Buffer.from(privKeyBytes);
+            data = Buffer.from([0]);
+            data = Buffer.concat([data,privKeyBuffer]);
+        }else{
+            const pubKey = Secp256k1.publicKeyCreate(privKeyBytes);
+            // TODO
+            if (index ==0){
+                indexBuffer = Buffer.from([0,0,0,0]);
+            }
+            data = pubKey
         }
-        data = pubKey
+        data = Buffer.concat([data,indexBuffer]);
+        let i64P = Hd.I64(chainCode, Uint8Array.from(data));
+        let aInt = Bignum.fromBuffer(privKeyBytes);
+        let bInt = Bignum.fromBuffer(i64P.secret);
+        let x = Hd.AddScalars(aInt, bInt);
+
+        return {
+            data : x.toBuffer(),
+            chainCode : i64P.chainCode
+        }
     }
-    data = Buffer.concat([data,indexBuffer]);
-    let i64P = i64(chainCode, Uint8Array.from(data));
-    let aInt = Bignum.fromBuffer(privKeyBytes);
-    let bInt = Bignum.fromBuffer(i64P.secret);
-    let x = addScalars(aInt, bInt);
 
-    return {
-        data : x.toBuffer(),
-        chainCode : i64P.chainCode
+    static AddScalars(a, b) {
+        let c = a.add(b);
+        const bn = require('secp256k1/lib/js/bn/index');
+        let n = bn.n.toBuffer();
+        let x = c.mod(Bignum.fromBuffer(n));
+        return x
     }
-}
 
-function addScalars(a,b) {
-    let c = a.add(b);
-    const bn = require('secp256k1/lib/js/bn/index');
-    let n = bn.n.toBuffer();
-    let x = c.mod(Bignum.fromBuffer(n));
-    return x
-}
-
-function Serialize(sig) {
-    var sigObj = {r: sig.slice(0, 32), s: sig.slice(32, 64)};
-    const SignatureFun = require('elliptic/lib/elliptic/ec/signature');
-    let signature = new SignatureFun(sigObj);
-    return signature.toDER();
+    static Serialize(sig) {
+        var sigObj = {r: sig.slice(0, 32), s: sig.slice(32, 64)};
+        const SignatureFun = require('elliptic/lib/elliptic/ec/signature');
+        let signature = new SignatureFun(sigObj);
+        return signature.toDER();
+    }
 }
 
 module.exports = CosmosKeypair;
