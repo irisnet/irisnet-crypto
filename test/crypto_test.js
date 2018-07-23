@@ -5,6 +5,7 @@ const blockChainThriftModel = require("blockchain-rpc/codegen/gen-nodejs/model_t
 const bech32 = require("../util/bech32");
 const utils = require("../util/utils");
 const bank = require("../chains/iris/bank");
+const stake = require("../chains/iris/stake");
 const Hex = require("../util/hex");
 
 describe('CryPto test', function () {
@@ -17,7 +18,7 @@ describe('CryPto test', function () {
         });
 
         it('bech32', function () {
-            console.log(bech32.fromBech32("cosmosaccaddr1tjl6adsm86n6zlca0ysw4rj9e63v3nqlac39mh"));
+            console.log(bech32.fromBech32("cosmosaccaddr10t42vrpen285fmmy7003cvtgy3du2w8d650h3x"));
         });
 
         it('test import', function () {
@@ -40,7 +41,7 @@ describe('CryPto test', function () {
 
         it('test transfer', function () {
             let tx = new blockChainThriftModel.Tx({
-                "sequence":7,
+                "sequence":8,
                 "ext":0,
                 "sender":{
                     "chain":"fuxi-1001",
@@ -93,7 +94,24 @@ describe('CryPto test', function () {
         });
 
         it('test delegate', function () {
-            let tx = new blockChainThriftModel.Tx({"sequence":2,"amount":[{"amount":-1,"denom":"iris"}],"fee":{"amount":0,"denom":"iris"},"receiver":{"chain":"fuxi-develop","app":"sigs","addr":"507405661F2DB1940941FA0A6B3642015A015387"},"sender":{"chain":"fuxi-develop","app":"sigs","addr":"9778915A4BF434C86A62C2FF45C2FCAE84AF458B"},"type":"delegate","ext":2});
+            let tx = new blockChainThriftModel.Tx({
+                "sequence":9,
+                "ext":0,
+                "sender":{
+                    "chain":"fuxi-1001",
+                    "app":"v0.2.0",
+                    "addr":"cosmosaccaddr1mgtyzhvfj424q9r35dmr70qtt63cpc58dct7jq"
+                },
+                "receiver":{
+                    "chain":"fuxi-1001",
+                    "app":"v0.2.0",
+                    "addr":"cosmosaccaddr1mgtyzhvfj424q9r35dmr70qtt63cpc58dct7jq"
+                },
+                "amount":[new blockChainThriftModel.Coin({denom: "iris",amount: "10"})],
+                "fee":new blockChainThriftModel.Fee({denom: "iris",amount: "0"}),
+                "type":Irisnet.Constants.IRIS.TxType.DELEGATE,
+                "memo":new blockChainThriftModel.Memo({id:1,text:"test"})
+            });
 
             let builder = Irisnet.getBuilder(Irisnet.Constants.COMM.Chains.IRIS);
             let stdTx = builder.buildAndSignTx(tx,"E9B05BF448FFDFC91EB2149BD5309342DCFC87FC3FBB3DE16256585FB407363A");
@@ -115,6 +133,11 @@ describe('CryPto test', function () {
             let s = JSON.stringify(utils.sortObjectKeys(msg));
             let expected = '{"inputs":[{"address":"input","coins":[{"amount":"10","denom":"atom"}]}],"outputs":[{"address":"output","coins":[{"amount":"10","denom":"atom"}]}]}';
             assert.deepEqual(s, expected);
+        });
+
+        it('test delegateMsg', function () {
+            let msg = stake.NewDelegateMsg("cosmosaccaddr1mgtyzhvfj424q9r35dmr70qtt63cpc58dct7jq","cosmosaccaddr1mgtyzhvfj424q9r35dmr70qtt63cpc58dct7jq",{denom: "iris",amount: "10"});
+            console.log(JSON.stringify(msg.GetSignBytes()))
         });
 
         //冷钱包

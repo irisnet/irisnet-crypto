@@ -3,26 +3,26 @@
 const Bank = require('./bank');
 const Builder = require("../../builder");
 const Utils = require('../../util/utils');
+const Amino = require('./amino');
 
 class DelegateMsg extends Builder.SignMsg{
-    constructor(delegator_addr, validator_addr, bond) {
+    constructor(delegator_addr, validator_addr, delegation) {
         super();
         this.delegator_addr = delegator_addr;
         this.validator_addr = validator_addr;
-        this.bond = bond;
+        this.delegation = delegation;
     }
 
     GetSignBytes() {
-        //let delegatorAddr = bech32.toBech32(Constants.PREFIX_BECH32_ACCADDR, this.delegator_addr)
-        //let validatorAddr = bech32.toBech32(Constants.PREFIX_BECH32_VALADDR, this.validator_addr);
 
         let msg = {
             "delegator_addr": this.delegator_addr,
             "validator_addr": this.validator_addr,
-            "bond": this.bond
+            "delegation": this.delegation
         };
-        return Utils.sortObjectKeys(msg)
-        //return Base64.encode(JSON.stringify((msg)))
+
+        let sortMsg = Utils.sortObjectKeys(msg);
+        return Amino.MarshalJSON("cosmos-sdk/MsgDelegate",sortMsg)
     }
 
     ValidateBasic() {
@@ -34,31 +34,28 @@ class DelegateMsg extends Builder.SignMsg{
             throw new Error("validator_addr is empty");
         }
 
-        if (Utils.isEmpty(this.bond)){
-            throw new Error("bond must great than 0");
+        if (Utils.isEmpty(this.delegation)){
+            throw new Error("delegation must great than 0");
         }
     }
 
 }
 
 class BeginUnbondingMsg extends Builder.Validator{
-    constructor(delegator_addr, validator_addr, shares) {
+    constructor(delegator_addr, validator_addr, shares_amount) {
         super();
         this.delegator_addr = delegator_addr;
         this.validator_addr = validator_addr;
-        this.shares = shares;
+        this.shares_amount = shares_amount;
     }
 
     GetSignBytes() {
-        //let delegatorAddr = bech32.toBech32(Constants.PREFIX_BECH32_ACCADDR, this.delegator_addr);
-        //let validatorAddr = bech32.toBech32(Constants.PREFIX_BECH32_VALADDR, this.validator_addr);
 
         let msg = {
             "delegator_addr": this.delegator_addr,
             "validator_addr": this.validator_addr,
-            "shares_amount" : this.shares
+            "shares_amount" : this.shares_amount
         };
-        //return Base64.encode(JSON.stringify((msg)))
         return Utils.sortObjectKeys(msg)
     }
 
@@ -71,7 +68,7 @@ class BeginUnbondingMsg extends Builder.Validator{
             throw new Error("validator_addr is empty");
         }
 
-        if (Utils.isEmpty(this.shares)){
+        if (Utils.isEmpty(this.shares_amount)){
             throw new Error("shares must great than 0");
         }
     }
@@ -85,15 +82,12 @@ class CompleteUnbondingMsg extends Builder.Validator{
     }
 
     GetSignBytes() {
-        //let delegatorAddr = bech32.toBech32(Constants.PREFIX_BECH32_ACCADDR, this.delegator_addr);
-        //let validatorAddr = bech32.toBech32(Constants.PREFIX_BECH32_VALADDR, this.validator_addr);
-
         let msg = {
             "delegator_addr": this.delegator_addr,
             "validator_addr": this.validator_addr
         };
-        //return Base64.encode(JSON.stringify((msg)))
-        return Utils.sortObjectKeys(msg)
+        let sortMsg = Utils.sortObjectKeys(msg);
+        return Amino.MarshalJSON("cosmos-sdk/CompleteUnbonding",sortMsg)
     }
 
     ValidateBasic() {
@@ -109,25 +103,29 @@ class CompleteUnbondingMsg extends Builder.Validator{
 }
 
 module.exports = class Stake {
-    static GetDelegateSignMsg(acc, validatorAddr, coins, fee, gas) {
+    static GetDelegateSignMsg(acc, validatorAddr, coins, fee, gas, memo) {
         let stdFee = Bank.NewStdFee(fee, gas);
         let msg = new DelegateMsg(acc.address, validatorAddr, coins);
-        let signMsg = Bank.NewStdSignMsg(acc.chain_id, acc.account_number, acc.sequence, stdFee, msg);
+        let signMsg = Bank.NewStdSignMsg(acc.chain_id, acc.account_number, acc.sequence, stdFee, msg,memo);
         return signMsg;
     }
 
-    static GetBeginUnbondingMsg(acc, validatorAddr, shares, fee, gas) {
+    static GetBeginUnbondingMsg(acc, validatorAddr, shares, fee, gas, memo) {
         let stdFee = Bank.NewStdFee(fee, gas);
         let msg = new BeginUnbondingMsg(acc.address, validatorAddr, shares);
-        let signMsg = Bank.NewStdSignMsg(acc.chain_id, acc.account_number, acc.sequence, stdFee, msg);
+        let signMsg = Bank.NewStdSignMsg(acc.chain_id, acc.account_number, acc.sequence, stdFee, msg,memo);
         return signMsg;
     }
 
-    static GetCompleteUnbondingMsg(acc, validatorAddr, shares, fee, gas) {
+    static GetCompleteUnbondingMsg(acc, validatorAddr, shares, fee, gas, memo) {
         let stdFee = Bank.NewStdFee(fee, gas);
         let msg = new CompleteUnbondingMsg(acc.address, validatorAddr);
-        let signMsg = Bank.NewStdSignMsg(acc.chain_id, acc.account_number, acc.sequence, stdFee, msg);
+        let signMsg = Bank.NewStdSignMsg(acc.chain_id, acc.account_number, acc.sequence, stdFee, msg,memo);
         return signMsg;
     };
+
+    static NewDelegateMsg(delegator_addr, validator_addr, delegation){
+        return new DelegateMsg(delegator_addr, validator_addr, delegation);
+    }
 
 };

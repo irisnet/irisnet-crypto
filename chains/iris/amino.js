@@ -36,6 +36,14 @@ class Codec {
         return prefixBytes
     }
 
+    MarshalJSON(key,message){
+        let pair = {
+            "type" : key,
+            "value": message
+        }
+        return pair
+    }
+
     _aminoPrefix(name) {
         let a = Sha256(name);
         let b = Hex.hexToBytes(a);
@@ -54,5 +62,6 @@ class Codec {
 let codec = new Codec();
 codec.RegisterConcrete(Constants.AminoKey.SignatureSecp256k1_prefix);
 codec.RegisterConcrete(Constants.AminoKey.PubKeySecp256k1_prefix);
+codec.RegisterConcrete("cosmos-sdk/MsgDelegate");
 
 module.exports = codec;

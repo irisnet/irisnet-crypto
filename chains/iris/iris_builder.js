@@ -35,17 +35,17 @@ class IrisBuilder extends Builder {
                 break;
             }
             case Constants.TxType.DELEGATE: {
-                msg = Stake.GetDelegateSignMsg(req.acc, req.to, req.coins[0], req.fees, req.gas);
+                msg = Stake.GetDelegateSignMsg(req.acc, req.to, req.coins[0], req.fees, req.gas, req.memo);
                 break;
             }
             case Constants.TxType.BEGINUNBOND: {
                 let share = req.coins[0].amount;
-                msg = Stake.GetBeginUnbondingMsg(req.acc, req.to, share, req.fees, req.gas);
+                msg = Stake.GetBeginUnbondingMsg(req.acc, req.to, share, req.fees, req.gas, req.memo);
                 break;
             }
             case Constants.TxType.COMPLETEUNBOND: {
                 let share = req.coins[0].amount;
-                msg = Stake.GetCompleteUnbondingMsg(req.acc, req.to, share, req.fees, req.gas);
+                msg = Stake.GetCompleteUnbondingMsg(req.acc, req.to, share, req.fees, req.gas, req.memo);
                 break;
             }
             default: {
