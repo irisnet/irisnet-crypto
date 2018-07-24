@@ -15,7 +15,7 @@ class IrisBuilder extends Builder {
      * 构造签名内容(如果是硬件钱包，请将返回结果中的msg传递给硬件钱包)
      *
      * @param tx {blockChainThriftModel.Tx} 请求内容
-     * @returns {{msg: StdSignMsg, type: string}}
+     * @returns {StdSignMsg}
      */
     buildTx(tx) {
         let req = super.buildParam(tx);
@@ -53,26 +53,23 @@ class IrisBuilder extends Builder {
             }
         }
         msg.ValidateBasic();
-        return {
-            msg : msg,
-            type:req.type
-        }
+        return msg
     }
 
     /**
      * 对buildTx构造的交易进行签名，注意入参必须是buildTx的结果.
      *
-     * @param tx {{msg: StdSignMsg, type: string}}
+     * @param tx {StdSignMsg}
      * @param privateKey
      * @returns {StdTx}
      */
     signTx(tx,privateKey) {
-        let signMsg = tx.msg;
+        let signMsg = tx;
         let sig = signMsg.GetSignBytes();
         let signbyte = IrisKeypair.sign(privateKey, sig);
         let keypair = IrisKeypair.import(privateKey);
         let signs = [Bank.NewStdSignature(Hex.hexToBytes(keypair.publicKey), signbyte, signMsg.accnum, signMsg.sequence)];
-        let stdTx = Bank.NewStdTx(signMsg.msgs, signMsg.fee, signs, tx.type,signMsg.memo);
+        let stdTx = Bank.NewStdTx(signMsg.msgs, signMsg.fee, signs, signMsg.memo);
         return stdTx
     }
 
@@ -86,11 +83,11 @@ class IrisBuilder extends Builder {
      * @returns {StdTx}  交易
      */
     buildAndSignTx(tx, privateKey) {
-        let signMsg = this.buildTx(tx).msg;
+        let signMsg = this.buildTx(tx);
         let signbyte = IrisKeypair.sign(privateKey, signMsg.GetSignBytes());
         let keypair = IrisKeypair.import(privateKey);
         let signs = [Bank.NewStdSignature(Hex.hexToBytes(keypair.publicKey), signbyte, signMsg.accnum, signMsg.sequence)];
-        let stdTx = Bank.NewStdTx(signMsg.msgs, signMsg.fee, signs, tx.type,signMsg.memo);
+        let stdTx = Bank.NewStdTx(signMsg.msgs, signMsg.fee, signs, signMsg.memo);
         return stdTx
     }
 }

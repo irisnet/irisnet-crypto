@@ -41,7 +41,7 @@ describe('CryPto test', function () {
 
         it('test transfer', function () {
             let tx = new blockChainThriftModel.Tx({
-                "sequence":8,
+                "sequence":14,
                 "ext":0,
                 "sender":{
                     "chain":"fuxi-1001",
@@ -95,7 +95,7 @@ describe('CryPto test', function () {
 
         it('test delegate', function () {
             let tx = new blockChainThriftModel.Tx({
-                "sequence":9,
+                "sequence":13,
                 "ext":0,
                 "sender":{
                     "chain":"fuxi-1001",

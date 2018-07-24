@@ -19,6 +19,8 @@ let sortObjectKeys = function (obj) {
             tmp[k] = p;
         } else if (obj[k] != null && typeof(obj[k]) === "object") {
             tmp[k] = sortObjectKeys(obj[k]);
+        } else if (obj[k] != null && typeof(obj[k]) === "function")  {
+            tmp[k] = eval(obj[k].toString())
         } else {
             tmp[k] = new String(obj[k]).toString();
         }

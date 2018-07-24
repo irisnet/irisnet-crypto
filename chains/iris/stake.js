@@ -5,7 +5,7 @@ const Builder = require("../../builder");
 const Utils = require('../../util/utils');
 const Amino = require('./amino');
 
-class DelegateMsg extends Builder.SignMsg{
+class DelegateMsg extends Builder.Msg{
     constructor(delegator_addr, validator_addr, delegation) {
         super();
         this.delegator_addr = delegator_addr;
@@ -22,7 +22,7 @@ class DelegateMsg extends Builder.SignMsg{
         };
 
         let sortMsg = Utils.sortObjectKeys(msg);
-        return Amino.MarshalJSON("cosmos-sdk/MsgDelegate",sortMsg)
+        return Amino.MarshalJSON(this.Type(),sortMsg)
     }
 
     ValidateBasic() {
@@ -39,9 +39,13 @@ class DelegateMsg extends Builder.SignMsg{
         }
     }
 
+    Type(){
+        return "cosmos-sdk/MsgDelegate";
+    }
+
 }
 
-class BeginUnbondingMsg extends Builder.Validator{
+class BeginUnbondingMsg extends Builder.Msg{
     constructor(delegator_addr, validator_addr, shares_amount) {
         super();
         this.delegator_addr = delegator_addr;
@@ -72,9 +76,14 @@ class BeginUnbondingMsg extends Builder.Validator{
             throw new Error("shares must great than 0");
         }
     }
+
+    Type(){
+        return "cosmos-sdk/BeginUnbonding";
+    }
+
 }
 
-class CompleteUnbondingMsg extends Builder.Validator{
+class CompleteUnbondingMsg extends Builder.Msg{
     constructor(delegator_addr, validator_addr) {
         super();
         this.delegator_addr = delegator_addr;
@@ -87,7 +96,7 @@ class CompleteUnbondingMsg extends Builder.Validator{
             "validator_addr": this.validator_addr
         };
         let sortMsg = Utils.sortObjectKeys(msg);
-        return Amino.MarshalJSON("cosmos-sdk/CompleteUnbonding",sortMsg)
+        return Amino.MarshalJSON(this.Type(),sortMsg)
     }
 
     ValidateBasic() {
@@ -99,6 +108,10 @@ class CompleteUnbondingMsg extends Builder.Validator{
             throw new Error("validator_addr is empty");
         }
 
+    }
+
+    Type(){
+        return "cosmos-sdk/CompleteUnbonding";
     }
 }
 

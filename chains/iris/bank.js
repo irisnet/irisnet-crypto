@@ -1,10 +1,9 @@
 'use strict';
 
-const Bech32 = require('../../util/bech32');
 const Utils = require('../../util/utils');
 const Constants = require('./constants');
-//const Base64 = require('base64-node');
 const Builder = require("../../builder");
+const Amino = require("./amino");
 
 class Coin {
     constructor(amount, denom) {
@@ -67,7 +66,7 @@ class Output extends Builder.Validator {
     }
 }
 
-class MsgSend extends Builder.Validator {
+class MsgSend extends Builder.Msg {
     constructor(from, to, coins) {
         super();
         this.inputs = [new Input(from, coins)];
@@ -88,9 +87,7 @@ class MsgSend extends Builder.Validator {
             "outputs": outputs
         };
 
-        let msgSort = Utils.sortObjectKeys(msg);
-        //return Base64.encode(JSON.stringify((msgSort)))
-        return msgSort;
+        return Utils.sortObjectKeys(msg);
     }
 
     ValidateBasic() {
@@ -110,6 +107,10 @@ class MsgSend extends Builder.Validator {
         })
 
     }
+
+    Type(){
+        return "cosmos-sdk/Send";
+    }
 }
 
 class StdFee {
@@ -125,13 +126,12 @@ class StdFee {
         if (Utils.isEmpty(this.amount)) {
             this.amount = [new Coin(0, "")]
         }
-        //return Base64.encode((JSON.stringify((this))))
         return this
     }
 }
 
 
-class StdSignMsg extends Builder.SignMsg {
+class StdSignMsg extends Builder.Msg {
     constructor(chainID, accnum, sequence, fee, msg, memo) {
         super();
         this.chainID = chainID;
@@ -185,19 +185,17 @@ class StdSignature {
 }
 
 class StdTx {
-    constructor(msgs, fee, signatures, type, memo) {
-        //this.msgs = JSON.stringify(msg);//TODO
+    constructor(msgs, fee, signatures, memo) {
         let fmtMsgs = function (msgs) {
             let msgS = [];
             msgs.forEach(function (msg) {
-                msgS.push(JSON.stringify(msg))
+                msgS.push(JSON.stringify(Amino.MarshalJSON(msg.Type(),msg)))
             });
             return msgS
         };
         this.msgs = fmtMsgs(msgs);
         this.fee = fee;
         this.signatures = signatures;
-        this.type = type;
         this.memo = memo
     }
 
@@ -215,8 +213,8 @@ module.exports = class Bank{
         return new StdSignature(pub_key, signature, account_number, sequence)
     }
 
-    static NewStdTx(msgs, fee, signatures, type, memo){
-        return new StdTx(msgs, fee, signatures, type, memo)
+    static NewStdTx(msgs, fee, signatures, memo){
+        return new StdTx(msgs, fee, signatures, memo)
     }
 
     static NewMsgSend(from, to, coins){

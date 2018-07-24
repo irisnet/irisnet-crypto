@@ -150,10 +150,14 @@ class Validator {
  *
  */
 
-class SignMsg extends Validator{
+class Msg extends Validator{
     GetSignBytes() {
+        throw new Error("not implement");
+    }
+
+    Type() {
         throw new Error("not implement");
     }
 }
 
-module.exports = {Builder,SignMsg,Validator};
+module.exports = {Builder,Msg,Validator};
