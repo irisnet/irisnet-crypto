@@ -1,6 +1,6 @@
 'use strict';
 
-const Hex = require("../../util/hex");
+const Codec = require("../../util/codec");
 const Sha256 = require("sha256");
 const Constants = require('./constants');
 
@@ -8,7 +8,7 @@ const Constants = require('./constants');
  * 处理amino编码（目前支持序列化）
  *
  */
-class Codec {
+class Amino {
     constructor(){
         this._keyMap = {};
     }
@@ -46,7 +46,7 @@ class Codec {
 
     _aminoPrefix(name) {
         let a = Sha256(name);
-        let b = Hex.hexToBytes(a);
+        let b = Codec.Hex.hexToBytes(a);
         while (b[0] === 0) {
             b = b.slice(1, b.length - 1)
         }
@@ -59,9 +59,9 @@ class Codec {
     }
 }
 
-let codec = new Codec();
-codec.RegisterConcrete(Constants.AminoKey.SignatureSecp256k1_prefix);
-codec.RegisterConcrete(Constants.AminoKey.PubKeySecp256k1_prefix);
-codec.RegisterConcrete("cosmos-sdk/MsgDelegate");
+let amino = new Amino();
+amino.RegisterConcrete(Constants.AminoKey.SignatureSecp256k1_prefix);
+amino.RegisterConcrete(Constants.AminoKey.PubKeySecp256k1_prefix);
+amino.RegisterConcrete("cosmos-sdk/MsgDelegate");
 
-module.exports = codec;
+module.exports = amino;

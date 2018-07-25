@@ -47,7 +47,6 @@ class Output extends Builder.Validator {
     }
 
     GetSignBytes() {
-        //let bech32Acc = Bech32.toBech32(Constants.IrisNetConfig.PREFIX_BECH32_ACCADDR, this.address);
         let msg = {
             "address": this.address,
             "coins": this.coins
@@ -124,7 +123,7 @@ class StdFee {
 
     GetSignBytes() {
         if (Utils.isEmpty(this.amount)) {
-            this.amount = [new Coin(0, "")]
+            this.amount = [new Coin("0", "")]
         }
         return this
     }

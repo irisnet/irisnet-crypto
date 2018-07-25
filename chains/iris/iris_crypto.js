@@ -2,9 +2,7 @@
 const Crypto = require("../../crypto");
 const Old = require('old');
 const IrisKeypair = require('./iris_keypair');
-const Wordcodec = require('../../util/wordcodec');
-const Hex = require('../../util/hex');
-const Bech32 = require('../../util/bech32');
+const Codec = require("../../util/codec");
 const Constants = require('./constants');
 
 
@@ -61,9 +59,9 @@ class IrisCrypto extends Crypto {
     }
 
     getAddress(publicKey) {
-        let pubKey = Hex.hexToBytes(publicKey);
+        let pubKey = Codec.Hex.hexToBytes(publicKey);
         let address = IrisKeypair.getAddress(pubKey);
-        address = Bech32.toBech32(Constants.IrisNetConfig.PREFIX_BECH32_ACCADDR, address);
+        address = Codec.Bech32.toBech32(Constants.IrisNetConfig.PREFIX_BECH32_ACCADDR, address);
         return address;
     }
 }

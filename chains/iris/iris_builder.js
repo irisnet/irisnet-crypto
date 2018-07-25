@@ -5,8 +5,7 @@ const Constants = require('./constants');
 const Bank = require('./bank');
 const Stake = require('./stake');
 const IrisKeypair = require('./iris_keypair');
-const Hex = require("../../util/hex");
-const Bech32 = require("../../util/bech32");
+const Codec = require("../../util/codec");
 
 class IrisBuilder extends Builder {
 
@@ -21,11 +20,11 @@ class IrisBuilder extends Builder {
         let req = super.buildParam(tx);
 
         //将from和to由hex编码转化为bech32编码
-        if (Hex.isHex(req.acc.address)) {
-            req.acc.address = Bech32.toBech32(Constants.IrisNetConfig.PREFIX_BECH32_ACCADDR, req.acc.address);
+        if (Codec.Hex.isHex(req.acc.address)) {
+            req.acc.address = Codec.Bech32.toBech32(Constants.IrisNetConfig.PREFIX_BECH32_ACCADDR, req.acc.address);
         }
-        if (Hex.isHex(req.to)) {
-            req.to =  Bech32.toBech32(Constants.IrisNetConfig.PREFIX_BECH32_ACCADDR,req.to)
+        if (Codec.Hex.isHex(req.to)) {
+            req.to =  Codec.Bech32.toBech32(Constants.IrisNetConfig.PREFIX_BECH32_ACCADDR,req.to)
         }
 
         let msg;
@@ -68,7 +67,7 @@ class IrisBuilder extends Builder {
         let sig = signMsg.GetSignBytes();
         let signbyte = IrisKeypair.sign(privateKey, sig);
         let keypair = IrisKeypair.import(privateKey);
-        let signs = [Bank.NewStdSignature(Hex.hexToBytes(keypair.publicKey), signbyte, signMsg.accnum, signMsg.sequence)];
+        let signs = [Bank.NewStdSignature(Codec.Hex.hexToBytes(keypair.publicKey), signbyte, signMsg.accnum, signMsg.sequence)];
         let stdTx = Bank.NewStdTx(signMsg.msgs, signMsg.fee, signs, signMsg.memo);
         return stdTx
     }
@@ -86,7 +85,7 @@ class IrisBuilder extends Builder {
         let signMsg = this.buildTx(tx);
         let signbyte = IrisKeypair.sign(privateKey, signMsg.GetSignBytes());
         let keypair = IrisKeypair.import(privateKey);
-        let signs = [Bank.NewStdSignature(Hex.hexToBytes(keypair.publicKey), signbyte, signMsg.accnum, signMsg.sequence)];
+        let signs = [Bank.NewStdSignature(Codec.Hex.hexToBytes(keypair.publicKey), signbyte, signMsg.accnum, signMsg.sequence)];
         let stdTx = Bank.NewStdTx(signMsg.msgs, signMsg.fee, signs, signMsg.memo);
         return stdTx
     }

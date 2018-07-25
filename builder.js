@@ -71,39 +71,30 @@ class Builder {
      * @returns {{acc, to, coins, fees, gas, type}}
      */
     buildParam(tx){
-        if (Utils.isEmpty(tx.amount)) {
-            throw new Error("amount not empty");
-        }
-
-        if (Utils.isEmpty(tx.sender.addr)) {
-            throw new Error("sender not empty");
-        }
-
-        if (Utils.isEmpty(tx.receiver.addr)) {
-            throw new Error("sender not empty");
-        }
-
         let convert = function (tx) {
             let coins = [];
-            tx.amount.forEach(function (item) {
-                if (Utils.isEmpty(item.denom)) {
-                    throw new Error("denom not empty");
-                }
-                if (Utils.isEmpty(item.amount)) {
-                    throw new Error("amount must > 0");
-                }
-                coins.push({
-                    "denom":item.denom,
-                    "amount":item.amount,
+            if (!Utils.isEmpty(tx.amount)){
+                tx.amount.forEach(function (item) {
+                    if (Utils.isEmpty(item.denom)) {
+                        throw new Error("denom not empty");
+                    }
+                    if (Utils.isEmpty(item.amount)) {
+                        throw new Error("amount must > 0");
+                    }
+                    coins.push({
+                        "denom":item.denom,
+                        "amount":Utils.toString(item.amount),
+                    });
                 });
-            });
+            }
 
             let fees = [];
-
-            fees.push({
-                "denom":tx.fee.denom,
-                "amount":tx.fee.amount,
-            });
+            if (!Utils.isEmpty(tx.fee)){
+                fees.push({
+                    "denom":tx.fee.denom,
+                    "amount":Utils.toString(tx.fee.amount),
+                });
+            }
 
             let fromAcc = new Account(tx.sender.addr, tx.sender.chain, tx.ext, tx.sequence);
             let memo = tx.memo ? tx.memo.text : '';
