@@ -1,15 +1,15 @@
 const EthUtil = require('ethereumjs-util');
 const EthereumTx = require('ethereumjs-tx');
-const Hex = require("../../util/hex");
+const Codec = require("../../util/codec");
 
 class EthermintKeypair {
     static Import(secret){
         let publicKey = EthUtil.privateToPublic(secret);
         let addr = EthUtil.publicToAddress(publicKey);
         return {
-            "address": "0x" + Hex.bytesToHex(addr),
-            "privateKey": Hex.bytesToHex(secret),
-            "publicKey": Hex.bytesToHex(publicKey)
+            "address": "0x" + Codec.Hex.bytesToHex(addr),
+            "privateKey": Codec.Hex.bytesToHex(secret),
+            "publicKey": Codec.Hex.bytesToHex(publicKey)
         };
     }
 
