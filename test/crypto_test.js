@@ -17,6 +17,7 @@ describe('CryPto test', function () {
 
         it('bech32', function () {
             console.log(bech32.fromBech32("cosmosaccaddr1tgemrgv9ljguecf2mgkj7r3sv3ad9fgvatnp39"));
+            console.log(bech32.toBech32("cosmosaccaddr","507405661F2DB1940941FA0A6B3642015A015387"));
         });
 
         it('test import', function () {
@@ -65,17 +66,17 @@ describe('CryPto test', function () {
         //冷钱包
         it('test buildTx and signTx', function () {
             let tx = new blockChainThriftModel.Tx({
-                "sequence":35,
+                "sequence":3,
                 "ext":0,
                 "sender":{
-                    "chain":"fuxi-develop",
+                    "chain":"fuxi-1001",
                     "app":"v0.2.0",
-                    "addr":"1EC2E86065D5EF88A3ED65B8B3A43210FAD9C7B2"
+                    "addr":"507405661F2DB1940941FA0A6B3642015A015387"
                 },
                 "receiver":{
                     "chain":"iris",
                     "app":"v0.2.0",
-                    "addr":"3A058A8B5468AE0EA2D2517CE3BAFDD281E50C2F"
+                    "addr":"9778915A4BF434C86A62C2FF45C2FCAE84AF458B"
                 },
                 "amount":[new blockChainThriftModel.Coin({denom: "iris",amount: 10})],
                 "fee":new blockChainThriftModel.Fee({denom: "iris",amount: 0}),
@@ -84,7 +85,10 @@ describe('CryPto test', function () {
 
             let builder = Irisnet.getBuilder(Irisnet.Constants.COMM.Chains.IRIS);
             let signMsg = builder.buildTx(tx);
-            let stdTx = builder.signTx(signMsg,"625f0968c78d95857629ea4b4cbafe2f3f949a92e82dda09b5fbe9fbc70d50cc62f3621a751f0431b69b965d41ec480f1b9a4b6f14a1f6c0d17158281a980f74");
+            let scan = JSON.stringify(signMsg);
+
+            let sig = JSON.parse(scan);
+            let stdTx = builder.signTx(sig,"2233230fa9326b52b33178273a6b356479933dd71f64c9409c5edc76d425f63ff9e164fb91f7f6ebb02d85fa0491a4e81eb9245680940c4ecf30324ab04ae6cd");
             console.log(JSON.stringify(stdTx))
             //TODO 将stdTx提交到iris-hub[/tx/send]
         });

@@ -140,6 +140,7 @@ class StdSignMsg extends Builder.SignMsg {
         this.sequence = [sequence];
         this.fee = fee;
         this.msg = msg;
+        this.signByte = this.GetSignBytes();
     }
 
     GetSignBytes() {
