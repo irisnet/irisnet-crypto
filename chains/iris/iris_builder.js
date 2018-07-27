@@ -64,7 +64,7 @@ class IrisBuilder extends Builder {
      */
     signTx(tx,privateKey) {
         let signMsg = tx;
-        let sig = signMsg.GetSignBytes();
+        let sig = signMsg.signByte;
         let signbyte = IrisKeypair.sign(privateKey, sig);
         let keypair = IrisKeypair.import(privateKey);
         let signs = [Bank.NewStdSignature(Codec.Hex.hexToBytes(keypair.publicKey), signbyte, signMsg.accnum, signMsg.sequence)];
@@ -83,7 +83,7 @@ class IrisBuilder extends Builder {
      */
     buildAndSignTx(tx, privateKey) {
         let signMsg = this.buildTx(tx);
-        let signbyte = IrisKeypair.sign(privateKey, signMsg.GetSignBytes());
+        let signbyte = IrisKeypair.sign(privateKey, signMsg.signByte);
         let keypair = IrisKeypair.import(privateKey);
         let signs = [Bank.NewStdSignature(Codec.Hex.hexToBytes(keypair.publicKey), signbyte, signMsg.accnum, signMsg.sequence)];
         let stdTx = Bank.NewStdTx(signMsg.msgs, signMsg.fee, signs, signMsg.memo);

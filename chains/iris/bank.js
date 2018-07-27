@@ -139,6 +139,7 @@ class StdSignMsg extends Builder.Msg {
         this.fee = fee;
         this.msgs = [msg];
         this.memo = memo;
+        this.signByte = this.GetSignBytes();
     }
 
     GetSignBytes() {
