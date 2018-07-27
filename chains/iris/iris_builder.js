@@ -63,7 +63,7 @@ class IrisBuilder extends Builder {
      */
     signTx(tx,privateKey) {
         let signMsg = tx.msg;
-        let signbyte = IrisKeypair.sign(privateKey, signMsg.GetSignBytes());
+        let signbyte = IrisKeypair.sign(privateKey, signMsg.signByte);
         let keypair = IrisKeypair.import(privateKey);
         let signs = [new Bank.StdSignature(Hex.hexToBytes(keypair.publicKey), signbyte, signMsg.accnum[0], signMsg.sequence[0])];
         let stdTx = new Bank.StdTx(signMsg.msg, signMsg.fee, signs, tx.type);
