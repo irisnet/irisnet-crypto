@@ -1,6 +1,6 @@
 {
   "name": "irisnet-crypto",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "irisnet-crypto",
   "main": "index.js",
   "scripts": {
