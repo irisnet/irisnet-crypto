@@ -34,7 +34,7 @@
     "tweetnacl": "^1.0.0",
     "thrift": "git+https://github.com/irisnet/thrift.git#browser_thrift",
     "web3": "git+https://github.com/ethereum/web3.js.git",
-    "blockchain-rpc": "git+https://github.com/irisnet/blockchain-rpc.git#develop",
+    "blockchain-rpc": "git+https://github.com/irisnet/blockchain-rpc.git#v1.0.1",
     "bech32": "^1.1.3",
     "base64-node": "^1.0.0",
     "bip39": "^2.5.0",
