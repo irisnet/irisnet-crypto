@@ -55,9 +55,9 @@ class Builder {
             case Constants.Chains.IRIS: {
                 return require('./chains/iris/iris_builder')();
             }
-            /*case Constants.Chains.ETHERMINT: {
+            case Constants.Chains.ETHERMINT: {
                 return require('./chains/ethermint/ethermint_builder')();
-            }*/
+            }
             default: {
                 throw new Error("not correct chain");
             }

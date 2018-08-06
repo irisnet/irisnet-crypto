@@ -76,9 +76,9 @@ class Crypto {
             case Constants.Chains.IRIS: {
                 return require('./chains/iris/iris_crypto')();
             }
-            /*case Constants.Chains.ETHERMINT: {
+            case Constants.Chains.ETHERMINT: {
                 return require('./chains/ethermint/ethermint_crypto')();
-            }*/
+            }
             default: {
                 throw new Error("not correct chain");
             }
