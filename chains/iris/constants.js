@@ -7,8 +7,8 @@ TxType.COMPLETEUNBOND               = "completeUnbond";
 
 class IrisNetConfig{}
 IrisNetConfig.MAXGAS                = 20000000;
-IrisNetConfig.PREFIX_BECH32_ACCADDR = "cosmosaccaddr";
-IrisNetConfig.PREFIX_BECH32_VALADDR = "cosmosvaladdr";
+IrisNetConfig.PREFIX_BECH32_ACCADDR = "faa";
+IrisNetConfig.PREFIX_BECH32_VALADDR = "fva";
 IrisNetConfig.ENCODING_BECH32       = "bech32";
 IrisNetConfig.ENCODING_HEX          = "hex";
 
