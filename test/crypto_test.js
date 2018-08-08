@@ -21,12 +21,12 @@ describe('CryPto test', function () {
 
         it('test import', function () {
             let crypto = Irisnet.getCrypto(Irisnet.Constants.COMM.Chains.IRIS);
-            let account = crypto.import("E9B05BF448FFDFC91EB2149BD5309342DCFC87FC3FBB3DE16256585FB407363A")
+            let account = crypto.import("8789EB2C2510D8D236EB85DAEFE4E1A4EA7D8E6929E0A1400FCF2848CF7F2DA4")
             assert.deepEqual(account, {
-                    address: 'DA16415D899555501471A3763F3C0B5EA380E287',
+                    address: 'faa1a89us8tvt3d9qpq7j6p06dc3z88n576shj8k2h',
                     phrase: null,
-                    privateKey: 'E9B05BF448FFDFC91EB2149BD5309342DCFC87FC3FBB3DE16256585FB407363A',
-                    publicKey: 'EB5AE98721026FD7CDF90DF4756B476EA6804E9DF4D11892ADF10247FB26F5F731A12F2CEB30'
+                    privateKey: '8789EB2C2510D8D236EB85DAEFE4E1A4EA7D8E6929E0A1400FCF2848CF7F2DA4',
+                    publicKey: 'fap1addwnpepqd7def2xt3vtwu8fparpdc8nkduqpfl9nth7re0f3ls73x6nnes6saayamy'
                 }
             );
         });
@@ -34,7 +34,13 @@ describe('CryPto test', function () {
         it('test recover', function () {
             let crypto = Irisnet.getCrypto(Irisnet.Constants.COMM.Chains.IRIS);
             let account = crypto.recover("beach paddle tray erupt soup powder fortune essence suit quality autumn cotton bubble direct cash route blast cabin wool ranch boring depart lemon hat");
-            console.log(JSON.stringify(account))
+            assert.deepEqual(account, {
+                    address: 'faa1cmjnj9zw0m4aau95dsmzj7zgaqagptzywu3v8r',
+                    phrase: 'beach paddle tray erupt soup powder fortune essence suit quality autumn cotton bubble direct cash route blast cabin wool ranch boring depart lemon hat',
+                    privateKey: '60F95C4585E42E41EE50F2C6CCAA1BBD6A9254602C4F5C934DCB5AAA28DD2FE0',
+                    publicKey: 'fap1addwnpepqd3kns6jqsanqjprvxnsj3rhmxfr9607mmy49ypg24p22f57pp446n0sz6v'
+                }
+            );
         });
 
         it('test transfer', function () {
