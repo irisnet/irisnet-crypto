@@ -6,7 +6,7 @@ const RIPEMD160 = require('ripemd160');
 const Bip39 = require('bip39');
 const Random = require('randombytes');
 const Secp256k1 = require('secp256k1');
-const Bignum = require('bignum');
+const BN = require("bn.js");
 const Constants = require('./constants');
 const Amino = require('./amino');
 
@@ -146,7 +146,7 @@ class Hd {
         let data;
         let indexBuffer = Buffer.from([index]);
         if(harden){
-            indexBuffer = Bignum(index).or(Bignum(0x80000000)).toBuffer();
+            indexBuffer = new BN(index).or(new BN(0x80000000)).toBuffer();
             let privKeyBuffer = Buffer.from(privKeyBytes);
             data = Buffer.from([0]);
             data = Buffer.concat([data,privKeyBuffer]);
@@ -160,8 +160,8 @@ class Hd {
         }
         data = Buffer.concat([data,indexBuffer]);
         let i64P = Hd.I64(chainCode, Uint8Array.from(data));
-        let aInt = Bignum.fromBuffer(privKeyBytes);
-        let bInt = Bignum.fromBuffer(i64P.secret);
+        let aInt = new BN(privKeyBytes);
+        let bInt = new BN(i64P.secret);
         let x = Hd.AddScalars(aInt, bInt);
 
         return {
@@ -174,7 +174,7 @@ class Hd {
         let c = a.add(b);
         const bn = require('secp256k1/lib/js/bn/index');
         let n = bn.n.toBuffer();
-        let x = c.mod(Bignum.fromBuffer(n));
+        let x = c.mod(new BN(n));
         return x
     }
 
