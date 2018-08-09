@@ -166,7 +166,7 @@ class Hd {
         let x = Hd.AddScalars(aInt, bInt);
 
         return {
-            data : x.toBuffer(),
+            data : Buffer.from(x),
             chainCode : i64P.chainCode
         }
     }
