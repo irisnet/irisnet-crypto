@@ -146,8 +146,7 @@ class Hd {
         let data;
         let indexBuffer = Buffer.from([index]);
         if(harden){
-			indexBuffer = Buffer.from(new BN(index).or(new BN(0x80000000)));
-	
+            indexBuffer = Buffer.from(new BN(index).or(new BN(0x80000000)));
             let privKeyBuffer = Buffer.from(privKeyBytes);
             data = Buffer.from([0]);
             data = Buffer.concat([data,privKeyBuffer]);
@@ -166,7 +165,7 @@ class Hd {
         let x = Hd.AddScalars(aInt, bInt);
 
         return {
-            data : Buffer.from(x),
+            data : x.toBuffer(),
             chainCode : i64P.chainCode
         }
     }
@@ -174,7 +173,7 @@ class Hd {
     static AddScalars(a, b) {
         let c = a.add(b);
         const bn = require('secp256k1/lib/js/bn/index');
-        let n = Buffer.from(bn.n);
+        let n = bn.n.toBuffer();
         let x = c.mod(new BN(n));
         return x
     }
