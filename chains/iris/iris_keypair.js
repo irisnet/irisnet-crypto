@@ -146,7 +146,8 @@ class Hd {
         let data;
         let indexBuffer = Buffer.from([index]);
         if(harden){
-            indexBuffer = Buffer.from(new BN(index).or(new BN(0x80000000)));
+			indexBuffer = new BN(index).or(new BN(0x80000000)).toBuffer();
+	
             let privKeyBuffer = Buffer.from(privKeyBytes);
             data = Buffer.from([0]);
             data = Buffer.concat([data,privKeyBuffer]);
@@ -165,7 +166,7 @@ class Hd {
         let x = Hd.AddScalars(aInt, bInt);
 
         return {
-            data : Buffer.from(x),
+            data : x.toBuffer(),
             chainCode : i64P.chainCode
         }
     }
