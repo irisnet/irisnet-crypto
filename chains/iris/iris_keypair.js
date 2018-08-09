@@ -6,7 +6,7 @@ const RIPEMD160 = require('ripemd160');
 const Bip39 = require('bip39');
 const Random = require('randombytes');
 const Secp256k1 = require('secp256k1');
-const BN = require("bn.js");
+const BN = require("bn");
 const Constants = require('./constants');
 const Amino = require('./amino');
 
