@@ -146,7 +146,7 @@ class Hd {
         let data;
         let indexBuffer = Buffer.from([index]);
         if(harden){
-			indexBuffer = new BN(index).or(new BN(0x80000000)).toBuffer();
+			indexBuffer = Buffer.from(new BN(index).or(new BN(0x80000000)));
 	
             let privKeyBuffer = Buffer.from(privKeyBytes);
             data = Buffer.from([0]);
