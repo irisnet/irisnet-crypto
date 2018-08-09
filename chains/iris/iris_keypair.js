@@ -26,7 +26,7 @@ class CosmosKeypair {
         let sig32 = Buffer.from(Sha256(sigByte,{ asBytes: true }));
 
         //对数据签名
-        let prikeyArr = new Uint8Array(Codec.Hex.hexToBytes(private_key));
+        let prikeyArr = Buffer.from(new Uint8Array(Codec.Hex.hexToBytes(private_key)));
         let sig = Secp256k1.sign(sig32,prikeyArr);
         let signature = Buffer.from(Hd.Serialize(sig.signature));
 
