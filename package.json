@@ -29,7 +29,7 @@
     "bip39": "^2.5.0",
     "blockchain-rpc": "git+https://github.com/irisnet/blockchain-rpc.git#develop",
     "bluebird": "^3.5.1",
-    "bn.js": "git+https://github.com/shineabel/bn.js",
+    "bn.js": "git+https://github.com/shineabel/bn.git",
     "create-hmac": "^1.1.7",
     "ethereumjs-tx": "^1.3.0",
     "ethereumjs-util": "^5.1.2",
