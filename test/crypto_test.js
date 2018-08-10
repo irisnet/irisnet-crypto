@@ -45,8 +45,8 @@ describe('CryPto test', function () {
 
         it('test transfer', function () {
             let tx = new blockChainThriftModel.Tx({
-                "sequence":0,
-                "ext":3,
+                "sequence":4,
+                "ext":0,
                 "sender":{
                     "chain":"fuxi-1001",
                     "app":"v0.2.0",
@@ -72,17 +72,17 @@ describe('CryPto test', function () {
         //冷钱包
         it('test buildTx and signTx', function () {
             let tx = new blockChainThriftModel.Tx({
-                "sequence":35,
+                "sequence":5,
                 "ext":0,
                 "sender":{
-                    "chain":"fuxi-develop",
+                    "chain":"fuxi-1001",
                     "app":"v0.2.0",
-                    "addr":"1EC2E86065D5EF88A3ED65B8B3A43210FAD9C7B2"
+                    "addr":"faa1a89us8tvt3d9qpq7j6p06dc3z88n576shj8k2h"
                 },
                 "receiver":{
-                    "chain":"iris",
+                    "chain":"fuxi-1001",
                     "app":"v0.2.0",
-                    "addr":"3A058A8B5468AE0EA2D2517CE3BAFDD281E50C2F"
+                    "addr":"faa1s6v9qgu8ye7d884s8kpye64x66znndg8t6eztj"
                 },
                 "amount":[new blockChainThriftModel.Coin({denom: "iris",amount: 10})],
                 "fee":new blockChainThriftModel.Fee({denom: "iris",amount: 0}),
@@ -91,8 +91,7 @@ describe('CryPto test', function () {
 
             let builder = Irisnet.getBuilder(Irisnet.Constants.COMM.Chains.IRIS);
             let signMsg = builder.buildTx(tx);
-            console.log(JSON.stringify(signMsg));
-            let stdTx = builder.signTx(signMsg,"E9B05BF448FFDFC91EB2149BD5309342DCFC87FC3FBB3DE16256585FB407363A");
+            let stdTx = builder.signTx(signMsg,"8789EB2C2510D8D236EB85DAEFE4E1A4EA7D8E6929E0A1400FCF2848CF7F2DA4");
             console.log(JSON.stringify(stdTx))
             //TODO 将stdTx提交到iris-hub[/tx/send]
         });

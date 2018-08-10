@@ -7,7 +7,7 @@ const Amino = require('./amino');
 
 class DelegateMsg extends Builder.Msg{
     constructor(delegator_addr, validator_addr, delegation) {
-        super();
+        super("cosmos-sdk/MsgDelegate");
         this.delegator_addr = delegator_addr;
         this.validator_addr = validator_addr;
         this.delegation = delegation;
@@ -47,7 +47,7 @@ class DelegateMsg extends Builder.Msg{
 
 class BeginUnbondingMsg extends Builder.Msg{
     constructor(delegator_addr, validator_addr, shares_amount) {
-        super();
+        super("cosmos-sdk/BeginUnbonding");
         this.delegator_addr = delegator_addr;
         this.validator_addr = validator_addr;
         this.shares_amount = shares_amount;
@@ -84,8 +84,9 @@ class BeginUnbondingMsg extends Builder.Msg{
 }
 
 class CompleteUnbondingMsg extends Builder.Msg{
+
     constructor(delegator_addr, validator_addr) {
-        super();
+        super("cosmos-sdk/CompleteUnbonding");
         this.delegator_addr = delegator_addr;
         this.validator_addr = validator_addr;
     }
