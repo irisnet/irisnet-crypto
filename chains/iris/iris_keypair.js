@@ -146,13 +146,15 @@ class Hd {
         let data;
         let indexBuffer = Buffer.from([index]);
         if(harden){
-			indexBuffer = Buffer.from(new BN(index).or(new BN(0x80000000)));
+			var c = new BN(index).or(new BN(0x80000000));
+			console.log("c", c);
+			indexBuffer = c.toBuffer();
 	
             let privKeyBuffer = Buffer.from(privKeyBytes);
             data = Buffer.from([0]);
             data = Buffer.concat([data,privKeyBuffer]);
         }else{
-            const pubKey = Secp256k1.publicKeyCreate(privKeyBytes);
+            const pubKey =Secp256k1.publicKeyCreate(privKeyBytes);
             // TODO
             if (index ==0){
                 indexBuffer = Buffer.from([0,0,0,0]);
@@ -166,7 +168,7 @@ class Hd {
         let x = Hd.AddScalars(aInt, bInt);
 
         return {
-            data : Buffer.from(x),
+            data : x.toBuffer(),
             chainCode : i64P.chainCode
         }
     }
