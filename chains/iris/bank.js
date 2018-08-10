@@ -67,7 +67,7 @@ class Output extends Builder.Validator {
 
 class MsgSend extends Builder.Msg {
     constructor(from, to, coins) {
-        super();
+        super("cosmos-sdk/Send");
         this.inputs = [new Input(from, coins)];
         this.outputs = [new Output(to, coins)];
     }
@@ -189,7 +189,7 @@ class StdTx {
         let fmtMsgs = function (msgs) {
             let msgS = [];
             msgs.forEach(function (msg) {
-                msgS.push(JSON.stringify(Amino.MarshalJSON(msg.Type(),msg)))
+                msgS.push(JSON.stringify(Amino.MarshalJSON(msg.type,msg)))
             });
             return msgS
         };
