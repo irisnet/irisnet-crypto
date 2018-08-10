@@ -1,6 +1,7 @@
 'use strict';
 
 const Constants = require('./constants');
+const Utils = require('./util/utils');
 
 class Builder {
 
@@ -70,56 +71,49 @@ class Builder {
      * @returns {{acc, to, coins, fees, gas, type}}
      */
     buildParam(tx){
-        if (!tx.amount || tx.amount.length == 0) {
-            throw new Error("amount not empty");
-        }
-
-        if (!tx.sender.addr || tx.sender.addr.length == 0) {
-            throw new Error("sender not empty");
-        }
-
-        if (!tx.receiver || tx.receiver.length == 0) {
-            throw new Error("sender not empty");
-        }
-
-
-        /*if (!tx.sequence) {
-            throw new Error("sequence not empty");
-        }*/
-
         let convert = function (tx) {
             let coins = [];
-            tx.amount.forEach(function (item) {
-                if (!item.denom || item.denom.length == 0) {
-                    throw new Error("denom not empty");
-                }
-                if (item.amount < 0) {
-                    throw new Error("amount must > 0");
-                }
-                coins.push({
-                    "denom":item.denom,
-                    "amount":item.amount,
+            if (!Utils.isEmpty(tx.amount)){
+                tx.amount.forEach(function (item) {
+                    if (Utils.isEmpty(item.denom)) {
+                        throw new Error("denom not empty");
+                    }
+                    if (Utils.isEmpty(item.amount)) {
+                        throw new Error("amount must > 0");
+                    }
+                    coins.push({
+                        "denom":item.denom,
+                        "amount":Utils.toString(item.amount),
+                    });
                 });
-            });
+            }
 
             let fees = [];
-
-            fees.push({
-                "denom":tx.fee.denom,
-                "amount":tx.fee.amount,
-            });
-
-            return {
-                "acc": new Account(tx.sender.addr, tx.sender.chain, tx.ext, tx.sequence),
-                "to": tx.receiver.addr,
-                "coins": coins,
-                "fees": fees,
-                "gas": tx.gas,
-                "type": tx.type
+            if (!Utils.isEmpty(tx.fee)){
+                fees.push({
+                    "denom":tx.fee.denom,
+                    "amount":Utils.toString(tx.fee.amount),
+                });
             }
+
+            let fromAcc = new Account(tx.sender.addr, tx.sender.chain, tx.ext, tx.sequence);
+            let memo = tx.memo ? tx.memo.text : '';
+            return new Request(fromAcc,tx.receiver.addr,coins,fees,tx.gas,memo,tx.type);
         };
 
         return convert(tx);
+    }
+}
+
+class Request {
+    constructor(acc, to, coins, fees,gas,memo,type) {
+        this.acc = acc;
+        this.to = to;
+        this.coins = coins;
+        this.fees = fees;
+        this.gas = gas;
+        this.memo = memo;
+        this.type = type
     }
 }
 
@@ -147,10 +141,18 @@ class Validator {
  *
  */
 
-class SignMsg extends Validator{
+class Msg extends Validator{
     GetSignBytes() {
         throw new Error("not implement");
     }
+
+    Type() {
+        throw new Error("not implement");
+    }
+    constructor(type) {
+       super();
+       this.type = type
+    }
 }
 
-module.exports = {Builder,SignMsg,Validator};
+module.exports = {Builder,Msg,Validator};

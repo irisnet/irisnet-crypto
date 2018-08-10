@@ -2,63 +2,71 @@ const Irisnet = require('../index');
 const chai = require('chai');
 const assert = chai.assert;
 const blockChainThriftModel = require("blockchain-rpc/codegen/gen-nodejs/model_types");
-const bech32 = require("../util/bech32");
-const utils = require("../util/utils");
-const bank = require("../chains/iris/bank");
+const Codec = require("../util/codec");
 
 describe('CryPto test', function () {
     describe('irisnet-crypto', function () {
         it('test create and recover', function () {
             let crypto = Irisnet.getCrypto(Irisnet.Constants.COMM.Chains.IRIS);
             let keyPair = crypto.create("english");
+            console.log(JSON.stringify(keyPair));
             let keyPair2 = crypto.recover(keyPair.phrase,"english");
             assert.deepEqual(keyPair, keyPair2);
         });
 
         it('bech32', function () {
-            console.log(bech32.fromBech32("cosmosaccaddr1tgemrgv9ljguecf2mgkj7r3sv3ad9fgvatnp39"));
-            console.log(bech32.toBech32("cosmosaccaddr","507405661F2DB1940941FA0A6B3642015A015387"));
+
+            console.log(Codec.Bech32.fromBech32("faa1cmjnj9zw0m4aau95dsmzj7zgaqagptzywu3v8r"));
+            console.log(Codec.Bech32.toBech32("faa","8698502387267CD39EB03D824CEAA6D68539B507"));
+
         });
 
         it('test import', function () {
             let crypto = Irisnet.getCrypto(Irisnet.Constants.COMM.Chains.IRIS);
-            let account = crypto.import("833a2457add0d23c840edb115e07069465ca04942406f799ea7128c3bc9b842f515fbd60f777a55d2c59069892b6e72e57fdc96da4b608cd07c86306d0ab6439")
+            let account = crypto.import("8789EB2C2510D8D236EB85DAEFE4E1A4EA7D8E6929E0A1400FCF2848CF7F2DA4")
             assert.deepEqual(account, {
-                    address: '4B0647A2FECBBB752C8C5134963EB0DF159E8501',
+                    address: 'faa1a89us8tvt3d9qpq7j6p06dc3z88n576shj8k2h',
                     phrase: null,
-                    privateKey: '833a2457add0d23c840edb115e07069465ca04942406f799ea7128c3bc9b842f515fbd60f777a55d2c59069892b6e72e57fdc96da4b608cd07c86306d0ab6439',
-                    publicKey: '515fbd60f777a55d2c59069892b6e72e57fdc96da4b608cd07c86306d0ab6439'
+                    privateKey: '8789EB2C2510D8D236EB85DAEFE4E1A4EA7D8E6929E0A1400FCF2848CF7F2DA4',
+                    publicKey: 'fap1addwnpepqd7def2xt3vtwu8fparpdc8nkduqpfl9nth7re0f3ls73x6nnes6saayamy'
                 }
             );
         });
 
         it('test recover', function () {
             let crypto = Irisnet.getCrypto(Irisnet.Constants.COMM.Chains.IRIS);
-            let account = crypto.recover("make question surge quality regret juice snack box other slim wild unknown route degree arm abandon");
-            console.log(JSON.stringify(account))
+            let account = crypto.recover("beach paddle tray erupt soup powder fortune essence suit quality autumn cotton bubble direct cash route blast cabin wool ranch boring depart lemon hat");
+            assert.deepEqual(account, {
+                    address: 'faa1cmjnj9zw0m4aau95dsmzj7zgaqagptzywu3v8r',
+                    phrase: 'beach paddle tray erupt soup powder fortune essence suit quality autumn cotton bubble direct cash route blast cabin wool ranch boring depart lemon hat',
+                    privateKey: '60F95C4585E42E41EE50F2C6CCAA1BBD6A9254602C4F5C934DCB5AAA28DD2FE0',
+                    publicKey: 'fap1addwnpepqd3kns6jqsanqjprvxnsj3rhmxfr9607mmy49ypg24p22f57pp446n0sz6v'
+                }
+            );
         });
 
         it('test transfer', function () {
             let tx = new blockChainThriftModel.Tx({
-                "sequence":"0",
-                "ext":2,
+                "sequence":4,
+                "ext":0,
                 "sender":{
-                    "chain":"fuxi-develop",
+                    "chain":"fuxi-1001",
                     "app":"v0.2.0",
-                    "addr":"9778915A4BF434C86A62C2FF45C2FCAE84AF458B"
+                    "addr":"faa1a89us8tvt3d9qpq7j6p06dc3z88n576shj8k2h"
                 },
                 "receiver":{
-                    "chain":"fuxi-develop",
+                    "chain":"fuxi-1001",
                     "app":"v0.2.0",
-                    "addr":"AD004D588925191653F47BACE51C23133D4EDBE1"
+                    "addr":"faa1s6v9qgu8ye7d884s8kpye64x66znndg8t6eztj"
                 },
                 "amount":[new blockChainThriftModel.Coin({denom: "iris",amount: 10})],
                 "fee":new blockChainThriftModel.Fee({denom: "iris",amount: 0}),
-                "type":Irisnet.Constants.IRIS.TxType.TRANSFER
+                "type":Irisnet.Constants.IRIS.TxType.TRANSFER,
+                "memo":new blockChainThriftModel.Memo({id:1,text:"test"})
             });
 
             let builder = Irisnet.getBuilder(Irisnet.Constants.COMM.Chains.IRIS);
-            let stdTx = builder.buildAndSignTx(tx,"2233230fa9326b52b33178273a6b356479933dd71f64c9409c5edc76d425f63ff9e164fb91f7f6ebb02d85fa0491a4e81eb9245680940c4ecf30324ab04ae6cd");
+            let stdTx = builder.buildAndSignTx(tx,"8789EB2C2510D8D236EB85DAEFE4E1A4EA7D8E6929E0A1400FCF2848CF7F2DA4");
             console.log(JSON.stringify(stdTx))
             //TODO 将stdTx提交到iris-hub[/tx/send]
         });
@@ -66,17 +74,23 @@ describe('CryPto test', function () {
         //冷钱包
         it('test buildTx and signTx', function () {
             let tx = new blockChainThriftModel.Tx({
-                "sequence":3,
+
+                "sequence":5,
+
                 "ext":0,
                 "sender":{
                     "chain":"fuxi-1001",
                     "app":"v0.2.0",
-                    "addr":"507405661F2DB1940941FA0A6B3642015A015387"
+
+                    "addr":"faa1a89us8tvt3d9qpq7j6p06dc3z88n576shj8k2h"
+
                 },
                 "receiver":{
-                    "chain":"iris",
+                    "chain":"fuxi-1001",
                     "app":"v0.2.0",
-                    "addr":"9778915A4BF434C86A62C2FF45C2FCAE84AF458B"
+
+                    "addr":"faa1s6v9qgu8ye7d884s8kpye64x66znndg8t6eztj"
+
                 },
                 "amount":[new blockChainThriftModel.Coin({denom: "iris",amount: 10})],
                 "fee":new blockChainThriftModel.Fee({denom: "iris",amount: 0}),
@@ -85,44 +99,126 @@ describe('CryPto test', function () {
 
             let builder = Irisnet.getBuilder(Irisnet.Constants.COMM.Chains.IRIS);
             let signMsg = builder.buildTx(tx);
-            let scan = JSON.stringify(signMsg);
 
-            let sig = JSON.parse(scan);
-            let stdTx = builder.signTx(sig,"2233230fa9326b52b33178273a6b356479933dd71f64c9409c5edc76d425f63ff9e164fb91f7f6ebb02d85fa0491a4e81eb9245680940c4ecf30324ab04ae6cd");
+            let stdTx = builder.signTx(signMsg,"8789EB2C2510D8D236EB85DAEFE4E1A4EA7D8E6929E0A1400FCF2848CF7F2DA4");
+
             console.log(JSON.stringify(stdTx))
             //TODO 将stdTx提交到iris-hub[/tx/send]
         });
 
         it('test delegate', function () {
-            let tx = new blockChainThriftModel.Tx({"sequence":2,"amount":[{"amount":-1,"denom":"iris"}],"fee":{"amount":0,"denom":"iris"},"receiver":{"chain":"fuxi-develop","app":"sigs","addr":"507405661F2DB1940941FA0A6B3642015A015387"},"sender":{"chain":"fuxi-develop","app":"sigs","addr":"9778915A4BF434C86A62C2FF45C2FCAE84AF458B"},"type":"delegate","ext":2});
+            let tx = new blockChainThriftModel.Tx({
+                "sequence":14,
+                "ext":0,
+                "sender":{
+                    "chain":"fuxi-1001",
+                    "app":"v0.2.0",
+                    "addr":"cosmosaccaddr1mgtyzhvfj424q9r35dmr70qtt63cpc58dct7jq"
+                },
+                "receiver":{
+                    "chain":"fuxi-1001",
+                    "app":"v0.2.0",
+                    "addr":"cosmosaccaddr1mgtyzhvfj424q9r35dmr70qtt63cpc58dct7jq"
+                },
+                "amount":[new blockChainThriftModel.Coin({denom: "iris",amount: "10"})],
+                "fee":new blockChainThriftModel.Fee({denom: "iris",amount: "0"}),
+                "type":Irisnet.Constants.IRIS.TxType.DELEGATE,
+                "memo":new blockChainThriftModel.Memo({id:1,text:"test"})
+            });
 
             let builder = Irisnet.getBuilder(Irisnet.Constants.COMM.Chains.IRIS);
-            let stdTx = builder.buildAndSignTx(tx,"2233230fa9326b52b33178273a6b356479933dd71f64c9409c5edc76d425f63ff9e164fb91f7f6ebb02d85fa0491a4e81eb9245680940c4ecf30324ab04ae6cd");
+            let stdTx = builder.buildAndSignTx(tx,"E9B05BF448FFDFC91EB2149BD5309342DCFC87FC3FBB3DE16256585FB407363A");
             console.log(JSON.stringify(stdTx))
             //TODO 将stdTx提交到iris-hub[/tx/send]
         });
 
-        it('test getAddress', function () {
-            let crypto = Irisnet.getCrypto(Irisnet.Constants.COMM.Chains.IRIS);
-            let addrBech32 = crypto.getAddress("b6be55dab3f686e2e60c0e5272a45905d4ec826dfd72334e8def519542cee915");
-            let addr = bech32.fromBech32(addrBech32);
-            assert.deepEqual(addr, "33FA54A78EDE1B22A55185DB06438078D7226436");
+        it('test BeginUnbonding', function () {
+            let tx = new blockChainThriftModel.Tx({
+                "sequence":9,
+                "ext":0,
+                "sender":{
+                    "chain":"fuxi-1001",
+                    "app":"v0.2.0",
+                    "addr":"cosmosaccaddr1mgtyzhvfj424q9r35dmr70qtt63cpc58dct7jq"
+                },
+                "receiver":{
+                    "chain":"fuxi-1001",
+                    "app":"v0.2.0",
+                    "addr":"cosmosaccaddr1mgtyzhvfj424q9r35dmr70qtt63cpc58dct7jq"
+                },
+                "amount":[new blockChainThriftModel.Coin({denom: "iris",amount: "20/1"})],
+                "fee":new blockChainThriftModel.Fee({denom: "iris",amount: "0"}),
+                "type":Irisnet.Constants.IRIS.TxType.BEGINUNBOND,
+                "memo":new blockChainThriftModel.Memo({id:1,text:"test"})
+            });
+
+            let builder = Irisnet.getBuilder(Irisnet.Constants.COMM.Chains.IRIS);
+            let stdTx = builder.buildAndSignTx(tx,"E9B05BF448FFDFC91EB2149BD5309342DCFC87FC3FBB3DE16256585FB407363A");
+            console.log(JSON.stringify(stdTx))
+            //TODO 将stdTx提交到iris-hub[/tx/send]
         });
 
-        it('test create', function () {
-            let crypto = Irisnet.getCrypto(Irisnet.Constants.COMM.Chains.IRIS);
-            let keypair = crypto.create();
-            console.log(JSON.stringify(keypair));
-            let keypair2 = crypto.recover(keypair.phrase);
-            assert.deepEqual(keypair, keypair2);
+        it('test CompleteUnbonding', function () {
+            let tx = new blockChainThriftModel.Tx({
+                "sequence":10,
+                "ext":0,
+                "sender":{
+                    "chain":"fuxi-1001",
+                    "app":"v0.2.0",
+                    "addr":"cosmosaccaddr1mgtyzhvfj424q9r35dmr70qtt63cpc58dct7jq"
+                },
+                "receiver":{
+                    "chain":"fuxi-1001",
+                    "app":"v0.2.0",
+                    "addr":"cosmosaccaddr1mgtyzhvfj424q9r35dmr70qtt63cpc58dct7jq"
+                },
+                "amount":[new blockChainThriftModel.Coin({denom: "iris",amount: "10/1"})],
+                "fee":new blockChainThriftModel.Fee({denom: "iris",amount: "0"}),
+                "type":Irisnet.Constants.IRIS.TxType.COMPLETEUNBOND,
+                "memo":new blockChainThriftModel.Memo({id:1,text:"test"})
+            });
+
+            let builder = Irisnet.getBuilder(Irisnet.Constants.COMM.Chains.IRIS);
+            let stdTx = builder.buildAndSignTx(tx,"E9B05BF448FFDFC91EB2149BD5309342DCFC87FC3FBB3DE16256585FB407363A");
+            console.log(JSON.stringify(stdTx))
+            //TODO 将stdTx提交到iris-hub[/tx/send]
         });
 
-        it('test sortObjectKeys', function () {
-            let msg = new bank.MsgSend("input","output",[new bank.Coin(10,"atom")]);
-            let s = JSON.stringify(utils.sortObjectKeys(msg));
-            let expected = '{"inputs":[{"address":"input","coins":[{"amount":"10","denom":"atom"}]}],"outputs":[{"address":"output","coins":[{"amount":"10","denom":"atom"}]}]}';
-            assert.deepEqual(s, expected);
+        //冷钱包
+        it('test signMsg', function () {
+            let tx = new blockChainThriftModel.Tx({
+                "sequence":0,
+                "ext":0,
+                "sender":{
+                    "chain":"fuxi-develop",
+                    "app":"v0.2.0",
+                    "addr":"1EC2E86065D5EF88A3ED65B8B3A43210FAD9C7B2"
+                },
+                "receiver":{
+                    "chain":"iris",
+                    "app":"v0.2.0",
+                    "addr":"3A058A8B5468AE0EA2D2517CE3BAFDD281E50C2F"
+                },
+                "amount":[new blockChainThriftModel.Coin({denom: "atom",amount: 10})],
+                "fee":new blockChainThriftModel.Fee({denom: "",amount: 0}),
+                "type":Irisnet.Constants.IRIS.TxType.TRANSFER,
+                "memo":new blockChainThriftModel.Memo({id: 0,text: "test"})
+            });
+
+            let builder = Irisnet.getBuilder(Irisnet.Constants.COMM.Chains.IRIS);
+            let signMsg = builder.buildTx(tx);
+            let msgBytes = JSON.stringify(signMsg.GetSignBytes());
+            console.log(msgBytes);
+            let msgHex = Codec.Hex.stringToHex(msgBytes);
+            let sigByte = Codec.Hex.hexToBytes(msgHex);
+            console.log(sigByte.toString());
         });
 
+        it('test codec', function () {
+            let s = Codec.Hex.hexToBytes("1EC2E86065D5EF88A3ED65B8B3A43210FAD9C7B2")
+            let s1 = Codec.Bech32.fromBech32("cosmosaccaddr1mgtyzhvfj424q9r35dmr70qtt63cpc58dct7jq");
+            console.log(s);
+            console.log(s1);
+        })
     });
 });
