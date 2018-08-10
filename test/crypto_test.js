@@ -15,10 +15,8 @@ describe('CryPto test', function () {
         });
 
         it('bech32', function () {
-
             console.log(Codec.Bech32.fromBech32("faa1cmjnj9zw0m4aau95dsmzj7zgaqagptzywu3v8r"));
             console.log(Codec.Bech32.toBech32("faa","8698502387267CD39EB03D824CEAA6D68539B507"));
-
         });
 
         it('test import', function () {
@@ -74,23 +72,17 @@ describe('CryPto test', function () {
         //冷钱包
         it('test buildTx and signTx', function () {
             let tx = new blockChainThriftModel.Tx({
-
                 "sequence":5,
-
                 "ext":0,
                 "sender":{
                     "chain":"fuxi-1001",
                     "app":"v0.2.0",
-
                     "addr":"faa1a89us8tvt3d9qpq7j6p06dc3z88n576shj8k2h"
-
                 },
                 "receiver":{
                     "chain":"fuxi-1001",
                     "app":"v0.2.0",
-
                     "addr":"faa1s6v9qgu8ye7d884s8kpye64x66znndg8t6eztj"
-
                 },
                 "amount":[new blockChainThriftModel.Coin({denom: "iris",amount: 10})],
                 "fee":new blockChainThriftModel.Fee({denom: "iris",amount: 0}),
@@ -99,9 +91,7 @@ describe('CryPto test', function () {
 
             let builder = Irisnet.getBuilder(Irisnet.Constants.COMM.Chains.IRIS);
             let signMsg = builder.buildTx(tx);
-
             let stdTx = builder.signTx(signMsg,"8789EB2C2510D8D236EB85DAEFE4E1A4EA7D8E6929E0A1400FCF2848CF7F2DA4");
-
             console.log(JSON.stringify(stdTx))
             //TODO 将stdTx提交到iris-hub[/tx/send]
         });
