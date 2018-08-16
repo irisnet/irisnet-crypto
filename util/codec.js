@@ -69,8 +69,23 @@ const bech32 = class {
      * @returns {*}  bech32编码后的字符串
      */
     static toBech32(prefix, str) {
-        let strByte = BECH32.toWords(Buffer.from(str, 'hex'))
+        let strByte = BECH32.toWords(Buffer.from(str, 'hex'));
         return BECH32.encode(prefix, strByte)
+    }
+
+    /**
+     *
+     * @param prefix bech32编码
+     * @param str    待编码的字符串
+     * @returns
+     */
+    static isBech32(prefix, str) {
+        if (!prefix || prefix.length == 0) {
+            return false
+        }
+        let preReg = new RegExp('^' + prefix + '1');
+        let allRge = new RegExp('[0-9a-fA-F]');
+        return preReg.test(str) && allRge.test(str)
     }
 };
 

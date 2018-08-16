@@ -98,8 +98,8 @@ class CosmosKeypair {
     }
 
     static isValidAddress(address) {
-        //return /^[0-9a-fA-F]{40}$/i.test(address);
-		return true;
+        let prefix = Constants.IrisNetConfig.PREFIX_BECH32_ACCADDR;
+		return Codec.Bech32.isBech32(prefix,address);
     }
 
     static isValidPrivate(privateKey) {
