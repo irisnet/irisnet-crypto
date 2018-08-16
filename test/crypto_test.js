@@ -204,11 +204,12 @@ describe('CryPto test', function () {
             console.log(sigByte.toString());
         });
 
-        it('test codec', function () {
-            let s = Codec.Hex.hexToBytes("1EC2E86065D5EF88A3ED65B8B3A43210FAD9C7B2")
-            let s1 = Codec.Bech32.fromBech32("cosmosaccaddr1mgtyzhvfj424q9r35dmr70qtt63cpc58dct7jq");
-            console.log(s);
-            console.log(s1);
+        it('test isValidAddress', function () {
+            let addr = "faa1a89us8tvt3d9qpq7j6p06dc3z88n576shj8k2h";
+            let crypto = Irisnet.getCrypto(Irisnet.Constants.COMM.Chains.IRIS);
+            let result = crypto.isValidAddress(addr)
+            assert.isTrue(result);
         })
+
     });
 });
