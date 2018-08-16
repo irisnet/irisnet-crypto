@@ -84,8 +84,8 @@ const bech32 = class {
             return false
         }
         let preReg = new RegExp('^' + prefix + '1');
-        let allRge = new RegExp('[0-9a-fA-F]');
-        return preReg.test(str) && allRge.test(str)
+        let allReg = new RegExp(/^[0-9a-zA-Z]*$/i);
+        return preReg.test(str) && allReg.test(str)
     }
 };
 
