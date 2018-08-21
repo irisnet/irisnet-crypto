@@ -83,9 +83,24 @@ const bech32 = class {
         if (!prefix || prefix.length == 0) {
             return false
         }
+
         let preReg = new RegExp('^' + prefix + '1');
+        if (!preReg.test(str) ){
+            return false
+        }
+
         let allReg = new RegExp(/^[0-9a-zA-Z]*$/i);
-        return preReg.test(str) && allReg.test(str)
+        if (!allReg.test(str)){
+            return false
+        }
+
+        try {
+            bech32.fromBech32(str);
+            return true
+        }catch (e) {
+            return false
+
+        }
     }
 };
 
