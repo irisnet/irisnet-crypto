@@ -16,6 +16,7 @@ describe('CryPto test', function () {
 
         it('bech32', function () {
             console.log(Codec.Bech32.fromBech32("faa1cmjnj9zw0m4aau95dsmzj7zgaqagptzywu3v8r"));
+            console.log(Codec.Bech32.fromBech32("faa1cmjnj9zw0m4aau95dsmzj7zgaqagptzwu3v8r"));
             console.log(Codec.Bech32.toBech32("faa","8698502387267CD39EB03D824CEAA6D68539B507"));
         });
 
@@ -205,7 +206,7 @@ describe('CryPto test', function () {
         });
 
         it('test isValidAddress', function () {
-            let addr = "faa1a89us8tvt3d9qpq7j6p06dc3z88n576shj8k2h";
+            let addr = "faa1a89us8tvt3d9qpq7j6e06dc3z88n576shj8k2h";
             let crypto = Irisnet.getCrypto(Irisnet.Constants.COMM.Chains.IRIS);
             let result = crypto.isValidAddress(addr)
             assert.isTrue(result);
