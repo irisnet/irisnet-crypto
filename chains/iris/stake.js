@@ -117,22 +117,22 @@ class CompleteUnbondingMsg extends Builder.Msg{
 }
 
 module.exports = class Stake {
-    static GetDelegateSignMsg(acc, validatorAddr, coins, fee, gas, memo) {
-        let stdFee = Bank.NewStdFee(fee, gas);
+    static GetDelegateSignMsg(acc, validatorAddr, coins, fee, gasLimit, memo) {
+        let stdFee = Bank.NewStdFee(fee, gasLimit);
         let msg = new DelegateMsg(acc.address, validatorAddr, coins);
         let signMsg = Bank.NewStdSignMsg(acc.chain_id, acc.account_number, acc.sequence, stdFee, msg,memo);
         return signMsg;
     }
 
-    static GetBeginUnbondingMsg(acc, validatorAddr, shares, fee, gas, memo) {
-        let stdFee = Bank.NewStdFee(fee, gas);
+    static GetBeginUnbondingMsg(acc, validatorAddr, shares, fee, gasLimit, memo) {
+        let stdFee = Bank.NewStdFee(fee, gasLimit);
         let msg = new BeginUnbondingMsg(acc.address, validatorAddr, shares);
         let signMsg = Bank.NewStdSignMsg(acc.chain_id, acc.account_number, acc.sequence, stdFee, msg,memo);
         return signMsg;
     }
 
-    static GetCompleteUnbondingMsg(acc, validatorAddr, shares, fee, gas, memo) {
-        let stdFee = Bank.NewStdFee(fee, gas);
+    static GetCompleteUnbondingMsg(acc, validatorAddr, shares, fee, gasLimit, memo) {
+        let stdFee = Bank.NewStdFee(fee, gasLimit);
         let msg = new CompleteUnbondingMsg(acc.address, validatorAddr);
         let signMsg = Bank.NewStdSignMsg(acc.chain_id, acc.account_number, acc.sequence, stdFee, msg,memo);
         return signMsg;
