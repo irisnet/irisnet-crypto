@@ -116,7 +116,7 @@ class StdFee {
     constructor(amount, gasLimit) {
         this.amount = amount;
         if (!gasLimit) {
-            gasLimit = Constants.IrisNetConfig.MAXgasLimit;
+            gasLimit = Constants.IrisNetConfig.MAXGAS;
         }
         this.gasLimit = gasLimit;
     }
