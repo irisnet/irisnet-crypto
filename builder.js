@@ -68,7 +68,7 @@ class Builder {
      * 将外部请求参数封装为crypto统一类型，与具体业务代码松耦合.由具体子类调用
      *
      * @param tx {blockChainThriftModel.Tx} 传入参数
-     * @returns {{acc, to, coins, fees, gas, type}}
+     * @returns {{acc, to, coins, fees, gasLimit, type}}
      */
     buildParam(tx){
         let convert = function (tx) {
@@ -98,7 +98,7 @@ class Builder {
 
             let fromAcc = new Account(tx.sender.addr, tx.sender.chain, tx.ext, tx.sequence);
             let memo = tx.memo ? tx.memo.text : '';
-            return new Request(fromAcc,tx.receiver.addr,coins,fees,tx.gas,memo,tx.type);
+            return new Request(fromAcc,tx.receiver.addr,coins,fees,tx.gasLimit,memo,tx.type);
         };
 
         return convert(tx);
@@ -106,12 +106,12 @@ class Builder {
 }
 
 class Request {
-    constructor(acc, to, coins, fees,gas,memo,type) {
+    constructor(acc, to, coins, fees,gasLimit,memo,type) {
         this.acc = acc;
         this.to = to;
         this.coins = coins;
         this.fees = fees;
-        this.gas = gas;
+        this.gasLimit = gasLimit;
         this.memo = memo;
         this.type = type
     }
