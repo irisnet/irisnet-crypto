@@ -113,12 +113,12 @@ class MsgSend extends Builder.Msg {
 }
 
 class StdFee {
-    constructor(amount, gasLimit) {
+    constructor(amount, gas) {
         this.amount = amount;
-        if (!gasLimit) {
-            gasLimit = Constants.IrisNetConfig.MAXGAS;
+        if (!gas) {
+            gas = Constants.IrisNetConfig.MAXGAS;
         }
-        this.gasLimit = gasLimit;
+        this.gas = gas;
     }
 
     GetSignBytes() {
@@ -202,8 +202,8 @@ class StdTx {
 }
 
 module.exports = class Bank{
-    static GetTransferSignMsg(acc, toAddress, coins, fee, gasLimit, memo) {
-        let stdFee = new StdFee(fee, gasLimit);
+    static GetTransferSignMsg(acc, toAddress, coins, fee, gas, memo) {
+        let stdFee = new StdFee(fee, gas);
         let msg = new MsgSend(acc.address, toAddress, coins);
         let signMsg = new StdSignMsg(acc.chain_id, acc.account_number, acc.sequence, stdFee, msg, memo);
         return signMsg
@@ -221,8 +221,8 @@ module.exports = class Bank{
         return new MsgSend(from, to, coins)
     }
 
-    static NewStdFee(amount, gasLimit){
-        return new StdFee(amount, gasLimit)
+    static NewStdFee(amount, gas){
+        return new StdFee(amount, gas)
     }
 
     static NewStdSignMsg(chainID, accnum, sequence, fee, msg, memo){

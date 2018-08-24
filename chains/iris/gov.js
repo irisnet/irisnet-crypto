@@ -56,8 +56,8 @@ class SubmitProposalMsg extends Builder.Msg{
 module.exports = class Gov {
 
     // TODO
-    static GetSubmitProposalMsg(acc, validatorAddr, coins, fee, gasLimit, memo){
-        let stdFee = Bank.NewStdFee(fee, gasLimit);
+    static GetSubmitProposalMsg(acc, validatorAddr, coins, fee, gas, memo){
+        let stdFee = Bank.NewStdFee(fee, gas);
         let msg = new SubmitProposalMsg(acc.address, validatorAddr, coins);
         let signMsg = Bank.NewStdSignMsg(acc.chain_id, acc.account_number, acc.sequence, stdFee, msg,memo);
         return signMsg;
