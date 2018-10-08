@@ -30,8 +30,8 @@ class CosmosKeypair {
         let sig = Secp256k1.sign(sig32,prikeyArr);
         let signature = Buffer.from(Hd.Serialize(sig.signature));
 
-        //将签名结果加上amino编码前缀(irishub反序列化需要)
-        signature = Amino.MarshalBinary(Constants.AminoKey.SignatureSecp256k1_prefix,signature);
+        //将签名结果加上amino编码前缀(irishub反序列化需要) (cosmos-sdk v0.24.0去掉了前缀)
+        //signature = Amino.MarshalBinary(Constants.AminoKey.SignatureSecp256k1_prefix,signature);
         return Array.from(signature)
     }
 
