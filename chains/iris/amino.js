@@ -14,6 +14,16 @@ class Amino {
     }
 
     /**
+     */
+
+    GetCode(key){
+        let code = this._keyMap[key];
+        if (code === "" || code === undefined){
+            throw new Error("not implement");
+        }
+        return code
+    }
+    /**
      * 注册消息的amino前缀
      *
      * @param key amino前缀
@@ -40,7 +50,7 @@ class Amino {
         let pair = {
             "type" : key,
             "value": message
-        }
+        };
         return pair
     }
 
@@ -63,5 +73,7 @@ let amino = new Amino();
 amino.RegisterConcrete(Constants.AminoKey.SignatureSecp256k1_prefix);
 amino.RegisterConcrete(Constants.AminoKey.PubKeySecp256k1_prefix);
 amino.RegisterConcrete("cosmos-sdk/MsgDelegate");
+amino.RegisterConcrete("cosmos-sdk/Send");
+amino.RegisterConcrete("auth/StdTx");
 
 module.exports = amino;
