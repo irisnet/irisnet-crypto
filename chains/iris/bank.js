@@ -4,7 +4,7 @@ const Utils = require('../../util/utils');
 const Constants = require('./constants');
 const Builder = require("../../builder");
 const Amino = require("./amino");
-const Tx = require("./tx/std_tx");
+const TxSerializer = require("./tx/std_tx");
 
 class Coin {
     constructor(amount, denom) {
@@ -232,7 +232,7 @@ class StdTx {
     }
 
     Hash(){
-        let result = Tx.MarshalBinary(this);
+        let result = TxSerializer.encode(this);
         return {
             data : result.data,
             hash : result.hash

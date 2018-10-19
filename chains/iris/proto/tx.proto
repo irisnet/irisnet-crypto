@@ -1,6 +1,7 @@
 package irisnet.tx;
 //syntax = "proto3";
 
+//pbjs -t static-module -w commonjs -o tx.js tx.proto
 message Coin {
     required string denom = 1;
     required string amount = 2;
@@ -33,7 +34,7 @@ message StdSignature {
 }
 
 message StdTx {
-    repeated MsgSend msgs = 1;
+    repeated bytes msgs = 1;
     required StdFee fee   = 2;
     repeated StdSignature signatures = 3;
     optional string memo = 4; //空值需要处理

@@ -12,7 +12,7 @@ describe('CryPto test', function () {
         let gas = 200000;
         let chainID = "fuxi-4000";
         let AccountNumber = 0; //0需要特殊处理
-        let Sequence = 2;
+        let Sequence = 250;
         let memo = "";
         let priKey = "730131E9E44DED08E5EA23E324097C0E072DC65053523760E151B74193BF1403";
 

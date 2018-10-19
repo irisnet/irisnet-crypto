@@ -1302,11 +1302,11 @@ $root.irisnet = (function() {
 
                 // ===========================整形过滤掉零值================================
                 if (message.accountNumber !== 0) {
-                    writer.uint32(/* id 3, wireType 0 =*/24).sint64(message.accountNumber);
+                writer.uint32(/* id 3, wireType 0 =*/24).sint64(message.accountNumber);
                 }
                 // ===========================整形过滤掉零值================================
                 if (message.sequence !== 0) {
-                    writer.uint32(/* id 4, wireType 0 =*/32).sint64(message.sequence);
+                writer.uint32(/* id 4, wireType 0 =*/32).sint64(message.sequence);
                 }
                 return writer;
             };
@@ -1527,7 +1527,7 @@ $root.irisnet = (function() {
              * Properties of a StdTx.
              * @memberof irisnet.tx
              * @interface IStdTx
-             * @property {Array.<irisnet.tx.IMsgSend>|null} [msgs] StdTx msgs
+             * @property {Array.<Uint8Array>|null} [msgs] StdTx msgs
              * @property {irisnet.tx.IStdFee} fee StdTx fee
              * @property {Array.<irisnet.tx.IStdSignature>|null} [signatures] StdTx signatures
              * @property {string|null} [memo] StdTx memo
@@ -1552,7 +1552,7 @@ $root.irisnet = (function() {
 
             /**
              * StdTx msgs.
-             * @member {Array.<irisnet.tx.IMsgSend>} msgs
+             * @member {Array.<Uint8Array>} msgs
              * @memberof irisnet.tx.StdTx
              * @instance
              */
@@ -1608,12 +1608,11 @@ $root.irisnet = (function() {
                     writer = $Writer.create();
                 if (message.msgs != null && message.msgs.length)
                     for (var i = 0; i < message.msgs.length; ++i)
-                        $root.irisnet.tx.MsgSend.encode(message.msgs[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                        writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.msgs[i]);
                 $root.irisnet.tx.StdFee.encode(message.fee, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                 if (message.signatures != null && message.signatures.length)
                     for (var i = 0; i < message.signatures.length; ++i)
                         $root.irisnet.tx.StdSignature.encode(message.signatures[i], writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                // ===========================过滤掉空值================================
                 if (message.memo != null && message.hasOwnProperty("memo") && message.memo !== "")
                     writer.uint32(/* id 4, wireType 2 =*/34).string(message.memo);
                 return writer;
@@ -1653,7 +1652,7 @@ $root.irisnet = (function() {
                     case 1:
                         if (!(message.msgs && message.msgs.length))
                             message.msgs = [];
-                        message.msgs.push($root.irisnet.tx.MsgSend.decode(reader, reader.uint32()));
+                        message.msgs.push(reader.bytes());
                         break;
                     case 2:
                         message.fee = $root.irisnet.tx.StdFee.decode(reader, reader.uint32());
@@ -1706,11 +1705,9 @@ $root.irisnet = (function() {
                 if (message.msgs != null && message.hasOwnProperty("msgs")) {
                     if (!Array.isArray(message.msgs))
                         return "msgs: array expected";
-                    for (var i = 0; i < message.msgs.length; ++i) {
-                        var error = $root.irisnet.tx.MsgSend.verify(message.msgs[i]);
-                        if (error)
-                            return "msgs." + error;
-                    }
+                    for (var i = 0; i < message.msgs.length; ++i)
+                        if (!(message.msgs[i] && typeof message.msgs[i].length === "number" || $util.isString(message.msgs[i])))
+                            return "msgs: buffer[] expected";
                 }
                 {
                     var error = $root.irisnet.tx.StdFee.verify(message.fee);
@@ -1748,11 +1745,11 @@ $root.irisnet = (function() {
                     if (!Array.isArray(object.msgs))
                         throw TypeError(".irisnet.tx.StdTx.msgs: array expected");
                     message.msgs = [];
-                    for (var i = 0; i < object.msgs.length; ++i) {
-                        if (typeof object.msgs[i] !== "object")
-                            throw TypeError(".irisnet.tx.StdTx.msgs: object expected");
-                        message.msgs[i] = $root.irisnet.tx.MsgSend.fromObject(object.msgs[i]);
-                    }
+                    for (var i = 0; i < object.msgs.length; ++i)
+                        if (typeof object.msgs[i] === "string")
+                            $util.base64.decode(object.msgs[i], message.msgs[i] = $util.newBuffer($util.base64.length(object.msgs[i])), 0);
+                        else if (object.msgs[i].length)
+                            message.msgs[i] = object.msgs[i];
                 }
                 if (object.fee != null) {
                     if (typeof object.fee !== "object")
@@ -1798,7 +1795,7 @@ $root.irisnet = (function() {
                 if (message.msgs && message.msgs.length) {
                     object.msgs = [];
                     for (var j = 0; j < message.msgs.length; ++j)
-                        object.msgs[j] = $root.irisnet.tx.MsgSend.toObject(message.msgs[j], options);
+                        object.msgs[j] = options.bytes === String ? $util.base64.encode(message.msgs[j], 0, message.msgs[j].length) : options.bytes === Array ? Array.prototype.slice.call(message.msgs[j]) : message.msgs[j];
                 }
                 if (message.fee != null && message.hasOwnProperty("fee"))
                     object.fee = $root.irisnet.tx.StdFee.toObject(message.fee, options);
