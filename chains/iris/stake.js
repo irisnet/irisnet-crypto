@@ -43,6 +43,21 @@ class DelegateMsg extends Builder.Msg{
         return "cosmos-sdk/MsgDelegate";
     }
 
+    GetMsg(){
+        const BECH32 = require('bech32');
+        let delegator_key = BECH32.decode(this.delegator_addr);
+        let delegator_addr = BECH32.fromWords(delegator_key.words);
+
+        let validator_key = BECH32.decode(this.validator_addr);
+        let validator_addr = BECH32.fromWords(validator_key.words);
+
+        return {
+            delegatorAddr : delegator_addr,
+            validatorAddr : validator_addr,
+            delegation : this.delegation
+        }
+    }
+
 }
 
 class BeginUnbondingMsg extends Builder.Msg{

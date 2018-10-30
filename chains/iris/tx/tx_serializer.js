@@ -1,7 +1,7 @@
 const root = require('./tx');
 const amino = require('../amino');
 
-//amino.RegisterConcrete("cosmos-sdk/MsgDelegate");
+amino.RegisterConcrete(root.irisnet.tx.MsgDelegate,"cosmos-sdk/MsgDelegate");
 amino.RegisterConcrete(root.irisnet.tx.MsgSend,"cosmos-sdk/Send");
 amino.RegisterConcrete(root.irisnet.tx.StdTx,"auth/StdTx");
 
@@ -34,10 +34,8 @@ class TxSerializer {
         let txMsgBuf = StdTx.encode(tx).finish();
 
         //stdTx amion编码前缀[auth/StdTx]
-        //let txPreBuf = Buffer.from([240,98,93,238]);
         let txPreBuf = Buffer.from(amino.GetRegisterInfo("auth/StdTx").prefix);
         //msg amion编码前缀[cosmos-sdk/Send]
-        //let msgPreBuf = Buffer.from([42,44,135,250]);
         let msgPreBuf = Buffer.from(info.prefix);
 
         let buf = Buffer.alloc(txPreBuf.length + msgPreBuf.length + txMsgBuf.length, 0);

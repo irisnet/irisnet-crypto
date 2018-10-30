@@ -128,15 +128,15 @@ $root.irisnet = (function() {
                 while (reader.pos < end) {
                     var tag = reader.uint32();
                     switch (tag >>> 3) {
-                    case 1:
-                        message.denom = reader.string();
-                        break;
-                    case 2:
-                        message.amount = reader.string();
-                        break;
-                    default:
-                        reader.skipType(tag & 7);
-                        break;
+                        case 1:
+                            message.denom = reader.string();
+                            break;
+                        case 2:
+                            message.amount = reader.string();
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
                     }
                 }
                 if (!message.hasOwnProperty("denom"))
@@ -341,17 +341,17 @@ $root.irisnet = (function() {
                 while (reader.pos < end) {
                     var tag = reader.uint32();
                     switch (tag >>> 3) {
-                    case 1:
-                        message.address = reader.bytes();
-                        break;
-                    case 2:
-                        if (!(message.coins && message.coins.length))
-                            message.coins = [];
-                        message.coins.push($root.irisnet.tx.Coin.decode(reader, reader.uint32()));
-                        break;
-                    default:
-                        reader.skipType(tag & 7);
-                        break;
+                        case 1:
+                            message.address = reader.bytes();
+                            break;
+                        case 2:
+                            if (!(message.coins && message.coins.length))
+                                message.coins = [];
+                            message.coins.push($root.irisnet.tx.Coin.decode(reader, reader.uint32()));
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
                     }
                 }
                 if (!message.hasOwnProperty("address"))
@@ -581,17 +581,17 @@ $root.irisnet = (function() {
                 while (reader.pos < end) {
                     var tag = reader.uint32();
                     switch (tag >>> 3) {
-                    case 1:
-                        message.address = reader.bytes();
-                        break;
-                    case 2:
-                        if (!(message.coins && message.coins.length))
-                            message.coins = [];
-                        message.coins.push($root.irisnet.tx.Coin.decode(reader, reader.uint32()));
-                        break;
-                    default:
-                        reader.skipType(tag & 7);
-                        break;
+                        case 1:
+                            message.address = reader.bytes();
+                            break;
+                        case 2:
+                            if (!(message.coins && message.coins.length))
+                                message.coins = [];
+                            message.coins.push($root.irisnet.tx.Coin.decode(reader, reader.uint32()));
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
                     }
                 }
                 if (!message.hasOwnProperty("address"))
@@ -824,19 +824,19 @@ $root.irisnet = (function() {
                 while (reader.pos < end) {
                     var tag = reader.uint32();
                     switch (tag >>> 3) {
-                    case 1:
-                        if (!(message.input && message.input.length))
-                            message.input = [];
-                        message.input.push($root.irisnet.tx.Input.decode(reader, reader.uint32()));
-                        break;
-                    case 2:
-                        if (!(message.output && message.output.length))
-                            message.output = [];
-                        message.output.push($root.irisnet.tx.Output.decode(reader, reader.uint32()));
-                        break;
-                    default:
-                        reader.skipType(tag & 7);
-                        break;
+                        case 1:
+                            if (!(message.input && message.input.length))
+                                message.input = [];
+                            message.input.push($root.irisnet.tx.Input.decode(reader, reader.uint32()));
+                            break;
+                        case 2:
+                            if (!(message.output && message.output.length))
+                                message.output = [];
+                            message.output.push($root.irisnet.tx.Output.decode(reader, reader.uint32()));
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
                     }
                 }
                 return message;
@@ -969,6 +969,262 @@ $root.irisnet = (function() {
             return MsgSend;
         })();
 
+        tx.MsgDelegate = (function() {
+
+            /**
+             * Properties of a MsgDelegate.
+             * @memberof irisnet.tx
+             * @interface IMsgDelegate
+             * @property {Uint8Array} delegatorAddr MsgDelegate delegatorAddr
+             * @property {Uint8Array} validatorAddr MsgDelegate validatorAddr
+             * @property {irisnet.tx.ICoin} delegation MsgDelegate delegation
+             */
+
+            /**
+             * Constructs a new MsgDelegate.
+             * @memberof irisnet.tx
+             * @classdesc Represents a MsgDelegate.
+             * @implements IMsgDelegate
+             * @constructor
+             * @param {irisnet.tx.IMsgDelegate=} [properties] Properties to set
+             */
+            function MsgDelegate(properties) {
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+
+            /**
+             * MsgDelegate delegatorAddr.
+             * @member {Uint8Array} delegatorAddr
+             * @memberof irisnet.tx.MsgDelegate
+             * @instance
+             */
+            MsgDelegate.prototype.delegatorAddr = $util.newBuffer([]);
+
+            /**
+             * MsgDelegate validatorAddr.
+             * @member {Uint8Array} validatorAddr
+             * @memberof irisnet.tx.MsgDelegate
+             * @instance
+             */
+            MsgDelegate.prototype.validatorAddr = $util.newBuffer([]);
+
+            /**
+             * MsgDelegate delegation.
+             * @member {irisnet.tx.ICoin} delegation
+             * @memberof irisnet.tx.MsgDelegate
+             * @instance
+             */
+            MsgDelegate.prototype.delegation = null;
+
+            /**
+             * Creates a new MsgDelegate instance using the specified properties.
+             * @function create
+             * @memberof irisnet.tx.MsgDelegate
+             * @static
+             * @param {irisnet.tx.IMsgDelegate=} [properties] Properties to set
+             * @returns {irisnet.tx.MsgDelegate} MsgDelegate instance
+             */
+            MsgDelegate.create = function create(properties) {
+                return new MsgDelegate(properties);
+            };
+
+            /**
+             * Encodes the specified MsgDelegate message. Does not implicitly {@link irisnet.tx.MsgDelegate.verify|verify} messages.
+             * @function encode
+             * @memberof irisnet.tx.MsgDelegate
+             * @static
+             * @param {irisnet.tx.IMsgDelegate} message MsgDelegate message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MsgDelegate.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.delegatorAddr);
+                writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.validatorAddr);
+                $root.irisnet.tx.Coin.encode(message.delegation, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+                return writer;
+            };
+
+            /**
+             * Encodes the specified MsgDelegate message, length delimited. Does not implicitly {@link irisnet.tx.MsgDelegate.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof irisnet.tx.MsgDelegate
+             * @static
+             * @param {irisnet.tx.IMsgDelegate} message MsgDelegate message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MsgDelegate.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+
+            /**
+             * Decodes a MsgDelegate message from the specified reader or buffer.
+             * @function decode
+             * @memberof irisnet.tx.MsgDelegate
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {irisnet.tx.MsgDelegate} MsgDelegate
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MsgDelegate.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.irisnet.tx.MsgDelegate();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
+                        case 1:
+                            message.delegatorAddr = reader.bytes();
+                            break;
+                        case 2:
+                            message.validatorAddr = reader.bytes();
+                            break;
+                        case 3:
+                            message.delegation = $root.irisnet.tx.Coin.decode(reader, reader.uint32());
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                    }
+                }
+                if (!message.hasOwnProperty("delegatorAddr"))
+                    throw $util.ProtocolError("missing required 'delegatorAddr'", { instance: message });
+                if (!message.hasOwnProperty("validatorAddr"))
+                    throw $util.ProtocolError("missing required 'validatorAddr'", { instance: message });
+                if (!message.hasOwnProperty("delegation"))
+                    throw $util.ProtocolError("missing required 'delegation'", { instance: message });
+                return message;
+            };
+
+            /**
+             * Decodes a MsgDelegate message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof irisnet.tx.MsgDelegate
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {irisnet.tx.MsgDelegate} MsgDelegate
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MsgDelegate.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a MsgDelegate message.
+             * @function verify
+             * @memberof irisnet.tx.MsgDelegate
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            MsgDelegate.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (!(message.delegatorAddr && typeof message.delegatorAddr.length === "number" || $util.isString(message.delegatorAddr)))
+                    return "delegatorAddr: buffer expected";
+                if (!(message.validatorAddr && typeof message.validatorAddr.length === "number" || $util.isString(message.validatorAddr)))
+                    return "validatorAddr: buffer expected";
+                {
+                    var error = $root.irisnet.tx.Coin.verify(message.delegation);
+                    if (error)
+                        return "delegation." + error;
+                }
+                return null;
+            };
+
+            /**
+             * Creates a MsgDelegate message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof irisnet.tx.MsgDelegate
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {irisnet.tx.MsgDelegate} MsgDelegate
+             */
+            MsgDelegate.fromObject = function fromObject(object) {
+                if (object instanceof $root.irisnet.tx.MsgDelegate)
+                    return object;
+                var message = new $root.irisnet.tx.MsgDelegate();
+                if (object.delegatorAddr != null)
+                    if (typeof object.delegatorAddr === "string")
+                        $util.base64.decode(object.delegatorAddr, message.delegatorAddr = $util.newBuffer($util.base64.length(object.delegatorAddr)), 0);
+                    else if (object.delegatorAddr.length)
+                        message.delegatorAddr = object.delegatorAddr;
+                if (object.validatorAddr != null)
+                    if (typeof object.validatorAddr === "string")
+                        $util.base64.decode(object.validatorAddr, message.validatorAddr = $util.newBuffer($util.base64.length(object.validatorAddr)), 0);
+                    else if (object.validatorAddr.length)
+                        message.validatorAddr = object.validatorAddr;
+                if (object.delegation != null) {
+                    if (typeof object.delegation !== "object")
+                        throw TypeError(".irisnet.tx.MsgDelegate.delegation: object expected");
+                    message.delegation = $root.irisnet.tx.Coin.fromObject(object.delegation);
+                }
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a MsgDelegate message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof irisnet.tx.MsgDelegate
+             * @static
+             * @param {irisnet.tx.MsgDelegate} message MsgDelegate
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            MsgDelegate.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults) {
+                    if (options.bytes === String)
+                        object.delegatorAddr = "";
+                    else {
+                        object.delegatorAddr = [];
+                        if (options.bytes !== Array)
+                            object.delegatorAddr = $util.newBuffer(object.delegatorAddr);
+                    }
+                    if (options.bytes === String)
+                        object.validatorAddr = "";
+                    else {
+                        object.validatorAddr = [];
+                        if (options.bytes !== Array)
+                            object.validatorAddr = $util.newBuffer(object.validatorAddr);
+                    }
+                    object.delegation = null;
+                }
+                if (message.delegatorAddr != null && message.hasOwnProperty("delegatorAddr"))
+                    object.delegatorAddr = options.bytes === String ? $util.base64.encode(message.delegatorAddr, 0, message.delegatorAddr.length) : options.bytes === Array ? Array.prototype.slice.call(message.delegatorAddr) : message.delegatorAddr;
+                if (message.validatorAddr != null && message.hasOwnProperty("validatorAddr"))
+                    object.validatorAddr = options.bytes === String ? $util.base64.encode(message.validatorAddr, 0, message.validatorAddr.length) : options.bytes === Array ? Array.prototype.slice.call(message.validatorAddr) : message.validatorAddr;
+                if (message.delegation != null && message.hasOwnProperty("delegation"))
+                    object.delegation = $root.irisnet.tx.Coin.toObject(message.delegation, options);
+                return object;
+            };
+
+            /**
+             * Converts this MsgDelegate to JSON.
+             * @function toJSON
+             * @memberof irisnet.tx.MsgDelegate
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            MsgDelegate.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            return MsgDelegate;
+        })();
+
         tx.StdFee = (function() {
 
             /**
@@ -1073,17 +1329,17 @@ $root.irisnet = (function() {
                 while (reader.pos < end) {
                     var tag = reader.uint32();
                     switch (tag >>> 3) {
-                    case 1:
-                        if (!(message.amount && message.amount.length))
-                            message.amount = [];
-                        message.amount.push($root.irisnet.tx.Coin.decode(reader, reader.uint32()));
-                        break;
-                    case 2:
-                        message.gas = reader.sint64();
-                        break;
-                    default:
-                        reader.skipType(tag & 7);
-                        break;
+                        case 1:
+                            if (!(message.amount && message.amount.length))
+                                message.amount = [];
+                            message.amount.push($root.irisnet.tx.Coin.decode(reader, reader.uint32()));
+                            break;
+                        case 2:
+                            message.gas = reader.sint64();
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
                     }
                 }
                 if (!message.hasOwnProperty("gas"))
@@ -1342,21 +1598,21 @@ $root.irisnet = (function() {
                 while (reader.pos < end) {
                     var tag = reader.uint32();
                     switch (tag >>> 3) {
-                    case 1:
-                        message.pubKey = reader.bytes();
-                        break;
-                    case 2:
-                        message.signature = reader.bytes();
-                        break;
-                    case 3:
-                        message.accountNumber = reader.sint64();
-                        break;
-                    case 4:
-                        message.sequence = reader.sint64();
-                        break;
-                    default:
-                        reader.skipType(tag & 7);
-                        break;
+                        case 1:
+                            message.pubKey = reader.bytes();
+                            break;
+                        case 2:
+                            message.signature = reader.bytes();
+                            break;
+                        case 3:
+                            message.accountNumber = reader.sint64();
+                            break;
+                        case 4:
+                            message.sequence = reader.sint64();
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
                     }
                 }
                 if (!message.hasOwnProperty("pubKey"))
@@ -1649,25 +1905,25 @@ $root.irisnet = (function() {
                 while (reader.pos < end) {
                     var tag = reader.uint32();
                     switch (tag >>> 3) {
-                    case 1:
-                        if (!(message.msgs && message.msgs.length))
-                            message.msgs = [];
-                        message.msgs.push(reader.bytes());
-                        break;
-                    case 2:
-                        message.fee = $root.irisnet.tx.StdFee.decode(reader, reader.uint32());
-                        break;
-                    case 3:
-                        if (!(message.signatures && message.signatures.length))
-                            message.signatures = [];
-                        message.signatures.push($root.irisnet.tx.StdSignature.decode(reader, reader.uint32()));
-                        break;
-                    case 4:
-                        message.memo = reader.string();
-                        break;
-                    default:
-                        reader.skipType(tag & 7);
-                        break;
+                        case 1:
+                            if (!(message.msgs && message.msgs.length))
+                                message.msgs = [];
+                            message.msgs.push(reader.bytes());
+                            break;
+                        case 2:
+                            message.fee = $root.irisnet.tx.StdFee.decode(reader, reader.uint32());
+                            break;
+                        case 3:
+                            if (!(message.signatures && message.signatures.length))
+                                message.signatures = [];
+                            message.signatures.push($root.irisnet.tx.StdSignature.decode(reader, reader.uint32()));
+                            break;
+                        case 4:
+                            message.memo = reader.string();
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
                     }
                 }
                 if (!message.hasOwnProperty("fee"))

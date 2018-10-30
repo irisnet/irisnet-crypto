@@ -4,7 +4,7 @@ const Utils = require('../../util/utils');
 const Constants = require('./constants');
 const Builder = require("../../builder");
 const Amino = require("./amino");
-const TxSerializer = require("./tx/std_tx");
+const TxSerializer = require("./tx/tx_serializer");
 
 class Coin {
     constructor(amount, denom) {

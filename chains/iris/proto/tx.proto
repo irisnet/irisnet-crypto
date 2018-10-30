@@ -21,6 +21,12 @@ message MsgSend {
     repeated Output output = 2;
 }
 
+message MsgDelegate {
+    required bytes  delegatorAddr = 1;
+    required bytes validatorAddr = 2;
+    required Coin delegation = 3;
+}
+
 message StdFee {
    repeated Coin amount = 1;
    required sint64 gas = 2;
