@@ -14,12 +14,27 @@ class Amino {
     }
 
     /**
-     * 注册消息的amino前缀
+     */
+
+    GetRegisterInfo(key){
+        let info = this._keyMap[key];
+        if (info === undefined){
+            throw new Error("not Registered");
+        }
+        return info
+    }
+    /**
+     * 注册amino类型
      *
+     * @param type field的类型
      * @param key amino前缀
      */
-    RegisterConcrete(key){
-        this._keyMap[key] = this._aminoPrefix(key)
+    RegisterConcrete(type,key){
+
+        this._keyMap[key] = {
+            prefix : this._aminoPrefix(key),
+            type : type
+        }
     }
 
     /**
@@ -30,7 +45,7 @@ class Amino {
      * @returns { Array }
      */
     MarshalBinary(key,message){
-        let prefixBytes = this._keyMap[key];
+        let prefixBytes = this._keyMap[key].prefix;
         prefixBytes = Buffer.from(prefixBytes.concat(message.length));
         prefixBytes = Buffer.concat([prefixBytes,message]);
         return prefixBytes
@@ -40,7 +55,7 @@ class Amino {
         let pair = {
             "type" : key,
             "value": message
-        }
+        };
         return pair
     }
 
@@ -60,8 +75,9 @@ class Amino {
 }
 
 let amino = new Amino();
-amino.RegisterConcrete(Constants.AminoKey.SignatureSecp256k1_prefix);
-amino.RegisterConcrete(Constants.AminoKey.PubKeySecp256k1_prefix);
-amino.RegisterConcrete("cosmos-sdk/MsgDelegate");
-
+amino.RegisterConcrete(null,Constants.AminoKey.SignatureSecp256k1_prefix);
+amino.RegisterConcrete(null,Constants.AminoKey.PubKeySecp256k1_prefix);
+// amino.RegisterConcrete("cosmos-sdk/MsgDelegate");
+// amino.RegisterConcrete("cosmos-sdk/Send");
+// amino.RegisterConcrete("auth/StdTx");
 module.exports = amino;

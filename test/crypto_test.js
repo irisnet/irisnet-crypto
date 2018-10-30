@@ -1,8 +1,10 @@
 const Irisnet = require('../index');
 const chai = require('chai');
 const assert = chai.assert;
-const blockChainThriftModel = require("blockchain-rpc/codegen/gen-nodejs/model_types");
+const blockChainThriftModel = require("irisnet-rpc/common/codegen/gen-nodejs/model_types");
 const Codec = require("../util/codec");
+const Amino = require('./amino_js');
+const root = require('./tx');
 
 describe('CryPto test', function () {
     describe('irisnet-crypto', function () {
@@ -16,13 +18,13 @@ describe('CryPto test', function () {
 
         it('bech32', function () {
             console.log(Codec.Bech32.fromBech32("faa1cmjnj9zw0m4aau95dsmzj7zgaqagptzywu3v8r"));
-            console.log(Codec.Bech32.fromBech32("faa1cmjnj9zw0m4aau95dsmzj7zgaqagptzwu3v8r"));
+            //console.log(Codec.Bech32.fromBech32("faa1cmjnj9zw0m4aau95dsmzj7zgaqagptzwu3v8r"));
             console.log(Codec.Bech32.toBech32("faa","8698502387267CD39EB03D824CEAA6D68539B507"));
         });
 
         it('test import', function () {
             let crypto = Irisnet.getCrypto(Irisnet.Constants.COMM.Chains.IRIS);
-            let account = crypto.import("8789EB2C2510D8D236EB85DAEFE4E1A4EA7D8E6929E0A1400FCF2848CF7F2DA4")
+            let account = crypto.import("B96DBE9629CF64AEE0F568B7875E35121016E2BBDCF07CF51768880E00549B87")
             assert.deepEqual(account, {
                     address: 'faa1a89us8tvt3d9qpq7j6p06dc3z88n576shj8k2h',
                     phrase: null,
@@ -34,7 +36,7 @@ describe('CryPto test', function () {
 
         it('test recover', function () {
             let crypto = Irisnet.getCrypto(Irisnet.Constants.COMM.Chains.IRIS);
-            let account = crypto.recover("canvas uncle merge artist sting enemy sugar know choice share exist tragic bird next salon donate pretty help subway expand diet pudding auction advice");
+            let account = crypto.recover("coconut pistol mushroom grocery razor tenant crumble trial ocean deny prosper fury put educate flush beef eager spoil mix insane divert obvious fresh puzzle");
             console.log(account)
             // assert.deepEqual(account, {
             //         address: 'faa1cmjnj9zw0m4aau95dsmzj7zgaqagptzywu3v8r',
@@ -209,9 +211,9 @@ describe('CryPto test', function () {
         it('test isValidAddress', function () {
             let addr = "faa1a89us8tvt3d9qpq7j6e06dc3z88n576shj8k2h";
             let crypto = Irisnet.getCrypto(Irisnet.Constants.COMM.Chains.IRIS);
-            let result = crypto.isValidAddress(addr)
+            let result = crypto.isValidAddress(addr);
             assert.isTrue(result);
-        })
+        });
 
     });
 });

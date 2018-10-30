@@ -153,6 +153,9 @@ class Msg extends Validator{
        super();
        this.type = type
     }
+    GetMsg(){
+        throw new Error("not implement");
+    }
 }
 
 module.exports = {Builder,Msg,Validator};
