@@ -202,7 +202,7 @@ class StdSignature {
     constructor(pub_key, signature, account_number, sequence) {
         this.pub_key = pub_key;
         this.signature = signature;
-        this.accountNumber = account_number;
+        this.account_number = account_number;
         this.sequence = sequence;
     }
 }
