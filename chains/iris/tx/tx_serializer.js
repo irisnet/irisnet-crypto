@@ -23,7 +23,7 @@ class TxSerializer {
         let signature = StdSignature.create({
             pubKey: object.signatures[0].pub_key,
             signature: object.signatures[0].signature,
-            accountNumber: object.signatures[0].accountNumber,
+            accountNumber: object.signatures[0].account_number,
             sequence: object.signatures[0].sequence
         });
 
