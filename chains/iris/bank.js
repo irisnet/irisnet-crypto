@@ -4,6 +4,7 @@ const Utils = require('../../util/utils');
 const Constants = require('./constants');
 const Builder = require("../../builder");
 const Amino = require("./amino");
+const TxSerializer = require("./tx/tx_serializer");
 
 class Coin {
     constructor(amount, denom) {
@@ -20,7 +21,6 @@ class Input extends Builder.Validator {
     }
 
     GetSignBytes() {
-        //let bech32Acc = Bech32.toBech32(Constants.IrisNetConfig.PREFIX_BECH32_ACCADDR, this.address);
         let msg = {
             "address": this.address,
             "coins": this.coins
@@ -110,6 +110,29 @@ class MsgSend extends Builder.Msg {
     Type(){
         return "cosmos-sdk/Send";
     }
+
+    GetMsg(){
+        let inputs = [];
+        let outputs = [];
+
+        this.inputs.forEach(function (item) {
+            const BECH32 = require('bech32');
+            let ownKey = BECH32.decode(item.address);
+            let addrHex = BECH32.fromWords(ownKey.words);
+            inputs.push({address:addrHex,coins:item.coins})
+        });
+
+        this.outputs.forEach(function (item) {
+            const BECH32 = require('bech32');
+            let ownKey = BECH32.decode(item.address);
+            let addrHex = BECH32.fromWords(ownKey.words);
+            outputs.push({address:addrHex,coins:item.coins})
+        });
+        return {
+            input : inputs,
+            output : outputs
+        }
+    }
 }
 
 class StdFee {
@@ -186,6 +209,13 @@ class StdSignature {
 
 class StdTx {
     constructor(msgs, fee, signatures, memo) {
+        this.msgs = msgs;
+        this.fee = fee;
+        this.signatures = signatures;
+        this.memo = memo
+    }
+
+    GetPostData(){
         let fmtMsgs = function (msgs) {
             let msgS = [];
             msgs.forEach(function (msg) {
@@ -193,10 +223,20 @@ class StdTx {
             });
             return msgS
         };
-        this.msgs = fmtMsgs(msgs);
-        this.fee = fee;
-        this.signatures = signatures;
-        this.memo = memo
+        return {
+            msgs:fmtMsgs(this.msgs),
+            fee:this.fee,
+            signatures:this.signatures,
+            memo:this.memo,
+        }
+    }
+
+    Hash(){
+        let result = TxSerializer.encode(this);
+        return {
+            data : result.data,
+            hash : result.hash
+        }
     }
 
 }
