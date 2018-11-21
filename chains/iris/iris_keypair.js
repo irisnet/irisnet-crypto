@@ -28,11 +28,10 @@ class CosmosKeypair {
         //对数据签名
         let prikeyArr = Buffer.from(new Uint8Array(Codec.Hex.hexToBytes(private_key)));
         let sig = Secp256k1.sign(sig32,prikeyArr);
-        let signature = Buffer.from(Hd.Serialize(sig.signature));
-
+        //let signature = Buffer.from(Hd.Serialize(sig.signature));
         //将签名结果加上amino编码前缀(irishub反序列化需要) (cosmos-sdk v0.24.0去掉了前缀)
         //signature = Amino.MarshalBinary(Constants.AminoKey.SignatureSecp256k1_prefix,signature);
-        return Array.from(signature)
+        return Array.from(sig.signature)
     }
 
     static getAddress(publicKey) {
@@ -123,7 +122,7 @@ class Hd {
             if (harden) {
                 part = part.slice(0,part.length -1);
             }
-            let idx = parseInt(part)
+            let idx = parseInt(part);
             let json = Hd.DerivePrivateKey(data, chainCode, idx, harden);
             data = json.data;
             chainCode = json.chainCode;
@@ -180,11 +179,32 @@ class Hd {
         let x = c.mod(new BN(n));
         return x
     }
+    /*
+    *
+    *  需要仿写以下代码，现在虽然没有调用，可能以后会出问题
+    *
+    func (sig *Signature) Serialize() []byte {
+        // low 'S' malleability breaker
+        sigS := sig.S
+        if sigS.Cmp(S256().halfOrder) == 1 {
+            sigS = new(big.Int).Sub(S256().N, sigS)
+        }
+        rBytes := sig.R.Bytes()
+        sBytes := sigS.Bytes()
+        sigBytes := make([]byte, 64)
+        // 0 pad the byte arrays from the left if they aren't big enough.
+        copy(sigBytes[32-len(rBytes):32], rBytes)
+        copy(sigBytes[64-len(sBytes):64], sBytes)
+        return sigBytes
+    }
+    *
+    * */
 
     static Serialize(sig) {
-        var sigObj = {r: sig.slice(0, 32), s: sig.slice(32, 64)};
+        const sigObj = {r: sig.slice(0, 32), s: sig.slice(32, 64)};
         const SignatureFun = require('elliptic/lib/elliptic/ec/signature');
         let signature = new SignatureFun(sigObj);
+
         return signature.toDER();
     }
 }
