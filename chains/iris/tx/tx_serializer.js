@@ -66,7 +66,7 @@ class TxSerializer {
         const crypto = require('crypto');
         const hash = crypto.createHash('sha256');
         hash.update(bz);
-        let hashTx = hash.digest('hex').substring(0, 40);
+        let hashTx = hash.digest('hex').substring(0, 64);
 
         return {
             data: bz,
