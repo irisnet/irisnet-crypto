@@ -68,6 +68,7 @@ class CosmosKeypair {
     }
 
     static recover(mnemonic){
+        this.checkSeed(mnemonic);
         //生成私钥
         let secretKey = this.getPrivateKeyFromSecret(mnemonic);
         //构造公钥
@@ -81,6 +82,16 @@ class CosmosKeypair {
             "privateKey": Codec.Hex.bytesToHex(secretKey),
             "publicKey": Codec.Hex.bytesToHex(pubKey)
         };
+    }
+
+    static checkSeed(mnemonic){
+        const seed = mnemonic.split(" ");
+        if(seed.length != 12 && seed.length != 24){
+            throw new Error("seed length must be equal 12 or 24");
+        }
+        if (!Bip39.validateMnemonic(mnemonic)){
+            throw new Error("seed is invalid");
+        }
     }
 
     static import(secretKey){
