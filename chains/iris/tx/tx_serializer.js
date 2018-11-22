@@ -9,7 +9,7 @@ class TxSerializer {
     static encode(object) {
         let txMsg = object.msgs[0];
         let msg = txMsg.GetMsg();
-        let info = amino.GetRegisterInfo(txMsg.Type());
+        let info = amino.GetRegisterInfo(txMsg.type);
 
         let sendMsg = info.type.create(msg);
         let msgBytes = info.type.encode(sendMsg).finish();

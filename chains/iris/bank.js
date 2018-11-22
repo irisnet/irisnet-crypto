@@ -148,7 +148,10 @@ class StdFee {
         if (Utils.isEmpty(this.amount)) {
             this.amount = [new Coin("0", "")]
         }
-        return this
+        return {
+            amount:this.amount,
+            gas:this.gas
+        }
     }
 }
 
