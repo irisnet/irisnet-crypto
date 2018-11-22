@@ -6,6 +6,7 @@ const Utils = require('../../util/utils');
 const Amino = require('./amino');
 
 class DelegateMsg extends Builder.Msg{
+
     constructor(delegator_addr, validator_addr, delegation) {
         super("cosmos-sdk/MsgDelegate");
         this.delegator_addr = delegator_addr;

@@ -26,14 +26,14 @@ class Amino {
     /**
      * 注册amino类型
      *
-     * @param type field的类型
+     * @param class field的类型
      * @param key amino前缀
      */
     RegisterConcrete(type,key){
 
         this._keyMap[key] = {
             prefix : this._aminoPrefix(key),
-            type : type
+            classType : type
         }
     }
 
@@ -77,7 +77,4 @@ class Amino {
 let amino = new Amino();
 amino.RegisterConcrete(null,Constants.AminoKey.SignatureSecp256k1_prefix);
 amino.RegisterConcrete(null,Constants.AminoKey.PubKeySecp256k1_prefix);
-// amino.RegisterConcrete("cosmos-sdk/MsgDelegate");
-// amino.RegisterConcrete("cosmos-sdk/Send");
-// amino.RegisterConcrete("auth/StdTx");
 module.exports = amino;

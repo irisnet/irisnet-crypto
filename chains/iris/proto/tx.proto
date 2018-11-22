@@ -29,14 +29,14 @@ message MsgDelegate {
 
 message StdFee {
    repeated Coin amount = 1;
-   required sint64 gas = 2;
+   required int64 gas = 2;
 }
 
 message StdSignature {
     required bytes pubKey = 1;
     required bytes signature = 2;
-    required sint64 accountNumber = 3;
-    required sint64 sequence = 4;
+    required int64 accountNumber = 3;
+    required int64 sequence = 4;
 }
 
 message StdTx {
