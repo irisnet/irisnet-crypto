@@ -5,7 +5,8 @@ const IrisKeypair = require('./iris_keypair');
 const Codec = require("../../util/codec");
 const Utils = require("../../util/utils");
 const Constants = require('./constants').IrisNetConfig;
-
+const Lan = require("../../constants").Language;
+const Bip39 = require('bip39');
 
 class IrisCrypto extends Crypto {
     
@@ -15,7 +16,7 @@ class IrisCrypto extends Crypto {
      * @returns {*}
      */
     create(language) {
-        let keyPair = IrisKeypair.create();
+        let keyPair = IrisKeypair.create(switchToWordList(language));
         if (keyPair) {
             return encode({
                 address: keyPair.address,
@@ -28,7 +29,7 @@ class IrisCrypto extends Crypto {
     }
 
     recover(secret, language) {
-        let keyPair = IrisKeypair.recover(secret)
+        let keyPair = IrisKeypair.recover(secret,switchToWordList(language));
         if (keyPair) {
             return encode({
                 address: keyPair.address,
@@ -81,6 +82,21 @@ function encode(acc){
             }
         }
         return acc
+    }
+}
+
+function switchToWordList(language){
+    switch (language) {
+        case Lan.CH_S:
+            return Bip39.wordlists.chinese_simplified;
+        case Lan.EN:
+            return Bip39.wordlists.english;
+        case Lan.JP:
+            return Bip39.wordlists.japanese;
+        case Lan.SP:
+            return Bip39.wordlists.spanish;
+        default:
+            return Bip39.wordlists.english;
     }
 }
 

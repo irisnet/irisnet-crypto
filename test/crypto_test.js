@@ -8,9 +8,9 @@ describe('CryPto test', function () {
     describe('irisnet-crypto', function () {
         it('test create and recover', function () {
             let crypto = Irisnet.getCrypto(Irisnet.Constants.COMM.Chains.IRIS);
-            let keyPair = crypto.create("english");
+            let keyPair = crypto.create(Irisnet.Constants.COMM.Language.EN);
             console.log(JSON.stringify(keyPair));
-            let keyPair2 = crypto.recover(keyPair.phrase,"english");
+            let keyPair2 = crypto.recover(keyPair.phrase,Irisnet.Constants.COMM.Language.EN);
             assert.deepEqual(keyPair, keyPair2);
         });
 
@@ -34,7 +34,7 @@ describe('CryPto test', function () {
 
         it('test recover', function () {
             let crypto = Irisnet.getCrypto(Irisnet.Constants.COMM.Chains.IRIS);
-            let account = crypto.recover("swim coconut leave border ski scatter attract favorite deposit proud phone dwarf cover pole south industry ticket say vapor that dog giant ride mechanic");
+            let account = crypto.recover("rate world upset aspect coin fortune wine barrel step jaguar toilet torch sentence roast mango result people tooth movie gun dinosaur city room exit");
             console.log(account)
             // assert.deepEqual(account, {
             //         address: 'faa1cmjnj9zw0m4aau95dsmzj7zgaqagptzywu3v8r',

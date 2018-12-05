@@ -45,11 +45,11 @@ class CosmosKeypair {
         return addr.digest('hex').toUpperCase();
     }
 
-    static create() {
+    static create(language) {
         //生成24位助记词
         let entropySize = 24 * 11 - 8;
         let entropy = Random(entropySize / 8);
-        let mnemonicS = Bip39.entropyToMnemonic(entropy);
+        let mnemonicS = Bip39.entropyToMnemonic(entropy,language);
 
         //生成私钥
         let secretKey = this.getPrivateKeyFromSecret(mnemonicS);
@@ -67,8 +67,8 @@ class CosmosKeypair {
         };
     }
 
-    static recover(mnemonic){
-        this.checkSeed(mnemonic);
+    static recover(mnemonic,language){
+        this.checkSeed(mnemonic,language);
         //生成私钥
         let secretKey = this.getPrivateKeyFromSecret(mnemonic);
         //构造公钥
@@ -84,12 +84,12 @@ class CosmosKeypair {
         };
     }
 
-    static checkSeed(mnemonic){
+    static checkSeed(mnemonic,language){
         const seed = mnemonic.split(" ");
         if(seed.length != 12 && seed.length != 24){
             throw new Error("seed length must be equal 12 or 24");
         }
-        if (!Bip39.validateMnemonic(mnemonic)){
+        if (!Bip39.validateMnemonic(mnemonic,language)){
             throw new Error("seed is invalid");
         }
     }
@@ -219,5 +219,6 @@ class Hd {
         return signature.toDER();
     }
 }
+
 
 module.exports = CosmosKeypair;
