@@ -4,6 +4,8 @@ const Utils = require('../../util/utils');
 const Constants = require('./constants');
 const Builder = require("../../builder");
 const Amino = require("./amino");
+const TxSerializer = require("./tx/tx_serializer");
+const Base64 = require('base64-node');
 
 class Coin {
     constructor(amount, denom) {
@@ -20,7 +22,6 @@ class Input extends Builder.Validator {
     }
 
     GetSignBytes() {
-        //let bech32Acc = Bech32.toBech32(Constants.IrisNetConfig.PREFIX_BECH32_ACCADDR, this.address);
         let msg = {
             "address": this.address,
             "coins": this.coins
@@ -110,6 +111,29 @@ class MsgSend extends Builder.Msg {
     Type(){
         return "cosmos-sdk/Send";
     }
+
+    GetMsg(){
+        let inputs = [];
+        let outputs = [];
+
+        this.inputs.forEach(function (item) {
+            const BECH32 = require('bech32');
+            let ownKey = BECH32.decode(item.address);
+            let addrHex = BECH32.fromWords(ownKey.words);
+            inputs.push({address:addrHex,coins:item.coins})
+        });
+
+        this.outputs.forEach(function (item) {
+            const BECH32 = require('bech32');
+            let ownKey = BECH32.decode(item.address);
+            let addrHex = BECH32.fromWords(ownKey.words);
+            outputs.push({address:addrHex,coins:item.coins})
+        });
+        return {
+            input : inputs,
+            output : outputs
+        }
+    }
 }
 
 class StdFee {
@@ -125,7 +149,10 @@ class StdFee {
         if (Utils.isEmpty(this.amount)) {
             this.amount = [new Coin("0", "")]
         }
-        return this
+        return {
+            amount:this.amount,
+            gas:this.gas
+        }
     }
 }
 
@@ -186,6 +213,19 @@ class StdSignature {
 
 class StdTx {
     constructor(msgs, fee, signatures, memo) {
+        this.msgs = msgs;
+        this.fee = fee;
+        this.signatures = signatures;
+        this.memo = memo
+    }
+
+    /**
+     * @Deprecated
+     *
+     * @returns {{msgs: Array, fee: *, signatures: *, memo: *}}
+     * @constructor
+     */
+    GetPostData(){
         let fmtMsgs = function (msgs) {
             let msgS = [];
             msgs.forEach(function (msg) {
@@ -193,10 +233,28 @@ class StdTx {
             });
             return msgS
         };
-        this.msgs = fmtMsgs(msgs);
-        this.fee = fee;
-        this.signatures = signatures;
-        this.memo = memo
+        return {
+            msgs:fmtMsgs(this.msgs),
+            fee:this.fee,
+            signatures:this.signatures,
+            memo:this.memo,
+        }
+    }
+
+    /**
+     *  用于计算交易hash和签名后的交易内容(base64编码)
+     *
+     *  可以直接将data提交到irishub的/txs接口
+     *
+     * @returns {{data: *, hash: *}}
+     * @constructor
+     */
+    Hash(){
+        let result = TxSerializer.encode(this);
+        return {
+            data : Base64.encode(result.data),
+            hash : result.hash
+        }
     }
 
 }

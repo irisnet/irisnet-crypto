@@ -1,0 +1,47 @@
+package irisnet.tx;
+//syntax = "proto3";
+
+//pbjs -t static-module -w commonjs -o tx.js tx.proto
+message Coin {
+    required string denom = 1;
+    required string amount = 2;
+}
+message Input {
+    required bytes address = 1;
+    repeated Coin coins = 2;
+}
+
+message Output {
+    required bytes address = 1;
+    repeated Coin coins = 2;
+}
+
+message MsgSend {
+    repeated Input  input = 1;
+    repeated Output output = 2;
+}
+
+message MsgDelegate {
+    required bytes  delegatorAddr = 1;
+    required bytes validatorAddr = 2;
+    required Coin delegation = 3;
+}
+
+message StdFee {
+   repeated Coin amount = 1;
+   required int64 gas = 2;
+}
+
+message StdSignature {
+    required bytes pubKey = 1;
+    required bytes signature = 2;
+    required int64 accountNumber = 3;
+    required int64 sequence = 4;
+}
+
+message StdTx {
+    repeated bytes msgs = 1;
+    required StdFee fee   = 2;
+    repeated StdSignature signatures = 3;
+    optional string memo = 4; //空值需要处理
+}

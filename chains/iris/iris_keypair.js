@@ -28,11 +28,10 @@ class CosmosKeypair {
         //对数据签名
         let prikeyArr = Buffer.from(new Uint8Array(Codec.Hex.hexToBytes(private_key)));
         let sig = Secp256k1.sign(sig32,prikeyArr);
-        let signature = Buffer.from(Hd.Serialize(sig.signature));
-
-        //将签名结果加上amino编码前缀(irishub反序列化需要)
-        signature = Amino.MarshalBinary(Constants.AminoKey.SignatureSecp256k1_prefix,signature);
-        return Array.from(signature)
+        //let signature = Buffer.from(Hd.Serialize(sig.signature));
+        //将签名结果加上amino编码前缀(irishub反序列化需要) (cosmos-sdk v0.24.0去掉了前缀)
+        //signature = Amino.MarshalBinary(Constants.AminoKey.SignatureSecp256k1_prefix,signature);
+        return Array.from(sig.signature)
     }
 
     static getAddress(publicKey) {
@@ -69,6 +68,7 @@ class CosmosKeypair {
     }
 
     static recover(mnemonic){
+        this.checkSeed(mnemonic);
         //生成私钥
         let secretKey = this.getPrivateKeyFromSecret(mnemonic);
         //构造公钥
@@ -82,6 +82,16 @@ class CosmosKeypair {
             "privateKey": Codec.Hex.bytesToHex(secretKey),
             "publicKey": Codec.Hex.bytesToHex(pubKey)
         };
+    }
+
+    static checkSeed(mnemonic){
+        const seed = mnemonic.split(" ");
+        if(seed.length != 12 && seed.length != 24){
+            throw new Error("seed length must be equal 12 or 24");
+        }
+        if (!Bip39.validateMnemonic(mnemonic)){
+            throw new Error("seed is invalid");
+        }
     }
 
     static import(secretKey){
@@ -123,7 +133,7 @@ class Hd {
             if (harden) {
                 part = part.slice(0,part.length -1);
             }
-            let idx = parseInt(part)
+            let idx = parseInt(part);
             let json = Hd.DerivePrivateKey(data, chainCode, idx, harden);
             data = json.data;
             chainCode = json.chainCode;
@@ -149,7 +159,7 @@ class Hd {
         if(harden){
 			var c = new BN(index).or(new BN(0x80000000));
 			indexBuffer = c.toBuffer();
-	
+
             let privKeyBuffer = Buffer.from(privKeyBytes);
             data = Buffer.from([0]);
             data = Buffer.concat([data,privKeyBuffer]);
@@ -180,11 +190,32 @@ class Hd {
         let x = c.mod(new BN(n));
         return x
     }
+    /*
+    *
+    *  需要仿写以下代码，现在虽然没有调用，可能以后会出问题
+    *
+    func (sig *Signature) Serialize() []byte {
+        // low 'S' malleability breaker
+        sigS := sig.S
+        if sigS.Cmp(S256().halfOrder) == 1 {
+            sigS = new(big.Int).Sub(S256().N, sigS)
+        }
+        rBytes := sig.R.Bytes()
+        sBytes := sigS.Bytes()
+        sigBytes := make([]byte, 64)
+        // 0 pad the byte arrays from the left if they aren't big enough.
+        copy(sigBytes[32-len(rBytes):32], rBytes)
+        copy(sigBytes[64-len(sBytes):64], sBytes)
+        return sigBytes
+    }
+    *
+    * */
 
     static Serialize(sig) {
-        var sigObj = {r: sig.slice(0, 32), s: sig.slice(32, 64)};
+        const sigObj = {r: sig.slice(0, 32), s: sig.slice(32, 64)};
         const SignatureFun = require('elliptic/lib/elliptic/ec/signature');
         let signature = new SignatureFun(sigObj);
+
         return signature.toDER();
     }
 }

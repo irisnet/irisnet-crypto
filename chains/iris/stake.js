@@ -6,6 +6,7 @@ const Utils = require('../../util/utils');
 const Amino = require('./amino');
 
 class DelegateMsg extends Builder.Msg{
+
     constructor(delegator_addr, validator_addr, delegation) {
         super("cosmos-sdk/MsgDelegate");
         this.delegator_addr = delegator_addr;
@@ -41,6 +42,21 @@ class DelegateMsg extends Builder.Msg{
 
     Type(){
         return "cosmos-sdk/MsgDelegate";
+    }
+
+    GetMsg(){
+        const BECH32 = require('bech32');
+        let delegator_key = BECH32.decode(this.delegator_addr);
+        let delegator_addr = BECH32.fromWords(delegator_key.words);
+
+        let validator_key = BECH32.decode(this.validator_addr);
+        let validator_addr = BECH32.fromWords(validator_key.words);
+
+        return {
+            delegatorAddr : delegator_addr,
+            validatorAddr : validator_addr,
+            delegation : this.delegation
+        }
     }
 
 }

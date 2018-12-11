@@ -150,8 +150,11 @@ class Msg extends Validator{
         throw new Error("not implement");
     }
     constructor(type) {
-       super();
+        super();
        this.type = type
+    }
+    GetMsg(){
+        throw new Error("not implement");
     }
 }
 
