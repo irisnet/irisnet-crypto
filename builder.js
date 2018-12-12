@@ -95,10 +95,10 @@ class Request {
         if (Utils.isEmpty(from)) {
             throw new Error("from is empty");
         }
-        if (Utils.isEmpty(account_number)) {
+        if (account_number < 0) {
             throw new Error("account_number is empty");
         }
-        if (Utils.isEmpty(sequence)) {
+        if (sequence < 0) {
             throw new Error("sequence is empty");
         }
         if (Utils.isEmpty(fees)) {
