@@ -1,23 +1,15 @@
 const Irisnet = require('../index');
 const chai = require('chai');
 const assert = chai.assert;
-const blockChainThriftModel = require("irisnet-rpc/common/codegen/gen-nodejs/model_types");
-const Codec = require("../util/codec");
 
 describe('CryPto test', function () {
     describe('irisnet-crypto', function () {
         it('test create and recover', function () {
             let crypto = Irisnet.getCrypto(Irisnet.Constants.COMM.Chains.IRIS);
-            let keyPair = crypto.create("english");
+            let keyPair = crypto.create(Irisnet.Constants.COMM.Language.EN);
             console.log(JSON.stringify(keyPair));
-            let keyPair2 = crypto.recover(keyPair.phrase,"english");
+            let keyPair2 = crypto.recover(keyPair.phrase,Irisnet.Constants.COMM.Language.EN);
             assert.deepEqual(keyPair, keyPair2);
-        });
-
-        it('bech32', function () {
-            console.log(Codec.Bech32.fromBech32("faa1cmjnj9zw0m4aau95dsmzj7zgaqagptzywu3v8r"));
-            //console.log(Codec.Bech32.fromBech32("faa1cmjnj9zw0m4aau95dsmzj7zgaqagptzwu3v8r"));
-            console.log(Codec.Bech32.toBech32("faa","8698502387267CD39EB03D824CEAA6D68539B507"));
         });
 
         it('test import', function () {
@@ -34,7 +26,7 @@ describe('CryPto test', function () {
 
         it('test recover', function () {
             let crypto = Irisnet.getCrypto(Irisnet.Constants.COMM.Chains.IRIS);
-            let account = crypto.recover("swim coconut leave border ski scatter attract favorite deposit proud phone dwarf cover pole south industry ticket say vapor that dog giant ride mechanic");
+            let account = crypto.recover("tube lonely pause spring gym veteran know want grid tired taxi such same mesh charge orient bracket ozone concert once good quick dry boss");
             console.log(account)
             // assert.deepEqual(account, {
             //         address: 'faa1cmjnj9zw0m4aau95dsmzj7zgaqagptzywu3v8r',
@@ -45,173 +37,161 @@ describe('CryPto test', function () {
             // );
         });
 
-        it('test transfer', function () {
-            let tx = new blockChainThriftModel.Tx({
-                "sequence":15,
-                "ext":0,
-                "sender":{
-                    "chain":"irishub-test",
-                    "app":"v0.2.0",
-                    "addr":"faa1x8j7rv0tvsdaf9k583d6svpkhk7afzk7lnuz7u"
+        it('test buildTx and signTx', function () {
+            let tx = {
+                chain_id: "rainbow-dev",
+                from: "faa1ljemm0yznz58qxxs8xyak7fashcfxf5lssn6jm",
+                account_number: 4,
+                sequence:14 ,
+                fees: {
+                    denom: "iris-atto",
+                    amount:400000000000000000
                 },
-                "receiver":{
-                    "chain":"irishub-test",
-                    "app":"v0.2.0",
-                    "addr":"faa1s6v9qgu8ye7d884s8kpye64x66znndg8t6eztj"
-                },
-                "amount":[new blockChainThriftModel.Coin({denom: "iris-atto",amount: 10000000000000000000})],
-                "fee":new blockChainThriftModel.Fee({denom: "iris-atto",amount:      400000000000000000}),
-                "type":Irisnet.Constants.IRIS.TxType.TRANSFER,
-                //"memo":new blockChainThriftModel.Memo({id:1,text:"test"})
-            });
+                gas: 200000,
+                memo: "",
+                type: Irisnet.Constants.IRIS.TxType.TRANSFER,
+                msg: {
+                    to: "faa1s6v9qgu8ye7d884s8kpye64x66znndg8t6eztj",
+                    coins: [
+                        {
+                            denom: "iris-atto",
+                            amount:10000000000000000000
+                        }
+                    ]
+                }
+            };
 
             let builder = Irisnet.getBuilder(Irisnet.Constants.COMM.Chains.IRIS);
-            let stdTx = builder.buildAndSignTx(tx,"5AC50B3B6BE48FE49C12C12B3B1D9C7ADEE5DB6251E6A7DA663751EEFD0576A2");
-            console.log(JSON.stringify(stdTx.GetPostData()))
-            //TODO 将stdTx提交到iris-hub[/tx/send]
+            let signMsg = builder.buildTx(tx,"55A3160577979EC014A2CE85C430E1FF0FF06EFD230B7CE41AEAE2EF00EDF175");
+            let signStr = JSON.stringify(signMsg.GetSignBytes());
+            console.log(signStr);
+
+            let stdTx = builder.signTx(signStr,"55A3160577979EC014A2CE85C430E1FF0FF06EFD230B7CE41AEAE2EF00EDF175")
+            console.log(JSON.stringify(stdTx.GetPostData()));
+            let result = stdTx.Hash();
+            console.log("data:",result.data);
+            console.log("hash",result.hash);
         });
 
-        //冷钱包
-        it('test buildTx and signTx', function () {
-            let tx = new blockChainThriftModel.Tx({
-                "sequence":5,
-                "ext":0,
-                "sender":{
-                    "chain":"fuxi-1001",
-                    "app":"v0.2.0",
-                    "addr":"faa1a89us8tvt3d9qpq7j6p06dc3z88n576shj8k2h"
+        it('test transfer', function () {
+            let tx = {
+                chain_id: "rainbow-dev",
+                from: "faa1ljemm0yznz58qxxs8xyak7fashcfxf5lssn6jm",
+                account_number: 4,
+                sequence:16 ,
+                fees: {
+                    denom: "iris-atto",
+                    amount:400000000000000000
                 },
-                "receiver":{
-                    "chain":"fuxi-1001",
-                    "app":"v0.2.0",
-                    "addr":"faa1s6v9qgu8ye7d884s8kpye64x66znndg8t6eztj"
-                },
-                "amount":[new blockChainThriftModel.Coin({denom: "iris",amount: 10})],
-                "fee":new blockChainThriftModel.Fee({denom: "iris",amount: 0}),
-                "type":Irisnet.Constants.IRIS.TxType.TRANSFER
-            });
+                gas: 200000,
+                memo: "",
+                type: Irisnet.Constants.IRIS.TxType.TRANSFER,
+                msg: {
+                    to: "faa1s6v9qgu8ye7d884s8kpye64x66znndg8t6eztj",
+                    coins: [
+                        {
+                            denom: "iris-atto",
+                            amount:10000000000000000000
+                        }
+                    ]
+                }
+            };
 
             let builder = Irisnet.getBuilder(Irisnet.Constants.COMM.Chains.IRIS);
-            let signMsg = builder.buildTx(tx);
-            let stdTx = builder.signTx(signMsg,"8789EB2C2510D8D236EB85DAEFE4E1A4EA7D8E6929E0A1400FCF2848CF7F2DA4");
-            console.log(JSON.stringify(stdTx.Hash().hash))
-            //TODO 将stdTx提交到iris-hub[/tx/send]
+            let stdTx = builder.buildAndSignTx(tx,"55A3160577979EC014A2CE85C430E1FF0FF06EFD230B7CE41AEAE2EF00EDF175");
+            console.log(JSON.stringify(stdTx.GetPostData()))
+
+            let result = stdTx.Hash();
+            console.log("data:",result.data);
+            console.log("hash",result.hash);
         });
 
         it('test delegate', function () {
-            let tx = new blockChainThriftModel.Tx({
-                "sequence":14,
-                "ext":0,
-                "sender":{
-                    "chain":"fuxi-1001",
-                    "app":"v0.2.0",
-                    "addr":"cosmosaccaddr1mgtyzhvfj424q9r35dmr70qtt63cpc58dct7jq"
+            let tx = {
+                chain_id: "rainbow-dev",
+                from: "faa1ljemm0yznz58qxxs8xyak7fashcfxf5lssn6jm",
+                account_number: 4,
+                sequence:17 ,
+                fees: {
+                    denom: "iris-atto",
+                    amount:400000000000000000
                 },
-                "receiver":{
-                    "chain":"fuxi-1001",
-                    "app":"v0.2.0",
-                    "addr":"cosmosaccaddr1mgtyzhvfj424q9r35dmr70qtt63cpc58dct7jq"
-                },
-                "amount":[new blockChainThriftModel.Coin({denom: "iris",amount: "10"})],
-                "fee":new blockChainThriftModel.Fee({denom: "iris",amount: "0"}),
-                "type":Irisnet.Constants.IRIS.TxType.DELEGATE,
-                "memo":new blockChainThriftModel.Memo({id:1,text:"test"})
-            });
+                gas: 200000,
+                memo: "",
+                type: Irisnet.Constants.IRIS.TxType.DELEGATE,
+                msg: {
+                    validator_addr: "fva16h3uazd2wknrae7ql0dqpjw69s5kp44slme6hr",
+                    delegation: {
+                        denom: "iris-atto",
+                        amount:10000000000000000000
+                    }
+                }
+            };
 
             let builder = Irisnet.getBuilder(Irisnet.Constants.COMM.Chains.IRIS);
-            let stdTx = builder.buildAndSignTx(tx,"E9B05BF448FFDFC91EB2149BD5309342DCFC87FC3FBB3DE16256585FB407363A");
-            console.log(JSON.stringify(stdTx))
-            //TODO 将stdTx提交到iris-hub[/tx/send]
+            let stdTx = builder.buildAndSignTx(tx,"55A3160577979EC014A2CE85C430E1FF0FF06EFD230B7CE41AEAE2EF00EDF175");
+            console.log(JSON.stringify(stdTx.GetPostData()));
+
+            let result = stdTx.Hash();
+            console.log("data:",result.data);
+            console.log("hash",result.hash);
         });
 
         it('test BeginUnbonding', function () {
-            let tx = new blockChainThriftModel.Tx({
-                "sequence":9,
-                "ext":0,
-                "sender":{
-                    "chain":"fuxi-1001",
-                    "app":"v0.2.0",
-                    "addr":"cosmosaccaddr1mgtyzhvfj424q9r35dmr70qtt63cpc58dct7jq"
+            let tx = {
+                chain_id: "rainbow-dev",
+                from: "faa1ljemm0yznz58qxxs8xyak7fashcfxf5lssn6jm",
+                account_number: 4,
+                sequence:18 ,
+                fees: {
+                    denom: "iris-atto",
+                    amount:400000000000000000
                 },
-                "receiver":{
-                    "chain":"fuxi-1001",
-                    "app":"v0.2.0",
-                    "addr":"cosmosaccaddr1mgtyzhvfj424q9r35dmr70qtt63cpc58dct7jq"
-                },
-                "amount":[new blockChainThriftModel.Coin({denom: "iris",amount: "20/1"})],
-                "fee":new blockChainThriftModel.Fee({denom: "iris",amount: "0"}),
-                "type":Irisnet.Constants.IRIS.TxType.BEGINUNBOND,
-                "memo":new blockChainThriftModel.Memo({id:1,text:"test"})
-            });
+                gas: 200000,
+                memo: "",
+                type: Irisnet.Constants.IRIS.TxType.BEGINUNBOND,
+                msg: {
+                    validator_addr: "fva16h3uazd2wknrae7ql0dqpjw69s5kp44slme6hr",
+                    shares_amount:"10000000000000000000"
+                }
+            };
 
             let builder = Irisnet.getBuilder(Irisnet.Constants.COMM.Chains.IRIS);
-            let stdTx = builder.buildAndSignTx(tx,"E9B05BF448FFDFC91EB2149BD5309342DCFC87FC3FBB3DE16256585FB407363A");
-            console.log(JSON.stringify(stdTx))
-            //TODO 将stdTx提交到iris-hub[/tx/send]
+            let stdTx = builder.buildAndSignTx(tx,"55A3160577979EC014A2CE85C430E1FF0FF06EFD230B7CE41AEAE2EF00EDF175");
+            console.log(JSON.stringify(stdTx.GetPostData()))
+
+            let result = stdTx.Hash();
+            console.log("data:",result.data);
+            console.log("hash",result.hash);
         });
 
-        it('test CompleteUnbonding', function () {
-            let tx = new blockChainThriftModel.Tx({
-                "sequence":10,
-                "ext":0,
-                "sender":{
-                    "chain":"fuxi-1001",
-                    "app":"v0.2.0",
-                    "addr":"cosmosaccaddr1mgtyzhvfj424q9r35dmr70qtt63cpc58dct7jq"
+        it('test BeginRedelegate', function () {
+            let tx = {
+                chain_id: "rainbow-dev",
+                from: "faa1ljemm0yznz58qxxs8xyak7fashcfxf5lssn6jm",
+                account_number: 4,
+                sequence:20 ,
+                fees: {
+                    denom: "iris-atto",
+                    amount:400000000000000000
                 },
-                "receiver":{
-                    "chain":"fuxi-1001",
-                    "app":"v0.2.0",
-                    "addr":"cosmosaccaddr1mgtyzhvfj424q9r35dmr70qtt63cpc58dct7jq"
-                },
-                "amount":[new blockChainThriftModel.Coin({denom: "iris",amount: "10/1"})],
-                "fee":new blockChainThriftModel.Fee({denom: "iris",amount: "0"}),
-                "type":Irisnet.Constants.IRIS.TxType.COMPLETEUNBOND,
-                "memo":new blockChainThriftModel.Memo({id:1,text:"test"})
-            });
+                gas: 200000,
+                memo: "",
+                type: Irisnet.Constants.IRIS.TxType.BEGINREdELEGATE,
+                msg: {
+                    validator_src_addr: "fva1cr6xfpp078nm7yfsh36850ftu20fl3c9duchrk",
+                    validator_dst_addr: "fva1xde0yh9vmc8mnkdvdr5krllfe3gslw9d4qp2wd",
+                    shares_amount:10000000000000000000
+                }
+            };
 
             let builder = Irisnet.getBuilder(Irisnet.Constants.COMM.Chains.IRIS);
-            let stdTx = builder.buildAndSignTx(tx,"E9B05BF448FFDFC91EB2149BD5309342DCFC87FC3FBB3DE16256585FB407363A");
-            console.log(JSON.stringify(stdTx))
-            //TODO 将stdTx提交到iris-hub[/tx/send]
+            let stdTx = builder.buildAndSignTx(tx,"55A3160577979EC014A2CE85C430E1FF0FF06EFD230B7CE41AEAE2EF00EDF175");
+            console.log(JSON.stringify(stdTx.GetPostData()))
+
+            let result = stdTx.Hash();
+            console.log("data:",result.data);
+            console.log("hash",result.hash);
         });
-
-        //冷钱包
-        it('test signMsg', function () {
-            let tx = new blockChainThriftModel.Tx({
-                "sequence":0,
-                "ext":0,
-                "sender":{
-                    "chain":"fuxi-develop",
-                    "app":"v0.2.0",
-                    "addr":"1EC2E86065D5EF88A3ED65B8B3A43210FAD9C7B2"
-                },
-                "receiver":{
-                    "chain":"iris",
-                    "app":"v0.2.0",
-                    "addr":"3A058A8B5468AE0EA2D2517CE3BAFDD281E50C2F"
-                },
-                "amount":[new blockChainThriftModel.Coin({denom: "atom",amount: 10})],
-                "fee":new blockChainThriftModel.Fee({denom: "",amount: 0}),
-                "type":Irisnet.Constants.IRIS.TxType.TRANSFER,
-                "memo":new blockChainThriftModel.Memo({id: 0,text: "test"})
-            });
-
-            let builder = Irisnet.getBuilder(Irisnet.Constants.COMM.Chains.IRIS);
-            let signMsg = builder.buildTx(tx);
-            let msgBytes = JSON.stringify(signMsg.GetSignBytes());
-            console.log(msgBytes);
-            let msgHex = Codec.Hex.stringToHex(msgBytes);
-            let sigByte = Codec.Hex.hexToBytes(msgHex);
-            console.log(sigByte.toString());
-        });
-
-        it('test isValidAddress', function () {
-            let addr = "faa1a89us8tvt3d9qpq7j6e06dc3z88n576shj8k2h";
-            let crypto = Irisnet.getCrypto(Irisnet.Constants.COMM.Chains.IRIS);
-            let result = crypto.isValidAddress(addr);
-            assert.isTrue(result);
-        });
-
     });
 });

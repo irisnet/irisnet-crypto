@@ -7,10 +7,14 @@ const Amino = require("./amino");
 const TxSerializer = require("./tx/tx_serializer");
 const Base64 = require('base64-node');
 
-class Coin {
+class Coin extends Builder.Creator{
     constructor(amount, denom) {
+        super();
         this.denom = denom;
         this.amount = amount;
+    }
+    Create(properties){
+        return new Coin(properties.denom,properties.amount)
     }
 }
 
@@ -38,6 +42,10 @@ class Input extends Builder.Validator {
             throw new Error("coins is empty");
         }
     }
+
+    Create(properties){
+        return new Input(properties.address,properties.coins)
+    }
 }
 
 class Output extends Builder.Validator {
@@ -63,6 +71,10 @@ class Output extends Builder.Validator {
         if (Utils.isEmpty(this.coins)) {
             throw new Error("coins is empty");
         }
+    }
+
+    Create(properties){
+        return new Output(properties.address,properties.coins)
     }
 }
 
@@ -166,7 +178,7 @@ class StdSignMsg extends Builder.Msg {
         this.fee = fee;
         this.msgs = [msg];
         this.memo = memo;
-        this.signByte = this.GetSignBytes();
+        //this.signByte = this.GetSignBytes();
     }
 
     GetSignBytes() {
@@ -260,11 +272,18 @@ class StdTx {
 }
 
 module.exports = class Bank{
-    static GetTransferSignMsg(acc, toAddress, coins, fee, gas, memo) {
-        let stdFee = new StdFee(fee, gas);
-        let msg = new MsgSend(acc.address, toAddress, coins);
-        let signMsg = new StdSignMsg(acc.chain_id, acc.account_number, acc.sequence, stdFee, msg, memo);
-        return signMsg
+    static CreateMsgSend(req) {
+        let coins = [];
+        if (!Utils.isEmpty(req.msg.coins)){
+            req.msg.coins.forEach(function (item) {
+                coins.push({
+                    denom:item.denom,
+                    amount:Utils.toString(item.amount),
+                });
+            });
+        }
+        let msg = new MsgSend(req.from, req.msg.to, coins);
+        return msg
     }
 
     static NewStdSignature(pub_key, signature, account_number, sequence){
@@ -289,5 +308,9 @@ module.exports = class Bank{
 
     static NewCoin(amount, denom){
         return new Coin(amount, denom)
+    }
+
+    static Create(properties){
+        return new MsgSend(properties.inputs[0].address,properties.outputs[0].address,properties.outputs[0].coins)
     }
 };
