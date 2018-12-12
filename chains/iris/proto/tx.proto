@@ -22,9 +22,22 @@ message MsgSend {
 }
 
 message MsgDelegate {
-    required bytes  delegatorAddr = 1;
+    required bytes delegatorAddr = 1;
     required bytes validatorAddr = 2;
     required Coin delegation = 3;
+}
+
+message MsgBeginUnbonding {
+    required bytes  delegatorAddr = 1;
+    required bytes  validatorAddr = 2;
+    required string  sharesAmount = 3;
+}
+
+message MsgBeginRedelegate {
+    required bytes  delegatorAddr = 1;
+    required bytes  validatorSrcAddr = 2;
+    required bytes  validatorDstAddr = 3;
+    required string  sharesAmount = 4;
 }
 
 message StdFee {

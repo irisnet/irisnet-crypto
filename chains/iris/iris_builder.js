@@ -6,6 +6,7 @@ const Bank = require('./bank');
 const Stake = require('./stake');
 const IrisKeypair = require('./iris_keypair');
 const Codec = require("../../util/codec");
+const Utils = require('../../util/utils');
 
 class IrisBuilder extends Builder {
 
@@ -13,46 +14,37 @@ class IrisBuilder extends Builder {
     /**
      * 构造签名内容(如果是硬件钱包，请将返回结果中的msg传递给硬件钱包)
      *
-     * @param tx {blockChainThriftModel.Tx} 请求内容
+     * @param tx  请求内容
      * @returns {StdSignMsg}
      */
     buildTx(tx) {
         let req = super.buildParam(tx);
-
-        //将from和to由hex编码转化为bech32编码
-        if (Codec.Hex.isHex(req.acc.address)) {
-            req.acc.address = Codec.Bech32.toBech32(Constants.IrisNetConfig.PREFIX_BECH32_ACCADDR, req.acc.address);
-        }
-        if (Codec.Hex.isHex(req.to)) {
-            req.to =  Codec.Bech32.toBech32(Constants.IrisNetConfig.PREFIX_BECH32_ACCADDR,req.to)
-        }
-
         let msg;
         switch (req.type) {
             case Constants.TxType.TRANSFER: {
-                msg = Bank.GetTransferSignMsg(req.acc, req.to, req.coins, req.fees, req.gas, req.memo);
+                msg = Bank.CreateMsgSend(req);
                 break;
             }
             case Constants.TxType.DELEGATE: {
-                msg = Stake.GetDelegateSignMsg(req.acc, req.to, req.coins[0], req.fees, req.gas, req.memo);
+                msg = Stake.GreateMsgDelegate(req);
                 break;
             }
             case Constants.TxType.BEGINUNBOND: {
-                let share = req.coins[0].amount;
-                msg = Stake.GetBeginUnbondingMsg(req.acc, req.to, share, req.fees, req.gas, req.memo);
+                msg = Stake.CreateMsgBeginUnbonding(req);
                 break;
             }
-            case Constants.TxType.COMPLETEUNBOND: {
-                let share = req.coins[0].amount;
-                msg = Stake.GetCompleteUnbondingMsg(req.acc, req.to, share, req.fees, req.gas, req.memo);
+            case Constants.TxType.BEGINREdELEGATE: {
+                msg = Stake.CreateMsgBeginRedelegate(req);
                 break;
             }
             default: {
                 throw new Error("not exist tx type");
             }
         }
-        msg.ValidateBasic();
-        return msg
+        let stdFee = Bank.NewStdFee(req.fees, req.gas);
+        let signMsg = Bank.NewStdSignMsg(req.chain_id, req.account_number, req.sequence, stdFee, msg,req.memo);
+        signMsg.ValidateBasic();
+        return signMsg
     }
 
     /**
@@ -63,8 +55,10 @@ class IrisBuilder extends Builder {
      * @returns {StdTx}
      */
     signTx(tx,privateKey) {
-        let signMsg = tx;
-        let sig = signMsg.signByte;
+        // let signMsg = tx;
+        // let sig = signMsg.signByte;
+        let signMsg = CreateSignMsg(tx);
+        let sig = signMsg.GetSignBytes();
         let signbyte = IrisKeypair.sign(privateKey, sig);
         let keypair = IrisKeypair.import(privateKey);
         let signs = [Bank.NewStdSignature(Codec.Hex.hexToBytes(keypair.publicKey), signbyte, signMsg.accnum, signMsg.sequence)];
@@ -83,12 +77,28 @@ class IrisBuilder extends Builder {
      */
     buildAndSignTx(tx, privateKey) {
         let signMsg = this.buildTx(tx);
-        let signbyte = IrisKeypair.sign(privateKey, signMsg.signByte);
+        let signbyte = IrisKeypair.sign(privateKey, signMsg.GetSignBytes());
         let keypair = IrisKeypair.import(privateKey);
         let signs = [Bank.NewStdSignature(Codec.Hex.hexToBytes(keypair.publicKey), signbyte, signMsg.accnum, signMsg.sequence)];
         let stdTx = Bank.NewStdTx(signMsg.msgs, signMsg.fee, signs, signMsg.memo);
         return stdTx
     }
+}
+
+function CreateSignMsg(properties){
+    let prop = JSON.parse(properties);
+    let msg = prop.msgs[0];
+    if(!Utils.isEmpty(msg.inputs)) {
+        msg = Bank.Create(msg)
+    }else if(!Utils.isEmpty(msg.delegation)){
+        msg = Stake.MsgDelegate().Create(msg)
+    }else if(!Utils.isEmpty(msg.shares_amount)){
+        msg = Stake.MsgBeginUnbonding().Create(msg)
+    }else if(!Utils.isEmpty(msg.validator_src_addr)){
+        msg = Stake.MsgBeginRedelegate().Create(msg)
+    }
+    let stdFee = Bank.NewStdFee(prop.fee.amount, parseInt(prop.fee.gas));
+    return Bank.NewStdSignMsg(prop.chain_id, parseInt(prop.account_number), parseInt(prop.sequence), stdFee, msg,prop.memo);
 }
 
 module.exports = Old(IrisBuilder);

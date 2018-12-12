@@ -1225,6 +1225,539 @@ $root.irisnet = (function() {
             return MsgDelegate;
         })();
 
+        tx.MsgBeginUnbonding = (function() {
+
+            /**
+             * Properties of a MsgBeginUnbonding.
+             * @memberof irisnet.tx
+             * @interface IMsgBeginUnbonding
+             * @property {Uint8Array} delegatorAddr MsgBeginUnbonding delegatorAddr
+             * @property {Uint8Array} validatorAddr MsgBeginUnbonding validatorAddr
+             * @property {string} sharesAmount MsgBeginUnbonding sharesAmount
+             */
+
+            /**
+             * Constructs a new MsgBeginUnbonding.
+             * @memberof irisnet.tx
+             * @classdesc Represents a MsgBeginUnbonding.
+             * @implements IMsgBeginUnbonding
+             * @constructor
+             * @param {irisnet.tx.IMsgBeginUnbonding=} [properties] Properties to set
+             */
+            function MsgBeginUnbonding(properties) {
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+
+            /**
+             * MsgBeginUnbonding delegatorAddr.
+             * @member {Uint8Array} delegatorAddr
+             * @memberof irisnet.tx.MsgBeginUnbonding
+             * @instance
+             */
+            MsgBeginUnbonding.prototype.delegatorAddr = $util.newBuffer([]);
+
+            /**
+             * MsgBeginUnbonding validatorAddr.
+             * @member {Uint8Array} validatorAddr
+             * @memberof irisnet.tx.MsgBeginUnbonding
+             * @instance
+             */
+            MsgBeginUnbonding.prototype.validatorAddr = $util.newBuffer([]);
+
+            /**
+             * MsgBeginUnbonding sharesAmount.
+             * @member {string} sharesAmount
+             * @memberof irisnet.tx.MsgBeginUnbonding
+             * @instance
+             */
+            MsgBeginUnbonding.prototype.sharesAmount = "";
+
+            /**
+             * Creates a new MsgBeginUnbonding instance using the specified properties.
+             * @function create
+             * @memberof irisnet.tx.MsgBeginUnbonding
+             * @static
+             * @param {irisnet.tx.IMsgBeginUnbonding=} [properties] Properties to set
+             * @returns {irisnet.tx.MsgBeginUnbonding} MsgBeginUnbonding instance
+             */
+            MsgBeginUnbonding.create = function create(properties) {
+                return new MsgBeginUnbonding(properties);
+            };
+
+            /**
+             * Encodes the specified MsgBeginUnbonding message. Does not implicitly {@link irisnet.tx.MsgBeginUnbonding.verify|verify} messages.
+             * @function encode
+             * @memberof irisnet.tx.MsgBeginUnbonding
+             * @static
+             * @param {irisnet.tx.IMsgBeginUnbonding} message MsgBeginUnbonding message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MsgBeginUnbonding.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.delegatorAddr);
+                writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.validatorAddr);
+                let shares = message.sharesAmount.replace(".",""); //fuck
+                writer.uint32(/* id 3, wireType 2 =*/26).string(shares);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified MsgBeginUnbonding message, length delimited. Does not implicitly {@link irisnet.tx.MsgBeginUnbonding.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof irisnet.tx.MsgBeginUnbonding
+             * @static
+             * @param {irisnet.tx.IMsgBeginUnbonding} message MsgBeginUnbonding message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MsgBeginUnbonding.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+
+            /**
+             * Decodes a MsgBeginUnbonding message from the specified reader or buffer.
+             * @function decode
+             * @memberof irisnet.tx.MsgBeginUnbonding
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {irisnet.tx.MsgBeginUnbonding} MsgBeginUnbonding
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MsgBeginUnbonding.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.irisnet.tx.MsgBeginUnbonding();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
+                        case 1:
+                            message.delegatorAddr = reader.bytes();
+                            break;
+                        case 2:
+                            message.validatorAddr = reader.bytes();
+                            break;
+                        case 3:
+                            message.sharesAmount = reader.string();
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                    }
+                }
+                if (!message.hasOwnProperty("delegatorAddr"))
+                    throw $util.ProtocolError("missing required 'delegatorAddr'", { instance: message });
+                if (!message.hasOwnProperty("validatorAddr"))
+                    throw $util.ProtocolError("missing required 'validatorAddr'", { instance: message });
+                if (!message.hasOwnProperty("sharesAmount"))
+                    throw $util.ProtocolError("missing required 'sharesAmount'", { instance: message });
+                return message;
+            };
+
+            /**
+             * Decodes a MsgBeginUnbonding message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof irisnet.tx.MsgBeginUnbonding
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {irisnet.tx.MsgBeginUnbonding} MsgBeginUnbonding
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MsgBeginUnbonding.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a MsgBeginUnbonding message.
+             * @function verify
+             * @memberof irisnet.tx.MsgBeginUnbonding
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            MsgBeginUnbonding.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (!(message.delegatorAddr && typeof message.delegatorAddr.length === "number" || $util.isString(message.delegatorAddr)))
+                    return "delegatorAddr: buffer expected";
+                if (!(message.validatorAddr && typeof message.validatorAddr.length === "number" || $util.isString(message.validatorAddr)))
+                    return "validatorAddr: buffer expected";
+                if (!$util.isString(message.sharesAmount))
+                    return "sharesAmount: string expected";
+                return null;
+            };
+
+            /**
+             * Creates a MsgBeginUnbonding message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof irisnet.tx.MsgBeginUnbonding
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {irisnet.tx.MsgBeginUnbonding} MsgBeginUnbonding
+             */
+            MsgBeginUnbonding.fromObject = function fromObject(object) {
+                if (object instanceof $root.irisnet.tx.MsgBeginUnbonding)
+                    return object;
+                var message = new $root.irisnet.tx.MsgBeginUnbonding();
+                if (object.delegatorAddr != null)
+                    if (typeof object.delegatorAddr === "string")
+                        $util.base64.decode(object.delegatorAddr, message.delegatorAddr = $util.newBuffer($util.base64.length(object.delegatorAddr)), 0);
+                    else if (object.delegatorAddr.length)
+                        message.delegatorAddr = object.delegatorAddr;
+                if (object.validatorAddr != null)
+                    if (typeof object.validatorAddr === "string")
+                        $util.base64.decode(object.validatorAddr, message.validatorAddr = $util.newBuffer($util.base64.length(object.validatorAddr)), 0);
+                    else if (object.validatorAddr.length)
+                        message.validatorAddr = object.validatorAddr;
+                if (object.sharesAmount != null)
+                    message.sharesAmount = String(object.sharesAmount);
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a MsgBeginUnbonding message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof irisnet.tx.MsgBeginUnbonding
+             * @static
+             * @param {irisnet.tx.MsgBeginUnbonding} message MsgBeginUnbonding
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            MsgBeginUnbonding.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults) {
+                    if (options.bytes === String)
+                        object.delegatorAddr = "";
+                    else {
+                        object.delegatorAddr = [];
+                        if (options.bytes !== Array)
+                            object.delegatorAddr = $util.newBuffer(object.delegatorAddr);
+                    }
+                    if (options.bytes === String)
+                        object.validatorAddr = "";
+                    else {
+                        object.validatorAddr = [];
+                        if (options.bytes !== Array)
+                            object.validatorAddr = $util.newBuffer(object.validatorAddr);
+                    }
+                    object.sharesAmount = "";
+                }
+                if (message.delegatorAddr != null && message.hasOwnProperty("delegatorAddr"))
+                    object.delegatorAddr = options.bytes === String ? $util.base64.encode(message.delegatorAddr, 0, message.delegatorAddr.length) : options.bytes === Array ? Array.prototype.slice.call(message.delegatorAddr) : message.delegatorAddr;
+                if (message.validatorAddr != null && message.hasOwnProperty("validatorAddr"))
+                    object.validatorAddr = options.bytes === String ? $util.base64.encode(message.validatorAddr, 0, message.validatorAddr.length) : options.bytes === Array ? Array.prototype.slice.call(message.validatorAddr) : message.validatorAddr;
+                if (message.sharesAmount != null && message.hasOwnProperty("sharesAmount"))
+                    object.sharesAmount = message.sharesAmount;
+                return object;
+            };
+
+            /**
+             * Converts this MsgBeginUnbonding to JSON.
+             * @function toJSON
+             * @memberof irisnet.tx.MsgBeginUnbonding
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            MsgBeginUnbonding.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            return MsgBeginUnbonding;
+        })();
+
+        tx.MsgBeginRedelegate = (function() {
+
+            /**
+             * Properties of a MsgBeginRedelegate.
+             * @memberof irisnet.tx
+             * @interface IMsgBeginRedelegate
+             * @property {Uint8Array} delegatorAddr MsgBeginRedelegate delegatorAddr
+             * @property {Uint8Array} validatorSrcAddr MsgBeginRedelegate validatorSrcAddr
+             * @property {Uint8Array} validatorDstAddr MsgBeginRedelegate validatorDstAddr
+             * @property {string} sharesAmount MsgBeginRedelegate sharesAmount
+             */
+
+            /**
+             * Constructs a new MsgBeginRedelegate.
+             * @memberof irisnet.tx
+             * @classdesc Represents a MsgBeginRedelegate.
+             * @implements IMsgBeginRedelegate
+             * @constructor
+             * @param {irisnet.tx.IMsgBeginRedelegate=} [properties] Properties to set
+             */
+            function MsgBeginRedelegate(properties) {
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+
+            /**
+             * MsgBeginRedelegate delegatorAddr.
+             * @member {Uint8Array} delegatorAddr
+             * @memberof irisnet.tx.MsgBeginRedelegate
+             * @instance
+             */
+            MsgBeginRedelegate.prototype.delegatorAddr = $util.newBuffer([]);
+
+            /**
+             * MsgBeginRedelegate validatorSrcAddr.
+             * @member {Uint8Array} validatorSrcAddr
+             * @memberof irisnet.tx.MsgBeginRedelegate
+             * @instance
+             */
+            MsgBeginRedelegate.prototype.validatorSrcAddr = $util.newBuffer([]);
+
+            /**
+             * MsgBeginRedelegate validatorDstAddr.
+             * @member {Uint8Array} validatorDstAddr
+             * @memberof irisnet.tx.MsgBeginRedelegate
+             * @instance
+             */
+            MsgBeginRedelegate.prototype.validatorDstAddr = $util.newBuffer([]);
+
+            /**
+             * MsgBeginRedelegate sharesAmount.
+             * @member {string} sharesAmount
+             * @memberof irisnet.tx.MsgBeginRedelegate
+             * @instance
+             */
+            MsgBeginRedelegate.prototype.sharesAmount = "";
+
+            /**
+             * Creates a new MsgBeginRedelegate instance using the specified properties.
+             * @function create
+             * @memberof irisnet.tx.MsgBeginRedelegate
+             * @static
+             * @param {irisnet.tx.IMsgBeginRedelegate=} [properties] Properties to set
+             * @returns {irisnet.tx.MsgBeginRedelegate} MsgBeginRedelegate instance
+             */
+            MsgBeginRedelegate.create = function create(properties) {
+                return new MsgBeginRedelegate(properties);
+            };
+
+            /**
+             * Encodes the specified MsgBeginRedelegate message. Does not implicitly {@link irisnet.tx.MsgBeginRedelegate.verify|verify} messages.
+             * @function encode
+             * @memberof irisnet.tx.MsgBeginRedelegate
+             * @static
+             * @param {irisnet.tx.IMsgBeginRedelegate} message MsgBeginRedelegate message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MsgBeginRedelegate.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.delegatorAddr);
+                writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.validatorSrcAddr);
+                writer.uint32(/* id 3, wireType 2 =*/26).bytes(message.validatorDstAddr);
+                let shares = message.sharesAmount.replace(".",""); //fuck
+                writer.uint32(/* id 4, wireType 2 =*/34).string(shares);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified MsgBeginRedelegate message, length delimited. Does not implicitly {@link irisnet.tx.MsgBeginRedelegate.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof irisnet.tx.MsgBeginRedelegate
+             * @static
+             * @param {irisnet.tx.IMsgBeginRedelegate} message MsgBeginRedelegate message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MsgBeginRedelegate.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+
+            /**
+             * Decodes a MsgBeginRedelegate message from the specified reader or buffer.
+             * @function decode
+             * @memberof irisnet.tx.MsgBeginRedelegate
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {irisnet.tx.MsgBeginRedelegate} MsgBeginRedelegate
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MsgBeginRedelegate.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.irisnet.tx.MsgBeginRedelegate();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
+                        case 1:
+                            message.delegatorAddr = reader.bytes();
+                            break;
+                        case 2:
+                            message.validatorSrcAddr = reader.bytes();
+                            break;
+                        case 3:
+                            message.validatorDstAddr = reader.bytes();
+                            break;
+                        case 4:
+                            message.sharesAmount = reader.string();
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                    }
+                }
+                if (!message.hasOwnProperty("delegatorAddr"))
+                    throw $util.ProtocolError("missing required 'delegatorAddr'", { instance: message });
+                if (!message.hasOwnProperty("validatorSrcAddr"))
+                    throw $util.ProtocolError("missing required 'validatorSrcAddr'", { instance: message });
+                if (!message.hasOwnProperty("validatorDstAddr"))
+                    throw $util.ProtocolError("missing required 'validatorDstAddr'", { instance: message });
+                if (!message.hasOwnProperty("sharesAmount"))
+                    throw $util.ProtocolError("missing required 'sharesAmount'", { instance: message });
+                return message;
+            };
+
+            /**
+             * Decodes a MsgBeginRedelegate message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof irisnet.tx.MsgBeginRedelegate
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {irisnet.tx.MsgBeginRedelegate} MsgBeginRedelegate
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MsgBeginRedelegate.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a MsgBeginRedelegate message.
+             * @function verify
+             * @memberof irisnet.tx.MsgBeginRedelegate
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            MsgBeginRedelegate.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (!(message.delegatorAddr && typeof message.delegatorAddr.length === "number" || $util.isString(message.delegatorAddr)))
+                    return "delegatorAddr: buffer expected";
+                if (!(message.validatorSrcAddr && typeof message.validatorSrcAddr.length === "number" || $util.isString(message.validatorSrcAddr)))
+                    return "validatorSrcAddr: buffer expected";
+                if (!(message.validatorDstAddr && typeof message.validatorDstAddr.length === "number" || $util.isString(message.validatorDstAddr)))
+                    return "validatorDstAddr: buffer expected";
+                if (!$util.isString(message.sharesAmount))
+                    return "sharesAmount: string expected";
+                return null;
+            };
+
+            /**
+             * Creates a MsgBeginRedelegate message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof irisnet.tx.MsgBeginRedelegate
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {irisnet.tx.MsgBeginRedelegate} MsgBeginRedelegate
+             */
+            MsgBeginRedelegate.fromObject = function fromObject(object) {
+                if (object instanceof $root.irisnet.tx.MsgBeginRedelegate)
+                    return object;
+                var message = new $root.irisnet.tx.MsgBeginRedelegate();
+                if (object.delegatorAddr != null)
+                    if (typeof object.delegatorAddr === "string")
+                        $util.base64.decode(object.delegatorAddr, message.delegatorAddr = $util.newBuffer($util.base64.length(object.delegatorAddr)), 0);
+                    else if (object.delegatorAddr.length)
+                        message.delegatorAddr = object.delegatorAddr;
+                if (object.validatorSrcAddr != null)
+                    if (typeof object.validatorSrcAddr === "string")
+                        $util.base64.decode(object.validatorSrcAddr, message.validatorSrcAddr = $util.newBuffer($util.base64.length(object.validatorSrcAddr)), 0);
+                    else if (object.validatorSrcAddr.length)
+                        message.validatorSrcAddr = object.validatorSrcAddr;
+                if (object.validatorDstAddr != null)
+                    if (typeof object.validatorDstAddr === "string")
+                        $util.base64.decode(object.validatorDstAddr, message.validatorDstAddr = $util.newBuffer($util.base64.length(object.validatorDstAddr)), 0);
+                    else if (object.validatorDstAddr.length)
+                        message.validatorDstAddr = object.validatorDstAddr;
+                if (object.sharesAmount != null)
+                    message.sharesAmount = String(object.sharesAmount);
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a MsgBeginRedelegate message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof irisnet.tx.MsgBeginRedelegate
+             * @static
+             * @param {irisnet.tx.MsgBeginRedelegate} message MsgBeginRedelegate
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            MsgBeginRedelegate.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults) {
+                    if (options.bytes === String)
+                        object.delegatorAddr = "";
+                    else {
+                        object.delegatorAddr = [];
+                        if (options.bytes !== Array)
+                            object.delegatorAddr = $util.newBuffer(object.delegatorAddr);
+                    }
+                    if (options.bytes === String)
+                        object.validatorSrcAddr = "";
+                    else {
+                        object.validatorSrcAddr = [];
+                        if (options.bytes !== Array)
+                            object.validatorSrcAddr = $util.newBuffer(object.validatorSrcAddr);
+                    }
+                    if (options.bytes === String)
+                        object.validatorDstAddr = "";
+                    else {
+                        object.validatorDstAddr = [];
+                        if (options.bytes !== Array)
+                            object.validatorDstAddr = $util.newBuffer(object.validatorDstAddr);
+                    }
+                    object.sharesAmount = "";
+                }
+                if (message.delegatorAddr != null && message.hasOwnProperty("delegatorAddr"))
+                    object.delegatorAddr = options.bytes === String ? $util.base64.encode(message.delegatorAddr, 0, message.delegatorAddr.length) : options.bytes === Array ? Array.prototype.slice.call(message.delegatorAddr) : message.delegatorAddr;
+                if (message.validatorSrcAddr != null && message.hasOwnProperty("validatorSrcAddr"))
+                    object.validatorSrcAddr = options.bytes === String ? $util.base64.encode(message.validatorSrcAddr, 0, message.validatorSrcAddr.length) : options.bytes === Array ? Array.prototype.slice.call(message.validatorSrcAddr) : message.validatorSrcAddr;
+                if (message.validatorDstAddr != null && message.hasOwnProperty("validatorDstAddr"))
+                    object.validatorDstAddr = options.bytes === String ? $util.base64.encode(message.validatorDstAddr, 0, message.validatorDstAddr.length) : options.bytes === Array ? Array.prototype.slice.call(message.validatorDstAddr) : message.validatorDstAddr;
+                if (message.sharesAmount != null && message.hasOwnProperty("sharesAmount"))
+                    object.sharesAmount = message.sharesAmount;
+                return object;
+            };
+
+            /**
+             * Converts this MsgBeginRedelegate to JSON.
+             * @function toJSON
+             * @memberof irisnet.tx.MsgBeginRedelegate
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            MsgBeginRedelegate.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            return MsgBeginRedelegate;
+        })();
+
         tx.StdFee = (function() {
 
             /**

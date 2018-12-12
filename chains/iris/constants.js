@@ -3,7 +3,7 @@ class TxType {}
 TxType.TRANSFER                     = "transfer";
 TxType.DELEGATE                     = "delegate";
 TxType.BEGINUNBOND                  = "beginUnbond";
-TxType.COMPLETEUNBOND               = "completeUnbond";
+TxType.BEGINREdELEGATE              = "beginRedelegate";
 
 class IrisNetConfig{}
 IrisNetConfig.MAXGAS                = 20000000;
