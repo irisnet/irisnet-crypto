@@ -1,3 +1,5 @@
+
+let conf = require("./conf")
 //交易类型枚举类型
 class TxType {}
 TxType.TRANSFER                     = "transfer";
@@ -5,21 +7,11 @@ TxType.DELEGATE                     = "delegate";
 TxType.BEGINUNBOND                  = "beginUnbond";
 TxType.COMPLETEUNBOND               = "completeUnbond";
 
-
-
-let AddrPrefix = {
-    accAddr:"faa",
-    init:function(prefix){
-        this.accAddr = prefix;
-    }
-}
-
-
-
-
 class IrisNetConfig{}
 IrisNetConfig.MAXGAS                = 20000000;
-IrisNetConfig.PREFIX_BECH32_ACCADDR = AddrPrefix.accaddr;
+IrisNetConfig.PREFIX_BECH32_ACCADDR = conf.accAddr;
+IrisNetConfig.PREFIX_BECH32_VALADDR = conf.valAddr;
+IrisNetConfig.PREFIX_BECH32_ACCPUB  = conf.accPub;
 IrisNetConfig.ENCODING_BECH32       = "bech32";
 IrisNetConfig.ENCODING_HEX          = "hex";
 IrisNetConfig.DEFAULT_ENCODING      = IrisNetConfig.ENCODING_BECH32;

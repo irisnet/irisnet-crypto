@@ -1,0 +1,5 @@
+{
+  "accAddr":"${accAddr}",
+  "accPub":"${accPub}",
+  "valAddr":"${valAddr}"
+}
