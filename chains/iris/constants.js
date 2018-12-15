@@ -22,4 +22,4 @@ AminoKey.FullFundraiserPath         = AminoKey.BIP44Prefix + "0'/0/0";
 AminoKey.SignatureSecp256k1_prefix  = "tendermint/SignatureSecp256k1";
 AminoKey.PubKeySecp256k1_prefix     = "tendermint/PubKeySecp256k1";
 
-module.exports = {TxType,IrisNetConfig,AminoKey,AddrPrefix};
+module.exports = {TxType,IrisNetConfig,AminoKey};
