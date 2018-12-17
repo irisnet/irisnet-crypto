@@ -79,7 +79,7 @@ class Builder {
                     "amount":Utils.toString(tx.fees.amount),
                 });
             }
-            let memo = tx.memo ? tx.memo.text : '';
+            let memo = tx.memo ? tx.memo : '';
             return new Request(tx.chain_id,tx.from,tx.account_number,tx.sequence,fees,tx.gas,memo,tx.type,tx.msg);
         };
 
