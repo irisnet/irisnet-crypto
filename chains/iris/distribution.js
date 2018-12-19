@@ -1,0 +1,143 @@
+'use strict';
+
+const Builder = require("../../builder");
+const Utils = require('../../util/utils');
+const Amino = require('./amino');
+
+class MsgSetWithdrawAddress extends Builder.Msg {
+    constructor(delegatorAddr, withdrawAddr) {
+        super("cosmos-sdk/MsgModifyWithdrawAddress");
+        this.delegator_addr = delegatorAddr;
+        this.withdraw_addr = withdrawAddr;
+    }
+
+    GetSignBytes() {
+        let msg = {
+            "delegator_addr": this.delegator_addr,
+            "withdraw_addr": this.withdraw_addr,
+        };
+        let sortMsg = Utils.sortObjectKeys(msg);
+        return Amino.MarshalJSON(this.Type(), sortMsg)
+    }
+
+    ValidateBasic() {
+        if (Utils.isEmpty(this.delegator_addr)) {
+            throw new Error("delegatorAddr is empty");
+        }
+
+        if (Utils.isEmpty(this.withdraw_addr)) {
+            throw new Error("withdrawAddr is empty");
+        }
+    }
+
+    Type() {
+        return "cosmos-sdk/MsgModifyWithdrawAddress";
+    }
+
+    GetMsg() {
+        const BECH32 = require('bech32');
+        let delegator_key = BECH32.decode(this.delegator_addr);
+        let delegator_addr = BECH32.fromWords(delegator_key.words);
+
+        let withdraw_addr_key = BECH32.decode(this.withdraw_addr);
+        let withdraw_addr_addr = BECH32.fromWords(withdraw_addr_key.words);
+
+        return {
+            delegatorAddr: delegator_addr,
+            withdrawAddr: withdraw_addr_addr
+        }
+    }
+}
+
+class MsgWithdrawDelegatorRewardsAll extends Builder.Msg {
+    constructor(delegatorAddr) {
+        super("cosmos-sdk/MsgWithdrawDelegationRewardsAll");
+        this.delegator_addr = delegatorAddr;
+    }
+
+    GetSignBytes() {
+        let msg = {
+            "delegator_addr": this.delegator_addr,
+        };
+        let sortMsg = Utils.sortObjectKeys(msg);
+        return Amino.MarshalJSON(this.Type(), sortMsg)
+    }
+
+    ValidateBasic() {
+        if (Utils.isEmpty(this.delegator_addr)) {
+            throw new Error("delegatorAddr is empty");
+        }
+    }
+
+    Type() {
+        return "cosmos-sdk/MsgWithdrawDelegationRewardsAll";
+    }
+
+    GetMsg() {
+        const BECH32 = require('bech32');
+        let delegator_key = BECH32.decode(this.delegator_addr);
+        let delegator_addr = BECH32.fromWords(delegator_key.words);
+
+        return {
+            delegatorAddr: delegator_addr,
+        }
+    }
+}
+
+class MsgWithdrawDelegatorReward extends Builder.Msg {
+    constructor(delegatorAddr,validator_addr) {
+        super("cosmos-sdk/MsgWithdrawDelegationReward");
+        this.delegator_addr = delegatorAddr;
+        this.validator_addr = validator_addr;
+    }
+
+    GetSignBytes() {
+        let msg = {
+            "delegator_addr": this.delegator_addr,
+            "validator_addr": this.validator_addr,
+        };
+        let sortMsg = Utils.sortObjectKeys(msg);
+        return Amino.MarshalJSON(this.Type(), sortMsg)
+    }
+
+    ValidateBasic() {
+        if (Utils.isEmpty(this.delegator_addr)) {
+            throw new Error("delegatorAddr is empty");
+        }
+        if (Utils.isEmpty(this.validator_addr)) {
+            throw new Error("validator_addr is empty");
+        }
+    }
+
+    Type() {
+        return "cosmos-sdk/MsgWithdrawDelegationReward";
+    }
+
+    GetMsg() {
+        const BECH32 = require('bech32');
+        let delegator_key = BECH32.decode(this.delegator_addr);
+        let delegator_addr = BECH32.fromWords(delegator_key.words);
+
+        let validator_key = BECH32.decode(this.validator_addr);
+        let validator_addr = BECH32.fromWords(validator_key.words);
+
+        return {
+            delegatorAddr: delegator_addr,
+            validatorAddr: validator_addr,
+        }
+    }
+}
+
+module.exports = class Stake {
+    static GreateMsgSetWithdrawAddress(req) {
+        return new MsgSetWithdrawAddress(req.from, req.msg.withdraw_addr);
+    }
+
+    static GreateMsgWithdrawDelegatorRewardsAll(req) {
+        return new MsgWithdrawDelegatorRewardsAll(req.from);
+    }
+
+    static GreateMsgWithdrawDelegatorReward(req) {
+        return new MsgWithdrawDelegatorReward(req.from,req.msg.validator_addr);
+    }
+};

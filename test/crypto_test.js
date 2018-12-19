@@ -78,13 +78,13 @@ describe('CryPto test', function () {
                 chain_id: "rainbow-dev",
                 from: "faa1ljemm0yznz58qxxs8xyak7fashcfxf5lssn6jm",
                 account_number: 4,
-                sequence:16 ,
+                sequence:696 ,
                 fees: {
                     denom: "iris-atto",
                     amount:400000000000000000
                 },
                 gas: 200000,
-                memo: "",
+                memo: "1",
                 type: Irisnet.Constants.IRIS.TxType.TRANSFER,
                 msg: {
                     to: "faa1s6v9qgu8ye7d884s8kpye64x66znndg8t6eztj",
@@ -99,8 +99,7 @@ describe('CryPto test', function () {
 
             let builder = Irisnet.getBuilder(Irisnet.Constants.COMM.Chains.IRIS);
             let stdTx = builder.buildAndSignTx(tx,"55A3160577979EC014A2CE85C430E1FF0FF06EFD230B7CE41AEAE2EF00EDF175");
-            console.log(JSON.stringify(stdTx.GetPostData()))
-
+            console.log(JSON.stringify(stdTx.GetPostData()));
             let result = stdTx.Hash();
             console.log("data:",result.data);
             console.log("hash",result.hash);
@@ -192,6 +191,84 @@ describe('CryPto test', function () {
             let result = stdTx.Hash();
             console.log("data:",result.data);
             console.log("hash",result.hash);
+        });
+
+        it('test MsgSetWithdrawAddress', function () {
+            let tx = {
+                chain_id: "rainbow-dev",
+                from: "faa1ljemm0yznz58qxxs8xyak7fashcfxf5lssn6jm",
+                account_number: 4,
+                sequence:696 ,
+                fees: {
+                    denom: "iris-atto",
+                    amount:400000000000000000
+                },
+                gas: 200000,
+                memo: "",
+                type: Irisnet.Constants.IRIS.TxType.SET_WITHDRAW_ADDRESS,
+                msg: {
+                    withdraw_addr: "faa1cr6xfpp078nm7yfsh36850ftu20fl3c9cdjc73",
+                }
+            };
+
+            let builder = Irisnet.getBuilder(Irisnet.Constants.COMM.Chains.IRIS);
+            let stdTx = builder.buildAndSignTx(tx,"55A3160577979EC014A2CE85C430E1FF0FF06EFD230B7CE41AEAE2EF00EDF175");
+            console.log(JSON.stringify(stdTx.GetPostData()));
+
+            // let result = stdTx.Hash();
+            // console.log("data:",result.data);
+            // console.log("hash",result.hash);
+        });
+
+        it('test MsgWithdrawDelegatorRewardsAll', function () {
+            let tx = {
+                chain_id: "rainbow-dev",
+                from: "faa1ljemm0yznz58qxxs8xyak7fashcfxf5lssn6jm",
+                account_number: 4,
+                sequence:697 ,
+                fees: {
+                    denom: "iris-atto",
+                    amount:400000000000000000
+                },
+                gas: 200000,
+                memo: "",
+                type: Irisnet.Constants.IRIS.TxType.WITHDRAW_DELEGATION_REWARD_ALL,
+            };
+
+            let builder = Irisnet.getBuilder(Irisnet.Constants.COMM.Chains.IRIS);
+            let stdTx = builder.buildAndSignTx(tx,"55A3160577979EC014A2CE85C430E1FF0FF06EFD230B7CE41AEAE2EF00EDF175");
+            console.log(JSON.stringify(stdTx.GetPostData()));
+
+            // let result = stdTx.Hash();
+            // console.log("data:",result.data);
+            // console.log("hash",result.hash);
+        });
+
+        it('test MsgWithdrawDelegatorReward', function () {
+            let tx = {
+                chain_id: "rainbow-dev",
+                from: "faa1ljemm0yznz58qxxs8xyak7fashcfxf5lssn6jm",
+                account_number: 4,
+                sequence:699 ,
+                fees: {
+                    denom: "iris-atto",
+                    amount:400000000000000000
+                },
+                gas: 200000,
+                memo: "",
+                type: Irisnet.Constants.IRIS.TxType.WITHDRAW_DELEGATION_REWARD,
+                msg: {
+                    validator_addr: "fva1xde0yh9vmc8mnkdvdr5krllfe3gslw9d4qp2wd",
+                }
+            };
+
+            let builder = Irisnet.getBuilder(Irisnet.Constants.COMM.Chains.IRIS);
+            let stdTx = builder.buildAndSignTx(tx,"55A3160577979EC014A2CE85C430E1FF0FF06EFD230B7CE41AEAE2EF00EDF175");
+            console.log(JSON.stringify(stdTx.GetPostData()));
+
+            // let result = stdTx.Hash();
+            // console.log("data:",result.data);
+            // console.log("hash",result.hash);
         });
     });
 });

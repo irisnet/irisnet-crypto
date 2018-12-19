@@ -1,9 +1,12 @@
 //交易类型枚举类型
 class TxType {}
-TxType.TRANSFER                     = "transfer";
-TxType.DELEGATE                     = "delegate";
-TxType.BEGINUNBOND                  = "beginUnbond";
-TxType.BEGINREdELEGATE              = "beginRedelegate";
+TxType.TRANSFER                         = "transfer";
+TxType.DELEGATE                         = "delegate";
+TxType.BEGINUNBOND                      = "beginUnbond";
+TxType.BEGINREdELEGATE                  = "beginRedelegate";
+TxType.SET_WITHDRAW_ADDRESS             = "set_withdraw_address";
+TxType.WITHDRAW_DELEGATION_REWARD_ALL   = "withdraw_delegation_rewards_all";
+TxType.WITHDRAW_DELEGATION_REWARD       = "withdraw_delegation_reward";
 
 class IrisNetConfig{}
 IrisNetConfig.MAXGAS                = 20000000;

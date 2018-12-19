@@ -4,6 +4,7 @@ const Old = require('old');
 const Constants = require('./constants');
 const Bank = require('./bank');
 const Stake = require('./stake');
+const Distribution = require('./distribution');
 const IrisKeypair = require('./iris_keypair');
 const Codec = require("../../util/codec");
 const Utils = require('../../util/utils');
@@ -35,6 +36,18 @@ class IrisBuilder extends Builder {
             }
             case Constants.TxType.BEGINREdELEGATE: {
                 msg = Stake.CreateMsgBeginRedelegate(req);
+                break;
+            }
+            case Constants.TxType.SET_WITHDRAW_ADDRESS: {
+                msg = Distribution.GreateMsgSetWithdrawAddress(req);
+                break;
+            }
+            case Constants.TxType.WITHDRAW_DELEGATION_REWARD_ALL: {
+                msg = Distribution.GreateMsgWithdrawDelegatorRewardsAll(req);
+                break;
+            }
+            case Constants.TxType.WITHDRAW_DELEGATION_REWARD: {
+                msg = Distribution.GreateMsgWithdrawDelegatorReward(req);
                 break;
             }
             default: {
@@ -77,6 +90,7 @@ class IrisBuilder extends Builder {
      */
     buildAndSignTx(tx, privateKey) {
         let signMsg = this.buildTx(tx);
+        console.log(JSON.stringify(signMsg.GetSignBytes()));
         let signbyte = IrisKeypair.sign(privateKey, signMsg.GetSignBytes());
         let keypair = IrisKeypair.import(privateKey);
         let signs = [Bank.NewStdSignature(Codec.Hex.hexToBytes(keypair.publicKey), signbyte, signMsg.accnum, signMsg.sequence)];

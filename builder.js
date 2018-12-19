@@ -107,9 +107,6 @@ class Request {
         if (Utils.isEmpty(type)) {
             throw new Error("type is empty");
         }
-        if (Utils.isEmpty(msg)) {
-            throw new Error("msg is empty");
-        }
 
         this.chain_id = chain_id;
         this.from = from;
@@ -154,7 +151,7 @@ class Msg extends Validator{
     }
     constructor(type) {
         super();
-       this.type = type
+        this.type = type
     }
     GetMsg(){
         throw new Error("not implement");
