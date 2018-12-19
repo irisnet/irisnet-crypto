@@ -1,13 +1,13 @@
 'use strict';
 const Builder = require("../../builder").Builder;
 const Old = require('old');
-const Constants = require('./constants');
 const Bank = require('./bank');
 const Stake = require('./stake');
 const Distribution = require('./distribution');
 const IrisKeypair = require('./iris_keypair');
 const Codec = require("../../util/codec");
 const Utils = require('../../util/utils');
+const Config = require('../../config');
 
 class IrisBuilder extends Builder {
 
@@ -22,31 +22,31 @@ class IrisBuilder extends Builder {
         let req = super.buildParam(tx);
         let msg;
         switch (req.type) {
-            case Constants.TxType.TRANSFER: {
+            case Config.iris.tx.transfer.type: {
                 msg = Bank.CreateMsgSend(req);
                 break;
             }
-            case Constants.TxType.DELEGATE: {
+            case Config.iris.tx.delegate.type: {
                 msg = Stake.GreateMsgDelegate(req);
                 break;
             }
-            case Constants.TxType.BEGINUNBOND: {
+            case Config.iris.tx.unbond.type: {
                 msg = Stake.CreateMsgBeginUnbonding(req);
                 break;
             }
-            case Constants.TxType.BEGINREdELEGATE: {
+            case Config.iris.tx.redelegate.type: {
                 msg = Stake.CreateMsgBeginRedelegate(req);
                 break;
             }
-            case Constants.TxType.SET_WITHDRAW_ADDRESS: {
+            case Config.iris.tx.setWithdrawAddress.type: {
                 msg = Distribution.GreateMsgSetWithdrawAddress(req);
                 break;
             }
-            case Constants.TxType.WITHDRAW_DELEGATION_REWARD_ALL: {
+            case Config.iris.tx.withdrawDelegationRewardsAll.type: {
                 msg = Distribution.GreateMsgWithdrawDelegatorRewardsAll(req);
                 break;
             }
-            case Constants.TxType.WITHDRAW_DELEGATION_REWARD: {
+            case Config.iris.tx.withdrawDelegationReward.type: {
                 msg = Distribution.GreateMsgWithdrawDelegatorReward(req);
                 break;
             }
@@ -55,7 +55,7 @@ class IrisBuilder extends Builder {
             }
         }
         let stdFee = Bank.NewStdFee(req.fees, req.gas);
-        let signMsg = Bank.NewStdSignMsg(req.chain_id, req.account_number, req.sequence, stdFee, msg,req.memo);
+        let signMsg = Bank.NewStdSignMsg(req.chain_id, req.account_number, req.sequence, stdFee, msg, req.memo,req.type);
         signMsg.ValidateBasic();
         return signMsg
     }
@@ -63,18 +63,15 @@ class IrisBuilder extends Builder {
     /**
      * 对buildTx构造的交易进行签名，注意入参必须是buildTx的结果.
      *
-     * @param tx {StdSignMsg}
+     * @param tx {StdSignMsg} 字符串
      * @param privateKey
      * @returns {StdTx}
      */
-    signTx(tx,privateKey) {
-        // let signMsg = tx;
-        // let sig = signMsg.signByte;
+    signTx(tx, privateKey) {
         let signMsg = CreateSignMsg(tx);
-        let sig = signMsg.GetSignBytes();
-        let signbyte = IrisKeypair.sign(privateKey, sig);
+        let signbyte = IrisKeypair.sign(privateKey, signMsg.GetSignBytes());
         let keypair = IrisKeypair.import(privateKey);
-        let signs = [Bank.NewStdSignature(Codec.Hex.hexToBytes(keypair.publicKey), signbyte, signMsg.accnum, signMsg.sequence)];
+        let signs = [Bank.NewStdSignature(Codec.Hex.hexToBytes(keypair.publicKey), signbyte, signMsg.account_number, signMsg.sequence)];
         let stdTx = Bank.NewStdTx(signMsg.msgs, signMsg.fee, signs, signMsg.memo);
         return stdTx
     }
@@ -90,29 +87,53 @@ class IrisBuilder extends Builder {
      */
     buildAndSignTx(tx, privateKey) {
         let signMsg = this.buildTx(tx);
-        console.log(JSON.stringify(signMsg.GetSignBytes()));
         let signbyte = IrisKeypair.sign(privateKey, signMsg.GetSignBytes());
         let keypair = IrisKeypair.import(privateKey);
-        let signs = [Bank.NewStdSignature(Codec.Hex.hexToBytes(keypair.publicKey), signbyte, signMsg.accnum, signMsg.sequence)];
+        let signs = [Bank.NewStdSignature(Codec.Hex.hexToBytes(keypair.publicKey), signbyte, signMsg.account_number, signMsg.sequence)];
         let stdTx = Bank.NewStdTx(signMsg.msgs, signMsg.fee, signs, signMsg.memo);
         return stdTx
     }
 }
 
-function CreateSignMsg(properties){
+function CreateSignMsg(properties) {
     let prop = JSON.parse(properties);
-    let msg = prop.msgs[0];
-    if(!Utils.isEmpty(msg.inputs)) {
-        msg = Bank.Create(msg)
-    }else if(!Utils.isEmpty(msg.delegation)){
-        msg = Stake.MsgDelegate().Create(msg)
-    }else if(!Utils.isEmpty(msg.shares_amount)){
-        msg = Stake.MsgBeginUnbonding().Create(msg)
-    }else if(!Utils.isEmpty(msg.validator_src_addr)){
-        msg = Stake.MsgBeginRedelegate().Create(msg)
+    let msg;
+    let msgType = prop.type;
+    switch (msgType) {
+        case Config.iris.tx.transfer.type: {
+            msg = Bank.Create(prop.msgs[0]);
+            break;
+        }
+        case Config.iris.tx.delegate.type: {
+            msg = Stake.MsgDelegate().Create(prop.msgs[0].value);
+            break;
+        }
+        case Config.iris.tx.unbond.type: {
+            msg = Stake.MsgBeginUnbonding().Create(prop.msgs[0]);
+            break;
+        }
+        case Config.iris.tx.redelegate.type: {
+            msg = Stake.MsgBeginRedelegate().Create(prop.msgs[0]);
+            break;
+        }
+        case Config.iris.tx.setWithdrawAddress.type: {
+            msg = Distribution.MsgSetWithdrawAddress().Create(prop.msgs[0]);
+            break;
+        }
+        case Config.iris.tx.withdrawDelegationRewardsAll.type: {
+            msg = Distribution.MsgWithdrawDelegatorRewardsAll().Create(prop.msgs[0]);
+            break;
+        }
+        case Config.iris.tx.withdrawDelegationReward.type: {
+            msg = Distribution.MsgWithdrawDelegatorReward().Create(prop.msgs[0]);
+            break;
+        }
+        default: {
+            throw new Error("not exist tx type");
+        }
     }
     let stdFee = Bank.NewStdFee(prop.fee.amount, parseInt(prop.fee.gas));
-    return Bank.NewStdSignMsg(prop.chain_id, parseInt(prop.account_number), parseInt(prop.sequence), stdFee, msg,prop.memo);
+    return Bank.NewStdSignMsg(prop.chain_id, parseInt(prop.account_number), parseInt(prop.sequence), stdFee, msg, prop.memo);
 }
 
 module.exports = Old(IrisBuilder);

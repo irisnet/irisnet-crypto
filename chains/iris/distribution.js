@@ -3,12 +3,13 @@
 const Builder = require("../../builder");
 const Utils = require('../../util/utils');
 const Amino = require('./amino');
+const Config = require('../../config');
 
 
 //TODO
 class MsgSetWithdrawAddress extends Builder.Msg {
     constructor(delegatorAddr, withdrawAddr) {
-        super("cosmos-sdk/MsgModifyWithdrawAddress");
+        super(Config.iris.tx.setWithdrawAddress.prefix);
         this.delegator_addr = delegatorAddr;
         this.withdraw_addr = withdrawAddr;
     }
@@ -33,7 +34,7 @@ class MsgSetWithdrawAddress extends Builder.Msg {
     }
 
     Type() {
-        return "cosmos-sdk/MsgModifyWithdrawAddress";
+        return Config.iris.tx.setWithdrawAddress.prefix;
     }
 
     GetMsg() {
@@ -49,11 +50,15 @@ class MsgSetWithdrawAddress extends Builder.Msg {
             withdrawAddr: withdraw_addr_addr
         }
     }
+
+    static Create(properties){
+        return new MsgSetWithdrawAddress(properties.delegator_addr,properties.withdraw_addr)
+    }
 }
 
 class MsgWithdrawDelegatorRewardsAll extends Builder.Msg {
     constructor(delegatorAddr) {
-        super("cosmos-sdk/MsgWithdrawDelegationRewardsAll");
+        super(Config.iris.tx.withdrawDelegationRewardsAll.prefix);
         this.delegator_addr = delegatorAddr;
     }
 
@@ -72,7 +77,7 @@ class MsgWithdrawDelegatorRewardsAll extends Builder.Msg {
     }
 
     Type() {
-        return "cosmos-sdk/MsgWithdrawDelegationRewardsAll";
+        return Config.iris.tx.withdrawDelegationRewardsAll.prefix;
     }
 
     GetMsg() {
@@ -84,11 +89,15 @@ class MsgWithdrawDelegatorRewardsAll extends Builder.Msg {
             delegatorAddr: delegator_addr,
         }
     }
+
+    static Create(properties){
+        return new MsgWithdrawDelegatorRewardsAll(properties.delegator_addr)
+    }
 }
 
 class MsgWithdrawDelegatorReward extends Builder.Msg {
     constructor(delegatorAddr,validator_addr) {
-        super("cosmos-sdk/MsgWithdrawDelegationReward");
+        super(Config.iris.tx.withdrawDelegationReward.prefix);
         this.delegator_addr = delegatorAddr;
         this.validator_addr = validator_addr;
     }
@@ -112,7 +121,7 @@ class MsgWithdrawDelegatorReward extends Builder.Msg {
     }
 
     Type() {
-        return "cosmos-sdk/MsgWithdrawDelegationReward";
+        return Config.iris.tx.withdrawDelegationReward.prefix;
     }
 
     GetMsg() {
@@ -128,9 +137,13 @@ class MsgWithdrawDelegatorReward extends Builder.Msg {
             validatorAddr: validator_addr,
         }
     }
+
+    static Create(properties){
+        return new MsgWithdrawDelegatorReward(properties.delegator_addr,properties.validator_addr)
+    }
 }
 
-module.exports = class Stake {
+module.exports = class Distribution {
     static GreateMsgSetWithdrawAddress(req) {
         return new MsgSetWithdrawAddress(req.from, req.msg.withdraw_addr);
     }
@@ -141,5 +154,17 @@ module.exports = class Stake {
 
     static GreateMsgWithdrawDelegatorReward(req) {
         return new MsgWithdrawDelegatorReward(req.from,req.msg.validator_addr);
+    }
+
+    static MsgSetWithdrawAddress(){
+        return MsgSetWithdrawAddress
+    }
+
+    static MsgWithdrawDelegatorRewardsAll(){
+        return MsgWithdrawDelegatorRewardsAll
+    }
+
+    static MsgWithdrawDelegatorReward(){
+        return MsgWithdrawDelegatorReward
     }
 };

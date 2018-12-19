@@ -1,7 +1,7 @@
 'use strict';
 
 const Utils = require('../../util/utils');
-const Constants = require('./constants');
+const Config = require('../../config');
 const Builder = require("../../builder");
 const Amino = require("./amino");
 const TxSerializer = require("./tx/tx_serializer");
@@ -80,7 +80,7 @@ class Output extends Builder.Validator {
 
 class MsgSend extends Builder.Msg {
     constructor(from, to, coins) {
-        super("cosmos-sdk/Send");
+        super(Config.iris.tx.transfer.prefix);
         this.inputs = [new Input(from, coins)];
         this.outputs = [new Output(to, coins)];
     }
@@ -121,7 +121,7 @@ class MsgSend extends Builder.Msg {
     }
 
     Type(){
-        return "cosmos-sdk/Send";
+        return Config.iris.tx.transfer.prefix;
     }
 
     GetMsg(){
@@ -152,7 +152,7 @@ class StdFee {
     constructor(amount, gas) {
         this.amount = amount;
         if (!gas) {
-            gas = Constants.IrisNetConfig.MAXGAS;
+            gas = Config.iris.maxGas;
         }
         this.gas = gas;
     }
@@ -170,15 +170,14 @@ class StdFee {
 
 
 class StdSignMsg extends Builder.Msg {
-    constructor(chainID, accnum, sequence, fee, msg, memo) {
-        super();
-        this.chainID = chainID;
-        this.accnum = accnum;
+    constructor(chainID, accnum, sequence, fee, msg, memo,msgType) {
+        super(msgType);
+        this.chain_id = chainID;
+        this.account_number = accnum;
         this.sequence = sequence;
         this.fee = fee;
         this.msgs = [msg];
         this.memo = memo;
-        //this.signByte = this.GetSignBytes();
     }
 
     GetSignBytes() {
@@ -188,8 +187,8 @@ class StdSignMsg extends Builder.Msg {
         });
 
         let tx = {
-            "account_number": this.accnum,
-            "chain_id": this.chainID,
+            "account_number": this.account_number,
+            "chain_id": this.chain_id,
             "fee": this.fee.GetSignBytes(),//TODO
             "memo": this.memo,
             "msgs": msgs,
@@ -199,11 +198,11 @@ class StdSignMsg extends Builder.Msg {
     }
 
     ValidateBasic() {
-        if (Utils.isEmpty(this.chainID)) {
-            throw new Error("chainID is  empty");
+        if (Utils.isEmpty(this.chain_id)) {
+            throw new Error("chain_id is  empty");
         }
-        if (this.accnum < 0) {
-            throw new Error("accountNumber is  empty");
+        if (this.account_number < 0) {
+            throw new Error("account_number is  empty");
         }
         if (this.sequence < 0) {
             throw new Error("sequence is  empty");
@@ -302,8 +301,8 @@ module.exports = class Bank{
         return new StdFee(amount, gas)
     }
 
-    static NewStdSignMsg(chainID, accnum, sequence, fee, msg, memo){
-        return new StdSignMsg(chainID, accnum, sequence, fee, msg, memo)
+    static NewStdSignMsg(chainID, accnum, sequence, fee, msg, memo,msgType){
+        return new StdSignMsg(chainID, accnum, sequence, fee, msg, memo,msgType)
     }
 
     static NewCoin(amount, denom){
