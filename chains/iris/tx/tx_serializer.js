@@ -7,6 +7,9 @@ amino.RegisterConcrete(root.irisnet.tx.MsgDelegate,"cosmos-sdk/MsgDelegate");
 amino.RegisterConcrete(root.irisnet.tx.MsgSend,"cosmos-sdk/Send");
 amino.RegisterConcrete(root.irisnet.tx.MsgBeginRedelegate,"cosmos-sdk/BeginRedelegate");
 amino.RegisterConcrete(root.irisnet.tx.MsgBeginUnbonding,"cosmos-sdk/BeginUnbonding");
+amino.RegisterConcrete(root.irisnet.tx.MsgSetWithdrawAddress,"cosmos-sdk/MsgModifyWithdrawAddress");
+amino.RegisterConcrete(root.irisnet.tx.MsgWithdrawDelegatorRewardsAll,"cosmos-sdk/MsgWithdrawDelegationRewardsAll");
+amino.RegisterConcrete(root.irisnet.tx.MsgWithdrawDelegatorReward,"cosmos-sdk/MsgWithdrawDelegationReward");
 amino.RegisterConcrete(root.irisnet.tx.StdTx,"auth/StdTx");
 
 /**

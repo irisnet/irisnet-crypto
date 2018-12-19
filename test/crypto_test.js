@@ -239,9 +239,9 @@ describe('CryPto test', function () {
             let stdTx = builder.buildAndSignTx(tx,"55A3160577979EC014A2CE85C430E1FF0FF06EFD230B7CE41AEAE2EF00EDF175");
             console.log(JSON.stringify(stdTx.GetPostData()));
 
-            // let result = stdTx.Hash();
-            // console.log("data:",result.data);
-            // console.log("hash",result.hash);
+            let result = stdTx.Hash();
+            console.log("data:",result.data);
+            console.log("hash",result.hash);
         });
 
         it('test MsgWithdrawDelegatorReward', function () {
@@ -266,9 +266,9 @@ describe('CryPto test', function () {
             let stdTx = builder.buildAndSignTx(tx,"55A3160577979EC014A2CE85C430E1FF0FF06EFD230B7CE41AEAE2EF00EDF175");
             console.log(JSON.stringify(stdTx.GetPostData()));
 
-            // let result = stdTx.Hash();
-            // console.log("data:",result.data);
-            // console.log("hash",result.hash);
+            let result = stdTx.Hash();
+            console.log("data:",result.data);
+            console.log("hash",result.hash);
         });
     });
 });

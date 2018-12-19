@@ -4,6 +4,8 @@ const Builder = require("../../builder");
 const Utils = require('../../util/utils');
 const Amino = require('./amino');
 
+
+//TODO
 class MsgSetWithdrawAddress extends Builder.Msg {
     constructor(delegatorAddr, withdrawAddr) {
         super("cosmos-sdk/MsgModifyWithdrawAddress");
