@@ -1,6 +1,6 @@
 'use strict';
 
-const Constants = require('./constants');
+const Config = require('./config');
 
 class Crypto {
 
@@ -73,10 +73,10 @@ class Crypto {
      */
     static getCrypto(chain) {
         switch (chain) {
-            case Constants.Chains.IRIS: {
+            case Config.chain.iris: {
                 return require('./chains/iris/iris_crypto')();
             }
-            case Constants.Chains.ETHERMINT: {
+            case Config.chain.ethermint: {
                 return require('./chains/ethermint/ethermint_crypto')();
             }
             default: {

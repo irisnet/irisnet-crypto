@@ -1,6 +1,6 @@
 'use strict';
 
-const Constants = require('./constants');
+const Config = require('./config');
 const Utils = require('./util/utils');
 
 class Builder {
@@ -52,10 +52,10 @@ class Builder {
      */
     static getBuilder(chainName) {
         switch (chainName) {
-            case Constants.Chains.IRIS: {
+            case Config.chain.iris: {
                 return require('./chains/iris/iris_builder')();
             }
-            case Constants.Chains.ETHERMINT: {
+            case Config.chain.ethermint: {
                 return require('./chains/ethermint/ethermint_builder')();
             }
             default: {
@@ -107,9 +107,6 @@ class Request {
         if (Utils.isEmpty(type)) {
             throw new Error("type is empty");
         }
-        if (Utils.isEmpty(msg)) {
-            throw new Error("msg is empty");
-        }
 
         this.chain_id = chain_id;
         this.from = from;
@@ -154,7 +151,7 @@ class Msg extends Validator{
     }
     constructor(type) {
         super();
-       this.type = type
+        this.type = type
     }
     GetMsg(){
         throw new Error("not implement");
