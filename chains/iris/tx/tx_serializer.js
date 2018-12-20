@@ -78,8 +78,6 @@ class TxSerializer {
         let uvarintBuf = Buffer.from(EncodeUvarint(buf.length));
         let bz = Buffer.concat([uvarintBuf, buf]);
 
-        console.log(JSON.stringify(bz));
-
         const crypto = require('crypto');
         const hash = crypto.createHash('sha256');
         hash.update(bz);

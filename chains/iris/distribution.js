@@ -144,15 +144,15 @@ class MsgWithdrawDelegatorReward extends Builder.Msg {
 }
 
 module.exports = class Distribution {
-    static GreateMsgSetWithdrawAddress(req) {
+    static CreateMsgSetWithdrawAddress(req) {
         return new MsgSetWithdrawAddress(req.from, req.msg.withdraw_addr);
     }
 
-    static GreateMsgWithdrawDelegatorRewardsAll(req) {
+    static CreateMsgWithdrawDelegatorRewardsAll(req) {
         return new MsgWithdrawDelegatorRewardsAll(req.from);
     }
 
-    static GreateMsgWithdrawDelegatorReward(req) {
+    static CreateMsgWithdrawDelegatorReward(req) {
         return new MsgWithdrawDelegatorReward(req.from,req.msg.validator_addr);
     }
 

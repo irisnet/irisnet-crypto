@@ -5,7 +5,6 @@ const IrisKeypair = require('./iris_keypair');
 const Codec = require("../../util/codec");
 const Utils = require("../../util/utils");
 const Config = require('../../config');
-const Lan = require("../../constants").Language;
 const Bip39 = require('bip39');
 
 class IrisCrypto extends Crypto {
@@ -86,13 +85,13 @@ function encode(acc){
 
 function switchToWordList(language){
     switch (language) {
-        case Lan.CH_S:
+        case Config.language.cn:
             return Bip39.wordlists.chinese_simplified;
-        case Lan.EN:
+        case Config.language.en:
             return Bip39.wordlists.english;
-        case Lan.JP:
+        case Config.language.jp:
             return Bip39.wordlists.japanese;
-        case Lan.SP:
+        case Config.language.sp:
             return Bip39.wordlists.spanish;
         default:
             return Bip39.wordlists.english;

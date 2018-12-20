@@ -6,7 +6,6 @@ const Stake = require('./stake');
 const Distribution = require('./distribution');
 const IrisKeypair = require('./iris_keypair');
 const Codec = require("../../util/codec");
-const Utils = require('../../util/utils');
 const Config = require('../../config');
 
 class IrisBuilder extends Builder {
@@ -27,7 +26,7 @@ class IrisBuilder extends Builder {
                 break;
             }
             case Config.iris.tx.delegate.type: {
-                msg = Stake.GreateMsgDelegate(req);
+                msg = Stake.CreateMsgDelegate(req);
                 break;
             }
             case Config.iris.tx.unbond.type: {
@@ -39,15 +38,15 @@ class IrisBuilder extends Builder {
                 break;
             }
             case Config.iris.tx.setWithdrawAddress.type: {
-                msg = Distribution.GreateMsgSetWithdrawAddress(req);
+                msg = Distribution.CreateMsgSetWithdrawAddress(req);
                 break;
             }
             case Config.iris.tx.withdrawDelegationRewardsAll.type: {
-                msg = Distribution.GreateMsgWithdrawDelegatorRewardsAll(req);
+                msg = Distribution.CreateMsgWithdrawDelegatorRewardsAll(req);
                 break;
             }
             case Config.iris.tx.withdrawDelegationReward.type: {
-                msg = Distribution.GreateMsgWithdrawDelegatorReward(req);
+                msg = Distribution.CreateMsgWithdrawDelegatorReward(req);
                 break;
             }
             default: {
@@ -101,11 +100,11 @@ function CreateSignMsg(properties) {
     let msgType = prop.type;
     switch (msgType) {
         case Config.iris.tx.transfer.type: {
-            msg = Bank.Create(prop.msgs[0]);
+            msg = Bank.MsgSend().Create(prop.msgs[0]);
             break;
         }
         case Config.iris.tx.delegate.type: {
-            msg = Stake.MsgDelegate().Create(prop.msgs[0].value);
+            msg = Stake.MsgDelegate().Create(prop.msgs[0]);
             break;
         }
         case Config.iris.tx.unbond.type: {

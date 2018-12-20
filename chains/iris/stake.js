@@ -189,7 +189,7 @@ class MsgBeginRedelegate extends Builder.Msg {
 }
 
 module.exports = class Stake {
-    static GreateMsgDelegate(req) {
+    static CreateMsgDelegate(req) {
         let delegation = {
             denom: req.msg.delegation.denom,
             amount: Utils.toString(req.msg.delegation.amount),

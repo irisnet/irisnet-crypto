@@ -146,6 +146,10 @@ class MsgSend extends Builder.Msg {
             output : outputs
         }
     }
+
+    static Create(properties){
+        return new MsgSend(properties.inputs[0].address,properties.outputs[0].address,properties.outputs[0].coins)
+    }
 }
 
 class StdFee {
@@ -293,10 +297,6 @@ module.exports = class Bank{
         return new StdTx(msgs, fee, signatures, memo)
     }
 
-    static NewMsgSend(from, to, coins){
-        return new MsgSend(from, to, coins)
-    }
-
     static NewStdFee(amount, gas){
         return new StdFee(amount, gas)
     }
@@ -305,11 +305,11 @@ module.exports = class Bank{
         return new StdSignMsg(chainID, accnum, sequence, fee, msg, memo,msgType)
     }
 
-    static NewCoin(amount, denom){
-        return new Coin(amount, denom)
-    }
-
     static Create(properties){
         return new MsgSend(properties.inputs[0].address,properties.outputs[0].address,properties.outputs[0].coins)
+    }
+
+    static MsgSend(){
+        return MsgSend
     }
 };
