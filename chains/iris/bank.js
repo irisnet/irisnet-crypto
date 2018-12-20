@@ -234,8 +234,9 @@ class StdTx {
         this.memo = memo
     }
 
+
     /**
-     * @Deprecated
+     * @deprecated(replace with Hash())
      *
      * @returns {{msgs: Array, fee: *, signatures: *, memo: *}}
      * @constructor

@@ -330,16 +330,24 @@ describe('CryPto test', function () {
     //冷钱包调用
     function extracted(tx) {
         let builder = Irisnet.getBuilder(chain);
+        //①先用联网的钱包构造一笔交易
         let signMsg = builder.buildTx(tx);
+        //②把步骤①的结构序列化为字符串，装入二维码
         let signStr = JSON.stringify(signMsg);
         console.log("======热钱包传递给冷钱包签名的字符串======");
         console.log(signStr);
         console.log("======热钱包传递给冷钱包签名的字符串======");
 
+        //③用未联网的钱包(存有账户秘钥)扫描步骤②的二维码，拿到待签名的字符串，调用signTx签名
         let stdTx = builder.signTx(signStr, privateKey);
         console.log("======待提交交易======");
+        //④步骤③的结果调用GetPostData，得到交易字符串，回传给联网的钱包，并发送该内容给irishub-server
         console.log(JSON.stringify(stdTx.GetPostData()));
         console.log("======待提交交易======");
+
+        //以下步骤为异常处理：在请求irishub-server超时的时候，服务器可能没有任何返回结果，这笔交易状态为止，所以需要客户端计算出
+        //本次交易的hash，校准该笔交易的状态。调用步骤③结构的Hash，可以得到交易hash以及本次交易内容的base64编码（以后考虑使用该编码内容替换
+        // GetPostData,解耦crypto和irishub交易结构的依赖）
         let result = stdTx.Hash();
         console.log("data:", result.data);
         console.log("hash", result.hash);
