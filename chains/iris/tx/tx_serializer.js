@@ -1,14 +1,6 @@
 const root = require('./tx');
 const amino = require('../amino');
 
-
-//先注册需要Amino编码的先关信息(编码前缀,信息实体类型)
-amino.RegisterConcrete(root.irisnet.tx.MsgDelegate,"cosmos-sdk/MsgDelegate");
-amino.RegisterConcrete(root.irisnet.tx.MsgSend,"cosmos-sdk/Send");
-amino.RegisterConcrete(root.irisnet.tx.MsgBeginRedelegate,"cosmos-sdk/BeginRedelegate");
-amino.RegisterConcrete(root.irisnet.tx.MsgBeginUnbonding,"cosmos-sdk/BeginUnbonding");
-amino.RegisterConcrete(root.irisnet.tx.StdTx,"auth/StdTx");
-
 /**
  *
  *  用于编码/解码 cosmos-sdk识别的StdTx交易模型
@@ -85,8 +77,6 @@ class TxSerializer {
 
         let uvarintBuf = Buffer.from(EncodeUvarint(buf.length));
         let bz = Buffer.concat([uvarintBuf, buf]);
-
-        console.log(JSON.stringify(bz));
 
         const crypto = require('crypto');
         const hash = crypto.createHash('sha256');
