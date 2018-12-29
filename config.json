@@ -34,6 +34,10 @@
         "prefix": "auth/StdTx"
       }
     },
+    "mode":{
+      "try": "try",
+      "normal": "normal"
+    },
     "bech32": {
       "accAddr": "faa",
       "valAddr": "fva",

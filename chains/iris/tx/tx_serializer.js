@@ -1,5 +1,6 @@
 const root = require('./tx');
 const amino = require('../amino');
+const config = require('../../../config');
 
 /**
  *
@@ -50,7 +51,7 @@ class TxSerializer {
         let txMsgBuf = StdTx.encode(tx).finish();
 
         //stdTx amion编码前缀[auth/StdTx]
-        let txPreBuf = Buffer.from(amino.GetRegisterInfo("auth/StdTx").prefix);
+        let txPreBuf = Buffer.from(amino.GetRegisterInfo(config.iris.tx.stdTx.prefix).prefix);
         let msgPreBuf = Buffer.from(info.prefix);
 
         let buf = Buffer.alloc(txPreBuf.length + msgPreBuf.length + txMsgBuf.length, 0);
