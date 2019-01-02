@@ -4,7 +4,7 @@ let conf = require("./conf")
 class TxType {}
 TxType.TRANSFER                     = "transfer";
 TxType.DELEGATE                     = "delegate";
-TxType.BEGINUNBOND                  = "beginUnbond";
+TxType.BEGINUNBONDING                  = "beginUnbonding";
 TxType.BEGINREdELEGATE              = "beginRedelegate";
 
 class IrisNetConfig{}

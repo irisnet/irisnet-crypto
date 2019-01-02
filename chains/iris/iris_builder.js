@@ -29,7 +29,7 @@ class IrisBuilder extends Builder {
                 msg = Stake.GreateMsgDelegate(req);
                 break;
             }
-            case Constants.TxType.BEGINUNBOND: {
+            case Constants.TxType.BEGINUNBONDING: {
                 msg = Stake.CreateMsgBeginUnbonding(req);
                 break;
             }
