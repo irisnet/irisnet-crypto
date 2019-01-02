@@ -88,6 +88,9 @@ class IrisBuilder extends Builder {
 function CreateSignMsg(properties){
     let prop = JSON.parse(properties);
     let msg = prop.msgs[0];
+    if (!Utils.isEmpty(msg.value)){
+        msg = msg.value
+    }
     if(!Utils.isEmpty(msg.inputs)) {
         msg = Bank.Create(msg)
     }else if(!Utils.isEmpty(msg.delegation)){
