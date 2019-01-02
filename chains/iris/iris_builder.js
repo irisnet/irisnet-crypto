@@ -7,6 +7,7 @@ const Distribution = require('./distribution');
 const IrisKeypair = require('./iris_keypair');
 const Codec = require("../../util/codec");
 const Config = require('../../config');
+const Utils = require("../../util/utils");
 
 class IrisBuilder extends Builder {
 
@@ -54,7 +55,7 @@ class IrisBuilder extends Builder {
             }
         }
         let stdFee = Bank.NewStdFee(req.fees, req.gas);
-        let signMsg = Bank.NewStdSignMsg(req.chain_id, req.account_number, req.sequence, stdFee, msg, req.memo,req.type);
+        let signMsg = Bank.NewStdSignMsg(req.chain_id, req.account_number, req.sequence, stdFee, msg, req.memo, req.type);
         signMsg.ValidateBasic();
         return signMsg
     }
@@ -80,13 +81,20 @@ class IrisBuilder extends Builder {
      *
      * 根据请求内容构造交易并对交易进行签名
      *
-     * @param tx {blockChainThriftModel.Tx} 请求内容
+     * @param tx  请求内容
      * @param privateKey 发送方账户私钥
      * @returns {StdTx}  交易
      */
     buildAndSignTx(tx, privateKey) {
         let signMsg = this.buildTx(tx);
-        let signbyte = IrisKeypair.sign(privateKey, signMsg.GetSignBytes());
+        let mode = tx.mode ? tx.mode : Config.iris.mode.normal;
+        let signbyte;
+        if (mode === Config.iris.mode.normal) {
+            if (Utils.isEmpty(privateKey)) {
+                throw new Error("privateKey is  empty");
+            }
+            signbyte = IrisKeypair.sign(privateKey, signMsg.GetSignBytes());
+        }
         let keypair = IrisKeypair.import(privateKey);
         let signs = [Bank.NewStdSignature(Codec.Hex.hexToBytes(keypair.publicKey), signbyte, signMsg.account_number, signMsg.sequence)];
         let stdTx = Bank.NewStdTx(signMsg.msgs, signMsg.fee, signs, signMsg.memo);

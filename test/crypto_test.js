@@ -54,7 +54,7 @@ describe('CryPto test', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence:720 ,
+                sequence:27 ,
                 fees: fees,
                 gas: gas,
                 memo: memo,
@@ -78,13 +78,13 @@ describe('CryPto test', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence:721 ,
+                sequence:19 ,
                 fees: fees,
                 gas: gas,
                 memo: memo,
                 type: config.iris.tx.delegate.type,
                 msg: {
-                    validator_addr: "fva16h3uazd2wknrae7ql0dqpjw69s5kp44slme6hr",
+                    validator_addr: "fva1kca5vw7r2k72d5zy0demszmrhdz4dp8t4uat0c",
                     delegation: {
                         denom: "iris-atto",
                         amount:10000000000000000000
@@ -100,13 +100,13 @@ describe('CryPto test', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence:723 ,
+                sequence:23 ,
                 fees: fees,
                 gas: gas,
                 memo: memo,
                 type: config.iris.tx.unbond.type,
                 msg: {
-                    validator_addr: "fva16h3uazd2wknrae7ql0dqpjw69s5kp44slme6hr",
+                    validator_addr: "fva1rz7jxmgsgyjwa6erusxlzrmg2aw3cvyf3c3x6v",
                     shares_amount:"10000000000000000000"
                 }
             };
@@ -119,14 +119,14 @@ describe('CryPto test', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence:722 ,
+                sequence:22 ,
                 fees: fees,
                 gas: gas,
                 memo: memo,
                 type: config.iris.tx.redelegate.type,
                 msg: {
-                    validator_src_addr: "fva1cr6xfpp078nm7yfsh36850ftu20fl3c9duchrk",
-                    validator_dst_addr: "fva1xde0yh9vmc8mnkdvdr5krllfe3gslw9d4qp2wd",
+                    validator_src_addr: "fva1kca5vw7r2k72d5zy0demszmrhdz4dp8t4uat0c",
+                    validator_dst_addr: "fva1rz7jxmgsgyjwa6erusxlzrmg2aw3cvyf3c3x6v",
                     shares_amount:10000000000000000000
                 }
             };
@@ -140,7 +140,7 @@ describe('CryPto test', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence:710 ,
+                sequence:24 ,
                 fees: fees,
                 gas: gas,
                 memo: memo,
@@ -158,11 +158,12 @@ describe('CryPto test', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence:724 ,
+                sequence:28 ,
                 fees: fees,
                 gas: gas,
                 memo: memo,
                 type: config.iris.tx.withdrawDelegationRewardsAll.type,
+                //mode: config.iris.mode.try
             };
 
             execute(tx);
@@ -173,13 +174,13 @@ describe('CryPto test', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence:725 ,
+                sequence:14 ,
                 fees: fees,
                 gas: gas,
                 memo: memo,
                 type: config.iris.tx.withdrawDelegationReward.type,
                 msg: {
-                    validator_addr: "fva1xde0yh9vmc8mnkdvdr5krllfe3gslw9d4qp2wd",
+                    validator_addr: "fva1kca5vw7r2k72d5zy0demszmrhdz4dp8t4uat0c",
                 }
             };
 
@@ -194,7 +195,7 @@ describe('CryPto test', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence:731 ,
+                sequence:20 ,
                 fees: fees,
                 gas: gas,
                 memo: memo,
@@ -225,7 +226,7 @@ describe('CryPto test', function () {
                 memo: memo,
                 type: config.iris.tx.delegate.type,
                 msg: {
-                    validator_addr: "fva16h3uazd2wknrae7ql0dqpjw69s5kp44slme6hr",
+                    validator_addr: "fva1kca5vw7r2k72d5zy0demszmrhdz4dp8t4uat0c",
                     delegation: {
                         denom: "iris-atto",
                         amount:10000000000000000000
@@ -313,7 +314,7 @@ describe('CryPto test', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence:730 ,
+                sequence:26 ,
                 fees: fees,
                 gas: gas,
                 memo: memo,
@@ -342,7 +343,7 @@ describe('CryPto test', function () {
         let stdTx = builder.signTx(signStr, privateKey);
         console.log("======待提交交易======");
         //④步骤③的结果调用GetPostData，得到交易字符串，回传给联网的钱包，并发送该内容给irishub-server
-        console.log(JSON.stringify(stdTx.GetPostData()));
+        console.log(JSON.stringify(stdTx.GetData()));
         console.log("======待提交交易======");
 
         //以下步骤为异常处理：在请求irishub-server超时的时候，服务器可能没有任何返回结果，这笔交易状态为止，所以需要客户端计算出
@@ -357,9 +358,11 @@ describe('CryPto test', function () {
     function execute(tx) {
         let builder = Irisnet.getBuilder(chain);
         let stdTx = builder.buildAndSignTx(tx,privateKey);
-        console.log("======待提交交易======");
-        console.log(JSON.stringify(stdTx.GetPostData()));
-        console.log("======待提交交易======");
+        console.log("======stdTx======");
+        console.log(JSON.stringify(stdTx.GetData()));
+        // console.log("======待提交交易======");
+        // console.log(JSON.stringify(stdTx.GetPostData()));
+        // console.log("======待提交交易======");
         let result = stdTx.Hash();
         console.log("data:",result.data);
         console.log("hash",result.hash);
