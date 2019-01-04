@@ -7,7 +7,7 @@ const Bip39 = require('bip39');
 const Random = require('randombytes');
 const Secp256k1 = require('secp256k1');
 const BN = require("bn");
-const Constants = require('./constants');
+const Config = require('../../config');
 const Amino = require('./amino');
 
 class CosmosKeypair {
@@ -15,7 +15,7 @@ class CosmosKeypair {
     static getPrivateKeyFromSecret(mnemonicS) {
         let seed = Bip39.mnemonicToSeed(mnemonicS);
         let master = Hd.ComputeMastersFromSeed(seed);
-        let derivedPriv = Hd.DerivePrivateKeyForPath(master.secret,master.chainCode,Constants.AminoKey.FullFundraiserPath);
+        let derivedPriv = Hd.DerivePrivateKeyForPath(master.secret,master.chainCode,Config.iris.bip39Path);
         return derivedPriv;
     }
 
@@ -30,7 +30,7 @@ class CosmosKeypair {
         let sig = Secp256k1.sign(sig32,prikeyArr);
         //let signature = Buffer.from(Hd.Serialize(sig.signature));
         //将签名结果加上amino编码前缀(irishub反序列化需要) (cosmos-sdk v0.24.0去掉了前缀)
-        //signature = Amino.MarshalBinary(Constants.AminoKey.SignatureSecp256k1_prefix,signature);
+        //signature = Amino.MarshalBinary(Config.iris.amino.signature,signature);
         return Array.from(sig.signature)
     }
 
@@ -57,7 +57,7 @@ class CosmosKeypair {
         //构造公钥
         let pubKey = Secp256k1.publicKeyCreate(secretKey);
         //将公钥加上amino编码前缀(irishub反序列化需要)
-        pubKey = Amino.MarshalBinary(Constants.AminoKey.PubKeySecp256k1_prefix,pubKey);
+        pubKey = Amino.MarshalBinary(Config.iris.amino.pubKey,pubKey);
 
         return {
             "secret": mnemonicS,
@@ -74,7 +74,7 @@ class CosmosKeypair {
         //构造公钥
         let pubKey = Secp256k1.publicKeyCreate(secretKey);
         //将公钥加上amino编码前缀(irishub反序列化需要)
-        pubKey = Amino.MarshalBinary(Constants.AminoKey.PubKeySecp256k1_prefix,pubKey);
+        pubKey = Amino.MarshalBinary(Config.iris.amino.pubKey,pubKey);
 
         return {
             "secret": mnemonic,
@@ -99,7 +99,7 @@ class CosmosKeypair {
         //构造公钥
         let pubKey = Secp256k1.publicKeyCreate(secretBytes);
         //将公钥加上amino编码前缀(irishub反序列化需要)
-        pubKey = Amino.MarshalBinary(Constants.AminoKey.PubKeySecp256k1_prefix,pubKey);
+        pubKey = Amino.MarshalBinary(Config.iris.amino.pubKey,pubKey);
         return {
             "address": this.getAddress(pubKey),
             "privateKey": secretKey,
@@ -108,7 +108,7 @@ class CosmosKeypair {
     }
 
     static isValidAddress(address) {
-        let prefix = Constants.IrisNetConfig.PREFIX_BECH32_ACCADDR;
+        let prefix = Config.iris.bech32.accAddr;
 		return Codec.Bech32.isBech32(prefix,address);
     }
 

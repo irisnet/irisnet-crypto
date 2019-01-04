@@ -1,91 +1,64 @@
 const Irisnet = require('../index');
 const chai = require('chai');
 const assert = chai.assert;
+const config = require('../config');
+
+
 
 describe('CryPto test', function () {
-    describe('irisnet-crypto', function () {
+
+    //测试账户相关信息
+    describe('test account', function () {
         it('test create and recover', function () {
-            let crypto = Irisnet.getCrypto(Irisnet.Constants.COMM.Chains.IRIS);
-            let keyPair = crypto.create(Irisnet.Constants.COMM.Language.EN);
+            let crypto = Irisnet.getCrypto(config.chain.iris);
+            let keyPair = crypto.create(config.language.en);
             console.log(JSON.stringify(keyPair));
-            let keyPair2 = crypto.recover(keyPair.phrase,Irisnet.Constants.COMM.Language.EN);
+            let keyPair2 = crypto.recover(keyPair.phrase,config.language.en);
             assert.deepEqual(keyPair, keyPair2);
         });
 
         it('test import', function () {
-            let crypto = Irisnet.getCrypto(Irisnet.Constants.COMM.Chains.IRIS);
-            let account = crypto.import("B96DBE9629CF64AEE0F568B7875E35121016E2BBDCF07CF51768880E00549B87")
+            let crypto = Irisnet.getCrypto(config.chain.iris);
+            let account = crypto.import("55A3160577979EC014A2CE85C430E1FF0FF06EFD230B7CE41AEAE2EF00EDF175")
             assert.deepEqual(account, {
-                    address: 'faa1a89us8tvt3d9qpq7j6p06dc3z88n576shj8k2h',
+                    address: 'faa1ljemm0yznz58qxxs8xyak7fashcfxf5lssn6jm',
                     phrase: null,
-                    privateKey: '8789EB2C2510D8D236EB85DAEFE4E1A4EA7D8E6929E0A1400FCF2848CF7F2DA4',
-                    publicKey: 'fap1addwnpepqd7def2xt3vtwu8fparpdc8nkduqpfl9nth7re0f3ls73x6nnes6saayamy'
+                    privateKey: '55A3160577979EC014A2CE85C430E1FF0FF06EFD230B7CE41AEAE2EF00EDF175',
+                    publicKey: 'fap1addwnpepqtdme789cpm8zww058ndlhzpwst3s0mxnhdhu5uyps0wjucaufha6v3ce99'
                 }
             );
         });
 
         it('test recover', function () {
-            let crypto = Irisnet.getCrypto(Irisnet.Constants.COMM.Chains.IRIS);
+            let crypto = Irisnet.getCrypto(config.chain.iris);
             let account = crypto.recover("tube lonely pause spring gym veteran know want grid tired taxi such same mesh charge orient bracket ozone concert once good quick dry boss");
             console.log(account)
-            // assert.deepEqual(account, {
-            //         address: 'faa1cmjnj9zw0m4aau95dsmzj7zgaqagptzywu3v8r',
-            //         phrase: 'beach paddle tray erupt soup powder fortune essence suit quality autumn cotton bubble direct cash route blast cabin wool ranch boring depart lemon hat',
-            //         privateKey: '60F95C4585E42E41EE50F2C6CCAA1BBD6A9254602C4F5C934DCB5AAA28DD2FE0',
-            //         publicKey: 'fap1addwnpepqd3kns6jqsanqjprvxnsj3rhmxfr9607mmy49ypg24p22f57pp446n0sz6v'
-            //     }
-            // );
         });
+    });
 
-        it('test buildTx and signTx', function () {
-            let tx = {
-                chain_id: "rainbow-dev",
-                from: "faa1ljemm0yznz58qxxs8xyak7fashcfxf5lssn6jm",
-                account_number: 4,
-                sequence:14 ,
-                fees: {
-                    denom: "iris-atto",
-                    amount:400000000000000000
-                },
-                gas: 200000,
-                memo: "",
-                type: Irisnet.Constants.IRIS.TxType.TRANSFER,
-                msg: {
-                    to: "faa1s6v9qgu8ye7d884s8kpye64x66znndg8t6eztj",
-                    coins: [
-                        {
-                            denom: "iris-atto",
-                            amount:10000000000000000000
-                        }
-                    ]
-                }
-            };
 
-            let builder = Irisnet.getBuilder(Irisnet.Constants.COMM.Chains.IRIS);
-            let signMsg = builder.buildTx(tx,"55A3160577979EC014A2CE85C430E1FF0FF06EFD230B7CE41AEAE2EF00EDF175");
-            let signStr = JSON.stringify(signMsg.GetSignBytes());
-            console.log(signStr);
+    let chain_id = "rainbow-dev";
+    let from = "faa1ljemm0yznz58qxxs8xyak7fashcfxf5lssn6jm";
+    let gas = 200000;
+    let account_number = 4;
+    let fees = {denom: "iris-atto",amount:400000000000000000};
+    let memo = "1";
+    let privateKey = "55A3160577979EC014A2CE85C430E1FF0FF06EFD230B7CE41AEAE2EF00EDF175";
+    let chain = config.chain.iris;
 
-            let stdTx = builder.signTx(signStr,"55A3160577979EC014A2CE85C430E1FF0FF06EFD230B7CE41AEAE2EF00EDF175")
-            console.log(JSON.stringify(stdTx.GetPostData()));
-            let result = stdTx.Hash();
-            console.log("data:",result.data);
-            console.log("hash",result.hash);
-        });
 
+    //测试热钱包相关交易
+    describe('test wallet tx', function () {
         it('test transfer', function () {
             let tx = {
-                chain_id: "rainbow-dev",
-                from: "faa1ljemm0yznz58qxxs8xyak7fashcfxf5lssn6jm",
-                account_number: 4,
-                sequence:16 ,
-                fees: {
-                    denom: "iris-atto",
-                    amount:400000000000000000
-                },
-                gas: 200000,
-                memo: "",
-                type: Irisnet.Constants.IRIS.TxType.TRANSFER,
+                chain_id: chain_id,
+                from: from,
+                account_number: account_number,
+                sequence:27 ,
+                fees: fees,
+                gas: gas,
+                memo: memo,
+                type: config.iris.tx.transfer.type,
                 msg: {
                     to: "faa1s6v9qgu8ye7d884s8kpye64x66znndg8t6eztj",
                     coins: [
@@ -97,30 +70,21 @@ describe('CryPto test', function () {
                 }
             };
 
-            let builder = Irisnet.getBuilder(Irisnet.Constants.COMM.Chains.IRIS);
-            let stdTx = builder.buildAndSignTx(tx,"55A3160577979EC014A2CE85C430E1FF0FF06EFD230B7CE41AEAE2EF00EDF175");
-            console.log(JSON.stringify(stdTx.GetPostData()))
-
-            let result = stdTx.Hash();
-            console.log("data:",result.data);
-            console.log("hash",result.hash);
+            execute(tx);
         });
 
         it('test delegate', function () {
             let tx = {
-                chain_id: "rainbow-dev",
-                from: "faa1ljemm0yznz58qxxs8xyak7fashcfxf5lssn6jm",
-                account_number: 4,
-                sequence:17 ,
-                fees: {
-                    denom: "iris-atto",
-                    amount:400000000000000000
-                },
-                gas: 200000,
-                memo: "",
-                type: Irisnet.Constants.IRIS.TxType.DELEGATE,
+                chain_id: chain_id,
+                from: from,
+                account_number: account_number,
+                sequence:19 ,
+                fees: fees,
+                gas: gas,
+                memo: memo,
+                type: config.iris.tx.delegate.type,
                 msg: {
-                    validator_addr: "fva16h3uazd2wknrae7ql0dqpjw69s5kp44slme6hr",
+                    validator_addr: "fva1kca5vw7r2k72d5zy0demszmrhdz4dp8t4uat0c",
                     delegation: {
                         denom: "iris-atto",
                         amount:10000000000000000000
@@ -128,56 +92,180 @@ describe('CryPto test', function () {
                 }
             };
 
-            let builder = Irisnet.getBuilder(Irisnet.Constants.COMM.Chains.IRIS);
-            let stdTx = builder.buildAndSignTx(tx,"55A3160577979EC014A2CE85C430E1FF0FF06EFD230B7CE41AEAE2EF00EDF175");
-            console.log(JSON.stringify(stdTx.GetPostData()));
-
-            let result = stdTx.Hash();
-            console.log("data:",result.data);
-            console.log("hash",result.hash);
+            execute(tx);
         });
 
         it('test BeginUnbonding', function () {
             let tx = {
-                chain_id: "rainbow-dev",
-                from: "faa1ljemm0yznz58qxxs8xyak7fashcfxf5lssn6jm",
-                account_number: 4,
-                sequence:18 ,
-                fees: {
-                    denom: "iris-atto",
-                    amount:400000000000000000
-                },
-                gas: 200000,
-                memo: "",
-                type: Irisnet.Constants.IRIS.TxType.BEGINUNBOND,
+                chain_id: chain_id,
+                from: from,
+                account_number: account_number,
+                sequence:23 ,
+                fees: fees,
+                gas: gas,
+                memo: memo,
+                type: config.iris.tx.unbond.type,
+                msg: {
+                    validator_addr: "fva1rz7jxmgsgyjwa6erusxlzrmg2aw3cvyf3c3x6v",
+                    shares_amount:"10000000000000000000"
+                }
+            };
+
+            execute(tx);
+        });
+
+        it('test BeginRedelegate', function () {
+            let tx = {
+                chain_id: chain_id,
+                from: from,
+                account_number: account_number,
+                sequence:22 ,
+                fees: fees,
+                gas: gas,
+                memo: memo,
+                type: config.iris.tx.redelegate.type,
+                msg: {
+                    validator_src_addr: "fva1kca5vw7r2k72d5zy0demszmrhdz4dp8t4uat0c",
+                    validator_dst_addr: "fva1rz7jxmgsgyjwa6erusxlzrmg2aw3cvyf3c3x6v",
+                    shares_amount:10000000000000000000
+                }
+            };
+
+            execute(tx);
+        });
+
+        //TODO
+        it('test MsgSetWithdrawAddress', function () {
+            let tx = {
+                chain_id: chain_id,
+                from: from,
+                account_number: account_number,
+                sequence:24 ,
+                fees: fees,
+                gas: gas,
+                memo: memo,
+                type: config.iris.tx.setWithdrawAddress.type,
+                msg: {
+                    withdraw_addr: "faa1cr6xfpp078nm7yfsh36850ftu20fl3c9cdjc73",
+                }
+            };
+
+            execute(tx);
+        });
+
+        it('test MsgWithdrawDelegatorRewardsAll', function () {
+            let tx = {
+                chain_id: chain_id,
+                from: from,
+                account_number: account_number,
+                sequence:28 ,
+                fees: fees,
+                gas: gas,
+                memo: memo,
+                type: config.iris.tx.withdrawDelegationRewardsAll.type,
+                //mode: config.iris.mode.try
+            };
+
+            execute(tx);
+        });
+
+        it('test MsgWithdrawDelegatorReward', function () {
+            let tx = {
+                chain_id: chain_id,
+                from: from,
+                account_number: account_number,
+                sequence:14 ,
+                fees: fees,
+                gas: gas,
+                memo: memo,
+                type: config.iris.tx.withdrawDelegationReward.type,
+                msg: {
+                    validator_addr: "fva1kca5vw7r2k72d5zy0demszmrhdz4dp8t4uat0c",
+                }
+            };
+
+            execute(tx);
+        });
+    });
+
+    //测试冷钱包相关交易
+    describe('test ledger wallet tx ', function () {
+        it('test transfer', function () {
+            let tx = {
+                chain_id: chain_id,
+                from: from,
+                account_number: account_number,
+                sequence:20 ,
+                fees: fees,
+                gas: gas,
+                memo: memo,
+                type: config.iris.tx.transfer.type,
+                msg: {
+                    to: "faa1s6v9qgu8ye7d884s8kpye64x66znndg8t6eztj",
+                    coins: [
+                        {
+                            denom: "iris-atto",
+                            amount:10000000000000000000
+                        }
+                    ]
+                }
+            };
+
+            extracted(tx);
+        });
+
+
+        it('test delegate', function () {
+            let tx = {
+                chain_id: chain_id,
+                from: from,
+                account_number: account_number,
+                sequence:727 ,
+                fees: fees,
+                gas: gas,
+                memo: memo,
+                type: config.iris.tx.delegate.type,
+                msg: {
+                    validator_addr: "fva1kca5vw7r2k72d5zy0demszmrhdz4dp8t4uat0c",
+                    delegation: {
+                        denom: "iris-atto",
+                        amount:10000000000000000000
+                    }
+                }
+            };
+
+            extracted(tx);
+        });
+
+        it('test BeginUnbonding', function () {
+            let tx = {
+                chain_id: chain_id,
+                from: from,
+                account_number: account_number,
+                sequence:728 ,
+                fees: fees,
+                gas: gas,
+                memo: memo,
+                type: config.iris.tx.unbond.type,
                 msg: {
                     validator_addr: "fva16h3uazd2wknrae7ql0dqpjw69s5kp44slme6hr",
                     shares_amount:"10000000000000000000"
                 }
             };
 
-            let builder = Irisnet.getBuilder(Irisnet.Constants.COMM.Chains.IRIS);
-            let stdTx = builder.buildAndSignTx(tx,"55A3160577979EC014A2CE85C430E1FF0FF06EFD230B7CE41AEAE2EF00EDF175");
-            console.log(JSON.stringify(stdTx.GetPostData()))
-
-            let result = stdTx.Hash();
-            console.log("data:",result.data);
-            console.log("hash",result.hash);
+            extracted(tx);
         });
 
         it('test BeginRedelegate', function () {
             let tx = {
-                chain_id: "rainbow-dev",
-                from: "faa1ljemm0yznz58qxxs8xyak7fashcfxf5lssn6jm",
-                account_number: 4,
+                chain_id: chain_id,
+                from: from,
+                account_number: account_number,
                 sequence:20 ,
-                fees: {
-                    denom: "iris-atto",
-                    amount:400000000000000000
-                },
-                gas: 200000,
-                memo: "",
-                type: Irisnet.Constants.IRIS.TxType.BEGINREdELEGATE,
+                fees: fees,
+                gas: gas,
+                memo: memo,
+                type: config.iris.tx.redelegate.type,
                 msg: {
                     validator_src_addr: "fva1cr6xfpp078nm7yfsh36850ftu20fl3c9duchrk",
                     validator_dst_addr: "fva1xde0yh9vmc8mnkdvdr5krllfe3gslw9d4qp2wd",
@@ -185,13 +273,98 @@ describe('CryPto test', function () {
                 }
             };
 
-            let builder = Irisnet.getBuilder(Irisnet.Constants.COMM.Chains.IRIS);
-            let stdTx = builder.buildAndSignTx(tx,"55A3160577979EC014A2CE85C430E1FF0FF06EFD230B7CE41AEAE2EF00EDF175");
-            console.log(JSON.stringify(stdTx.GetPostData()))
+            extracted(tx);
+        });
 
-            let result = stdTx.Hash();
-            console.log("data:",result.data);
-            console.log("hash",result.hash);
+        it('test MsgSetWithdrawAddress', function () {
+            let tx = {
+                chain_id: chain_id,
+                from: from,
+                account_number: account_number,
+                sequence:696 ,
+                fees: fees,
+                gas: gas,
+                memo: memo,
+                type: config.iris.tx.setWithdrawAddress.type,
+                msg: {
+                    withdraw_addr: "faa1cr6xfpp078nm7yfsh36850ftu20fl3c9cdjc73",
+                }
+            };
+
+            extracted(tx);
+        });
+
+        it('test MsgWithdrawDelegatorRewardsAll', function () {
+            let tx = {
+                chain_id: chain_id,
+                from: from,
+                account_number: account_number,
+                sequence:729 ,
+                fees: fees,
+                gas: gas,
+                memo: memo,
+                type: config.iris.tx.withdrawDelegationRewardsAll.type,
+            };
+
+            extracted(tx);
+        });
+
+        it('test MsgWithdrawDelegatorReward', function () {
+            let tx = {
+                chain_id: chain_id,
+                from: from,
+                account_number: account_number,
+                sequence:26 ,
+                fees: fees,
+                gas: gas,
+                memo: memo,
+                type: config.iris.tx.withdrawDelegationReward.type,
+                msg: {
+                    validator_addr: "fva1xde0yh9vmc8mnkdvdr5krllfe3gslw9d4qp2wd",
+                }
+            };
+
+            extracted(tx);
         });
     });
+
+    //冷钱包调用
+    function extracted(tx) {
+        let builder = Irisnet.getBuilder(chain);
+        //①先用联网的钱包构造一笔交易
+        let signMsg = builder.buildTx(tx);
+        //②把步骤①的结构序列化为字符串，装入二维码
+        let signStr = JSON.stringify(signMsg);
+        console.log("======热钱包传递给冷钱包签名的字符串======");
+        console.log(signStr);
+        console.log("======热钱包传递给冷钱包签名的字符串======");
+
+        //③用未联网的钱包(存有账户秘钥)扫描步骤②的二维码，拿到待签名的字符串，调用signTx签名
+        let stdTx = builder.signTx(signStr, privateKey);
+        console.log("======待提交交易======");
+        //④步骤③的结果调用GetPostData，得到交易字符串，回传给联网的钱包，并发送该内容给irishub-server
+        console.log(JSON.stringify(stdTx.GetData()));
+        console.log("======待提交交易======");
+
+        //以下步骤为异常处理：在请求irishub-server超时的时候，服务器可能没有任何返回结果，这笔交易状态为止，所以需要客户端计算出
+        //本次交易的hash，校准该笔交易的状态。调用步骤③结构的Hash，可以得到交易hash以及本次交易内容的base64编码（以后考虑使用该编码内容替换
+        // GetPostData,解耦crypto和irishub交易结构的依赖）
+        let result = stdTx.Hash();
+        console.log("data:", result.data);
+        console.log("hash", result.hash);
+    }
+
+    //热钱包调用
+    function execute(tx) {
+        let builder = Irisnet.getBuilder(chain);
+        let stdTx = builder.buildAndSignTx(tx,privateKey);
+        console.log("======stdTx======");
+        console.log(JSON.stringify(stdTx.GetData()));
+        // console.log("======待提交交易======");
+        // console.log(JSON.stringify(stdTx.GetPostData()));
+        // console.log("======待提交交易======");
+        let result = stdTx.Hash();
+        console.log("data:",result.data);
+        console.log("hash",result.hash);
+    }
 });

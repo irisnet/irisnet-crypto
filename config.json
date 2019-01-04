@@ -1,0 +1,68 @@
+{
+  "iris": {
+    "tx": {
+      "transfer": {
+        "type": "transfer",
+        "prefix": "cosmos-sdk/Send"
+      },
+      "delegate": {
+        "type": "delegate",
+        "prefix": "cosmos-sdk/MsgDelegate"
+      },
+      "unbond": {
+        "type": "unbond",
+        "prefix": "cosmos-sdk/BeginUnbonding"
+      },
+      "redelegate": {
+        "type": "redelegate",
+        "prefix": "cosmos-sdk/BeginRedelegate"
+      },
+      "setWithdrawAddress": {
+        "type": "set_withdraw_address",
+        "prefix": "cosmos-sdk/MsgModifyWithdrawAddress"
+      },
+      "withdrawDelegationRewardsAll": {
+        "type": "withdraw_delegation_rewards_all",
+        "prefix": "cosmos-sdk/MsgWithdrawDelegationRewardsAll"
+      },
+      "withdrawDelegationReward": {
+        "type": "withdraw_delegation_reward",
+        "prefix": "cosmos-sdk/MsgWithdrawDelegationReward"
+      },
+      "stdTx": {
+        "type": "",
+        "prefix": "auth/StdTx"
+      }
+    },
+    "mode":{
+      "try": "try",
+      "normal": "normal"
+    },
+    "bech32": {
+      "accAddr": "faa",
+      "valAddr": "fva",
+      "accPub": "fap"
+    },
+    "defaultCoding": "bech32",
+    "coding": {
+      "bech32": "bech32",
+      "hex": "hex"
+    },
+    "maxGas": 20000000,
+    "amino": {
+      "signature": "tendermint/SignatureSecp256k1",
+      "pubKey": "tendermint/PubKeySecp256k1"
+    },
+    "bip39Path": "44'/118'/0'/0/0"
+  },
+  "language": {
+    "cn": "chinese_simplified",
+    "jp": "japanese",
+    "sp": "spanish",
+    "en": "english"
+  },
+  "chain": {
+    "iris": "iris",
+    "ethermint": "ethermint"
+  }
+}

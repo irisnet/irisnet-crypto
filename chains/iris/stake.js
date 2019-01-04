@@ -3,11 +3,12 @@
 const Builder = require("../../builder");
 const Utils = require('../../util/utils');
 const Amino = require('./amino');
+const Config = require('../../config');
 
-class DelegateMsg extends Builder.Msg {
+class MsgDelegate extends Builder.Msg {
 
     constructor(delegator_addr, validator_addr, delegation) {
-        super("cosmos-sdk/MsgDelegate");
+        super(Config.iris.tx.delegate.prefix);
         this.delegator_addr = delegator_addr;
         this.validator_addr = validator_addr;
         this.delegation = delegation;
@@ -40,7 +41,7 @@ class DelegateMsg extends Builder.Msg {
     }
 
     Type() {
-        return "cosmos-sdk/MsgDelegate";
+        return Config.iris.tx.delegate.prefix;
     }
 
     GetMsg() {
@@ -59,14 +60,14 @@ class DelegateMsg extends Builder.Msg {
     }
 
     static Create(properties){
-        return new DelegateMsg(properties.delegator_addr,properties.validator_addr,properties.delegation)
+        return new MsgDelegate(properties.delegator_addr,properties.validator_addr,properties.delegation)
     }
 
 }
 
-class BeginUnbondingMsg extends Builder.Msg {
+class MsgBeginUnbonding extends Builder.Msg {
     constructor(delegator_addr, validator_addr, shares_amount) {
-        super("cosmos-sdk/BeginUnbonding");
+        super(Config.iris.tx.unbond.prefix);
         this.delegator_addr = delegator_addr;
         this.validator_addr = validator_addr;
         this.shares_amount = shares_amount;
@@ -96,7 +97,7 @@ class BeginUnbondingMsg extends Builder.Msg {
     }
 
     Type() {
-        return "cosmos-sdk/BeginUnbonding";
+        return Config.iris.tx.unbond.prefix;
     }
 
     GetMsg() {
@@ -115,15 +116,15 @@ class BeginUnbondingMsg extends Builder.Msg {
     }
 
     static Create(properties){
-        return new BeginUnbondingMsg(properties.delegator_addr,properties.validator_addr,properties.shares_amount)
+        return new MsgBeginUnbonding(properties.delegator_addr,properties.validator_addr,properties.shares_amount)
     }
 
 }
 
-class BeginRedelegateMsg extends Builder.Msg {
+class MsgBeginRedelegate extends Builder.Msg {
 
     constructor(delegator_addr, validator_src_addr, validator_dst_addr, shares_amount) {
-        super("cosmos-sdk/BeginRedelegate");
+        super(Config.iris.tx.redelegate.prefix);
         this.delegator_addr = delegator_addr;
         this.validator_src_addr = validator_src_addr;
         this.validator_dst_addr = validator_dst_addr;
@@ -160,7 +161,7 @@ class BeginRedelegateMsg extends Builder.Msg {
     }
 
     Type() {
-        return "cosmos-sdk/BeginRedelegate";
+        return Config.iris.tx.redelegate.prefix;
     }
 
     GetMsg() {
@@ -183,42 +184,42 @@ class BeginRedelegateMsg extends Builder.Msg {
     }
 
     static Create(properties){
-        return new BeginUnbondingMsg(properties.delegator_addr,properties.validator_src_addr,properties.validator_dst_addr,properties.shares)
+        return new MsgBeginUnbonding(properties.delegator_addr,properties.validator_src_addr,properties.validator_dst_addr,properties.shares)
     }
 }
 
 module.exports = class Stake {
-    static GreateMsgDelegate(req) {
+    static CreateMsgDelegate(req) {
         let delegation = {
             denom: req.msg.delegation.denom,
             amount: Utils.toString(req.msg.delegation.amount),
         };
-        let msg = new DelegateMsg(req.from, req.msg.validator_addr, delegation);
+        let msg = new MsgDelegate(req.from, req.msg.validator_addr, delegation);
         return msg;
     }
 
     static CreateMsgBeginUnbonding(req) {
         let shares = Dec.String(req.msg.shares_amount);
-        let msg = new BeginUnbondingMsg(req.from, req.msg.validator_addr, shares);
+        let msg = new MsgBeginUnbonding(req.from, req.msg.validator_addr, shares);
         return msg;
     }
 
     static CreateMsgBeginRedelegate(req) {
         let shares = Dec.String(req.msg.shares_amount);
-        let msg = new BeginRedelegateMsg(req.from, req.msg.validator_src_addr, req.msg.validator_dst_addr, shares);
+        let msg = new MsgBeginRedelegate(req.from, req.msg.validator_src_addr, req.msg.validator_dst_addr, shares);
         return msg;
     };
 
     static MsgDelegate(){
-        return DelegateMsg
+        return MsgDelegate
     }
 
     static MsgBeginUnbonding(){
-        return BeginUnbondingMsg
+        return MsgBeginUnbonding
     }
 
     static MsgBeginRedelegate(){
-        return BeginRedelegateMsg
+        return MsgBeginRedelegate
     }
 
 };

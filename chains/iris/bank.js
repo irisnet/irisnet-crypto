@@ -1,20 +1,20 @@
 'use strict';
 
 const Utils = require('../../util/utils');
-const Constants = require('./constants');
+const Config = require('../../config');
 const Builder = require("../../builder");
 const Amino = require("./amino");
 const TxSerializer = require("./tx/tx_serializer");
 const Base64 = require('base64-node');
 
-class Coin extends Builder.Creator{
+class Coin extends Builder.Creator {
     constructor(amount, denom) {
         super();
         this.denom = denom;
         this.amount = amount;
     }
-    Create(properties){
-        return new Coin(properties.denom,properties.amount)
+    Create(properties) {
+        return new Coin(properties.denom, properties.amount)
     }
 }
 
@@ -43,8 +43,8 @@ class Input extends Builder.Validator {
         }
     }
 
-    Create(properties){
-        return new Input(properties.address,properties.coins)
+    Create(properties) {
+        return new Input(properties.address, properties.coins)
     }
 }
 
@@ -73,14 +73,14 @@ class Output extends Builder.Validator {
         }
     }
 
-    Create(properties){
-        return new Output(properties.address,properties.coins)
+    Create(properties) {
+        return new Output(properties.address, properties.coins)
     }
 }
 
 class MsgSend extends Builder.Msg {
     constructor(from, to, coins) {
-        super("cosmos-sdk/Send");
+        super(Config.iris.tx.transfer.prefix);
         this.inputs = [new Input(from, coins)];
         this.outputs = [new Output(to, coins)];
     }
@@ -88,10 +88,10 @@ class MsgSend extends Builder.Msg {
     GetSignBytes() {
         let inputs = [];
         let outputs = [];
-        this.inputs.forEach(function (item) {
+        this.inputs.forEach(function(item) {
             inputs.push(item.GetSignBytes())
         });
-        this.outputs.forEach(function (item) {
+        this.outputs.forEach(function(item) {
             outputs.push(item.GetSignBytes())
         });
         let msg = {
@@ -110,41 +110,51 @@ class MsgSend extends Builder.Msg {
             throw new Error("sender is  empty");
         }
 
-        this.inputs.forEach(function (input) {
+        this.inputs.forEach(function(input) {
             input.ValidateBasic();
         });
 
-        this.outputs.forEach(function (output) {
+        this.outputs.forEach(function(output) {
             output.ValidateBasic();
         })
 
     }
 
-    Type(){
-        return "cosmos-sdk/Send";
+    Type() {
+        return Config.iris.tx.transfer.prefix;
     }
 
-    GetMsg(){
+    GetMsg() {
         let inputs = [];
         let outputs = [];
 
-        this.inputs.forEach(function (item) {
+        this.inputs.forEach(function(item) {
             const BECH32 = require('bech32');
             let ownKey = BECH32.decode(item.address);
             let addrHex = BECH32.fromWords(ownKey.words);
-            inputs.push({address:addrHex,coins:item.coins})
+            inputs.push({
+                address: addrHex,
+                coins: item.coins
+            })
         });
 
-        this.outputs.forEach(function (item) {
+        this.outputs.forEach(function(item) {
             const BECH32 = require('bech32');
             let ownKey = BECH32.decode(item.address);
             let addrHex = BECH32.fromWords(ownKey.words);
-            outputs.push({address:addrHex,coins:item.coins})
+            outputs.push({
+                address: addrHex,
+                coins: item.coins
+            })
         });
         return {
-            input : inputs,
-            output : outputs
+            input: inputs,
+            output: outputs
         }
+    }
+
+    static Create(properties) {
+        return new MsgSend(properties.inputs[0].address, properties.outputs[0].address, properties.outputs[0].coins)
     }
 }
 
@@ -152,7 +162,7 @@ class StdFee {
     constructor(amount, gas) {
         this.amount = amount;
         if (!gas) {
-            gas = Constants.IrisNetConfig.MAXGAS;
+            gas = Config.iris.maxGas;
         }
         this.gas = gas;
     }
@@ -162,35 +172,33 @@ class StdFee {
             this.amount = [new Coin("0", "")]
         }
         return {
-            amount:this.amount,
-            gas:this.gas
+            amount: this.amount,
+            gas: this.gas
         }
     }
 }
 
-
 class StdSignMsg extends Builder.Msg {
-    constructor(chainID, accnum, sequence, fee, msg, memo) {
-        super();
-        this.chainID = chainID;
-        this.accnum = accnum;
+    constructor(chainID, accnum, sequence, fee, msg, memo, msgType) {
+        super(msgType);
+        this.chain_id = chainID;
+        this.account_number = accnum;
         this.sequence = sequence;
         this.fee = fee;
         this.msgs = [msg];
         this.memo = memo;
-        //this.signByte = this.GetSignBytes();
     }
 
     GetSignBytes() {
         let msgs = [];
-        this.msgs.forEach(function (msg) {
+        this.msgs.forEach(function(msg) {
             msgs.push(msg.GetSignBytes())
         });
 
         let tx = {
-            "account_number": this.accnum,
-            "chain_id": this.chainID,
-            "fee": this.fee.GetSignBytes(),//TODO
+            "account_number": this.account_number,
+            "chain_id": this.chain_id,
+            "fee": this.fee.GetSignBytes(),
             "memo": this.memo,
             "msgs": msgs,
             "sequence": this.sequence
@@ -199,16 +207,16 @@ class StdSignMsg extends Builder.Msg {
     }
 
     ValidateBasic() {
-        if (Utils.isEmpty(this.chainID)) {
-            throw new Error("chainID is  empty");
+        if (Utils.isEmpty(this.chain_id)) {
+            throw new Error("chain_id is  empty");
         }
-        if (this.accnum < 0) {
-            throw new Error("accountNumber is  empty");
+        if (this.account_number < 0) {
+            throw new Error("account_number is  empty");
         }
         if (this.sequence < 0) {
             throw new Error("sequence is  empty");
         }
-        this.msgs.forEach(function (msg) {
+        this.msgs.forEach(function(msg) {
             msg.ValidateBasic();
         });
     }
@@ -232,24 +240,64 @@ class StdTx {
     }
 
     /**
-     * @Deprecated
+     * @deprecated(replace with Hash())
      *
      * @returns {{msgs: Array, fee: *, signatures: *, memo: *}}
      * @constructor
      */
-    GetPostData(){
-        let fmtMsgs = function (msgs) {
+    GetPostData() {
+        let fmtMsgs = function(msgs) {
             let msgS = [];
-            msgs.forEach(function (msg) {
-                msgS.push(JSON.stringify(Amino.MarshalJSON(msg.type,msg)))
+            msgs.forEach(function(msg) {
+                msgS.push(JSON.stringify(Amino.MarshalJSON(msg.type, msg)))
             });
             return msgS
         };
         return {
-            msgs:fmtMsgs(this.msgs),
-            fee:this.fee,
-            signatures:this.signatures,
-            memo:this.memo,
+            msgs: fmtMsgs(this.msgs),
+            fee: this.fee,
+            signatures: this.signatures,
+            memo: this.memo,
+        }
+    }
+
+    GetData() {
+        let signatures = [];
+        this.signatures.forEach(function(sig) {
+            let publicKey = "";
+            let signature = "";
+            if (sig.pub_key.length > 33) {
+                //去掉amino编码前缀
+                publicKey = sig.pub_key.slice(5, sig.pub_key.length)
+            }
+            publicKey = Base64.encode(publicKey);
+
+            if (!Utils.isEmpty(sig.signature)) {
+                signature = Base64.encode(sig.signature);
+            }
+
+            signatures.push({
+                pub_key: Amino.MarshalJSON(Config.iris.amino.pubKey, publicKey),
+                signature: signature,
+                account_number: Utils.toString(sig.account_number),
+                sequence: Utils.toString(sig.sequence)
+            })
+        });
+        let msgs = [];
+        this.msgs.forEach(function(msg) {
+            msgs.push(Amino.MarshalJSON(msg.type, msg))
+        });
+        let fee = {
+            amount: this.fee.amount,
+            gas: Utils.toString(this.fee.gas)
+        };
+        return {
+            tx: {
+                msg: msgs,
+                fee: fee,
+                signatures: signatures,
+                memo: this.memo
+            }
         }
     }
 
@@ -261,24 +309,24 @@ class StdTx {
      * @returns {{data: *, hash: *}}
      * @constructor
      */
-    Hash(){
+    Hash() {
         let result = TxSerializer.encode(this);
         return {
-            data : Base64.encode(result.data),
-            hash : result.hash
+            data: Base64.encode(result.data),
+            hash: result.hash
         }
     }
 
 }
 
-module.exports = class Bank{
+module.exports = class Bank {
     static CreateMsgSend(req) {
         let coins = [];
-        if (!Utils.isEmpty(req.msg.coins)){
-            req.msg.coins.forEach(function (item) {
+        if (!Utils.isEmpty(req.msg.coins)) {
+            req.msg.coins.forEach(function(item) {
                 coins.push({
-                    denom:item.denom,
-                    amount:Utils.toString(item.amount),
+                    denom: item.denom,
+                    amount: Utils.toString(item.amount),
                 });
             });
         }
@@ -286,31 +334,27 @@ module.exports = class Bank{
         return msg
     }
 
-    static NewStdSignature(pub_key, signature, account_number, sequence){
+    static NewStdSignature(pub_key, signature, account_number, sequence) {
         return new StdSignature(pub_key, signature, account_number, sequence)
     }
 
-    static NewStdTx(msgs, fee, signatures, memo){
+    static NewStdTx(msgs, fee, signatures, memo) {
         return new StdTx(msgs, fee, signatures, memo)
     }
 
-    static NewMsgSend(from, to, coins){
-        return new MsgSend(from, to, coins)
-    }
-
-    static NewStdFee(amount, gas){
+    static NewStdFee(amount, gas) {
         return new StdFee(amount, gas)
     }
 
-    static NewStdSignMsg(chainID, accnum, sequence, fee, msg, memo){
-        return new StdSignMsg(chainID, accnum, sequence, fee, msg, memo)
+    static NewStdSignMsg(chainID, accnum, sequence, fee, msg, memo, msgType) {
+        return new StdSignMsg(chainID, accnum, sequence, fee, msg, memo, msgType)
     }
 
-    static NewCoin(amount, denom){
-        return new Coin(amount, denom)
+    static Create(properties) {
+        return new MsgSend(properties.inputs[0].address, properties.outputs[0].address, properties.outputs[0].coins)
     }
 
-    static Create(properties){
-        return new MsgSend(properties.inputs[0].address,properties.outputs[0].address,properties.outputs[0].coins)
+    static MsgSend() {
+        return MsgSend
     }
 };
