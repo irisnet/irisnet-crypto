@@ -10,7 +10,7 @@
         "prefix": "cosmos-sdk/MsgDelegate"
       },
       "unbond": {
-        "type": "unbond",
+        "type": "beginUnbonding",
         "prefix": "cosmos-sdk/BeginUnbonding"
       },
       "redelegate": {
