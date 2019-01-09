@@ -133,24 +133,6 @@ describe('CryPto test', function () {
             execute(tx);
         });
 
-        //TODO
-        it('test MsgSetWithdrawAddress', function () {
-            let tx = {
-                chain_id: chain_id,
-                from: from,
-                account_number: account_number,
-                sequence:24 ,
-                fees: fees,
-                gas: gas,
-                memo: memo,
-                type: Irisnet.config.iris.tx.setWithdrawAddress.type,
-                msg: {
-                    withdraw_addr: "faa1cr6xfpp078nm7yfsh36850ftu20fl3c9cdjc73",
-                }
-            };
-
-            execute(tx);
-        });
 
         it('test MsgWithdrawDelegatorRewardsAll', function () {
             let tx = {
@@ -269,24 +251,6 @@ describe('CryPto test', function () {
                     validator_src_addr: "fva1cr6xfpp078nm7yfsh36850ftu20fl3c9duchrk",
                     validator_dst_addr: "fva1xde0yh9vmc8mnkdvdr5krllfe3gslw9d4qp2wd",
                     shares_amount:10000000000000000000
-                }
-            };
-
-            extracted(tx);
-        });
-
-        it('test MsgSetWithdrawAddress', function () {
-            let tx = {
-                chain_id: chain_id,
-                from: from,
-                account_number: account_number,
-                sequence:696 ,
-                fees: fees,
-                gas: gas,
-                memo: memo,
-                type: Irisnet.config.iris.tx.setWithdrawAddress.type,
-                msg: {
-                    withdraw_addr: "faa1cr6xfpp078nm7yfsh36850ftu20fl3c9cdjc73",
                 }
             };
 
