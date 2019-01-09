@@ -1,6 +1,6 @@
 'use strict';
 
-const Constants = require('./constants');
+const Config = require('./config');
 const Utils = require('./util/utils');
 
 class Builder {
@@ -52,10 +52,10 @@ class Builder {
      */
     static getBuilder(chainName) {
         switch (chainName) {
-            case Constants.Chains.IRIS: {
+            case Config.chain.iris: {
                 return require('./chains/iris/iris_builder')();
             }
-            case Constants.Chains.ETHERMINT: {
+            case Config.chain.ethermint: {
                 return require('./chains/ethermint/ethermint_builder')();
             }
             default: {
@@ -72,33 +72,15 @@ class Builder {
      */
     buildParam(tx){
         let convert = function (tx) {
-            let coins = [];
-            if (!Utils.isEmpty(tx.amount)){
-                tx.amount.forEach(function (item) {
-                    if (Utils.isEmpty(item.denom)) {
-                        throw new Error("denom not empty");
-                    }
-                    if (Utils.isEmpty(item.amount)) {
-                        throw new Error("amount must > 0");
-                    }
-                    coins.push({
-                        "denom":item.denom,
-                        "amount":Utils.toString(item.amount),
-                    });
-                });
-            }
-
             let fees = [];
-            if (!Utils.isEmpty(tx.fee)){
+            if (!Utils.isEmpty(tx.fees)){
                 fees.push({
-                    "denom":tx.fee.denom,
-                    "amount":Utils.toString(tx.fee.amount),
+                    "denom":tx.fees.denom,
+                    "amount":Utils.toString(tx.fees.amount),
                 });
             }
-
-            let fromAcc = new Account(tx.sender.addr, tx.sender.chain, tx.ext, tx.sequence);
-            let memo = tx.memo ? tx.memo.text : '';
-            return new Request(fromAcc,tx.receiver.addr,coins,fees,tx.gas,memo,tx.type);
+            let memo = tx.memo ? tx.memo : '';
+            return new Request(tx.chain_id,tx.from,tx.account_number,tx.sequence,fees,tx.gas,memo,tx.type,tx.msg);
         };
 
         return convert(tx);
@@ -106,23 +88,41 @@ class Builder {
 }
 
 class Request {
-    constructor(acc, to, coins, fees,gas,memo,type) {
-        this.acc = acc;
-        this.to = to;
-        this.coins = coins;
+    constructor(chain_id, from, account_number,sequence, fees,gas,memo,type,msg) {
+        if (Utils.isEmpty(chain_id)) {
+            throw new Error("chain_id is empty");
+        }
+        if (Utils.isEmpty(from)) {
+            throw new Error("from is empty");
+        }
+        if (account_number < 0) {
+            throw new Error("account_number is empty");
+        }
+        if (sequence < 0) {
+            throw new Error("sequence is empty");
+        }
+        if (Utils.isEmpty(fees)) {
+            throw new Error("fees is empty");
+        }
+        if (Utils.isEmpty(type)) {
+            throw new Error("type is empty");
+        }
+
+        this.chain_id = chain_id;
+        this.from = from;
+        this.account_number = account_number;
+        this.sequence = sequence;
         this.fees = fees;
         this.gas = gas;
         this.memo = memo;
-        this.type = type
+        this.type = type;
+        this.msg = msg
     }
 }
 
-class Account {
-    constructor(address, chain_id, account_number, sequence) {
-        this.address = address;
-        this.chain_id = chain_id;
-        this.account_number = account_number;
-        this.sequence = sequence
+class Creator{
+    Create(properties){
+        throw new Error("not implement");
     }
 }
 
@@ -130,7 +130,7 @@ class Account {
  * 校验器接口
  *
  */
-class Validator {
+class Validator extends Creator{
     ValidateBasic() {
         throw new Error("not implement");
     }
@@ -151,11 +151,11 @@ class Msg extends Validator{
     }
     constructor(type) {
         super();
-       this.type = type
+        this.type = type
     }
     GetMsg(){
         throw new Error("not implement");
     }
 }
 
-module.exports = {Builder,Msg,Validator};
+module.exports = {Builder,Msg,Validator,Creator};

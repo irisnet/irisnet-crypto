@@ -2,38 +2,40 @@
 
 const Codec = require("../../util/codec");
 const Sha256 = require("sha256");
-const Constants = require('./constants');
+const Config = require('../../config');
+const root = require('./tx/tx');
 
 /**
  * 处理amino编码（目前支持序列化）
  *
  */
 class Amino {
-    constructor(){
+    constructor() {
         this._keyMap = {};
     }
 
     /**
      */
 
-    GetRegisterInfo(key){
+    GetRegisterInfo(key) {
         let info = this._keyMap[key];
-        if (info === undefined){
+        if (info === undefined) {
             throw new Error("not Registered");
         }
         return info
     }
+
     /**
      * 注册amino类型
      *
      * @param class field的类型
      * @param key amino前缀
      */
-    RegisterConcrete(type,key){
+    RegisterConcrete(type, key) {
 
         this._keyMap[key] = {
-            prefix : this._aminoPrefix(key),
-            classType : type
+            prefix: this._aminoPrefix(key),
+            classType: type
         }
     }
 
@@ -44,16 +46,16 @@ class Amino {
      * @param message 编码msg
      * @returns { Array }
      */
-    MarshalBinary(key,message){
+    MarshalBinary(key, message) {
         let prefixBytes = this._keyMap[key].prefix;
         prefixBytes = Buffer.from(prefixBytes.concat(message.length));
-        prefixBytes = Buffer.concat([prefixBytes,message]);
+        prefixBytes = Buffer.concat([prefixBytes, message]);
         return prefixBytes
     }
 
-    MarshalJSON(key,message){
+    MarshalJSON(key, message) {
         let pair = {
-            "type" : key,
+            "type": key,
             "value": message
         };
         return pair
@@ -75,6 +77,14 @@ class Amino {
 }
 
 let amino = new Amino();
-amino.RegisterConcrete(null,Constants.AminoKey.SignatureSecp256k1_prefix);
-amino.RegisterConcrete(null,Constants.AminoKey.PubKeySecp256k1_prefix);
+amino.RegisterConcrete(null, Config.iris.amino.pubKey);
+amino.RegisterConcrete(null, Config.iris.amino.signature);
+amino.RegisterConcrete(root.irisnet.tx.MsgDelegate, Config.iris.tx.delegate.prefix);
+amino.RegisterConcrete(root.irisnet.tx.MsgSend, Config.iris.tx.transfer.prefix);
+amino.RegisterConcrete(root.irisnet.tx.MsgBeginRedelegate, Config.iris.tx.redelegate.prefix);
+amino.RegisterConcrete(root.irisnet.tx.MsgBeginUnbonding, Config.iris.tx.unbond.prefix);
+amino.RegisterConcrete(root.irisnet.tx.MsgSetWithdrawAddress, Config.iris.tx.setWithdrawAddress.prefix);
+amino.RegisterConcrete(root.irisnet.tx.MsgWithdrawDelegatorRewardsAll, Config.iris.tx.withdrawDelegationRewardsAll.prefix);
+amino.RegisterConcrete(root.irisnet.tx.MsgWithdrawDelegatorReward, Config.iris.tx.withdrawDelegationReward.prefix);
+amino.RegisterConcrete(root.irisnet.tx.StdTx, Config.iris.tx.stdTx.prefix);
 module.exports = amino;

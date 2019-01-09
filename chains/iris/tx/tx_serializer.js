@@ -1,11 +1,6 @@
 const root = require('./tx');
 const amino = require('../amino');
-
-
-//先注册需要Amino编码的先关信息(编码前缀,信息实体类型)
-amino.RegisterConcrete(root.irisnet.tx.MsgDelegate,"cosmos-sdk/MsgDelegate");
-amino.RegisterConcrete(root.irisnet.tx.MsgSend,"cosmos-sdk/Send");
-amino.RegisterConcrete(root.irisnet.tx.StdTx,"auth/StdTx");
+const config = require('../../../config');
 
 /**
  *
@@ -56,7 +51,7 @@ class TxSerializer {
         let txMsgBuf = StdTx.encode(tx).finish();
 
         //stdTx amion编码前缀[auth/StdTx]
-        let txPreBuf = Buffer.from(amino.GetRegisterInfo("auth/StdTx").prefix);
+        let txPreBuf = Buffer.from(amino.GetRegisterInfo(config.iris.tx.stdTx.prefix).prefix);
         let msgPreBuf = Buffer.from(info.prefix);
 
         let buf = Buffer.alloc(txPreBuf.length + msgPreBuf.length + txMsgBuf.length, 0);

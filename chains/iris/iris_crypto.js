@@ -4,8 +4,8 @@ const Old = require('old');
 const IrisKeypair = require('./iris_keypair');
 const Codec = require("../../util/codec");
 const Utils = require("../../util/utils");
-const Constants = require('./constants').IrisNetConfig;
-
+const Config = require('../../config');
+const Bip39 = require('bip39');
 
 class IrisCrypto extends Crypto {
     
@@ -15,7 +15,7 @@ class IrisCrypto extends Crypto {
      * @returns {*}
      */
     create(language) {
-        let keyPair = IrisKeypair.create();
+        let keyPair = IrisKeypair.create(switchToWordList(language));
         if (keyPair) {
             return encode({
                 address: keyPair.address,
@@ -28,7 +28,7 @@ class IrisCrypto extends Crypto {
     }
 
     recover(secret, language) {
-        let keyPair = IrisKeypair.recover(secret)
+        let keyPair = IrisKeypair.recover(secret,switchToWordList(language));
         if (keyPair) {
             return encode({
                 address: keyPair.address,
@@ -62,25 +62,39 @@ class IrisCrypto extends Crypto {
     getAddress(publicKey) {
         let pubKey = Codec.Hex.hexToBytes(publicKey);
         let address = IrisKeypair.getAddress(pubKey);
-        address = Codec.Bech32.toBech32(Constants.PREFIX_BECH32_ACCADDR, address);
+        address = Codec.Bech32.toBech32(Config.iris.bech32.accAddr, address);
         return address;
     }
 }
 
 function encode(acc){
     if(!Utils.isEmpty(acc)){
-        let defaultCoding = Constants.DEFAULT_ENCODING;
-        switch (defaultCoding){
-            case Constants.ENCODING_BECH32:{
+        switch (Config.iris.defaultCoding){
+            case Config.iris.coding.bech32:{
                 if (Codec.Hex.isHex(acc.address)){
-                    acc.address =  Codec.Bech32.toBech32(Constants.PREFIX_BECH32_ACCADDR, acc.address);
+                    acc.address =  Codec.Bech32.toBech32(Config.iris.bech32.accAddr, acc.address);
                 }
                 if (Codec.Hex.isHex(acc.publicKey)){
-                    acc.publicKey = Codec.Bech32.toBech32(Constants.PREFIX_BECH32_ACCPUB, acc.publicKey);
+                    acc.publicKey = Codec.Bech32.toBech32(Config.iris.bech32.accPub, acc.publicKey);
                 }
             }
         }
         return acc
+    }
+}
+
+function switchToWordList(language){
+    switch (language) {
+        case Config.language.cn:
+            return Bip39.wordlists.chinese_simplified;
+        case Config.language.en:
+            return Bip39.wordlists.english;
+        case Config.language.jp:
+            return Bip39.wordlists.japanese;
+        case Config.language.sp:
+            return Bip39.wordlists.spanish;
+        default:
+            return Bip39.wordlists.english;
     }
 }
 

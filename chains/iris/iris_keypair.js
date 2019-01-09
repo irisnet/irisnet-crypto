@@ -7,7 +7,7 @@ const Bip39 = require('bip39');
 const Random = require('randombytes');
 const Secp256k1 = require('secp256k1');
 const BN = require("bn");
-const Constants = require('./constants');
+const Config = require('../../config');
 const Amino = require('./amino');
 
 class CosmosKeypair {
@@ -15,7 +15,7 @@ class CosmosKeypair {
     static getPrivateKeyFromSecret(mnemonicS) {
         let seed = Bip39.mnemonicToSeed(mnemonicS);
         let master = Hd.ComputeMastersFromSeed(seed);
-        let derivedPriv = Hd.DerivePrivateKeyForPath(master.secret,master.chainCode,Constants.AminoKey.FullFundraiserPath);
+        let derivedPriv = Hd.DerivePrivateKeyForPath(master.secret,master.chainCode,Config.iris.bip39Path);
         return derivedPriv;
     }
 
@@ -30,7 +30,7 @@ class CosmosKeypair {
         let sig = Secp256k1.sign(sig32,prikeyArr);
         //let signature = Buffer.from(Hd.Serialize(sig.signature));
         //将签名结果加上amino编码前缀(irishub反序列化需要) (cosmos-sdk v0.24.0去掉了前缀)
-        //signature = Amino.MarshalBinary(Constants.AminoKey.SignatureSecp256k1_prefix,signature);
+        //signature = Amino.MarshalBinary(Config.iris.amino.signature,signature);
         return Array.from(sig.signature)
     }
 
@@ -45,11 +45,11 @@ class CosmosKeypair {
         return addr.digest('hex').toUpperCase();
     }
 
-    static create() {
+    static create(language) {
         //生成24位助记词
         let entropySize = 24 * 11 - 8;
         let entropy = Random(entropySize / 8);
-        let mnemonicS = Bip39.entropyToMnemonic(entropy);
+        let mnemonicS = Bip39.entropyToMnemonic(entropy,language);
 
         //生成私钥
         let secretKey = this.getPrivateKeyFromSecret(mnemonicS);
@@ -57,7 +57,7 @@ class CosmosKeypair {
         //构造公钥
         let pubKey = Secp256k1.publicKeyCreate(secretKey);
         //将公钥加上amino编码前缀(irishub反序列化需要)
-        pubKey = Amino.MarshalBinary(Constants.AminoKey.PubKeySecp256k1_prefix,pubKey);
+        pubKey = Amino.MarshalBinary(Config.iris.amino.pubKey,pubKey);
 
         return {
             "secret": mnemonicS,
@@ -67,14 +67,14 @@ class CosmosKeypair {
         };
     }
 
-    static recover(mnemonic){
-        this.checkSeed(mnemonic);
+    static recover(mnemonic,language){
+        this.checkSeed(mnemonic,language);
         //生成私钥
         let secretKey = this.getPrivateKeyFromSecret(mnemonic);
         //构造公钥
         let pubKey = Secp256k1.publicKeyCreate(secretKey);
         //将公钥加上amino编码前缀(irishub反序列化需要)
-        pubKey = Amino.MarshalBinary(Constants.AminoKey.PubKeySecp256k1_prefix,pubKey);
+        pubKey = Amino.MarshalBinary(Config.iris.amino.pubKey,pubKey);
 
         return {
             "secret": mnemonic,
@@ -84,12 +84,12 @@ class CosmosKeypair {
         };
     }
 
-    static checkSeed(mnemonic){
+    static checkSeed(mnemonic,language){
         const seed = mnemonic.split(" ");
         if(seed.length != 12 && seed.length != 24){
             throw new Error("seed length must be equal 12 or 24");
         }
-        if (!Bip39.validateMnemonic(mnemonic)){
+        if (!Bip39.validateMnemonic(mnemonic,language)){
             throw new Error("seed is invalid");
         }
     }
@@ -99,7 +99,7 @@ class CosmosKeypair {
         //构造公钥
         let pubKey = Secp256k1.publicKeyCreate(secretBytes);
         //将公钥加上amino编码前缀(irishub反序列化需要)
-        pubKey = Amino.MarshalBinary(Constants.AminoKey.PubKeySecp256k1_prefix,pubKey);
+        pubKey = Amino.MarshalBinary(Config.iris.amino.pubKey,pubKey);
         return {
             "address": this.getAddress(pubKey),
             "privateKey": secretKey,
@@ -108,7 +108,7 @@ class CosmosKeypair {
     }
 
     static isValidAddress(address) {
-        let prefix = Constants.IrisNetConfig.PREFIX_BECH32_ACCADDR;
+        let prefix = Config.iris.bech32.accAddr;
 		return Codec.Bech32.isBech32(prefix,address);
     }
 
@@ -219,5 +219,6 @@ class Hd {
         return signature.toDER();
     }
 }
+
 
 module.exports = CosmosKeypair;

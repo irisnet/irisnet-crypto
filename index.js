@@ -9,9 +9,4 @@ function getCrypto(chainName){
     return Crypto.getCrypto(chainName)
 }
 
-class Constants{}
-Constants.COMM = require("./constants");
-Constants.IRIS = require("./chains/iris/constants");
-Constants.ETHERMINT = require("./chains/ethermint/constants");
-
-module.exports = {getCrypto,getBuilder,Constants};
+module.exports = {getCrypto,getBuilder};
