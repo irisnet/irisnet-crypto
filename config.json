@@ -3,31 +3,31 @@
     "tx": {
       "transfer": {
         "type": "transfer",
-        "prefix": "cosmos-sdk/Send"
+        "prefix": "irishub/bank/Send"
       },
       "delegate": {
         "type": "delegate",
-        "prefix": "cosmos-sdk/MsgDelegate"
+        "prefix": "irishub/stake/MsgDelegate"
       },
       "unbond": {
         "type": "beginUnbonding",
-        "prefix": "cosmos-sdk/BeginUnbonding"
+        "prefix": "irishub/stake/BeginUnbonding"
       },
       "redelegate": {
         "type": "redelegate",
-        "prefix": "cosmos-sdk/BeginRedelegate"
+        "prefix": "irishub/stake/BeginRedelegate"
       },
       "withdrawDelegationRewardsAll": {
         "type": "withdraw_delegation_rewards_all",
-        "prefix": "cosmos-sdk/MsgWithdrawDelegationRewardsAll"
+        "prefix": "irishub/distr/MsgWithdrawDelegationRewardsAll"
       },
       "withdrawDelegationReward": {
         "type": "withdraw_delegation_reward",
-        "prefix": "cosmos-sdk/MsgWithdrawDelegationReward"
+        "prefix": "irishub/distr/MsgWithdrawDelegationReward"
       },
       "stdTx": {
         "type": "",
-        "prefix": "auth/StdTx"
+        "prefix": "irishub/bank/StdTx"
       }
     },
     "mode":{

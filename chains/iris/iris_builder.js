@@ -90,6 +90,7 @@ class IrisBuilder extends Builder {
                 throw new Error("privateKey is  empty");
             }
             signbyte = IrisKeypair.sign(privateKey, signMsg.GetSignBytes());
+            //console.log(JSON.stringify(signMsg.GetSignBytes()))
         }
         let keypair = IrisKeypair.import(privateKey);
         let signs = [Bank.NewStdSignature(Codec.Hex.hexToBytes(keypair.publicKey), signbyte, signMsg.account_number, signMsg.sequence)];

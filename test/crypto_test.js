@@ -36,9 +36,9 @@ describe('CryPto test', function () {
     });
 
 
-    let chain_id = "rainbow-dev";
+    let chain_id = "irishub-test";
     let from = "faa1ljemm0yznz58qxxs8xyak7fashcfxf5lssn6jm";
-    let gas = 19000;
+    let gas = 200000;
     let account_number = 4;
     let fees = {denom: "iris-atto",amount:400000000000000000};
     let memo = "1";
@@ -53,7 +53,7 @@ describe('CryPto test', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence:101 ,
+                sequence:0 ,
                 fees: fees,
                 gas: gas,
                 memo: memo,
@@ -77,7 +77,7 @@ describe('CryPto test', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence:94 ,
+                sequence:1 ,
                 fees: fees,
                 gas: gas,
                 memo: memo,
@@ -201,7 +201,7 @@ describe('CryPto test', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence:727 ,
+                sequence:2 ,
                 fees: fees,
                 gas: gas,
                 memo: memo,
@@ -306,7 +306,7 @@ describe('CryPto test', function () {
         let stdTx = builder.signTx(signStr, privateKey);
         console.log("======待提交交易======");
         //④步骤③的结果调用GetPostData，得到交易字符串，回传给联网的钱包，并发送该内容给irishub-server
-        console.log(JSON.stringify(stdTx.GetPostData()));
+        console.log(JSON.stringify(stdTx.GetData()));
         console.log("======待提交交易======");
 
         //以下步骤为异常处理：在请求irishub-server超时的时候，服务器可能没有任何返回结果，这笔交易状态为止，所以需要客户端计算出
