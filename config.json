@@ -17,10 +17,6 @@
         "type": "redelegate",
         "prefix": "cosmos-sdk/BeginRedelegate"
       },
-      "setWithdrawAddress": {
-        "type": "set_withdraw_address",
-        "prefix": "cosmos-sdk/MsgModifyWithdrawAddress"
-      },
       "withdrawDelegationRewardsAll": {
         "type": "withdraw_delegation_rewards_all",
         "prefix": "cosmos-sdk/MsgWithdrawDelegationRewardsAll"

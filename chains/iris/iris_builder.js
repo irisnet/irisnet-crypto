@@ -38,10 +38,6 @@ class IrisBuilder extends Builder {
                 msg = Stake.CreateMsgBeginRedelegate(req);
                 break;
             }
-            case Config.iris.tx.setWithdrawAddress.type: {
-                msg = Distribution.CreateMsgSetWithdrawAddress(req);
-                break;
-            }
             case Config.iris.tx.withdrawDelegationRewardsAll.type: {
                 msg = Distribution.CreateMsgWithdrawDelegatorRewardsAll(req);
                 break;
@@ -121,10 +117,6 @@ function CreateSignMsg(properties) {
         }
         case Config.iris.tx.redelegate.type: {
             msg = Stake.MsgBeginRedelegate().Create(prop.msgs[0]);
-            break;
-        }
-        case Config.iris.tx.setWithdrawAddress.type: {
-            msg = Distribution.MsgSetWithdrawAddress().Create(prop.msgs[0]);
             break;
         }
         case Config.iris.tx.withdrawDelegationRewardsAll.type: {
