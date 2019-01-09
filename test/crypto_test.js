@@ -3,8 +3,6 @@ const chai = require('chai');
 const assert = chai.assert;
 const blockChainThriftModel = require("irisnet-rpc/common/codegen/gen-nodejs/model_types");
 const Codec = require("../util/codec");
-const Amino = require('./amino_js');
-const root = require('./tx');
 
 describe('CryPto test', function () {
     describe('irisnet-crypto', function () {
@@ -36,7 +34,7 @@ describe('CryPto test', function () {
 
         it('test recover', function () {
             let crypto = Irisnet.getCrypto(Irisnet.Constants.COMM.Chains.IRIS);
-            let account = crypto.recover("coconut pistol mushroom grocery razor tenant crumble trial ocean deny prosper fury put educate flush beef eager spoil mix insane divert obvious fresh puzzle");
+            let account = crypto.recover("swim coconut leave border ski scatter attract favorite deposit proud phone dwarf cover pole south industry ticket say vapor that dog giant ride mechanic");
             console.log(account)
             // assert.deepEqual(account, {
             //         address: 'faa1cmjnj9zw0m4aau95dsmzj7zgaqagptzywu3v8r',
@@ -49,27 +47,27 @@ describe('CryPto test', function () {
 
         it('test transfer', function () {
             let tx = new blockChainThriftModel.Tx({
-                "sequence":0,
+                "sequence":15,
                 "ext":0,
                 "sender":{
-                    "chain":"fuxi-4000",
+                    "chain":"irishub-test",
                     "app":"v0.2.0",
-                    "addr":"faa14q3lumvq32jwk0zu4plslarqefj5vzdeleraes"
+                    "addr":"faa1x8j7rv0tvsdaf9k583d6svpkhk7afzk7lnuz7u"
                 },
                 "receiver":{
-                    "chain":"fuxi-1001",
+                    "chain":"irishub-test",
                     "app":"v0.2.0",
                     "addr":"faa1s6v9qgu8ye7d884s8kpye64x66znndg8t6eztj"
                 },
                 "amount":[new blockChainThriftModel.Coin({denom: "iris-atto",amount: 10000000000000000000})],
-                "fee":new blockChainThriftModel.Fee({denom: "iris-atto",amount: 4000000000000000}),
+                "fee":new blockChainThriftModel.Fee({denom: "iris-atto",amount:      400000000000000000}),
                 "type":Irisnet.Constants.IRIS.TxType.TRANSFER,
-                "memo":new blockChainThriftModel.Memo({id:1,text:"test"})
+                //"memo":new blockChainThriftModel.Memo({id:1,text:"test"})
             });
 
             let builder = Irisnet.getBuilder(Irisnet.Constants.COMM.Chains.IRIS);
-            let stdTx = builder.buildAndSignTx(tx,"B96DBE9629CF64AEE0F568B7875E35121016E2BBDCF07CF51768880E00549B87");
-            console.log(JSON.stringify(stdTx))
+            let stdTx = builder.buildAndSignTx(tx,"5AC50B3B6BE48FE49C12C12B3B1D9C7ADEE5DB6251E6A7DA663751EEFD0576A2");
+            console.log(JSON.stringify(stdTx.GetPostData()))
             //TODO 将stdTx提交到iris-hub[/tx/send]
         });
 
@@ -96,7 +94,7 @@ describe('CryPto test', function () {
             let builder = Irisnet.getBuilder(Irisnet.Constants.COMM.Chains.IRIS);
             let signMsg = builder.buildTx(tx);
             let stdTx = builder.signTx(signMsg,"8789EB2C2510D8D236EB85DAEFE4E1A4EA7D8E6929E0A1400FCF2848CF7F2DA4");
-            console.log(JSON.stringify(stdTx))
+            console.log(JSON.stringify(stdTx.Hash().hash))
             //TODO 将stdTx提交到iris-hub[/tx/send]
         });
 

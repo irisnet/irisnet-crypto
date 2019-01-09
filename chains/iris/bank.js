@@ -5,6 +5,7 @@ const Constants = require('./constants');
 const Builder = require("../../builder");
 const Amino = require("./amino");
 const TxSerializer = require("./tx/tx_serializer");
+const Base64 = require('base64-node');
 
 class Coin {
     constructor(amount, denom) {
@@ -148,7 +149,10 @@ class StdFee {
         if (Utils.isEmpty(this.amount)) {
             this.amount = [new Coin("0", "")]
         }
-        return this
+        return {
+            amount:this.amount,
+            gas:this.gas
+        }
     }
 }
 
@@ -215,6 +219,12 @@ class StdTx {
         this.memo = memo
     }
 
+    /**
+     * @Deprecated
+     *
+     * @returns {{msgs: Array, fee: *, signatures: *, memo: *}}
+     * @constructor
+     */
     GetPostData(){
         let fmtMsgs = function (msgs) {
             let msgS = [];
@@ -231,10 +241,18 @@ class StdTx {
         }
     }
 
+    /**
+     *  用于计算交易hash和签名后的交易内容(base64编码)
+     *
+     *  可以直接将data提交到irishub的/txs接口
+     *
+     * @returns {{data: *, hash: *}}
+     * @constructor
+     */
     Hash(){
         let result = TxSerializer.encode(this);
         return {
-            data : result.data,
+            data : Base64.encode(result.data),
             hash : result.hash
         }
     }

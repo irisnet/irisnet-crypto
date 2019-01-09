@@ -1294,7 +1294,7 @@ $root.irisnet = (function() {
                 if (message.amount != null && message.amount.length)
                     for (var i = 0; i < message.amount.length; ++i)
                         $root.irisnet.tx.Coin.encode(message.amount[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                writer.uint32(/* id 2, wireType 0 =*/16).sint64(message.gas);
+                writer.uint32(/* id 2, wireType 0 =*/16).int64(message.gas);
                 return writer;
             };
 
@@ -1335,7 +1335,7 @@ $root.irisnet = (function() {
                             message.amount.push($root.irisnet.tx.Coin.decode(reader, reader.uint32()));
                             break;
                         case 2:
-                            message.gas = reader.sint64();
+                            message.gas = reader.int64();
                             break;
                         default:
                             reader.skipType(tag & 7);
@@ -1558,11 +1558,11 @@ $root.irisnet = (function() {
 
                 // ===========================整形过滤掉零值================================
                 if (message.accountNumber !== 0) {
-                writer.uint32(/* id 3, wireType 0 =*/24).sint64(message.accountNumber);
+                writer.uint32(/* id 3, wireType 0 =*/24).int64(message.accountNumber);
                 }
                 // ===========================整形过滤掉零值================================
                 if (message.sequence !== 0) {
-                writer.uint32(/* id 4, wireType 0 =*/32).sint64(message.sequence);
+                writer.uint32(/* id 4, wireType 0 =*/32).int64(message.sequence);
                 }
                 return writer;
             };
@@ -1605,10 +1605,10 @@ $root.irisnet = (function() {
                             message.signature = reader.bytes();
                             break;
                         case 3:
-                            message.accountNumber = reader.sint64();
+                            message.accountNumber = reader.int64();
                             break;
                         case 4:
-                            message.sequence = reader.sint64();
+                            message.sequence = reader.int64();
                             break;
                         default:
                             reader.skipType(tag & 7);
