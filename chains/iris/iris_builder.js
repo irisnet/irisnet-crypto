@@ -38,10 +38,6 @@ class IrisBuilder extends Builder {
                 msg = Stake.CreateMsgBeginRedelegate(req);
                 break;
             }
-            case Config.iris.tx.setWithdrawAddress.type: {
-                msg = Distribution.CreateMsgSetWithdrawAddress(req);
-                break;
-            }
             case Config.iris.tx.withdrawDelegationRewardsAll.type: {
                 msg = Distribution.CreateMsgWithdrawDelegatorRewardsAll(req);
                 break;
@@ -94,6 +90,7 @@ class IrisBuilder extends Builder {
                 throw new Error("privateKey is  empty");
             }
             signbyte = IrisKeypair.sign(privateKey, signMsg.GetSignBytes());
+            //console.log(JSON.stringify(signMsg.GetSignBytes()))
         }
         let keypair = IrisKeypair.import(privateKey);
         let signs = [Bank.NewStdSignature(Codec.Hex.hexToBytes(keypair.publicKey), signbyte, signMsg.account_number, signMsg.sequence)];
@@ -121,10 +118,6 @@ function CreateSignMsg(properties) {
         }
         case Config.iris.tx.redelegate.type: {
             msg = Stake.MsgBeginRedelegate().Create(prop.msgs[0]);
-            break;
-        }
-        case Config.iris.tx.setWithdrawAddress.type: {
-            msg = Distribution.MsgSetWithdrawAddress().Create(prop.msgs[0]);
             break;
         }
         case Config.iris.tx.withdrawDelegationRewardsAll.type: {
