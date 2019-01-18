@@ -226,6 +226,9 @@ module.exports = class Stake {
 
 class Dec {
     static String(share) {
-        return share + ".0000000000"
+        if (share.indexOf(".") === -1) {
+            share = share + ".0000000000"
+        }
+        return share
     }
 }
