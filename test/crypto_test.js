@@ -36,7 +36,7 @@ describe('CryPto test', function () {
     });
 
 
-    let chain_id = "irishub-test";
+    let chain_id = "rainbow-dev";
     let from = "faa1ljemm0yznz58qxxs8xyak7fashcfxf5lssn6jm";
     let gas = 200000;
     let account_number = 4;
@@ -53,7 +53,7 @@ describe('CryPto test', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence:0 ,
+                sequence:21 ,
                 fees: fees,
                 gas: gas,
                 memo: memo,
@@ -77,7 +77,7 @@ describe('CryPto test', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence:1 ,
+                sequence:15 ,
                 fees: fees,
                 gas: gas,
                 memo: memo,

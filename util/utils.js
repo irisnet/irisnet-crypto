@@ -18,7 +18,7 @@ module.exports = class Utils {
                 } else if (obj[k] != null && typeof(obj[k]) === "object") {
                     tmp[k] = sort(obj[k]);
                 } else if (obj[k] != null && typeof(obj[k]) === "function") {
-                    tmp[k] = eval(obj[k].toString())
+                    tmp[k] = evil(obj[k].toString())
                 } else {
                     tmp[k] = new String(obj[k]).toString();
                 }
@@ -61,3 +61,8 @@ module.exports = class Utils {
         }
     }
 };
+
+function evil(fn) {
+    let Fn = Function;
+    return new Fn('return ' + fn)();
+}
