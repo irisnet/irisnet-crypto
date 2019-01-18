@@ -40,11 +40,6 @@ message MsgBeginRedelegate {
     required string  sharesAmount = 4;
 }
 
-message MsgSetWithdrawAddress {
-    required bytes  delegatorAddr = 1;
-    required bytes  withdrawAddr = 2;
-}
-
 message MsgWithdrawDelegatorRewardsAll {
     required bytes  delegatorAddr = 1;
 }

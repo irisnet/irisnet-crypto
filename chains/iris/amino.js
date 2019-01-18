@@ -83,7 +83,6 @@ amino.RegisterConcrete(root.irisnet.tx.MsgDelegate, Config.iris.tx.delegate.pref
 amino.RegisterConcrete(root.irisnet.tx.MsgSend, Config.iris.tx.transfer.prefix);
 amino.RegisterConcrete(root.irisnet.tx.MsgBeginRedelegate, Config.iris.tx.redelegate.prefix);
 amino.RegisterConcrete(root.irisnet.tx.MsgBeginUnbonding, Config.iris.tx.unbond.prefix);
-amino.RegisterConcrete(root.irisnet.tx.MsgSetWithdrawAddress, Config.iris.tx.setWithdrawAddress.prefix);
 amino.RegisterConcrete(root.irisnet.tx.MsgWithdrawDelegatorRewardsAll, Config.iris.tx.withdrawDelegationRewardsAll.prefix);
 amino.RegisterConcrete(root.irisnet.tx.MsgWithdrawDelegatorReward, Config.iris.tx.withdrawDelegationReward.prefix);
 amino.RegisterConcrete(root.irisnet.tx.StdTx, Config.iris.tx.stdTx.prefix);
