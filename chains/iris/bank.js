@@ -239,28 +239,6 @@ class StdTx {
         this.memo = memo
     }
 
-    /**
-     * @deprecated(replace with Hash())
-     *
-     * @returns {{msgs: Array, fee: *, signatures: *, memo: *}}
-     * @constructor
-     */
-    GetPostData() {
-        let fmtMsgs = function(msgs) {
-            let msgS = [];
-            msgs.forEach(function(msg) {
-                msgS.push(JSON.stringify(Amino.MarshalJSON(msg.type, msg)))
-            });
-            return msgS
-        };
-        return {
-            msgs: fmtMsgs(this.msgs),
-            fee: this.fee,
-            signatures: this.signatures,
-            memo: this.memo,
-        }
-    }
-
     GetData() {
         let signatures = [];
         this.signatures.forEach(function(sig) {
