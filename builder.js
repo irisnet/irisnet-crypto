@@ -23,11 +23,11 @@ class Builder {
      *
      * 根据请求内容构造交易并对交易进行签名
      *
-     * @param tx {*}
+     * @param data {*}
      * @param privateKey {string} 交易发送方私钥(hex编码)，冷钱包提供
      * @returns {StdSignature} 交易
      */
-    signTx(tx,privateKey) {
+    sign(data,privateKey) {
         throw new Error("not implement");
     }
 

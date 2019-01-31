@@ -73,7 +73,7 @@ describe('CryPto test', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 38,
+                sequence: 48,
                 fees: fees,
                 gas: gas,
                 memo: memo,
@@ -196,7 +196,7 @@ describe('CryPto test', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 43,
+                sequence: 49,
                 fees: fees,
                 gas: gas,
                 memo: memo,
@@ -319,8 +319,10 @@ describe('CryPto test', function () {
         //②把步骤①的结构序列化为字符串，装入二维码
         let signStr = JSON.stringify(stdTx.GetSignBytes());
         //③用未联网的钱包(存有账户秘钥)扫描步骤②的二维码，拿到待签名的字符串，调用signTx签名
-        let signature = builder.signTx(signStr, privateKey);
-        stdTx.SetSignature(signature);
+        let signature = builder.sign(signStr, privateKey);
+        //④
+        let signatureStr = JSON.stringify(signature);//二维码字符串
+        stdTx.SetSignature(signatureStr);
         //console.log("======待提交交易======");
         //④步骤③的结果调用GetData，得到交易字符串，回传给联网的钱包，并发送该内容给irishub-server
         console.log(JSON.stringify(stdTx.GetData()));

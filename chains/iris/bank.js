@@ -240,7 +240,11 @@ class StdTx {
         this.signMsg = properties
     }
 
-    SetSignature(signature){
+    SetSignature(sig){
+        if (typeof sig === "string") {
+            sig = JSON.parse(sig);
+        }
+        let signature = new StdSignature(sig.pub_key,sig.signature,this.signMsg.account_number,this.signMsg.sequence);
         this.signatures = [signature];
     }
 

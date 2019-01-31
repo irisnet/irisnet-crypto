@@ -61,16 +61,19 @@ class IrisBuilder extends Builder {
      *
      * @param data
      * @param privateKey
-     * @returns {StdSignature}
+     * @returns {}
      */
-    signTx(data, privateKey) {
+    sign(data, privateKey) {
         if (typeof data === "string") {
             data = JSON.parse(data);
         }
         let signbyte = IrisKeypair.sign(privateKey, data);
         let keypair = IrisKeypair.import(privateKey);
 
-        return Bank.NewStdSignature(Codec.Hex.hexToBytes(keypair.publicKey), signbyte, data.account_number, data.sequence)
+        return {
+            pub_key:Codec.Hex.hexToBytes(keypair.publicKey),
+            signature:signbyte
+        }
     }
 
     /**
@@ -90,9 +93,9 @@ class IrisBuilder extends Builder {
             if (Utils.isEmpty(privateKey)) {
                 throw new Error("privateKey is  empty");
             }
-            signature = this.signTx(stdTx.GetSignBytes(),privateKey);
+            signature = this.sign(stdTx.GetSignBytes(),privateKey);
+            stdTx.SetSignature(signature);
         }
-        stdTx.SetSignature(signature);
         return stdTx
     }
 }
