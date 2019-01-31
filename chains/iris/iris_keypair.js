@@ -21,7 +21,6 @@ class CosmosKeypair {
     }
 
     static sign(private_key, msg) {
-
         //将签名字符串使用Sha256构造32位byte数组
         let sigByte = Buffer.from(JSON.stringify(msg));
         let sig32 = Buffer.from(Sha256(sigByte,{ asBytes: true }));

@@ -25,7 +25,7 @@ class Builder {
      *
      * @param tx {*}
      * @param privateKey {string} 交易发送方私钥(hex编码)，冷钱包提供
-     * @returns {StdTx} 交易
+     * @returns {StdSignature} 交易
      */
     signTx(tx,privateKey) {
         throw new Error("not implement");

@@ -101,12 +101,4 @@ module.exports = class Distribution {
     static CreateMsgWithdrawDelegatorReward(req) {
         return new MsgWithdrawDelegatorReward(req.from,req.msg.validator_addr);
     }
-
-    static MsgWithdrawDelegatorRewardsAll(){
-        return MsgWithdrawDelegatorRewardsAll
-    }
-
-    static MsgWithdrawDelegatorReward(){
-        return MsgWithdrawDelegatorReward
-    }
 };

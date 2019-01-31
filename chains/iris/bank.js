@@ -232,11 +232,16 @@ class StdSignature {
 }
 
 class StdTx {
-    constructor(msgs, fee, signatures, memo) {
-        this.msgs = msgs;
-        this.fee = fee;
-        this.signatures = signatures;
-        this.memo = memo
+    constructor(properties) {
+        this.msgs = properties.msgs;
+        this.fee = properties.fee;
+        this.signatures = null;
+        this.memo = properties.memo;
+        this.signMsg = properties
+    }
+
+    SetSignature(signature){
+        this.signatures = [signature];
     }
 
     GetData() {
@@ -295,6 +300,10 @@ class StdTx {
         }
     }
 
+    GetSignBytes(){
+        return this.signMsg.GetSignBytes()
+    }
+
 }
 
 module.exports = class Bank {
@@ -316,8 +325,8 @@ module.exports = class Bank {
         return new StdSignature(pub_key, signature, account_number, sequence)
     }
 
-    static NewStdTx(msgs, fee, signatures, memo) {
-        return new StdTx(msgs, fee, signatures, memo)
+    static NewStdTx(properties) {
+        return new StdTx(properties)
     }
 
     static NewStdFee(amount, gas) {
@@ -326,13 +335,5 @@ module.exports = class Bank {
 
     static NewStdSignMsg(chainID, accnum, sequence, fee, msg, memo, msgType) {
         return new StdSignMsg(chainID, accnum, sequence, fee, msg, memo, msgType)
-    }
-
-    static Create(properties) {
-        return new MsgSend(properties.inputs[0].address, properties.outputs[0].address, properties.outputs[0].coins)
-    }
-
-    static MsgSend() {
-        return MsgSend
     }
 };

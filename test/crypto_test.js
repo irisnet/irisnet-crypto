@@ -1,6 +1,7 @@
 const Irisnet = require('../index');
 const chai = require('chai');
 const util = require('../util/utils');
+const codec = require('../util/codec');
 const assert = chai.assert;
 
 
@@ -30,8 +31,9 @@ describe('CryPto test', function () {
 
         it('test recover', function () {
             let crypto = Irisnet.getCrypto(Irisnet.config.chain.iris);
-            let account = crypto.recover("detect jealous layer garlic improve web begin because lion absurd vital crater diary mother barrel act elevator gossip census long beauty shy orphan tumble");
-            console.log(account)
+            let account = crypto.recover("tube lonely pause spring gym veteran know want grid tired taxi such same mesh charge orient bracket ozone concert once good quick dry boss");
+            console.log(account);
+            console.log(codec.Bech32.fromBech32("fca18059ymwg4sa49yw7x9gzdeydn892elw0twle0a"))
         });
 
         it('test hasRepeatElement', function () {
@@ -71,7 +73,7 @@ describe('CryPto test', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 21,
+                sequence: 38,
                 fees: fees,
                 gas: gas,
                 memo: memo,
@@ -95,13 +97,13 @@ describe('CryPto test', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 26,
+                sequence: 39,
                 fees: fees,
                 gas: gas,
                 memo: memo,
                 type: Irisnet.config.iris.tx.delegate.type,
                 msg: {
-                    validator_addr: "fva1aj49hnd8gtqkzwh7fj0xlnhxxddhky0h6ptwvy",
+                    validator_addr: "fva19lkvdr6yjluj602ljn9epafqgq2xekxlqrm3n8",
                     delegation: {
                         denom: "iris-atto",
                         amount: 10000000000000000000
@@ -117,13 +119,13 @@ describe('CryPto test', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 36,
+                sequence: 40,
                 fees: fees,
                 gas: gas,
                 memo: memo,
                 type: Irisnet.config.iris.tx.unbond.type,
                 msg: {
-                    validator_addr: "fva1aj49hnd8gtqkzwh7fj0xlnhxxddhky0h6ptwvy",
+                    validator_addr: "fva19lkvdr6yjluj602ljn9epafqgq2xekxlqrm3n8",
                     shares_amount: "10000000000000000000"
                 }
             };
@@ -157,7 +159,7 @@ describe('CryPto test', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 28,
+                sequence: 41,
                 fees: fees,
                 gas: gas,
                 memo: memo,
@@ -173,7 +175,7 @@ describe('CryPto test', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 14,
+                sequence: 42,
                 fees: fees,
                 gas: gas,
                 memo: memo,
@@ -194,7 +196,7 @@ describe('CryPto test', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 20,
+                sequence: 43,
                 fees: fees,
                 gas: gas,
                 memo: memo,
@@ -219,7 +221,7 @@ describe('CryPto test', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 2,
+                sequence: 44,
                 fees: fees,
                 gas: gas,
                 memo: memo,
@@ -241,7 +243,7 @@ describe('CryPto test', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 728,
+                sequence: 45,
                 fees: fees,
                 gas: gas,
                 memo: memo,
@@ -280,7 +282,7 @@ describe('CryPto test', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 729,
+                sequence: 46,
                 fees: fees,
                 gas: gas,
                 memo: memo,
@@ -313,19 +315,15 @@ describe('CryPto test', function () {
     function extracted(tx) {
         let builder = Irisnet.getBuilder(chain);
         //①先用联网的钱包构造一笔交易
-        let signMsg = builder.buildTx(tx);
+        let stdTx = builder.buildTx(tx);
         //②把步骤①的结构序列化为字符串，装入二维码
-        let signStr = JSON.stringify(signMsg);
-        console.log("======热钱包传递给冷钱包签名的字符串======");
-        console.log(signStr);
-        console.log("======热钱包传递给冷钱包签名的字符串======");
-
+        let signStr = JSON.stringify(stdTx.GetSignBytes());
         //③用未联网的钱包(存有账户秘钥)扫描步骤②的二维码，拿到待签名的字符串，调用signTx签名
-        let stdTx = builder.signTx(signStr, privateKey);
-        console.log("======待提交交易======");
+        let signature = builder.signTx(signStr, privateKey);
+        stdTx.SetSignature(signature);
+        //console.log("======待提交交易======");
         //④步骤③的结果调用GetData，得到交易字符串，回传给联网的钱包，并发送该内容给irishub-server
         console.log(JSON.stringify(stdTx.GetData()));
-        console.log("======待提交交易======");
 
         //以下步骤为异常处理：在请求irishub-server超时的时候，服务器可能没有任何返回结果，这笔交易状态为止，所以需要客户端计算出
         //本次交易的hash，校准该笔交易的状态。调用步骤③结构的Hash，可以得到交易hash以及本次交易内容的base64编码（以后考虑使用该编码内容替换

@@ -209,19 +209,6 @@ module.exports = class Stake {
         let msg = new MsgBeginRedelegate(req.from, req.msg.validator_src_addr, req.msg.validator_dst_addr, shares);
         return msg;
     };
-
-    static MsgDelegate(){
-        return MsgDelegate
-    }
-
-    static MsgBeginUnbonding(){
-        return MsgBeginUnbonding
-    }
-
-    static MsgBeginRedelegate(){
-        return MsgBeginRedelegate
-    }
-
 };
 
 class Dec {
