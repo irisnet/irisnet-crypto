@@ -73,7 +73,7 @@ describe('CryPto test', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 48,
+                sequence: 54,
                 fees: fees,
                 gas: gas,
                 memo: memo,
@@ -146,7 +146,7 @@ describe('CryPto test', function () {
                 msg: {
                     validator_src_addr: "fva1kca5vw7r2k72d5zy0demszmrhdz4dp8t4uat0c",
                     validator_dst_addr: "fva1rz7jxmgsgyjwa6erusxlzrmg2aw3cvyf3c3x6v",
-                    shares_amount: 10000000000000000000
+                    shares_amount: "10000000000000000000"
                 }
             };
 
@@ -159,12 +159,12 @@ describe('CryPto test', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 41,
+                sequence: 55,
                 fees: fees,
                 gas: gas,
                 memo: memo,
                 type: Irisnet.config.iris.tx.withdrawDelegationRewardsAll.type,
-                //mode: config.iris.mode.try
+                mode: Irisnet.config.iris.mode.try
             };
 
             execute(tx);
@@ -196,7 +196,7 @@ describe('CryPto test', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 49,
+                sequence: 53,
                 fees: fees,
                 gas: gas,
                 memo: memo,
@@ -221,7 +221,7 @@ describe('CryPto test', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 44,
+                sequence: 55,
                 fees: fees,
                 gas: gas,
                 memo: memo,
@@ -270,7 +270,7 @@ describe('CryPto test', function () {
                 msg: {
                     validator_src_addr: "fva1cr6xfpp078nm7yfsh36850ftu20fl3c9duchrk",
                     validator_dst_addr: "fva1xde0yh9vmc8mnkdvdr5krllfe3gslw9d4qp2wd",
-                    shares_amount: 10000000000000000000
+                    shares_amount: "10000000000000000000"
                 }
             };
 
@@ -333,6 +333,8 @@ describe('CryPto test', function () {
         let result = stdTx.Hash();
         console.log("data:", result.data);
         console.log("hash", result.hash);
+        console.log("displayContent", JSON.stringify(stdTx.GetDisplayContent()));
+
     }
 
     //热钱包调用
@@ -345,5 +347,6 @@ describe('CryPto test', function () {
         let result = stdTx.Hash();
         console.log("data:", result.data);
         console.log("hash", result.hash);
+        console.log("displayContent", JSON.stringify(stdTx.GetDisplayContent()));
     }
 });

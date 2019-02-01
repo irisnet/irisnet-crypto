@@ -120,17 +120,11 @@ class Request {
     }
 }
 
-class Creator{
-    Create(properties){
-        throw new Error("not implement");
-    }
-}
-
 /**
  * 校验器接口
  *
  */
-class Validator extends Creator{
+class Validator{
     ValidateBasic() {
         throw new Error("not implement");
     }
@@ -156,6 +150,10 @@ class Msg extends Validator{
     GetMsg(){
         throw new Error("not implement");
     }
+
+    GetDisplayContent(){
+        throw new Error("not implement");
+    }
 }
 
-module.exports = {Builder,Msg,Validator,Creator};
+module.exports = {Builder,Msg,Validator};

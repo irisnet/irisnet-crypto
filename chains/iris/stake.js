@@ -59,8 +59,13 @@ class MsgDelegate extends Builder.Msg {
         }
     }
 
-    static Create(properties){
-        return new MsgDelegate(properties.delegator_addr,properties.validator_addr,properties.delegation)
+    GetDisplayContent(){
+        return {
+            i18n_tx_type:"i18n_delegate",
+            i18n_delegator_addr:this.delegator_addr,
+            i18n_validator_addr:this.validator_addr,
+            i18n_amount:this.delegation,
+        }
     }
 
 }
@@ -115,8 +120,13 @@ class MsgBeginUnbonding extends Builder.Msg {
         }
     }
 
-    static Create(properties){
-        return new MsgBeginUnbonding(properties.delegator_addr,properties.validator_addr,properties.shares_amount)
+    GetDisplayContent(){
+        return {
+            i18n_tx_type:"i18n_beginUnbonding",
+            i18n_delegator_addr:this.delegator_addr,
+            i18n_validator_addr:this.validator_addr,
+            i18n_shares_amount:this.shares_amount,
+        }
     }
 
 }
@@ -183,8 +193,14 @@ class MsgBeginRedelegate extends Builder.Msg {
         }
     }
 
-    static Create(properties){
-        return new MsgBeginUnbonding(properties.delegator_addr,properties.validator_src_addr,properties.validator_dst_addr,properties.shares)
+    GetDisplayContent(){
+        return {
+            i18n_tx_type:"i18n_redelegate",
+            i18n_delegator_addr:this.delegator_addr,
+            i18n_validator_src_addr:this.validator_src_addr,
+            i18n_validator_dst_addr:this.validator_dst_addr,
+            i18n_shares_amount:this.shares_amount,
+        }
     }
 }
 
