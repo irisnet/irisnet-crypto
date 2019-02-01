@@ -7,14 +7,10 @@ const Amino = require("./amino");
 const TxSerializer = require("./tx/tx_serializer");
 const Base64 = require('base64-node');
 
-class Coin extends Builder.Creator {
+class Coin{
     constructor(amount, denom) {
-        super();
         this.denom = denom;
         this.amount = amount;
-    }
-    Create(properties) {
-        return new Coin(properties.denom, properties.amount)
     }
 }
 
@@ -42,10 +38,6 @@ class Input extends Builder.Validator {
             throw new Error("coins is empty");
         }
     }
-
-    Create(properties) {
-        return new Input(properties.address, properties.coins)
-    }
 }
 
 class Output extends Builder.Validator {
@@ -71,10 +63,6 @@ class Output extends Builder.Validator {
         if (Utils.isEmpty(this.coins)) {
             throw new Error("coins is empty");
         }
-    }
-
-    Create(properties) {
-        return new Output(properties.address, properties.coins)
     }
 }
 
@@ -153,8 +141,13 @@ class MsgSend extends Builder.Msg {
         }
     }
 
-    static Create(properties) {
-        return new MsgSend(properties.inputs[0].address, properties.outputs[0].address, properties.outputs[0].coins)
+    GetDisplayContent(){
+        return {
+            i18n_tx_type:"i18n_transfer",
+            i18n_from:this.inputs[0].address,
+            i18n_to:this.outputs[0].address,
+            i18n_amount:this.outputs[0].coins,
+        }
     }
 }
 
@@ -232,35 +225,47 @@ class StdSignature {
 }
 
 class StdTx {
-    constructor(msgs, fee, signatures, memo) {
-        this.msgs = msgs;
-        this.fee = fee;
-        this.signatures = signatures;
-        this.memo = memo
+    constructor(properties) {
+        this.msgs = properties.msgs;
+        this.fee = properties.fee;
+        this.signatures = null;
+        this.memo = properties.memo;
+        this.signMsg = properties
+    }
+
+    SetSignature(sig){
+        if (typeof sig === "string") {
+            sig = JSON.parse(sig);
+        }
+        let signature = new StdSignature(sig.pub_key,sig.signature,this.signMsg.account_number,this.signMsg.sequence);
+        this.signatures = [signature];
     }
 
     GetData() {
         let signatures = [];
-        this.signatures.forEach(function(sig) {
-            let publicKey = "";
-            let signature = "";
-            if (sig.pub_key.length > 33) {
-                //去掉amino编码前缀
-                publicKey = sig.pub_key.slice(5, sig.pub_key.length)
-            }
-            publicKey = Base64.encode(publicKey);
+        if (this.signatures){
+            this.signatures.forEach(function(sig) {
+                let publicKey = "";
+                let signature = "";
+                if (sig.pub_key.length > 33) {
+                    //去掉amino编码前缀
+                    publicKey = sig.pub_key.slice(5, sig.pub_key.length)
+                }
+                publicKey = Base64.encode(publicKey);
 
-            if (!Utils.isEmpty(sig.signature)) {
-                signature = Base64.encode(sig.signature);
-            }
+                if (!Utils.isEmpty(sig.signature)) {
+                    signature = Base64.encode(sig.signature);
+                }
 
-            signatures.push({
-                pub_key: Amino.MarshalJSON(Config.iris.amino.pubKey, publicKey),
-                signature: signature,
-                account_number: Utils.toString(sig.account_number),
-                sequence: Utils.toString(sig.sequence)
-            })
-        });
+                signatures.push({
+                    pub_key: Amino.MarshalJSON(Config.iris.amino.pubKey, publicKey),
+                    signature: signature,
+                    account_number: Utils.toString(sig.account_number),
+                    sequence: Utils.toString(sig.sequence)
+                })
+            });
+        }
+
         let msgs = [];
         this.msgs.forEach(function(msg) {
             msgs.push(Amino.MarshalJSON(msg.type, msg))
@@ -295,6 +300,17 @@ class StdTx {
         }
     }
 
+    GetSignBytes(){
+        return this.signMsg.GetSignBytes()
+    }
+
+    GetDisplayContent(){
+        let msg = this.msgs[0];
+        let content = msg.GetDisplayContent();
+        content.i18n_fee = this.fee.amount;
+        return content
+    }
+
 }
 
 module.exports = class Bank {
@@ -316,8 +332,8 @@ module.exports = class Bank {
         return new StdSignature(pub_key, signature, account_number, sequence)
     }
 
-    static NewStdTx(msgs, fee, signatures, memo) {
-        return new StdTx(msgs, fee, signatures, memo)
+    static NewStdTx(properties) {
+        return new StdTx(properties)
     }
 
     static NewStdFee(amount, gas) {
@@ -326,13 +342,5 @@ module.exports = class Bank {
 
     static NewStdSignMsg(chainID, accnum, sequence, fee, msg, memo, msgType) {
         return new StdSignMsg(chainID, accnum, sequence, fee, msg, memo, msgType)
-    }
-
-    static Create(properties) {
-        return new MsgSend(properties.inputs[0].address, properties.outputs[0].address, properties.outputs[0].coins)
-    }
-
-    static MsgSend() {
-        return MsgSend
     }
 };

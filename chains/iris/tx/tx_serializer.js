@@ -37,17 +37,20 @@ class TxSerializer {
 
 
         let StdSignature = root.irisnet.tx.StdSignature;
-        let signature = StdSignature.create({
-            pubKey: object.signatures[0].pub_key,
-            signature: object.signatures[0].signature,
-            accountNumber: object.signatures[0].account_number,
-            sequence: object.signatures[0].sequence
-        });
+        let signature;
+        if (object.signatures){
+            signature = [StdSignature.create({
+                pubKey: object.signatures[0].pub_key,
+                signature: object.signatures[0].signature,
+                accountNumber: object.signatures[0].account_number,
+                sequence: object.signatures[0].sequence
+            })];
+        }
 
         let memo = object.memo;
 
         let StdTx = root.irisnet.tx.StdTx;
-        let tx = StdTx.create({msgs: [msgBytes], fee: feeMsg, signatures: [signature], memo: memo});
+        let tx = StdTx.create({msgs: [msgBytes], fee: feeMsg, signatures: signature, memo: memo});
         let txMsgBuf = StdTx.encode(tx).finish();
 
         //stdTx amion编码前缀[auth/StdTx]
@@ -88,14 +91,6 @@ class TxSerializer {
             data: bz,
             hash: hashTx.toUpperCase()
         }
-    }
-
-    /**
-     * TODO
-     *
-     */
-    decode(){
-        throw new Error("not implement");
     }
 }
 function EncodeUvarint(u) {
