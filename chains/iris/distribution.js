@@ -39,8 +39,11 @@ class MsgWithdrawDelegatorRewardsAll extends Builder.Msg {
         }
     }
 
-    static Create(properties){
-        return new MsgWithdrawDelegatorRewardsAll(properties.delegator_addr)
+    GetDisplayContent(){
+        return {
+            i18n_tx_type:"i18n_rwithdraw_delegation_rewards_all",
+            i18n_delegator_addr:this.delegator_addr,
+        }
     }
 }
 
@@ -87,8 +90,12 @@ class MsgWithdrawDelegatorReward extends Builder.Msg {
         }
     }
 
-    static Create(properties){
-        return new MsgWithdrawDelegatorReward(properties.delegator_addr,properties.validator_addr)
+    GetDisplayContent(){
+        return {
+            i18n_tx_type:"i18n_withdraw_delegation_reward",
+            i18n_delegator_addr:this.delegator_addr,
+            i18n_validator_addr:this.validator_addr,
+        }
     }
 }
 
@@ -100,13 +107,5 @@ module.exports = class Distribution {
 
     static CreateMsgWithdrawDelegatorReward(req) {
         return new MsgWithdrawDelegatorReward(req.from,req.msg.validator_addr);
-    }
-
-    static MsgWithdrawDelegatorRewardsAll(){
-        return MsgWithdrawDelegatorRewardsAll
-    }
-
-    static MsgWithdrawDelegatorReward(){
-        return MsgWithdrawDelegatorReward
     }
 };

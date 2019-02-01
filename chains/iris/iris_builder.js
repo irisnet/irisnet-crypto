@@ -13,10 +13,10 @@ class IrisBuilder extends Builder {
 
 
     /**
-     * 构造签名内容(如果是硬件钱包，请将返回结果中的msg传递给硬件钱包)
+     * 构造签名内容
      *
      * @param tx  请求内容
-     * @returns {StdSignMsg}
+     * @returns {StdTx}
      */
     buildTx(tx) {
         let req = super.buildParam(tx);
@@ -53,23 +53,27 @@ class IrisBuilder extends Builder {
         let stdFee = Bank.NewStdFee(req.fees, req.gas);
         let signMsg = Bank.NewStdSignMsg(req.chain_id, req.account_number, req.sequence, stdFee, msg, req.memo, req.type);
         signMsg.ValidateBasic();
-        return signMsg
+        return Bank.NewStdTx(signMsg);
     }
 
     /**
-     * 对buildTx构造的交易进行签名，注意入参必须是buildTx的结果.
+     * 签名交易数据
      *
-     * @param tx {StdSignMsg} 字符串
+     * @param data
      * @param privateKey
-     * @returns {StdTx}
+     * @returns {}
      */
-    signTx(tx, privateKey) {
-        let signMsg = CreateSignMsg(tx);
-        let signbyte = IrisKeypair.sign(privateKey, signMsg.GetSignBytes());
+    sign(data, privateKey) {
+        if (typeof data === "string") {
+            data = JSON.parse(data);
+        }
+        let signbyte = IrisKeypair.sign(privateKey, data);
         let keypair = IrisKeypair.import(privateKey);
-        let signs = [Bank.NewStdSignature(Codec.Hex.hexToBytes(keypair.publicKey), signbyte, signMsg.account_number, signMsg.sequence)];
-        let stdTx = Bank.NewStdTx(signMsg.msgs, signMsg.fee, signs, signMsg.memo);
-        return stdTx
+
+        return {
+            pub_key:Codec.Hex.hexToBytes(keypair.publicKey),
+            signature:signbyte
+        }
     }
 
     /**
@@ -82,58 +86,17 @@ class IrisBuilder extends Builder {
      * @returns {StdTx}  交易
      */
     buildAndSignTx(tx, privateKey) {
-        let signMsg = this.buildTx(tx);
+        let stdTx = this.buildTx(tx);
         let mode = tx.mode ? tx.mode : Config.iris.mode.normal;
-        let signbyte;
+        let signature;
         if (mode === Config.iris.mode.normal) {
             if (Utils.isEmpty(privateKey)) {
                 throw new Error("privateKey is  empty");
             }
-            signbyte = IrisKeypair.sign(privateKey, signMsg.GetSignBytes());
-            //console.log(JSON.stringify(signMsg.GetSignBytes()))
+            signature = this.sign(stdTx.GetSignBytes(),privateKey);
+            stdTx.SetSignature(signature);
         }
-        let keypair = IrisKeypair.import(privateKey);
-        let signs = [Bank.NewStdSignature(Codec.Hex.hexToBytes(keypair.publicKey), signbyte, signMsg.account_number, signMsg.sequence)];
-        let stdTx = Bank.NewStdTx(signMsg.msgs, signMsg.fee, signs, signMsg.memo);
         return stdTx
     }
 }
-
-function CreateSignMsg(properties) {
-    let prop = JSON.parse(properties);
-    let msg;
-    let msgType = prop.type;
-    switch (msgType) {
-        case Config.iris.tx.transfer.type: {
-            msg = Bank.MsgSend().Create(prop.msgs[0]);
-            break;
-        }
-        case Config.iris.tx.delegate.type: {
-            msg = Stake.MsgDelegate().Create(prop.msgs[0]);
-            break;
-        }
-        case Config.iris.tx.unbond.type: {
-            msg = Stake.MsgBeginUnbonding().Create(prop.msgs[0]);
-            break;
-        }
-        case Config.iris.tx.redelegate.type: {
-            msg = Stake.MsgBeginRedelegate().Create(prop.msgs[0]);
-            break;
-        }
-        case Config.iris.tx.withdrawDelegationRewardsAll.type: {
-            msg = Distribution.MsgWithdrawDelegatorRewardsAll().Create(prop.msgs[0]);
-            break;
-        }
-        case Config.iris.tx.withdrawDelegationReward.type: {
-            msg = Distribution.MsgWithdrawDelegatorReward().Create(prop.msgs[0]);
-            break;
-        }
-        default: {
-            throw new Error("not exist tx type");
-        }
-    }
-    let stdFee = Bank.NewStdFee(prop.fee.amount, parseInt(prop.fee.gas));
-    return Bank.NewStdSignMsg(prop.chain_id, parseInt(prop.account_number), parseInt(prop.sequence), stdFee, msg, prop.memo);
-}
-
 module.exports = Old(IrisBuilder);

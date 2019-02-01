@@ -1,6 +1,7 @@
 'use strict';
 
 const Codec = require("../../util/codec");
+const Util = require("../../util/utils");
 const Sha256 = require("sha256");
 const RIPEMD160 = require('ripemd160');
 const Bip39 = require('bip39');
@@ -20,7 +21,6 @@ class CosmosKeypair {
     }
 
     static sign(private_key, msg) {
-
         //将签名字符串使用Sha256构造32位byte数组
         let sigByte = Buffer.from(JSON.stringify(msg));
         let sig32 = Buffer.from(Sha256(sigByte,{ asBytes: true }));
@@ -50,6 +50,9 @@ class CosmosKeypair {
         let entropySize = 24 * 11 - 8;
         let entropy = Random(entropySize / 8);
         let mnemonicS = Bip39.entropyToMnemonic(entropy,language);
+        while (Util.hasRepeatElement(mnemonicS," ")){
+            mnemonicS = Bip39.entropyToMnemonic(entropy,language);
+        }
 
         //生成私钥
         let secretKey = this.getPrivateKeyFromSecret(mnemonicS);

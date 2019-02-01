@@ -23,11 +23,11 @@ class Builder {
      *
      * 根据请求内容构造交易并对交易进行签名
      *
-     * @param tx {*}
+     * @param data {*}
      * @param privateKey {string} 交易发送方私钥(hex编码)，冷钱包提供
-     * @returns {StdTx} 交易
+     * @returns {StdSignature} 交易
      */
-    signTx(tx,privateKey) {
+    sign(data,privateKey) {
         throw new Error("not implement");
     }
 
@@ -120,17 +120,11 @@ class Request {
     }
 }
 
-class Creator{
-    Create(properties){
-        throw new Error("not implement");
-    }
-}
-
 /**
  * 校验器接口
  *
  */
-class Validator extends Creator{
+class Validator{
     ValidateBasic() {
         throw new Error("not implement");
     }
@@ -156,6 +150,10 @@ class Msg extends Validator{
     GetMsg(){
         throw new Error("not implement");
     }
+
+    GetDisplayContent(){
+        throw new Error("not implement");
+    }
 }
 
-module.exports = {Builder,Msg,Validator,Creator};
+module.exports = {Builder,Msg,Validator};

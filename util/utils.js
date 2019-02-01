@@ -60,6 +60,18 @@ module.exports = class Utils {
             return str.toString()
         }
     }
+
+    static hasRepeatElement(target,splitChar){
+        if (!(target instanceof Array)){
+            if (this.isEmpty(splitChar)){
+                throw new Error("split char is empty");
+            }
+            target = target.split(splitChar)
+        }
+        let srcLen = target.length;
+        let eSet = new Set(target);
+        return !(srcLen == eSet.size)
+    }
 };
 
 function evil(fn) {
