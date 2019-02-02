@@ -1,6 +1,7 @@
 'use strict';
 
 const Utils = require('../../util/utils');
+const Codec = require('../../util/codec');
 const Config = require('../../config');
 const Builder = require("../../builder");
 const Amino = require("./amino");
@@ -239,6 +240,22 @@ class StdTx {
         }
         let signature = new StdSignature(sig.pub_key,sig.signature,this.signMsg.account_number,this.signMsg.sequence);
         this.signatures = [signature];
+    }
+
+    SetPubKey(pubkey){
+        if (Codec.Bech32.isBech32(Config.iris.bech32.accPub,pubkey)){
+            pubkey = Codec.Bech32.fromBech32(pubkey);
+        }
+        pubkey = Codec.Hex.hexToBytes(pubkey);
+        if(!this.signatures || this.signatures.length == 0){
+            let signature = {
+                pub_key:pubkey
+            };
+            this.SetSignature(signature);
+            return
+        }
+        this.signatures[0].pub_key = pubkey
+
     }
 
     GetData() {
