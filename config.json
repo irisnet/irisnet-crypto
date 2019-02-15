@@ -10,7 +10,7 @@
         "prefix": "irishub/stake/MsgDelegate"
       },
       "unbond": {
-        "type": "beginUnbonding",
+        "type": "begin_unbonding",
         "prefix": "irishub/stake/BeginUnbonding"
       },
       "redelegate": {
