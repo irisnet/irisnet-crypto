@@ -33,7 +33,7 @@ describe('CryPto test', function () {
             let crypto = Irisnet.getCrypto(Irisnet.config.chain.iris);
             let account = crypto.recover("tube lonely pause spring gym veteran know want grid tired taxi such same mesh charge orient bracket ozone concert once good quick dry boss");
             console.log(account);
-            console.log(codec.Bech32.fromBech32("fca18059ymwg4sa49yw7x9gzdeydn892elw0twle0a"))
+            console.log(codec.Bech32.fromBech32("fap1addwnpepqtdme789cpm8zww058ndlhzpwst3s0mxnhdhu5uyps0wjucaufha6v3ce99"))
         });
 
         it('test hasRepeatElement', function () {
@@ -63,17 +63,43 @@ describe('CryPto test', function () {
     let fees = {denom: "iris-atto", amount: 400000000000000000};
     let memo = "1";
     let privateKey = "55A3160577979EC014A2CE85C430E1FF0FF06EFD230B7CE41AEAE2EF00EDF175";
+    let pubKey = "fap1addwnpepqtdme789cpm8zww058ndlhzpwst3s0mxnhdhu5uyps0wjucaufha6v3ce99";
     let chain = Irisnet.config.chain.iris;
 
 
     //测试热钱包相关交易
     describe('test wallet tx', function () {
+        it('test simulate transfer', function () {
+            let tx = {
+                chain_id: chain_id,
+                from: from,
+                account_number: account_number,
+                sequence: 57,
+                fees: fees,
+                gas: gas,
+                memo: memo,
+                type: Irisnet.config.iris.tx.transfer.type,
+                mode: Irisnet.config.iris.mode.try,
+                msg: {
+                    to: "faa1s6v9qgu8ye7d884s8kpye64x66znndg8t6eztj",
+                    coins: [
+                        {
+                            denom: "iris-atto",
+                            amount: 10000000000000000000
+                        }
+                    ]
+                }
+            };
+
+            simulate(tx);
+        });
+
         it('test transfer', function () {
             let tx = {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 54,
+                sequence: 57,
                 fees: fees,
                 gas: gas,
                 memo: memo,
@@ -97,7 +123,7 @@ describe('CryPto test', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 39,
+                sequence: 56,
                 fees: fees,
                 gas: gas,
                 memo: memo,
@@ -341,6 +367,20 @@ describe('CryPto test', function () {
     function execute(tx) {
         let builder = Irisnet.getBuilder(chain);
         let stdTx = builder.buildAndSignTx(tx, privateKey);
+        console.log("======stdTx======");
+        console.log(JSON.stringify(stdTx.GetData()));
+        // console.log("======待提交交易======");
+        let result = stdTx.Hash();
+        console.log("data:", result.data);
+        console.log("hash", result.hash);
+        console.log("displayContent", JSON.stringify(stdTx.GetDisplayContent()));
+    }
+
+    //simulate
+    function simulate(tx) {
+        let builder = Irisnet.getBuilder(chain);
+        let stdTx = builder.buildAndSignTx(tx);
+        stdTx.SetPubKey(pubKey);
         console.log("======stdTx======");
         console.log(JSON.stringify(stdTx.GetData()));
         // console.log("======待提交交易======");
