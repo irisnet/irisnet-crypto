@@ -10,7 +10,7 @@
         "prefix": "irishub/stake/MsgDelegate"
       },
       "unbond": {
-        "type": "beginUnbonding",
+        "type": "begin_unbonding",
         "prefix": "irishub/stake/BeginUnbonding"
       },
       "redelegate": {
@@ -35,9 +35,9 @@
       "normal": "normal"
     },
     "bech32": {
-      "accAddr": "faa",
-      "valAddr": "fva",
-      "accPub": "fap"
+      "accAddr": "${accAddr}",
+      "valAddr": "${valAddr}",
+      "accPub": "${accPub}"
     },
     "defaultCoding": "bech32",
     "coding": {

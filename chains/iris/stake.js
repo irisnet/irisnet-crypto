@@ -122,7 +122,7 @@ class MsgBeginUnbonding extends Builder.Msg {
 
     GetDisplayContent(){
         return {
-            i18n_tx_type:"i18n_beginUnbonding",
+            i18n_tx_type:"i18n_begin_unbonding",
             i18n_delegator_addr:this.delegator_addr,
             i18n_validator_addr:this.validator_addr,
             i18n_shares_amount:this.shares_amount,
