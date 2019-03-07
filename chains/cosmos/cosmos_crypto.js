@@ -7,7 +7,7 @@ const Utils = require("../../util/utils");
 const Config = require('../../config');
 const Bip39 = require('bip39');
 
-class IrisCrypto extends Crypto {
+class CosmosCrypto extends Crypto {
     
     /**
      *
@@ -98,4 +98,4 @@ function switchToWordList(language){
     }
 }
 
-module.exports = Old(IrisCrypto);
+module.exports = Old(CosmosCrypto);

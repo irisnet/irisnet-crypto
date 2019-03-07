@@ -7,7 +7,7 @@ const Codec = require("../../util/codec");
 const Config = require('../../config');
 const StdTx = require("./stdTx");
 
-class IrisBuilder extends Builder {
+class CosmosBuilder extends Builder {
 
 
     /**
@@ -88,4 +88,4 @@ class IrisBuilder extends Builder {
         return stdTx
     }
 }
-module.exports = Old(IrisBuilder);
+module.exports = Old(CosmosBuilder);

@@ -31,7 +31,7 @@ describe('CryPto iris test', function () {
 
         it('test recover', function () {
             let crypto = Irisnet.getCrypto(Irisnet.config.chain.cosmos);
-            let account = crypto.recover("profit clean faculty fix gown kitten input code attend meat require breeze credit dynamic clown army half under truck lake toy whisper clip salon");
+            let account = crypto.recover("");
             console.log(account);
             console.log(codec.Bech32.fromBech32("fap1addwnpepqtdme789cpm8zww058ndlhzpwst3s0mxnhdhu5uyps0wjucaufha6v3ce99"))
         });
@@ -397,7 +397,7 @@ describe('CryPto cosmos test', function () {
     let account_number = 920;
     let fees = {denom: "photino", amount: "20"};
     let memo = "1";
-    let privateKey = "0A36EC1ADC5653EC602DC702FD32576ADDC114534ED23ECB621FA0929BFC7CDE";
+    let privateKey = "";//TODO
     let pubKey = "cosmospub1addwnpepq25tsfnsvd37fhsw2jv70rnq0ecsth64syqrlm5dqjsfm5jw5shfvwjzjqh";
     let chain = Irisnet.config.chain.cosmos;
 
@@ -406,7 +406,7 @@ describe('CryPto cosmos test', function () {
             chain_id: chain_id,
             from: from,
             account_number: account_number,
-            sequence: 13,
+            sequence: 14,
             fees: fees,
             gas: gas,
             memo: memo,
@@ -425,17 +425,11 @@ describe('CryPto cosmos test', function () {
         execute(tx,chain);
     });
 
-    //热钱包调用
     function execute(tx,chain = 'iris') {
         let builder = Irisnet.getBuilder(chain);
         let stdTx = builder.buildAndSignTx(tx, privateKey);
-        //console.log("======stdTx======");
-        //console.log(JSON.stringify(stdTx.GetSignBytes()));
         console.log(JSON.stringify(stdTx.GetData()));
-        // console.log("======待提交交易======");
         let result = stdTx.Hash();
-        //console.log("data:", result.data);
         console.log("hash", result.hash);
-        //console.log("displayContent", JSON.stringify(stdTx.GetDisplayContent()));
     }
 });
