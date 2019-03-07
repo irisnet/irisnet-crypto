@@ -397,11 +397,11 @@ describe('CryPto cosmos test', function () {
     let account_number = 920;
     let fees = {denom: "photino", amount: "20"};
     let memo = "1";
-    let privateKey = "";//TODO
+    let privateKey = "";
     let pubKey = "cosmospub1addwnpepq25tsfnsvd37fhsw2jv70rnq0ecsth64syqrlm5dqjsfm5jw5shfvwjzjqh";
     let chain = Irisnet.config.chain.cosmos;
 
-    it('test cosmos transfer', function () {
+    it('test  transfer', function () {
         let tx = {
             chain_id: chain_id,
             from: from,
@@ -422,10 +422,51 @@ describe('CryPto cosmos test', function () {
             }
         };
 
-        execute(tx,chain);
+        execute(tx);
     });
 
-    function execute(tx,chain = 'iris') {
+    it('test delegate', function () {
+        let tx = {
+            chain_id: chain_id,
+            from: from,
+            account_number: account_number,
+            sequence: 15,
+            fees: fees,
+            gas: gas,
+            memo: memo,
+            type: Irisnet.config.cosmos.tx.delegate.type,
+            msg: {
+                validator_addr: "cosmosvaloper1qsl0pz6rht3fx4plrgj2z4ry9z0nhvykel550p",
+                delegation: {
+                    denom: "muon",
+                    amount: "10"
+                }
+            }
+        };
+
+        execute(tx);
+    });
+
+    it('test undelegate', function () {
+        let tx = {
+            chain_id: chain_id,
+            from: from,
+            account_number: account_number,
+            sequence: 18,
+            fees: fees,
+            gas: gas,
+            memo: memo,
+            type: Irisnet.config.cosmos.tx.undelegate.type,
+            msg: {
+                validator_addr: "cosmosvaloper1qsl0pz6rht3fx4plrgj2z4ry9z0nhvykel550p",
+                shares_amount: "1.5"
+            }
+        };
+
+        execute(tx);
+    });
+
+    function execute(tx) {
         let builder = Irisnet.getBuilder(chain);
         let stdTx = builder.buildAndSignTx(tx, privateKey);
         console.log(JSON.stringify(stdTx.GetData()));

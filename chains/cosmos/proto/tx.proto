@@ -13,20 +13,20 @@ message MsgSend {
 }
 
 message MsgDelegate {
-    required bytes delegatorAddr = 1;
-    required bytes validatorAddr = 2;
+    required bytes DelegatorAddr = 1;
+    required bytes ValidatorAddr = 2;
     required Coin Value = 3;
 }
 
 message MsgUndelegate {
-    required bytes  delegatorAddr = 1;
-    required bytes  validatorAddr = 2;
-    required string  sharesAmount = 3;
+    required bytes DelegatorAddr = 1;
+    required bytes ValidatorAddr = 2;
+    required string SharesAmount = 3;
 }
 
 message StdFee {
-   repeated Coin amount = 1;
-   required int64 gas = 2;
+    repeated Coin amount = 1;
+    required int64 gas = 2;
 }
 
 message StdSignature {
@@ -36,7 +36,7 @@ message StdSignature {
 
 message StdTx {
     repeated bytes msg = 1;
-    required StdFee fee   = 2;
+    required StdFee fee = 2;
     repeated StdSignature signatures = 3;
     optional string memo = 4; //空值需要处理
 }

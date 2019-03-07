@@ -2,6 +2,7 @@
 const Builder = require("../../builder").Builder;
 const Old = require('old');
 const Bank = require('./bank');
+const Stake = require('./stake');
 const CosmosKeypair = require('./cosmos_keypair');
 const Codec = require("../../util/codec");
 const Config = require('../../config');
@@ -24,26 +25,14 @@ class CosmosBuilder extends Builder {
                 msg = Bank.create(req);
                 break;
             }
-            // case Config.iris.tx.delegate.type: {
-            //     msg = Stake.CreateMsgDelegate(req);
-            //     break;
-            // }
-            // case Config.iris.tx.unbond.type: {
-            //     msg = Stake.CreateMsgBeginUnbonding(req);
-            //     break;
-            // }
-            // case Config.iris.tx.redelegate.type: {
-            //     msg = Stake.CreateMsgBeginRedelegate(req);
-            //     break;
-            // }
-            // case Config.iris.tx.withdrawDelegationRewardsAll.type: {
-            //     msg = Distribution.CreateMsgWithdrawDelegatorRewardsAll(req);
-            //     break;
-            // }
-            // case Config.iris.tx.withdrawDelegationReward.type: {
-            //     msg = Distribution.CreateMsgWithdrawDelegatorReward(req);
-            //     break;
-            // }
+            case Config.iris.tx.delegate.type: {
+                msg = Stake.createMsgDelegate(req);
+                break;
+            }
+            case Config.cosmos.tx.undelegate.type: {
+                msg = Stake.createMsgUndelegate(req);
+                break;
+            }
             default: {
                 throw new Error("not exist tx type");
             }
