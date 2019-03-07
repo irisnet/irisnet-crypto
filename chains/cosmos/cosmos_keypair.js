@@ -9,7 +9,7 @@ const Random = require('randombytes');
 const Secp256k1 = require('secp256k1');
 const BN = require("bn");
 const Config = require('../../config');
-const Amino = require('./amino');
+const Amino = require('../base');
 
 class CosmosKeypair {
 
@@ -163,7 +163,6 @@ class Hd {
             data = Buffer.concat([data,privKeyBuffer]);
         }else{
             const pubKey =Secp256k1.publicKeyCreate(privKeyBytes);
-            // TODO
             if (index ==0){
                 indexBuffer = Buffer.from([0,0,0,0]);
             }

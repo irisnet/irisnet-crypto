@@ -1,9 +1,10 @@
 'use strict';
 
-const Codec = require("../../util/codec");
+const Codec = require("../util/codec");
 const Sha256 = require("sha256");
-const Config = require('../../config');
-const root = require('./tx/tx');
+const Config = require('../config');
+const R_Cosmos = require('./cosmos/tx/tx');
+const R_Iris = require('./iris/tx/tx');
 
 /**
  * 处理amino编码（目前支持序列化）
@@ -79,8 +80,18 @@ class Amino {
 let amino = new Amino();
 amino.RegisterConcrete(null, Config.cosmos.amino.pubKey);
 amino.RegisterConcrete(null, Config.cosmos.amino.signature);
-amino.RegisterConcrete(root.cosmos.MsgDelegate, Config.cosmos.tx.delegate.prefix);
-amino.RegisterConcrete(root.cosmos.MsgSend, Config.cosmos.tx.transfer.prefix);
-amino.RegisterConcrete(root.cosmos.MsgUndelegate, Config.cosmos.tx.undelegate.prefix);
-amino.RegisterConcrete(root.cosmos.StdTx, Config.cosmos.tx.stdTx.prefix);
+amino.RegisterConcrete(R_Cosmos.cosmos.MsgDelegate, Config.cosmos.tx.delegate.prefix);
+amino.RegisterConcrete(R_Cosmos.cosmos.MsgSend, Config.cosmos.tx.transfer.prefix);
+amino.RegisterConcrete(R_Cosmos.cosmos.MsgUndelegate, Config.cosmos.tx.undelegate.prefix);
+amino.RegisterConcrete(R_Cosmos.cosmos.StdTx, Config.cosmos.tx.stdTx.prefix);
+
+amino.RegisterConcrete(null, Config.iris.amino.pubKey);
+amino.RegisterConcrete(null, Config.iris.amino.signature);
+amino.RegisterConcrete(R_Iris.irisnet.tx.MsgDelegate, Config.iris.tx.delegate.prefix);
+amino.RegisterConcrete(R_Iris.irisnet.tx.MsgSend, Config.iris.tx.transfer.prefix);
+amino.RegisterConcrete(R_Iris.irisnet.tx.MsgBeginRedelegate, Config.iris.tx.redelegate.prefix);
+amino.RegisterConcrete(R_Iris.irisnet.tx.MsgBeginUnbonding, Config.iris.tx.unbond.prefix);
+amino.RegisterConcrete(R_Iris.irisnet.tx.MsgWithdrawDelegatorRewardsAll, Config.iris.tx.withdrawDelegationRewardsAll.prefix);
+amino.RegisterConcrete(R_Iris.irisnet.tx.MsgWithdrawDelegatorReward, Config.iris.tx.withdrawDelegationReward.prefix);
+amino.RegisterConcrete(R_Iris.irisnet.tx.StdTx, Config.iris.tx.stdTx.prefix);
 module.exports = amino;

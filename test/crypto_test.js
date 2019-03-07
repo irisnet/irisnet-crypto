@@ -406,7 +406,7 @@ describe('CryPto cosmos test', function () {
             chain_id: chain_id,
             from: from,
             account_number: account_number,
-            sequence: 8,
+            sequence: 13,
             fees: fees,
             gas: gas,
             memo: memo,
@@ -429,7 +429,7 @@ describe('CryPto cosmos test', function () {
     function execute(tx,chain = 'iris') {
         let builder = Irisnet.getBuilder(chain);
         let stdTx = builder.buildAndSignTx(tx, privateKey);
-        console.log("======stdTx======");
+        //console.log("======stdTx======");
         //console.log(JSON.stringify(stdTx.GetSignBytes()));
         console.log(JSON.stringify(stdTx.GetData()));
         // console.log("======待提交交易======");

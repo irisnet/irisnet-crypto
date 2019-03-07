@@ -5,7 +5,7 @@ const Bank = require('./bank');
 const CosmosKeypair = require('./cosmos_keypair');
 const Codec = require("../../util/codec");
 const Config = require('../../config');
-const Utils = require("../../util/utils");
+const StdTx = require("./stdTx");
 
 class IrisBuilder extends Builder {
 
@@ -21,7 +21,7 @@ class IrisBuilder extends Builder {
         let msg;
         switch (req.type) {
             case Config.cosmos.tx.transfer.type: {
-                msg = Bank.CreateMsgSend(req);
+                msg = Bank.create(req);
                 break;
             }
             // case Config.iris.tx.delegate.type: {
@@ -48,10 +48,7 @@ class IrisBuilder extends Builder {
                 throw new Error("not exist tx type");
             }
         }
-        let stdFee = Bank.NewStdFee(req.fees, req.gas);
-        let signMsg = Bank.NewStdSignMsg(req.chain_id, req.account_number, req.sequence, stdFee, msg, req.memo, req.type);
-        signMsg.ValidateBasic();
-        return Bank.NewStdTx(signMsg);
+        return StdTx.create(req,msg);
     }
 
     /**

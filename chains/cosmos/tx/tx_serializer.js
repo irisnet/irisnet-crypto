@@ -1,5 +1,5 @@
 const root = require('./tx');
-const amino = require('../amino');
+const amino = require('../../base');
 const config = require('../../../config');
 
 /**
@@ -36,11 +36,13 @@ class TxSerializer {
         let feeMsg = StdFee.create(fee);
 
 
+
+
         let StdSignature = root.cosmos.StdSignature;
         let signature;
         if (object.signatures){
             signature = [StdSignature.create({
-                pubKey: object.signatures[0].pub_key,
+                pubKey: object.signatures[0].pubKey,
                 signature: object.signatures[0].signature,
             })];
         }
@@ -50,6 +52,7 @@ class TxSerializer {
         let StdTx = root.cosmos.StdTx;
         let tx = StdTx.create({msg: [msgBytes], fee: feeMsg, signatures: signature, memo: memo});
         let txMsgBuf = StdTx.encode(tx).finish();
+
 
         //stdTx amion编码前缀[auth/StdTx]
         let txPreBuf = Buffer.from(amino.GetRegisterInfo(config.cosmos.tx.stdTx.prefix).prefix);
@@ -79,11 +82,14 @@ class TxSerializer {
 
         let uvarintBuf = Buffer.from(EncodeUvarint(buf.length));
         let bz = Buffer.concat([uvarintBuf, buf]);
-
         const crypto = require('crypto');
         const hash = crypto.createHash('sha256');
         hash.update(bz);
         let hashTx = hash.digest('hex').substring(0, 64);
+
+        // console.log(JSON.stringify(msgBytes));
+        // console.log(JSON.stringify(StdFee.encode(feeMsg).finish()));
+        // console.log(JSON.stringify(StdSignature.encode(signature[0]).finish()));
 
         return {
             data: bz,
