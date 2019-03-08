@@ -51,6 +51,7 @@ class CosmosKeypair {
         let entropy = Random(entropySize / 8);
         let mnemonicS = Bip39.entropyToMnemonic(entropy,language);
         while (Util.hasRepeatElement(mnemonicS," ")){
+            entropy = Random(entropySize / 8);
             mnemonicS = Bip39.entropyToMnemonic(entropy,language);
         }
 
