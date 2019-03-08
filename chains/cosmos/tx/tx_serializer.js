@@ -34,10 +34,7 @@ class TxSerializer {
         let fee = object.fee;
         let StdFee = root.cosmos.StdFee;
         let feeMsg = StdFee.create(fee);
-
-
-
-
+        
         let StdSignature = root.cosmos.StdSignature;
         let signature;
         if (object.signatures){
@@ -86,10 +83,6 @@ class TxSerializer {
         const hash = crypto.createHash('sha256');
         hash.update(bz);
         let hashTx = hash.digest('hex').substring(0, 64);
-
-        // console.log(JSON.stringify(msgBytes));
-        // console.log(JSON.stringify(StdFee.encode(feeMsg).finish()));
-        // console.log(JSON.stringify(StdSignature.encode(signature[0]).finish()));
 
         return {
             data: bz,

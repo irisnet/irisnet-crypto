@@ -833,6 +833,7 @@ $root.cosmos = (function() {
             writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.DelegatorAddr);
             writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.ValidatorAddr);
             let shares = message.SharesAmount.replace(".","");
+            shares = shares.replace(/\b(0+)/gi,"");
             writer.uint32(/* id 3, wireType 2 =*/26).string(shares);
             return writer;
         };
