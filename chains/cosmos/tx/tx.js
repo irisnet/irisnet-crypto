@@ -2508,7 +2508,7 @@ $root.cosmos = (function() {
             if (message.signatures != null && message.signatures.length)
                 for (var i = 0; i < message.signatures.length; ++i)
                     $root.cosmos.StdSignature.encode(message.signatures[i], writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-            if (message.memo != null && message.hasOwnProperty("memo"))
+            if (message.memo != null && message.hasOwnProperty("memo") && message.memo !== "")
                 writer.uint32(/* id 4, wireType 2 =*/34).string(message.memo);
             return writer;
         };
