@@ -8,7 +8,7 @@ describe('cosmos traction test', function () {
     let fees = {denom: "photino", amount: "20"};
     let memo = "";
     let privateKey = "0A36EC1ADC5653EC602DC702FD32576ADDC114534ED23ECB621FA0929BFC7CDE";
-    let pubKey = "cosmospub1addwnpepq25tsfnsvd37fhsw2jv70rnq0ecsth64syqrlm5dqjsfm5jw5shfvwjzjqh";
+    let pubKey = "";
     let chain = Irisnet.config.chain.cosmos;
 
     it('test  transfer', function () {
