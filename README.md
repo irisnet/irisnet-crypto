@@ -16,6 +16,10 @@ It mainly provides account generation, transaction construction and offline sign
     - Transfer transaction construction and signature
     - Delegate transaction construction and signature
     - Undelegate transaction construction and signature
+    - Redelegate transaction construction and signature
+    - SetWithdrawAddress transaction construction and signature
+    - WithdrawDelegatorReward transaction construction and signature
+    - WithdrawValidatorCommission transaction construction and signature
     
 In addition, irIRISnet also supports hot and cold wallets, offline signatures of transactions by scanning code.
 ## Installation
@@ -73,7 +77,7 @@ let hash = stdTx.Hash();
 ```
 *buildAndSignTx* has two parameters: 
 - request : transaction content,specific instructions are as follows:
-    - chain_id : blockchain's chain_id(example:fuxi/irishub/gaia-12001 etc.)
+    - chain_id : blockchain's chain_id(example:fuxi/irishub/gaia-13001 etc.)
     - from : transaction originator address(example:faa1ljemm0yznz58qxxs8xyak7fashcfxf5lssn6jm)
     - account_number : you can get it from lcd's 'auth/accounts/'
     - sequence : you can get it from lcd's 'auth/accounts/'
@@ -90,7 +94,7 @@ let hash = stdTx.Hash();
     - msg : message content
 - privateKey : your privateKey
 
-*GetData* will return the constructed and signed transaction,you can call lcd's 'tx/broadcast' to send the transaction.
+*GetData* will return the constructed and signed transaction,you can call lcd's 'tx/broadcast'(cosmos:/txs) to send the transaction.
 
 *Hash* is used to calculate the hash of the transaction,prevent server response from being unavailable due to timeout. You can use hash to confirm if the transaction was successful.For specific usage, please refer to the use [case](./test/crypto_test.js)
         
