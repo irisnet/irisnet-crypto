@@ -1,0 +1,63 @@
+package cosmos;
+
+//pbjs -t static-module -w commonjs -o tx.js tx.proto
+message Coin {
+    required string denom = 1;
+    required string amount = 2;
+}
+
+message MsgSend {
+    required bytes FromAddress = 1;
+    required bytes ToAddress = 2;
+    repeated Coin Amount = 3;
+}
+
+message MsgDelegate {
+    required bytes DelegatorAddr = 1;
+    required bytes ValidatorAddr = 2;
+    required Coin Value = 3;
+}
+
+message MsgUndelegate {
+    required bytes DelegatorAddr = 1;
+    required bytes ValidatorAddr = 2;
+    required string SharesAmount = 3;
+}
+
+message MsgBeginRedelegate {
+    required bytes DelegatorAddr = 1;
+    required bytes ValidatorSrcAddr = 2;
+    required bytes ValidatorDstAddr = 3;
+    required string SharesAmount = 4;
+}
+
+message MsgSetWithdrawAddress {
+     required bytes DelegatorAddr = 1;
+     required bytes WithdrawAddr = 2;
+}
+
+message MsgWithdrawDelegatorReward {
+    required bytes DelegatorAddr = 1;
+    required bytes ValidatorAddr = 2;
+}
+
+message MsgWithdrawValidatorCommission {
+    required bytes ValidatorAddr = 1;
+}
+
+message StdFee {
+    repeated Coin amount = 1;
+    required int64 gas = 2;
+}
+
+message StdSignature {
+    required bytes pubKey = 1;
+    required bytes signature = 2;
+}
+
+message StdTx {
+    repeated bytes msg = 1;
+    required StdFee fee = 2;
+    repeated StdSignature signatures = 3;
+    optional string memo = 4; //空值需要处理
+}

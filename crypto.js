@@ -79,6 +79,9 @@ class Crypto {
             case Config.chain.ethermint: {
                 return require('./chains/ethermint/ethermint_crypto')();
             }
+            case Config.chain.cosmos: {
+                return require('./chains/cosmos/cosmos_crypto')();
+            }
             default: {
                 throw new Error("not correct chain");
             }

@@ -9,14 +9,14 @@ const Random = require('randombytes');
 const Secp256k1 = require('secp256k1');
 const BN = require("bn");
 const Config = require('../../config');
-const Amino = require('./amino');
+const Amino = require('../base');
 
 class CosmosKeypair {
 
     static getPrivateKeyFromSecret(mnemonicS) {
         let seed = Bip39.mnemonicToSeed(mnemonicS);
         let master = Hd.ComputeMastersFromSeed(seed);
-        let derivedPriv = Hd.DerivePrivateKeyForPath(master.secret,master.chainCode,Config.iris.bip39Path);
+        let derivedPriv = Hd.DerivePrivateKeyForPath(master.secret,master.chainCode,Config.cosmos.bip39Path);
         return derivedPriv;
     }
 
@@ -29,8 +29,6 @@ class CosmosKeypair {
         let prikeyArr = Buffer.from(new Uint8Array(Codec.Hex.hexToBytes(private_key)));
         let sig = Secp256k1.sign(sig32,prikeyArr);
         //let signature = Buffer.from(Hd.Serialize(sig.signature));
-        //将签名结果加上amino编码前缀(irishub反序列化需要) (cosmos-sdk v0.24.0去掉了前缀)
-        //signature = Amino.MarshalBinary(Config.iris.amino.signature,signature);
         return Array.from(sig.signature)
     }
 
@@ -60,8 +58,7 @@ class CosmosKeypair {
 
         //构造公钥
         let pubKey = Secp256k1.publicKeyCreate(secretKey);
-        //将公钥加上amino编码前缀(irishub反序列化需要)
-        pubKey = Amino.MarshalBinary(Config.iris.amino.pubKey,pubKey);
+        pubKey = Amino.MarshalBinary(Config.cosmos.amino.pubKey,pubKey);
 
         return {
             "secret": mnemonicS,
@@ -77,8 +74,7 @@ class CosmosKeypair {
         let secretKey = this.getPrivateKeyFromSecret(mnemonic);
         //构造公钥
         let pubKey = Secp256k1.publicKeyCreate(secretKey);
-        //将公钥加上amino编码前缀(irishub反序列化需要)
-        pubKey = Amino.MarshalBinary(Config.iris.amino.pubKey,pubKey);
+        pubKey = Amino.MarshalBinary(Config.cosmos.amino.pubKey,pubKey);
 
         return {
             "secret": mnemonic,
@@ -102,8 +98,7 @@ class CosmosKeypair {
         let secretBytes = Buffer.from(secretKey,"hex");
         //构造公钥
         let pubKey = Secp256k1.publicKeyCreate(secretBytes);
-        //将公钥加上amino编码前缀(irishub反序列化需要)
-        pubKey = Amino.MarshalBinary(Config.iris.amino.pubKey,pubKey);
+        pubKey = Amino.MarshalBinary(Config.cosmos.amino.pubKey,pubKey);
         return {
             "address": this.getAddress(pubKey),
             "privateKey": secretKey,
@@ -112,7 +107,7 @@ class CosmosKeypair {
     }
 
     static isValidAddress(address) {
-        let prefix = Config.iris.bech32.accAddr;
+        let prefix = Config.cosmos.bech32.accAddr;
 		return Codec.Bech32.isBech32(prefix,address);
     }
 
@@ -169,7 +164,6 @@ class Hd {
             data = Buffer.concat([data,privKeyBuffer]);
         }else{
             const pubKey =Secp256k1.publicKeyCreate(privKeyBytes);
-            // TODO
             if (index ==0){
                 indexBuffer = Buffer.from([0,0,0,0]);
             }
@@ -194,27 +188,6 @@ class Hd {
         let x = c.mod(new BN(n));
         return x
     }
-    /*
-    *
-    *  需要仿写以下代码，现在虽然没有调用，可能以后会出问题
-    *
-    func (sig *Signature) Serialize() []byte {
-        // low 'S' malleability breaker
-        sigS := sig.S
-        if sigS.Cmp(S256().halfOrder) == 1 {
-            sigS = new(big.Int).Sub(S256().N, sigS)
-        }
-        rBytes := sig.R.Bytes()
-        sBytes := sigS.Bytes()
-        sigBytes := make([]byte, 64)
-        // 0 pad the byte arrays from the left if they aren't big enough.
-        copy(sigBytes[32-len(rBytes):32], rBytes)
-        copy(sigBytes[64-len(sBytes):64], sBytes)
-        return sigBytes
-    }
-    *
-    * */
-
     static Serialize(sig) {
         const sigObj = {r: sig.slice(0, 32), s: sig.slice(32, 64)};
         const SignatureFun = require('elliptic/lib/elliptic/ec/signature');
