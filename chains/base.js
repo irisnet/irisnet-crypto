@@ -82,7 +82,11 @@ amino.RegisterConcrete(null, Config.cosmos.amino.pubKey);
 amino.RegisterConcrete(null, Config.cosmos.amino.signature);
 amino.RegisterConcrete(R_Cosmos.cosmos.MsgDelegate, Config.cosmos.tx.delegate.prefix);
 amino.RegisterConcrete(R_Cosmos.cosmos.MsgSend, Config.cosmos.tx.transfer.prefix);
+amino.RegisterConcrete(R_Cosmos.cosmos.MsgSetWithdrawAddress, Config.cosmos.tx.setWithdrawAddress.prefix);
+amino.RegisterConcrete(R_Cosmos.cosmos.MsgWithdrawDelegatorReward, Config.cosmos.tx.withdrawDelegatorReward.prefix);
+amino.RegisterConcrete(R_Cosmos.cosmos.MsgWithdrawValidatorCommission, Config.cosmos.tx.withdrawValidatorCommission.prefix);
 amino.RegisterConcrete(R_Cosmos.cosmos.MsgUndelegate, Config.cosmos.tx.undelegate.prefix);
+amino.RegisterConcrete(R_Cosmos.cosmos.MsgBeginRedelegate, Config.cosmos.tx.beginRedelegate.prefix);
 amino.RegisterConcrete(R_Cosmos.cosmos.StdTx, Config.cosmos.tx.stdTx.prefix);
 
 amino.RegisterConcrete(null, Config.iris.amino.pubKey);

@@ -391,7 +391,7 @@ describe('CryPto iris test', function () {
 });
 
 describe('CryPto cosmos test', function () {
-    let chain_id = "gaia-12001";
+    let chain_id = "gaia-13001";
     let from = "cosmos1j3nlv8wcfst2mezkny4w2up76wfgnkq744ezus";
     let gas = 200000;
     let account_number = 920;
@@ -406,11 +406,12 @@ describe('CryPto cosmos test', function () {
             chain_id: chain_id,
             from: from,
             account_number: account_number,
-            sequence: 14,
+            sequence: 1,
             fees: fees,
             gas: gas,
             memo: memo,
             type: Irisnet.config.cosmos.tx.transfer.type,
+            return_type: 'block',
             msg: {
                 to: "cosmos1cx7ny2znzdegzj27mq2lqavk8dcvc0uysmyzg7",
                 coins: [
@@ -430,13 +431,13 @@ describe('CryPto cosmos test', function () {
             chain_id: chain_id,
             from: from,
             account_number: account_number,
-            sequence: 15,
+            sequence: 2,
             fees: fees,
             gas: gas,
             memo: memo,
             type: Irisnet.config.cosmos.tx.delegate.type,
             msg: {
-                validator_addr: "cosmosvaloper1qsl0pz6rht3fx4plrgj2z4ry9z0nhvykel550p",
+                validator_addr: "cosmosvaloper1qksw0e05eh652yy0zqd7f0e3q4082dxy9qxdx6",
                 delegation: {
                     denom: "muon",
                     amount: "10"
@@ -452,14 +453,88 @@ describe('CryPto cosmos test', function () {
             chain_id: chain_id,
             from: from,
             account_number: account_number,
-            sequence: 18,
+            sequence: 3,
             fees: fees,
             gas: gas,
             memo: memo,
             type: Irisnet.config.cosmos.tx.undelegate.type,
             msg: {
-                validator_addr: "cosmosvaloper1qsl0pz6rht3fx4plrgj2z4ry9z0nhvykel550p",
-                shares_amount: "1.5"
+                validator_addr: "cosmosvaloper1qksw0e05eh652yy0zqd7f0e3q4082dxy9qxdx6",
+                shares_amount: "1.05"
+            }
+        };
+
+        execute(tx);
+    });
+
+    it('test beginRedelegate', function () {
+        let tx = {
+            chain_id: chain_id,
+            from: from,
+            account_number: account_number,
+            sequence: 6,
+            fees: fees,
+            gas: gas,
+            memo: memo,
+            type: Irisnet.config.cosmos.tx.beginRedelegate.type,
+            msg: {
+                validator_src_addr: "cosmosvaloper1qksw0e05eh652yy0zqd7f0e3q4082dxy9qxdx6",
+                validator_dst_addr: "cosmosvaloper1le34teftd4fa5lu64uyafzmw78yq7dgcnxchp3",
+                shares_amount: "1.05"
+            }
+        };
+
+        execute(tx);
+    });
+
+    it('test MsgSetWithdrawAddress', function () {
+        let tx = {
+            chain_id: chain_id,
+            from: from,
+            account_number: account_number,
+            sequence: 4,
+            fees: fees,
+            gas: gas,
+            memo: memo,
+            type: Irisnet.config.cosmos.tx.setWithdrawAddress.type,
+            msg: {
+                withdraw_addr: "cosmos1j3nlv8wcfst2mezkny4w2up76wfgnkq744ezus",
+            }
+        };
+
+        execute(tx);
+    });
+    it('test MsgWithdrawDelegatorReward', function () {
+        let tx = {
+            chain_id: chain_id,
+            from: from,
+            account_number: account_number,
+            sequence: 5,
+            fees: fees,
+            gas: gas,
+            memo: memo,
+            type: Irisnet.config.cosmos.tx.withdrawDelegatorReward.type,
+            msg: {
+                validator_addr: "cosmosvaloper1qksw0e05eh652yy0zqd7f0e3q4082dxy9qxdx6",
+            }
+        };
+
+        execute(tx);
+    });
+
+    //TODO Pending verification
+    it('test MsgWithdrawValidatorCommission', function () {
+        let tx = {
+            chain_id: chain_id,
+            from: from,
+            account_number: account_number,
+            sequence: 6,
+            fees: fees,
+            gas: gas,
+            memo: memo,
+            type: Irisnet.config.cosmos.tx.withdrawValidatorCommission.type,
+            msg: {
+                validator_addr: "cosmosvaloper1qksw0e05eh652yy0zqd7f0e3q4082dxy9qxdx6",
             }
         };
 
@@ -469,8 +544,9 @@ describe('CryPto cosmos test', function () {
     function execute(tx) {
         let builder = Irisnet.getBuilder(chain);
         let stdTx = builder.buildAndSignTx(tx, privateKey);
+        //
         console.log(JSON.stringify(stdTx.GetData()));
         let result = stdTx.Hash();
-        console.log("hash", result.hash);
+        console.log(result.hash);
     }
 });

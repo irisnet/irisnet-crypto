@@ -3,6 +3,7 @@ const Builder = require("../../builder").Builder;
 const Old = require('old');
 const Bank = require('./bank');
 const Stake = require('./stake');
+const Distribution = require('./distribution');
 const CosmosKeypair = require('./cosmos_keypair');
 const Codec = require("../../util/codec");
 const Config = require('../../config');
@@ -31,6 +32,22 @@ class CosmosBuilder extends Builder {
             }
             case Config.cosmos.tx.undelegate.type: {
                 msg = Stake.createMsgUndelegate(req);
+                break;
+            }
+            case Config.cosmos.tx.beginRedelegate.type: {
+                msg = Stake.createMsgBeginRedelegate(req);
+                break;
+            }
+            case Config.cosmos.tx.setWithdrawAddress.type: {
+                msg = Distribution.CreateMsgSetWithdrawAddress(req);
+                break;
+            }
+            case Config.cosmos.tx.withdrawDelegatorReward.type: {
+                msg = Distribution.CreateMsgWithdrawDelegatorReward(req);
+                break;
+            }
+            case Config.cosmos.tx.withdrawValidatorCommission.type: {
+                msg = Distribution.CreateMsgWithdrawValidatorCommission(req);
                 break;
             }
             default: {

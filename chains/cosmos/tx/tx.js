@@ -1008,6 +1008,941 @@ $root.cosmos = (function() {
         return MsgUndelegate;
     })();
 
+    cosmos.MsgBeginRedelegate = (function() {
+
+        /**
+         * Properties of a MsgBeginRedelegate.
+         * @memberof cosmos
+         * @interface IMsgBeginRedelegate
+         * @property {Uint8Array} DelegatorAddr MsgBeginRedelegate DelegatorAddr
+         * @property {Uint8Array} ValidatorSrcAddr MsgBeginRedelegate ValidatorSrcAddr
+         * @property {Uint8Array} ValidatorDstAddr MsgBeginRedelegate ValidatorDstAddr
+         * @property {string} SharesAmount MsgBeginRedelegate SharesAmount
+         */
+
+        /**
+         * Constructs a new MsgBeginRedelegate.
+         * @memberof cosmos
+         * @classdesc Represents a MsgBeginRedelegate.
+         * @implements IMsgBeginRedelegate
+         * @constructor
+         * @param {cosmos.IMsgBeginRedelegate=} [properties] Properties to set
+         */
+        function MsgBeginRedelegate(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * MsgBeginRedelegate DelegatorAddr.
+         * @member {Uint8Array} DelegatorAddr
+         * @memberof cosmos.MsgBeginRedelegate
+         * @instance
+         */
+        MsgBeginRedelegate.prototype.DelegatorAddr = $util.newBuffer([]);
+
+        /**
+         * MsgBeginRedelegate ValidatorSrcAddr.
+         * @member {Uint8Array} ValidatorSrcAddr
+         * @memberof cosmos.MsgBeginRedelegate
+         * @instance
+         */
+        MsgBeginRedelegate.prototype.ValidatorSrcAddr = $util.newBuffer([]);
+
+        /**
+         * MsgBeginRedelegate ValidatorDstAddr.
+         * @member {Uint8Array} ValidatorDstAddr
+         * @memberof cosmos.MsgBeginRedelegate
+         * @instance
+         */
+        MsgBeginRedelegate.prototype.ValidatorDstAddr = $util.newBuffer([]);
+
+        /**
+         * MsgBeginRedelegate SharesAmount.
+         * @member {string} SharesAmount
+         * @memberof cosmos.MsgBeginRedelegate
+         * @instance
+         */
+        MsgBeginRedelegate.prototype.SharesAmount = "";
+
+        /**
+         * Creates a new MsgBeginRedelegate instance using the specified properties.
+         * @function create
+         * @memberof cosmos.MsgBeginRedelegate
+         * @static
+         * @param {cosmos.IMsgBeginRedelegate=} [properties] Properties to set
+         * @returns {cosmos.MsgBeginRedelegate} MsgBeginRedelegate instance
+         */
+        MsgBeginRedelegate.create = function create(properties) {
+            return new MsgBeginRedelegate(properties);
+        };
+
+        /**
+         * Encodes the specified MsgBeginRedelegate message. Does not implicitly {@link cosmos.MsgBeginRedelegate.verify|verify} messages.
+         * @function encode
+         * @memberof cosmos.MsgBeginRedelegate
+         * @static
+         * @param {cosmos.IMsgBeginRedelegate} message MsgBeginRedelegate message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        MsgBeginRedelegate.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.DelegatorAddr);
+            writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.ValidatorSrcAddr);
+            writer.uint32(/* id 3, wireType 2 =*/26).bytes(message.ValidatorDstAddr);
+            let shares = message.SharesAmount.replace(".","");
+            shares = shares.replace(/\b(0+)/gi,"");
+            writer.uint32(/* id 3, wireType 2 =*/34).string(shares);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified MsgBeginRedelegate message, length delimited. Does not implicitly {@link cosmos.MsgBeginRedelegate.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof cosmos.MsgBeginRedelegate
+         * @static
+         * @param {cosmos.IMsgBeginRedelegate} message MsgBeginRedelegate message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        MsgBeginRedelegate.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a MsgBeginRedelegate message from the specified reader or buffer.
+         * @function decode
+         * @memberof cosmos.MsgBeginRedelegate
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {cosmos.MsgBeginRedelegate} MsgBeginRedelegate
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        MsgBeginRedelegate.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.cosmos.MsgBeginRedelegate();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.DelegatorAddr = reader.bytes();
+                    break;
+                case 2:
+                    message.ValidatorSrcAddr = reader.bytes();
+                    break;
+                case 3:
+                    message.ValidatorDstAddr = reader.bytes();
+                    break;
+                case 4:
+                    message.SharesAmount = reader.string();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            if (!message.hasOwnProperty("DelegatorAddr"))
+                throw $util.ProtocolError("missing required 'DelegatorAddr'", { instance: message });
+            if (!message.hasOwnProperty("ValidatorSrcAddr"))
+                throw $util.ProtocolError("missing required 'ValidatorSrcAddr'", { instance: message });
+            if (!message.hasOwnProperty("ValidatorDstAddr"))
+                throw $util.ProtocolError("missing required 'ValidatorDstAddr'", { instance: message });
+            if (!message.hasOwnProperty("SharesAmount"))
+                throw $util.ProtocolError("missing required 'SharesAmount'", { instance: message });
+            return message;
+        };
+
+        /**
+         * Decodes a MsgBeginRedelegate message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof cosmos.MsgBeginRedelegate
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {cosmos.MsgBeginRedelegate} MsgBeginRedelegate
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        MsgBeginRedelegate.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a MsgBeginRedelegate message.
+         * @function verify
+         * @memberof cosmos.MsgBeginRedelegate
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        MsgBeginRedelegate.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (!(message.DelegatorAddr && typeof message.DelegatorAddr.length === "number" || $util.isString(message.DelegatorAddr)))
+                return "DelegatorAddr: buffer expected";
+            if (!(message.ValidatorSrcAddr && typeof message.ValidatorSrcAddr.length === "number" || $util.isString(message.ValidatorSrcAddr)))
+                return "ValidatorSrcAddr: buffer expected";
+            if (!(message.ValidatorDstAddr && typeof message.ValidatorDstAddr.length === "number" || $util.isString(message.ValidatorDstAddr)))
+                return "ValidatorDstAddr: buffer expected";
+            if (!$util.isString(message.SharesAmount))
+                return "SharesAmount: string expected";
+            return null;
+        };
+
+        /**
+         * Creates a MsgBeginRedelegate message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof cosmos.MsgBeginRedelegate
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {cosmos.MsgBeginRedelegate} MsgBeginRedelegate
+         */
+        MsgBeginRedelegate.fromObject = function fromObject(object) {
+            if (object instanceof $root.cosmos.MsgBeginRedelegate)
+                return object;
+            var message = new $root.cosmos.MsgBeginRedelegate();
+            if (object.DelegatorAddr != null)
+                if (typeof object.DelegatorAddr === "string")
+                    $util.base64.decode(object.DelegatorAddr, message.DelegatorAddr = $util.newBuffer($util.base64.length(object.DelegatorAddr)), 0);
+                else if (object.DelegatorAddr.length)
+                    message.DelegatorAddr = object.DelegatorAddr;
+            if (object.ValidatorSrcAddr != null)
+                if (typeof object.ValidatorSrcAddr === "string")
+                    $util.base64.decode(object.ValidatorSrcAddr, message.ValidatorSrcAddr = $util.newBuffer($util.base64.length(object.ValidatorSrcAddr)), 0);
+                else if (object.ValidatorSrcAddr.length)
+                    message.ValidatorSrcAddr = object.ValidatorSrcAddr;
+            if (object.ValidatorDstAddr != null)
+                if (typeof object.ValidatorDstAddr === "string")
+                    $util.base64.decode(object.ValidatorDstAddr, message.ValidatorDstAddr = $util.newBuffer($util.base64.length(object.ValidatorDstAddr)), 0);
+                else if (object.ValidatorDstAddr.length)
+                    message.ValidatorDstAddr = object.ValidatorDstAddr;
+            if (object.SharesAmount != null)
+                message.SharesAmount = String(object.SharesAmount);
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a MsgBeginRedelegate message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof cosmos.MsgBeginRedelegate
+         * @static
+         * @param {cosmos.MsgBeginRedelegate} message MsgBeginRedelegate
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        MsgBeginRedelegate.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.defaults) {
+                if (options.bytes === String)
+                    object.DelegatorAddr = "";
+                else {
+                    object.DelegatorAddr = [];
+                    if (options.bytes !== Array)
+                        object.DelegatorAddr = $util.newBuffer(object.DelegatorAddr);
+                }
+                if (options.bytes === String)
+                    object.ValidatorSrcAddr = "";
+                else {
+                    object.ValidatorSrcAddr = [];
+                    if (options.bytes !== Array)
+                        object.ValidatorSrcAddr = $util.newBuffer(object.ValidatorSrcAddr);
+                }
+                if (options.bytes === String)
+                    object.ValidatorDstAddr = "";
+                else {
+                    object.ValidatorDstAddr = [];
+                    if (options.bytes !== Array)
+                        object.ValidatorDstAddr = $util.newBuffer(object.ValidatorDstAddr);
+                }
+                object.SharesAmount = "";
+            }
+            if (message.DelegatorAddr != null && message.hasOwnProperty("DelegatorAddr"))
+                object.DelegatorAddr = options.bytes === String ? $util.base64.encode(message.DelegatorAddr, 0, message.DelegatorAddr.length) : options.bytes === Array ? Array.prototype.slice.call(message.DelegatorAddr) : message.DelegatorAddr;
+            if (message.ValidatorSrcAddr != null && message.hasOwnProperty("ValidatorSrcAddr"))
+                object.ValidatorSrcAddr = options.bytes === String ? $util.base64.encode(message.ValidatorSrcAddr, 0, message.ValidatorSrcAddr.length) : options.bytes === Array ? Array.prototype.slice.call(message.ValidatorSrcAddr) : message.ValidatorSrcAddr;
+            if (message.ValidatorDstAddr != null && message.hasOwnProperty("ValidatorDstAddr"))
+                object.ValidatorDstAddr = options.bytes === String ? $util.base64.encode(message.ValidatorDstAddr, 0, message.ValidatorDstAddr.length) : options.bytes === Array ? Array.prototype.slice.call(message.ValidatorDstAddr) : message.ValidatorDstAddr;
+            if (message.SharesAmount != null && message.hasOwnProperty("SharesAmount"))
+                object.SharesAmount = message.SharesAmount;
+            return object;
+        };
+
+        /**
+         * Converts this MsgBeginRedelegate to JSON.
+         * @function toJSON
+         * @memberof cosmos.MsgBeginRedelegate
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        MsgBeginRedelegate.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return MsgBeginRedelegate;
+    })();
+
+    cosmos.MsgSetWithdrawAddress = (function() {
+
+        /**
+         * Properties of a MsgSetWithdrawAddress.
+         * @memberof cosmos
+         * @interface IMsgSetWithdrawAddress
+         * @property {Uint8Array} DelegatorAddr MsgSetWithdrawAddress DelegatorAddr
+         * @property {Uint8Array} WithdrawAddr MsgSetWithdrawAddress WithdrawAddr
+         */
+
+        /**
+         * Constructs a new MsgSetWithdrawAddress.
+         * @memberof cosmos
+         * @classdesc Represents a MsgSetWithdrawAddress.
+         * @implements IMsgSetWithdrawAddress
+         * @constructor
+         * @param {cosmos.IMsgSetWithdrawAddress=} [properties] Properties to set
+         */
+        function MsgSetWithdrawAddress(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * MsgSetWithdrawAddress DelegatorAddr.
+         * @member {Uint8Array} DelegatorAddr
+         * @memberof cosmos.MsgSetWithdrawAddress
+         * @instance
+         */
+        MsgSetWithdrawAddress.prototype.DelegatorAddr = $util.newBuffer([]);
+
+        /**
+         * MsgSetWithdrawAddress WithdrawAddr.
+         * @member {Uint8Array} WithdrawAddr
+         * @memberof cosmos.MsgSetWithdrawAddress
+         * @instance
+         */
+        MsgSetWithdrawAddress.prototype.WithdrawAddr = $util.newBuffer([]);
+
+        /**
+         * Creates a new MsgSetWithdrawAddress instance using the specified properties.
+         * @function create
+         * @memberof cosmos.MsgSetWithdrawAddress
+         * @static
+         * @param {cosmos.IMsgSetWithdrawAddress=} [properties] Properties to set
+         * @returns {cosmos.MsgSetWithdrawAddress} MsgSetWithdrawAddress instance
+         */
+        MsgSetWithdrawAddress.create = function create(properties) {
+            return new MsgSetWithdrawAddress(properties);
+        };
+
+        /**
+         * Encodes the specified MsgSetWithdrawAddress message. Does not implicitly {@link cosmos.MsgSetWithdrawAddress.verify|verify} messages.
+         * @function encode
+         * @memberof cosmos.MsgSetWithdrawAddress
+         * @static
+         * @param {cosmos.IMsgSetWithdrawAddress} message MsgSetWithdrawAddress message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        MsgSetWithdrawAddress.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.DelegatorAddr);
+            writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.WithdrawAddr);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified MsgSetWithdrawAddress message, length delimited. Does not implicitly {@link cosmos.MsgSetWithdrawAddress.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof cosmos.MsgSetWithdrawAddress
+         * @static
+         * @param {cosmos.IMsgSetWithdrawAddress} message MsgSetWithdrawAddress message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        MsgSetWithdrawAddress.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a MsgSetWithdrawAddress message from the specified reader or buffer.
+         * @function decode
+         * @memberof cosmos.MsgSetWithdrawAddress
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {cosmos.MsgSetWithdrawAddress} MsgSetWithdrawAddress
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        MsgSetWithdrawAddress.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.cosmos.MsgSetWithdrawAddress();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.DelegatorAddr = reader.bytes();
+                    break;
+                case 2:
+                    message.WithdrawAddr = reader.bytes();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            if (!message.hasOwnProperty("DelegatorAddr"))
+                throw $util.ProtocolError("missing required 'DelegatorAddr'", { instance: message });
+            if (!message.hasOwnProperty("WithdrawAddr"))
+                throw $util.ProtocolError("missing required 'WithdrawAddr'", { instance: message });
+            return message;
+        };
+
+        /**
+         * Decodes a MsgSetWithdrawAddress message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof cosmos.MsgSetWithdrawAddress
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {cosmos.MsgSetWithdrawAddress} MsgSetWithdrawAddress
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        MsgSetWithdrawAddress.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a MsgSetWithdrawAddress message.
+         * @function verify
+         * @memberof cosmos.MsgSetWithdrawAddress
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        MsgSetWithdrawAddress.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (!(message.DelegatorAddr && typeof message.DelegatorAddr.length === "number" || $util.isString(message.DelegatorAddr)))
+                return "DelegatorAddr: buffer expected";
+            if (!(message.WithdrawAddr && typeof message.WithdrawAddr.length === "number" || $util.isString(message.WithdrawAddr)))
+                return "WithdrawAddr: buffer expected";
+            return null;
+        };
+
+        /**
+         * Creates a MsgSetWithdrawAddress message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof cosmos.MsgSetWithdrawAddress
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {cosmos.MsgSetWithdrawAddress} MsgSetWithdrawAddress
+         */
+        MsgSetWithdrawAddress.fromObject = function fromObject(object) {
+            if (object instanceof $root.cosmos.MsgSetWithdrawAddress)
+                return object;
+            var message = new $root.cosmos.MsgSetWithdrawAddress();
+            if (object.DelegatorAddr != null)
+                if (typeof object.DelegatorAddr === "string")
+                    $util.base64.decode(object.DelegatorAddr, message.DelegatorAddr = $util.newBuffer($util.base64.length(object.DelegatorAddr)), 0);
+                else if (object.DelegatorAddr.length)
+                    message.DelegatorAddr = object.DelegatorAddr;
+            if (object.WithdrawAddr != null)
+                if (typeof object.WithdrawAddr === "string")
+                    $util.base64.decode(object.WithdrawAddr, message.WithdrawAddr = $util.newBuffer($util.base64.length(object.WithdrawAddr)), 0);
+                else if (object.WithdrawAddr.length)
+                    message.WithdrawAddr = object.WithdrawAddr;
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a MsgSetWithdrawAddress message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof cosmos.MsgSetWithdrawAddress
+         * @static
+         * @param {cosmos.MsgSetWithdrawAddress} message MsgSetWithdrawAddress
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        MsgSetWithdrawAddress.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.defaults) {
+                if (options.bytes === String)
+                    object.DelegatorAddr = "";
+                else {
+                    object.DelegatorAddr = [];
+                    if (options.bytes !== Array)
+                        object.DelegatorAddr = $util.newBuffer(object.DelegatorAddr);
+                }
+                if (options.bytes === String)
+                    object.WithdrawAddr = "";
+                else {
+                    object.WithdrawAddr = [];
+                    if (options.bytes !== Array)
+                        object.WithdrawAddr = $util.newBuffer(object.WithdrawAddr);
+                }
+            }
+            if (message.DelegatorAddr != null && message.hasOwnProperty("DelegatorAddr"))
+                object.DelegatorAddr = options.bytes === String ? $util.base64.encode(message.DelegatorAddr, 0, message.DelegatorAddr.length) : options.bytes === Array ? Array.prototype.slice.call(message.DelegatorAddr) : message.DelegatorAddr;
+            if (message.WithdrawAddr != null && message.hasOwnProperty("WithdrawAddr"))
+                object.WithdrawAddr = options.bytes === String ? $util.base64.encode(message.WithdrawAddr, 0, message.WithdrawAddr.length) : options.bytes === Array ? Array.prototype.slice.call(message.WithdrawAddr) : message.WithdrawAddr;
+            return object;
+        };
+
+        /**
+         * Converts this MsgSetWithdrawAddress to JSON.
+         * @function toJSON
+         * @memberof cosmos.MsgSetWithdrawAddress
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        MsgSetWithdrawAddress.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return MsgSetWithdrawAddress;
+    })();
+
+    cosmos.MsgWithdrawDelegatorReward = (function() {
+
+        /**
+         * Properties of a MsgWithdrawDelegatorReward.
+         * @memberof cosmos
+         * @interface IMsgWithdrawDelegatorReward
+         * @property {Uint8Array} DelegatorAddr MsgWithdrawDelegatorReward DelegatorAddr
+         * @property {Uint8Array} ValidatorAddr MsgWithdrawDelegatorReward ValidatorAddr
+         */
+
+        /**
+         * Constructs a new MsgWithdrawDelegatorReward.
+         * @memberof cosmos
+         * @classdesc Represents a MsgWithdrawDelegatorReward.
+         * @implements IMsgWithdrawDelegatorReward
+         * @constructor
+         * @param {cosmos.IMsgWithdrawDelegatorReward=} [properties] Properties to set
+         */
+        function MsgWithdrawDelegatorReward(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * MsgWithdrawDelegatorReward DelegatorAddr.
+         * @member {Uint8Array} DelegatorAddr
+         * @memberof cosmos.MsgWithdrawDelegatorReward
+         * @instance
+         */
+        MsgWithdrawDelegatorReward.prototype.DelegatorAddr = $util.newBuffer([]);
+
+        /**
+         * MsgWithdrawDelegatorReward ValidatorAddr.
+         * @member {Uint8Array} ValidatorAddr
+         * @memberof cosmos.MsgWithdrawDelegatorReward
+         * @instance
+         */
+        MsgWithdrawDelegatorReward.prototype.ValidatorAddr = $util.newBuffer([]);
+
+        /**
+         * Creates a new MsgWithdrawDelegatorReward instance using the specified properties.
+         * @function create
+         * @memberof cosmos.MsgWithdrawDelegatorReward
+         * @static
+         * @param {cosmos.IMsgWithdrawDelegatorReward=} [properties] Properties to set
+         * @returns {cosmos.MsgWithdrawDelegatorReward} MsgWithdrawDelegatorReward instance
+         */
+        MsgWithdrawDelegatorReward.create = function create(properties) {
+            return new MsgWithdrawDelegatorReward(properties);
+        };
+
+        /**
+         * Encodes the specified MsgWithdrawDelegatorReward message. Does not implicitly {@link cosmos.MsgWithdrawDelegatorReward.verify|verify} messages.
+         * @function encode
+         * @memberof cosmos.MsgWithdrawDelegatorReward
+         * @static
+         * @param {cosmos.IMsgWithdrawDelegatorReward} message MsgWithdrawDelegatorReward message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        MsgWithdrawDelegatorReward.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.DelegatorAddr);
+            writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.ValidatorAddr);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified MsgWithdrawDelegatorReward message, length delimited. Does not implicitly {@link cosmos.MsgWithdrawDelegatorReward.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof cosmos.MsgWithdrawDelegatorReward
+         * @static
+         * @param {cosmos.IMsgWithdrawDelegatorReward} message MsgWithdrawDelegatorReward message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        MsgWithdrawDelegatorReward.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a MsgWithdrawDelegatorReward message from the specified reader or buffer.
+         * @function decode
+         * @memberof cosmos.MsgWithdrawDelegatorReward
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {cosmos.MsgWithdrawDelegatorReward} MsgWithdrawDelegatorReward
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        MsgWithdrawDelegatorReward.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.cosmos.MsgWithdrawDelegatorReward();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.DelegatorAddr = reader.bytes();
+                    break;
+                case 2:
+                    message.ValidatorAddr = reader.bytes();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            if (!message.hasOwnProperty("DelegatorAddr"))
+                throw $util.ProtocolError("missing required 'DelegatorAddr'", { instance: message });
+            if (!message.hasOwnProperty("ValidatorAddr"))
+                throw $util.ProtocolError("missing required 'ValidatorAddr'", { instance: message });
+            return message;
+        };
+
+        /**
+         * Decodes a MsgWithdrawDelegatorReward message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof cosmos.MsgWithdrawDelegatorReward
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {cosmos.MsgWithdrawDelegatorReward} MsgWithdrawDelegatorReward
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        MsgWithdrawDelegatorReward.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a MsgWithdrawDelegatorReward message.
+         * @function verify
+         * @memberof cosmos.MsgWithdrawDelegatorReward
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        MsgWithdrawDelegatorReward.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (!(message.DelegatorAddr && typeof message.DelegatorAddr.length === "number" || $util.isString(message.DelegatorAddr)))
+                return "DelegatorAddr: buffer expected";
+            if (!(message.ValidatorAddr && typeof message.ValidatorAddr.length === "number" || $util.isString(message.ValidatorAddr)))
+                return "ValidatorAddr: buffer expected";
+            return null;
+        };
+
+        /**
+         * Creates a MsgWithdrawDelegatorReward message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof cosmos.MsgWithdrawDelegatorReward
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {cosmos.MsgWithdrawDelegatorReward} MsgWithdrawDelegatorReward
+         */
+        MsgWithdrawDelegatorReward.fromObject = function fromObject(object) {
+            if (object instanceof $root.cosmos.MsgWithdrawDelegatorReward)
+                return object;
+            var message = new $root.cosmos.MsgWithdrawDelegatorReward();
+            if (object.DelegatorAddr != null)
+                if (typeof object.DelegatorAddr === "string")
+                    $util.base64.decode(object.DelegatorAddr, message.DelegatorAddr = $util.newBuffer($util.base64.length(object.DelegatorAddr)), 0);
+                else if (object.DelegatorAddr.length)
+                    message.DelegatorAddr = object.DelegatorAddr;
+            if (object.ValidatorAddr != null)
+                if (typeof object.ValidatorAddr === "string")
+                    $util.base64.decode(object.ValidatorAddr, message.ValidatorAddr = $util.newBuffer($util.base64.length(object.ValidatorAddr)), 0);
+                else if (object.ValidatorAddr.length)
+                    message.ValidatorAddr = object.ValidatorAddr;
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a MsgWithdrawDelegatorReward message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof cosmos.MsgWithdrawDelegatorReward
+         * @static
+         * @param {cosmos.MsgWithdrawDelegatorReward} message MsgWithdrawDelegatorReward
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        MsgWithdrawDelegatorReward.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.defaults) {
+                if (options.bytes === String)
+                    object.DelegatorAddr = "";
+                else {
+                    object.DelegatorAddr = [];
+                    if (options.bytes !== Array)
+                        object.DelegatorAddr = $util.newBuffer(object.DelegatorAddr);
+                }
+                if (options.bytes === String)
+                    object.ValidatorAddr = "";
+                else {
+                    object.ValidatorAddr = [];
+                    if (options.bytes !== Array)
+                        object.ValidatorAddr = $util.newBuffer(object.ValidatorAddr);
+                }
+            }
+            if (message.DelegatorAddr != null && message.hasOwnProperty("DelegatorAddr"))
+                object.DelegatorAddr = options.bytes === String ? $util.base64.encode(message.DelegatorAddr, 0, message.DelegatorAddr.length) : options.bytes === Array ? Array.prototype.slice.call(message.DelegatorAddr) : message.DelegatorAddr;
+            if (message.ValidatorAddr != null && message.hasOwnProperty("ValidatorAddr"))
+                object.ValidatorAddr = options.bytes === String ? $util.base64.encode(message.ValidatorAddr, 0, message.ValidatorAddr.length) : options.bytes === Array ? Array.prototype.slice.call(message.ValidatorAddr) : message.ValidatorAddr;
+            return object;
+        };
+
+        /**
+         * Converts this MsgWithdrawDelegatorReward to JSON.
+         * @function toJSON
+         * @memberof cosmos.MsgWithdrawDelegatorReward
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        MsgWithdrawDelegatorReward.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return MsgWithdrawDelegatorReward;
+    })();
+
+    cosmos.MsgWithdrawValidatorCommission = (function() {
+
+        /**
+         * Properties of a MsgWithdrawValidatorCommission.
+         * @memberof cosmos
+         * @interface IMsgWithdrawValidatorCommission
+         * @property {Uint8Array} ValidatorAddr MsgWithdrawValidatorCommission ValidatorAddr
+         */
+
+        /**
+         * Constructs a new MsgWithdrawValidatorCommission.
+         * @memberof cosmos
+         * @classdesc Represents a MsgWithdrawValidatorCommission.
+         * @implements IMsgWithdrawValidatorCommission
+         * @constructor
+         * @param {cosmos.IMsgWithdrawValidatorCommission=} [properties] Properties to set
+         */
+        function MsgWithdrawValidatorCommission(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * MsgWithdrawValidatorCommission ValidatorAddr.
+         * @member {Uint8Array} ValidatorAddr
+         * @memberof cosmos.MsgWithdrawValidatorCommission
+         * @instance
+         */
+        MsgWithdrawValidatorCommission.prototype.ValidatorAddr = $util.newBuffer([]);
+
+        /**
+         * Creates a new MsgWithdrawValidatorCommission instance using the specified properties.
+         * @function create
+         * @memberof cosmos.MsgWithdrawValidatorCommission
+         * @static
+         * @param {cosmos.IMsgWithdrawValidatorCommission=} [properties] Properties to set
+         * @returns {cosmos.MsgWithdrawValidatorCommission} MsgWithdrawValidatorCommission instance
+         */
+        MsgWithdrawValidatorCommission.create = function create(properties) {
+            return new MsgWithdrawValidatorCommission(properties);
+        };
+
+        /**
+         * Encodes the specified MsgWithdrawValidatorCommission message. Does not implicitly {@link cosmos.MsgWithdrawValidatorCommission.verify|verify} messages.
+         * @function encode
+         * @memberof cosmos.MsgWithdrawValidatorCommission
+         * @static
+         * @param {cosmos.IMsgWithdrawValidatorCommission} message MsgWithdrawValidatorCommission message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        MsgWithdrawValidatorCommission.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.ValidatorAddr);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified MsgWithdrawValidatorCommission message, length delimited. Does not implicitly {@link cosmos.MsgWithdrawValidatorCommission.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof cosmos.MsgWithdrawValidatorCommission
+         * @static
+         * @param {cosmos.IMsgWithdrawValidatorCommission} message MsgWithdrawValidatorCommission message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        MsgWithdrawValidatorCommission.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a MsgWithdrawValidatorCommission message from the specified reader or buffer.
+         * @function decode
+         * @memberof cosmos.MsgWithdrawValidatorCommission
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {cosmos.MsgWithdrawValidatorCommission} MsgWithdrawValidatorCommission
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        MsgWithdrawValidatorCommission.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.cosmos.MsgWithdrawValidatorCommission();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.ValidatorAddr = reader.bytes();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            if (!message.hasOwnProperty("ValidatorAddr"))
+                throw $util.ProtocolError("missing required 'ValidatorAddr'", { instance: message });
+            return message;
+        };
+
+        /**
+         * Decodes a MsgWithdrawValidatorCommission message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof cosmos.MsgWithdrawValidatorCommission
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {cosmos.MsgWithdrawValidatorCommission} MsgWithdrawValidatorCommission
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        MsgWithdrawValidatorCommission.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a MsgWithdrawValidatorCommission message.
+         * @function verify
+         * @memberof cosmos.MsgWithdrawValidatorCommission
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        MsgWithdrawValidatorCommission.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (!(message.ValidatorAddr && typeof message.ValidatorAddr.length === "number" || $util.isString(message.ValidatorAddr)))
+                return "ValidatorAddr: buffer expected";
+            return null;
+        };
+
+        /**
+         * Creates a MsgWithdrawValidatorCommission message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof cosmos.MsgWithdrawValidatorCommission
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {cosmos.MsgWithdrawValidatorCommission} MsgWithdrawValidatorCommission
+         */
+        MsgWithdrawValidatorCommission.fromObject = function fromObject(object) {
+            if (object instanceof $root.cosmos.MsgWithdrawValidatorCommission)
+                return object;
+            var message = new $root.cosmos.MsgWithdrawValidatorCommission();
+            if (object.ValidatorAddr != null)
+                if (typeof object.ValidatorAddr === "string")
+                    $util.base64.decode(object.ValidatorAddr, message.ValidatorAddr = $util.newBuffer($util.base64.length(object.ValidatorAddr)), 0);
+                else if (object.ValidatorAddr.length)
+                    message.ValidatorAddr = object.ValidatorAddr;
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a MsgWithdrawValidatorCommission message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof cosmos.MsgWithdrawValidatorCommission
+         * @static
+         * @param {cosmos.MsgWithdrawValidatorCommission} message MsgWithdrawValidatorCommission
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        MsgWithdrawValidatorCommission.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.defaults)
+                if (options.bytes === String)
+                    object.ValidatorAddr = "";
+                else {
+                    object.ValidatorAddr = [];
+                    if (options.bytes !== Array)
+                        object.ValidatorAddr = $util.newBuffer(object.ValidatorAddr);
+                }
+            if (message.ValidatorAddr != null && message.hasOwnProperty("ValidatorAddr"))
+                object.ValidatorAddr = options.bytes === String ? $util.base64.encode(message.ValidatorAddr, 0, message.ValidatorAddr.length) : options.bytes === Array ? Array.prototype.slice.call(message.ValidatorAddr) : message.ValidatorAddr;
+            return object;
+        };
+
+        /**
+         * Converts this MsgWithdrawValidatorCommission to JSON.
+         * @function toJSON
+         * @memberof cosmos.MsgWithdrawValidatorCommission
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        MsgWithdrawValidatorCommission.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return MsgWithdrawValidatorCommission;
+    })();
+
     cosmos.StdFee = (function() {
 
         /**

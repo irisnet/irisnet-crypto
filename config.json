@@ -55,7 +55,7 @@
     "tx":{
       "transfer": {
         "type": "transfer",
-        "prefix": "cosmos-sdk/Send"
+        "prefix": "cosmos-sdk/MsgSend"
       },
       "delegate": {
         "type": "delegate",
@@ -63,7 +63,23 @@
       },
       "undelegate": {
         "type": "undelegate",
-        "prefix": "cosmos-sdk/Undelegate"
+        "prefix": "cosmos-sdk/MsgUndelegate"
+      },
+      "beginRedelegate": {
+        "type": "begin_redelegate",
+        "prefix": "cosmos-sdk/MsgBeginRedelegate"
+      },
+      "setWithdrawAddress": {
+        "type": "set_withdraw_address",
+        "prefix": "cosmos-sdk/MsgModifyWithdrawAddress"
+      },
+      "withdrawDelegatorReward": {
+        "type": "withdraw_delegation_reward",
+        "prefix": "cosmos-sdk/MsgWithdrawDelegationReward"
+      },
+      "withdrawValidatorCommission": {
+        "type": "withdraw_validator_commission",
+        "prefix": "cosmos-sdk/MsgWithdrawValidatorCommission"
       },
       "stdTx": {
         "type": "stdTx",

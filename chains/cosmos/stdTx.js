@@ -69,7 +69,7 @@ class StdTx {
         this.fee = properties.fee;
         this.signatures = null;
         this.memo = properties.memo;
-        this.signMsg = properties
+        this.signMsg = properties;
     }
 
     SetSignature(sig){
@@ -131,12 +131,13 @@ class StdTx {
             gas: Utils.toString(this.fee.gas)
         };
         return {
-            tx: {
+            'tx': {
                 msg: msgs,
                 fee: fee,
                 signatures: signatures,
                 memo: this.memo
-            }
+            },
+            'return': 'block'
         }
     }
 
@@ -151,7 +152,7 @@ class StdTx {
     Hash() {
         let result = TxSerializer.encode(this);
         return {
-            data: Base64.encode(result.data),
+            data: this.GetData(),
             hash: result.hash
         }
     }
