@@ -35,9 +35,61 @@
       "normal": "normal"
     },
     "bech32": {
-      "accAddr": "${accAddr}",
-      "valAddr": "${valAddr}",
-      "accPub": "${accPub}"
+      "accAddr": "iaa",
+      "valAddr": "iva",
+      "accPub": "iap"
+    },
+    "defaultCoding": "bech32",
+    "coding": {
+      "bech32": "bech32",
+      "hex": "hex"
+    },
+    "maxGas": 20000000,
+    "amino": {
+      "signature": "tendermint/SignatureSecp256k1",
+      "pubKey": "tendermint/PubKeySecp256k1"
+    },
+    "bip39Path": "44'/118'/0'/0/0"
+  },
+  "cosmos": {
+    "tx":{
+      "transfer": {
+        "type": "transfer",
+        "prefix": "cosmos-sdk/MsgSend"
+      },
+      "delegate": {
+        "type": "delegate",
+        "prefix": "cosmos-sdk/MsgDelegate"
+      },
+      "undelegate": {
+        "type": "undelegate",
+        "prefix": "cosmos-sdk/MsgUndelegate"
+      },
+      "beginRedelegate": {
+        "type": "begin_redelegate",
+        "prefix": "cosmos-sdk/MsgBeginRedelegate"
+      },
+      "setWithdrawAddress": {
+        "type": "set_withdraw_address",
+        "prefix": "cosmos-sdk/MsgModifyWithdrawAddress"
+      },
+      "withdrawDelegatorReward": {
+        "type": "withdraw_delegation_reward",
+        "prefix": "cosmos-sdk/MsgWithdrawDelegationReward"
+      },
+      "withdrawValidatorCommission": {
+        "type": "withdraw_validator_commission",
+        "prefix": "cosmos-sdk/MsgWithdrawValidatorCommission"
+      },
+      "stdTx": {
+        "type": "stdTx",
+        "prefix": "auth/StdTx"
+      }
+    },
+    "bech32": {
+      "accAddr": "cosmos",
+      "valAddr": "cosmosvaloper",
+      "accPub": "cosmospub"
     },
     "defaultCoding": "bech32",
     "coding": {
@@ -59,6 +111,7 @@
   },
   "chain": {
     "iris": "iris",
-    "ethermint": "ethermint"
+    "ethermint": "ethermint",
+    "cosmos": "cosmos"
   }
 }

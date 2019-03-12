@@ -1,11 +1,11 @@
-const Irisnet = require('../index');
+const Irisnet = require('../../index');
 const chai = require('chai');
-const util = require('../util/utils');
-const codec = require('../util/codec');
+const util = require('../../util/utils');
+const codec = require('../../util/codec');
 const assert = chai.assert;
 
 
-describe('CryPto test', function () {
+describe('CryPto iris test', function () {
 
     //测试账户相关信息
     describe('test account', function () {
@@ -30,8 +30,8 @@ describe('CryPto test', function () {
         });
 
         it('test recover', function () {
-            let crypto = Irisnet.getCrypto(Irisnet.config.chain.iris);
-            let account = crypto.recover("tube lonely pause spring gym veteran know want grid tired taxi such same mesh charge orient bracket ozone concert once good quick dry boss");
+            let crypto = Irisnet.getCrypto(Irisnet.config.chain.cosmos);
+            let account = crypto.recover("");
             console.log(account);
             console.log(codec.Bech32.fromBech32("fap1addwnpepqtdme789cpm8zww058ndlhzpwst3s0mxnhdhu5uyps0wjucaufha6v3ce99"))
         });
@@ -336,9 +336,8 @@ describe('CryPto test', function () {
             extracted(tx);
         });
     });
-
     //冷钱包调用
-    function extracted(tx) {
+    function extracted(tx,chain = 'iris') {
         let builder = Irisnet.getBuilder(chain);
         //①先用联网的钱包构造一笔交易
         let stdTx = builder.buildTx(tx);
@@ -359,21 +358,20 @@ describe('CryPto test', function () {
         let result = stdTx.Hash();
         console.log("data:", result.data);
         console.log("hash", result.hash);
-        console.log("displayContent", JSON.stringify(stdTx.GetDisplayContent()));
+        //console.log("displayContent", JSON.stringify(stdTx.GetDisplayContent()));
 
     }
 
     //热钱包调用
-    function execute(tx) {
+    function execute(tx,chain = 'iris') {
         let builder = Irisnet.getBuilder(chain);
         let stdTx = builder.buildAndSignTx(tx, privateKey);
         console.log("======stdTx======");
         console.log(JSON.stringify(stdTx.GetData()));
         // console.log("======待提交交易======");
         let result = stdTx.Hash();
-        console.log("data:", result.data);
+        //console.log("data:", result.data);
         console.log("hash", result.hash);
-        console.log("displayContent", JSON.stringify(stdTx.GetDisplayContent()));
     }
 
     //simulate
@@ -385,8 +383,6 @@ describe('CryPto test', function () {
         console.log(JSON.stringify(stdTx.GetData()));
         // console.log("======待提交交易======");
         let result = stdTx.Hash();
-        console.log("data:", result.data);
         console.log("hash", result.hash);
-        console.log("displayContent", JSON.stringify(stdTx.GetDisplayContent()));
     }
 });

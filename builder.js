@@ -58,6 +58,9 @@ class Builder {
             case Config.chain.ethermint: {
                 return require('./chains/ethermint/ethermint_builder')();
             }
+            case Config.chain.cosmos: {
+                return require('./chains/cosmos/cosmos_builder')();
+            }
             default: {
                 throw new Error("not correct chain");
             }
