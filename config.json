@@ -35,9 +35,9 @@
       "normal": "normal"
     },
     "bech32": {
-      "accAddr": "faa",
-      "valAddr": "fva",
-      "accPub": "fap"
+      "accAddr": "iaa",
+      "valAddr": "iva",
+      "accPub": "iap"
     },
     "defaultCoding": "bech32",
     "coding": {
