@@ -57,7 +57,10 @@ class CosmosKeypair {
 
         //生成私钥
         let secretKey = this.getPrivateKeyFromSecret(mnemonicS);
-
+        if(secretKey.length === 31){
+            let pad = Buffer.from([0]);
+            secretKey = Buffer.concat([pad,secretKey]);
+        }
         //构造公钥
         let pubKey = Secp256k1.publicKeyCreate(secretKey);
         //将公钥加上amino编码前缀(irishub反序列化需要)
@@ -138,6 +141,10 @@ class Hd {
                 part = part.slice(0,part.length -1);
             }
             let idx = parseInt(part);
+            if(data.length === 31){
+                let pad = Buffer.from([0]);
+                data = Buffer.concat([pad,data]);
+            }
             let json = Hd.DerivePrivateKey(data, chainCode, idx, harden);
             data = json.data;
             chainCode = json.chainCode;
