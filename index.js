@@ -19,6 +19,12 @@ function setNetwork(network){
             valAddr: "fva",
             accPub: "fap"
         };
+    }else {
+        config.iris.bech32 = {
+            accAddr: "iaa",
+            valAddr: "iva",
+            accPub: "iap"
+        };
     }
     return config
 }
