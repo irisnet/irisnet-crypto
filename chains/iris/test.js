@@ -10,7 +10,7 @@ describe('CryPto iris test', function () {
     //测试账户相关信息
     describe('test account', function () {
         it('test create and recover', function () {
-            let crypto = Irisnet.getCrypto(Irisnet.config.chain.iris);
+            let crypto = Irisnet.getCrypto(Irisnet.config.chain.iris,'testnet');
             let keyPair = crypto.create(Irisnet.config.language.en);
             console.log(JSON.stringify(keyPair));
             let keyPair2 = crypto.recover(keyPair.phrase, Irisnet.config.language.en);
@@ -364,7 +364,7 @@ describe('CryPto iris test', function () {
 
     //热钱包调用
     function execute(tx,chain = 'iris') {
-        let builder = Irisnet.getBuilder(chain);
+        let builder = Irisnet.getBuilder(chain,'testnet');
         let stdTx = builder.buildAndSignTx(tx, privateKey);
         console.log("======stdTx======");
         console.log(JSON.stringify(stdTx.GetData()));
