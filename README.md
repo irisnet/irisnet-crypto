@@ -21,7 +21,7 @@ It mainly provides account generation, transaction construction and offline sign
     - WithdrawDelegatorReward transaction construction and signature
     - WithdrawValidatorCommission transaction construction and signature
     
-In addition, irIRISnet also supports hot and cold wallets, offline signatures of transactions by scanning code.
+In addition, IRISnet also supports hot and cold wallets, offline signatures of transactions by scanning code.
 ## Installation
 
 ```bash
