@@ -25,7 +25,7 @@ In addition, IRISnet also supports hot and cold wallets, offline signatures of t
 ## Installation
 
 ```bash
-npm install irisnet-crypto
+npm install git+https://github.com/irisnet/irisnet-crypto.git
 ```
 
 ## Examples
