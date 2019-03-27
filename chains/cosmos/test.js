@@ -15,7 +15,7 @@ describe('cosmos traction test', function () {
             chain_id: chain_id,
             from: from,
             account_number: account_number,
-            sequence: 7,
+            sequence: 8,
             fees: fees,
             gas: gas,
             memo: memo,
@@ -32,7 +32,7 @@ describe('cosmos traction test', function () {
             }
         };
 
-        execute(tx);
+        extracted(tx);
     });
 
     it('test delegate', function () {
@@ -40,7 +40,7 @@ describe('cosmos traction test', function () {
             chain_id: chain_id,
             from: from,
             account_number: account_number,
-            sequence: 2,
+            sequence: 9,
             fees: fees,
             gas: gas,
             memo: memo,
@@ -54,7 +54,7 @@ describe('cosmos traction test', function () {
             }
         };
 
-        execute(tx);
+        extracted(tx);
     });
 
     it('test undelegate', function () {
@@ -62,7 +62,7 @@ describe('cosmos traction test', function () {
             chain_id: chain_id,
             from: from,
             account_number: account_number,
-            sequence: 3,
+            sequence: 10,
             fees: fees,
             gas: gas,
             memo: memo,
@@ -73,7 +73,7 @@ describe('cosmos traction test', function () {
             }
         };
 
-        execute(tx);
+        extracted(tx);
     });
 
     it('test beginRedelegate', function () {
@@ -81,7 +81,7 @@ describe('cosmos traction test', function () {
             chain_id: chain_id,
             from: from,
             account_number: account_number,
-            sequence: 6,
+            sequence: 11,
             fees: fees,
             gas: gas,
             memo: memo,
@@ -101,7 +101,7 @@ describe('cosmos traction test', function () {
             chain_id: chain_id,
             from: from,
             account_number: account_number,
-            sequence: 4,
+            sequence: 12,
             fees: fees,
             gas: gas,
             memo: memo,
@@ -118,7 +118,7 @@ describe('cosmos traction test', function () {
             chain_id: chain_id,
             from: from,
             account_number: account_number,
-            sequence: 5,
+            sequence: 13,
             fees: fees,
             gas: gas,
             memo: memo,
@@ -150,6 +150,18 @@ describe('cosmos traction test', function () {
         execute(tx);
     });
 
+    it('test config', function () {
+        let conf = require('../../config');
+        console.log('prefix',conf.iris.bech32);
+        conf.iris.bech32 = {
+            "accAddr": "iaa",
+            "valAddr": "iva",
+            "accPub": "iap"
+        };
+        let conf2 = require('../../config');
+        console.log('prefix',conf2.iris.bech32);
+    });
+
     function execute(tx) {
         let builder = Irisnet.getBuilder(chain);
         let stdTx = builder.buildAndSignTx(tx, privateKey);
@@ -157,5 +169,30 @@ describe('cosmos traction test', function () {
         console.log(JSON.stringify(stdTx.GetData()));
         let result = stdTx.Hash();
         console.log(result.hash);
+    }
+
+    //冷钱包调用
+    function extracted(tx) {
+        let builder = Irisnet.getBuilder(chain);
+        //①先用联网的钱包构造一笔交易
+        let stdTx = builder.buildTx(tx);
+        //②把步骤①的结构序列化为字符串，装入二维码
+        let signStr = JSON.stringify(stdTx.GetSignBytes());
+        //③用未联网的钱包(存有账户秘钥)扫描步骤②的二维码，拿到待签名的字符串，调用signTx签名
+        let signature = builder.sign(signStr, privateKey);
+        //④
+        let signatureStr = JSON.stringify(signature);//二维码字符串
+        stdTx.SetSignature(signatureStr);
+        //console.log("======待提交交易======");
+        //④步骤③的结果调用GetData，得到交易字符串，回传给联网的钱包，并发送该内容给irishub-server
+        console.log(JSON.stringify(stdTx.GetData()));
+
+        //以下步骤为异常处理：在请求irishub-server超时的时候，服务器可能没有任何返回结果，这笔交易状态为止，所以需要客户端计算出
+        //本次交易的hash，校准该笔交易的状态。调用步骤③结构的Hash，可以得到交易hash以及本次交易内容的base64编码（以后考虑使用该编码内容替换
+        // GetPostData,解耦crypto和irishub交易结构的依赖）
+        let result = stdTx.Hash();
+        console.log("hash", result.hash);
+        //console.log("displayContent", JSON.stringify(stdTx.GetDisplayContent()));
+
     }
 });
