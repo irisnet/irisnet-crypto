@@ -63,7 +63,7 @@ let account = crypto.recover('your seed','your language');
 or via privateKey
 
 ```js
-let account = crypto.recover('your privateKey');
+let account = crypto.import('your privateKey');
 ```
 The difference between the above two is that the latter does not return the mnemonic of the account.
 
