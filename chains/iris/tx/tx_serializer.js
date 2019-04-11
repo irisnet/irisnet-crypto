@@ -57,37 +57,29 @@ class TxSerializer {
         let txPreBuf = Buffer.from(amino.GetRegisterInfo(config.iris.tx.stdTx.prefix).prefix);
         let msgPreBuf = Buffer.from(info.prefix);
 
-        let uvarintMsgBuf = EncodeUvarint(msgPreBuf.length + txMsgBuf[1]);
-        let buf = Buffer.alloc(txPreBuf.length + msgPreBuf.length + txMsgBuf.length + uvarintMsgBuf.length - 1, 0);
-        let offset = 0;
+        let buf = Buffer.from("");
 
         //填充stdTx amion编码前缀
-        buf.fill(txPreBuf, offset);
-        offset += txPreBuf.length;
+        buf = Buffer.concat([buf, txPreBuf]);
 
         //填充txMsgBuf第一位编码字节(数组标识)
-        buf.fill(txMsgBuf[0], offset);
-        offset += 1;
+        buf = Buffer.concat([buf, txMsgBuf.slice(0, 1)]);
 
-        //填充txMsgBuf加入前缀后的编码长度
-        // buf.fill(msgPreBuf.length + txMsgBuf[1], offset);
-        // offset += 1;
-
-        buf.fill(uvarintMsgBuf, offset);
-        offset += uvarintMsgBuf.length;
+        let uvintMsgBuf = EncodeUvarint(msgPreBuf.length + txMsgBuf[1]);
+        buf = Buffer.concat([buf, uvintMsgBuf]);
 
         //填充msg amion编码前缀
-        buf.fill(msgPreBuf, offset);
-        offset += msgPreBuf.length;
+        buf = Buffer.concat([buf, msgPreBuf]);
 
         //填充交易内容字节
-        buf.fill(txMsgBuf.slice(2), offset);
+        buf = Buffer.concat([buf, txMsgBuf.slice(DecodeUvarint(txMsgBuf[1]) + 1)]);
 
         let uvarintBuf = Buffer.from(EncodeUvarint(buf.length));
         let bz = Buffer.concat([uvarintBuf, buf]);
 
         const crypto = require('crypto');
         const hash = crypto.createHash('sha256');
+        console.log(JSON.stringify(bz));
         hash.update(bz);
         let hashTx = hash.digest('hex').substring(0, 64);
 
@@ -97,6 +89,7 @@ class TxSerializer {
         }
     }
 }
+
 function EncodeUvarint(u) {
     let buf = Buffer.alloc(10);
     let i = 0;
@@ -108,6 +101,13 @@ function EncodeUvarint(u) {
     }
     buf[i] = new BN(u);
     return buf.slice(0, i + 1);
+}
+
+function DecodeUvarint(u) {
+    if (u >= 0x80) {
+        return 2
+    }
+    return 1
 }
 
 module.exports = TxSerializer;
