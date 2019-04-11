@@ -38,7 +38,7 @@ class TxSerializer {
 
         let StdSignature = root.irisnet.tx.StdSignature;
         let signature;
-        if (object.signatures){
+        if (object.signatures) {
             signature = [StdSignature.create({
                 pubKey: object.signatures[0].pub_key,
                 signature: object.signatures[0].signature,
@@ -57,7 +57,8 @@ class TxSerializer {
         let txPreBuf = Buffer.from(amino.GetRegisterInfo(config.iris.tx.stdTx.prefix).prefix);
         let msgPreBuf = Buffer.from(info.prefix);
 
-        let buf = Buffer.alloc(txPreBuf.length + msgPreBuf.length + txMsgBuf.length, 0);
+        let uvarintMsgBuf = EncodeUvarint(msgPreBuf.length + txMsgBuf[1]);
+        let buf = Buffer.alloc(txPreBuf.length + msgPreBuf.length + txMsgBuf.length + uvarintMsgBuf.length - 1, 0);
         let offset = 0;
 
         //填充stdTx amion编码前缀
@@ -69,8 +70,11 @@ class TxSerializer {
         offset += 1;
 
         //填充txMsgBuf加入前缀后的编码长度
-        buf.fill(msgPreBuf.length + txMsgBuf[1], offset);
-        offset += 1;
+        // buf.fill(msgPreBuf.length + txMsgBuf[1], offset);
+        // offset += 1;
+
+        buf.fill(uvarintMsgBuf, offset);
+        offset += uvarintMsgBuf.length;
 
         //填充msg amion编码前缀
         buf.fill(msgPreBuf, offset);
@@ -103,7 +107,7 @@ function EncodeUvarint(u) {
         i++;
     }
     buf[i] = new BN(u);
-    return buf.slice(0, 2);
+    return buf.slice(0, i + 1);
 }
 
 module.exports = TxSerializer;
