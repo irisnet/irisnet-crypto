@@ -79,7 +79,6 @@ class TxSerializer {
 
         const crypto = require('crypto');
         const hash = crypto.createHash('sha256');
-        console.log(JSON.stringify(bz));
         hash.update(bz);
         let hashTx = hash.digest('hex').substring(0, 64);
 
