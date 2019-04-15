@@ -57,12 +57,8 @@ class CosmosKeypair {
 
         //生成私钥
         let secretKey = this.getPrivateKeyFromSecret(mnemonicS);
-        if(secretKey.length === 31){
-            let pad = Buffer.from([0]);
-            secretKey = Buffer.concat([pad,secretKey]);
-        }
         //构造公钥
-        let pubKey = Secp256k1.publicKeyCreate(secretKey);
+        let pubKey = Hd.publicKeyCreate(secretKey);
         //将公钥加上amino编码前缀(irishub反序列化需要)
         pubKey = Amino.MarshalBinary(Config.iris.amino.pubKey,pubKey);
 
@@ -79,7 +75,7 @@ class CosmosKeypair {
         //生成私钥
         let secretKey = this.getPrivateKeyFromSecret(mnemonic);
         //构造公钥
-        let pubKey = Secp256k1.publicKeyCreate(secretKey);
+        let pubKey = Hd.publicKeyCreate(secretKey);
         //将公钥加上amino编码前缀(irishub反序列化需要)
         pubKey = Amino.MarshalBinary(Config.iris.amino.pubKey,pubKey);
 
@@ -104,7 +100,7 @@ class CosmosKeypair {
     static import(secretKey){
         let secretBytes = Buffer.from(secretKey,"hex");
         //构造公钥
-        let pubKey = Secp256k1.publicKeyCreate(secretBytes);
+        let pubKey = Hd.publicKeyCreate(secretBytes);
         //将公钥加上amino编码前缀(irishub反序列化需要)
         pubKey = Amino.MarshalBinary(Config.iris.amino.pubKey,pubKey);
         return {
@@ -141,10 +137,10 @@ class Hd {
                 part = part.slice(0,part.length -1);
             }
             let idx = parseInt(part);
-            if(data.length === 31){
-                let pad = Buffer.from([0]);
-                data = Buffer.concat([pad,data]);
-            }
+            // if(data.length === 31){
+            //     let pad = Buffer.from([0]);
+            //     data = Buffer.concat([pad,data]);
+            // }
             let json = Hd.DerivePrivateKey(data, chainCode, idx, harden);
             data = json.data;
             chainCode = json.chainCode;
@@ -168,14 +164,14 @@ class Hd {
         let data;
         let indexBuffer = Buffer.from([index]);
         if(harden){
-			var c = new BN(index).or(new BN(0x80000000));
+            let c = new BN(index).or(new BN(0x80000000));
 			indexBuffer = c.toBuffer();
 
             let privKeyBuffer = Buffer.from(privKeyBytes);
             data = Buffer.from([0]);
             data = Buffer.concat([data,privKeyBuffer]);
         }else{
-            const pubKey =Secp256k1.publicKeyCreate(privKeyBytes);
+            const pubKey =this.publicKeyCreate(privKeyBytes);
             // TODO
             if (index ==0){
                 indexBuffer = Buffer.from([0,0,0,0]);
@@ -201,26 +197,16 @@ class Hd {
         let x = c.mod(new BN(n));
         return x
     }
-    /*
-    *
-    *  需要仿写以下代码，现在虽然没有调用，可能以后会出问题
-    *
-    func (sig *Signature) Serialize() []byte {
-        // low 'S' malleability breaker
-        sigS := sig.S
-        if sigS.Cmp(S256().halfOrder) == 1 {
-            sigS = new(big.Int).Sub(S256().N, sigS)
+    static publicKeyCreate(privKeyBytes){
+        if(privKeyBytes.length < 32){
+            let pad = Buffer.alloc(32 - privKeyBytes);
+            for(let i= 0;i <32 - privKeyBytes.length;i++ ){
+                pad =  Buffer.concat([pad,Buffer.from([0])]);
+            }
+            privKeyBytes = Buffer.concat([pad,privKeyBytes]);
         }
-        rBytes := sig.R.Bytes()
-        sBytes := sigS.Bytes()
-        sigBytes := make([]byte, 64)
-        // 0 pad the byte arrays from the left if they aren't big enough.
-        copy(sigBytes[32-len(rBytes):32], rBytes)
-        copy(sigBytes[64-len(sBytes):64], sBytes)
-        return sigBytes
+        return Secp256k1.publicKeyCreate(privKeyBytes);
     }
-    *
-    * */
 
     static Serialize(sig) {
         const sigObj = {r: sig.slice(0, 32), s: sig.slice(32, 64)};
