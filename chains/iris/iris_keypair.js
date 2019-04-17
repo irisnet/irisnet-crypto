@@ -57,6 +57,7 @@ class CosmosKeypair {
 
         //生成私钥
         let secretKey = this.getPrivateKeyFromSecret(mnemonicS);
+
         //构造公钥
         let pubKey = Hd.publicKeyCreate(secretKey);
         //将公钥加上amino编码前缀(irishub反序列化需要)
@@ -137,10 +138,6 @@ class Hd {
                 part = part.slice(0,part.length -1);
             }
             let idx = parseInt(part);
-            // if(data.length === 31){
-            //     let pad = Buffer.from([0]);
-            //     data = Buffer.concat([pad,data]);
-            // }
             let json = Hd.DerivePrivateKey(data, chainCode, idx, harden);
             data = json.data;
             chainCode = json.chainCode;
@@ -185,7 +182,7 @@ class Hd {
         let x = Hd.AddScalars(aInt, bInt);
 
         return {
-            data : x.toBuffer(),
+            data : x,
             chainCode : i64P.chainCode
         }
     }
@@ -194,17 +191,19 @@ class Hd {
         let c = a.add(b);
         const bn = require('secp256k1/lib/js/bn/index');
         let n = bn.n.toBuffer();
-        let x = c.mod(new BN(n));
-        return x
+        let x = c.mod(new BN(n)).toBuffer();
+        let buf = Buffer.alloc(32);
+        buf.fill(x,32 - x.length);
+        // if(x.length < 32){
+        //     let pad = Buffer.from("");
+        //     for(let i= 0;i <32 - x.length;i++ ){
+        //         pad =  Buffer.concat([pad,Buffer.from([0])]);
+        //     }
+        //     x = Buffer.concat([pad,x]);
+        // }
+        return buf
     }
     static publicKeyCreate(privKeyBytes){
-        if(privKeyBytes.length < 32){
-            let pad = Buffer.alloc(32 - privKeyBytes);
-            for(let i= 0;i <32 - privKeyBytes.length;i++ ){
-                pad =  Buffer.concat([pad,Buffer.from([0])]);
-            }
-            privKeyBytes = Buffer.concat([pad,privKeyBytes]);
-        }
         return Secp256k1.publicKeyCreate(privKeyBytes);
     }
 

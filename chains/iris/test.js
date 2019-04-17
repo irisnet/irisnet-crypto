@@ -10,11 +10,18 @@ describe('CryPto iris test', function () {
     //测试账户相关信息
     describe('test account', function () {
         it('test create and recover', function () {
-            let crypto = Irisnet.getCrypto(Irisnet.config.chain.iris,'testnet');
-            let keyPair = crypto.create(Irisnet.config.language.en);
-            console.log(JSON.stringify(keyPair));
-            let keyPair2 = crypto.recover(keyPair.phrase, Irisnet.config.language.en);
-            assert.deepEqual(keyPair, keyPair2);
+            let str = "";
+            for (let i = 0;i<300000;i++){
+                let crypto = Irisnet.getCrypto(Irisnet.config.chain.iris,'testnet');
+                let keyPair = crypto.create(Irisnet.config.language.en);
+                let keyPair2 = crypto.recover(keyPair.phrase, Irisnet.config.language.en);
+                console.log(i);
+                assert.deepEqual(keyPair, keyPair2);
+                str += (JSON.stringify(keyPair) + "\n")
+            }
+            let fs = require("fs");
+            fs.writeFileSync('./input.txt',str);
+            fs.close()
         });
 
         it('test import', function () {
@@ -30,10 +37,10 @@ describe('CryPto iris test', function () {
         });
 
         it('test recover', function () {
-            let crypto = Irisnet.getCrypto(Irisnet.config.chain.cosmos);
+            let crypto = Irisnet.getCrypto(Irisnet.config.chain.iris,"testnet");
             let account = crypto.recover("");
             console.log(account);
-            console.log(codec.Bech32.fromBech32("fap1addwnpepqtdme789cpm8zww058ndlhzpwst3s0mxnhdhu5uyps0wjucaufha6v3ce99"))
+            //console.log(codec.Bech32.fromBech32("fap1addwnpepqtdme789cpm8zww058ndlhzpwst3s0mxnhdhu5uyps0wjucaufha6v3ce99"))
         });
 
         it('test hasRepeatElement', function () {
@@ -56,13 +63,13 @@ describe('CryPto iris test', function () {
     });
 
 
-    let chain_id = "rainbow-dev";
-    let from = "faa1ljemm0yznz58qxxs8xyak7fashcfxf5lssn6jm";
-    let gas = 200000;
-    let account_number = 4;
-    let fees = {denom: "iris-atto", amount: 400000000000000000};
+    let chain_id = "hash";
+    let from = "faa1aake3umjllpd9es5d3qmry4egcne0f8a8u5rsx";
+    let gas = 10000;
+    let account_number = 0;
+    let fees = {denom: "iris-atto", amount: 600000000000000000};
     let memo = "1";
-    let privateKey = "55A3160577979EC014A2CE85C430E1FF0FF06EFD230B7CE41AEAE2EF00EDF175";
+    let privateKey = "465820F3AC6B406F8D599E558ACC48A135C57A2537CB96EF544A3D66449E7D63";
     let pubKey = "fap1addwnpepqtdme789cpm8zww058ndlhzpwst3s0mxnhdhu5uyps0wjucaufha6v3ce99";
     let chain = Irisnet.config.chain.iris;
 
@@ -118,21 +125,59 @@ describe('CryPto iris test', function () {
             execute(tx);
         });
 
+        it('test build', function () {
+            let tx = {
+                chain_id: "irishub",
+                from: "iaa1wcsa554l5lx99ylu94ujlxuu6jkvacvpp63ajc",
+                account_number: 8001,
+                sequence: 3,
+                fees: {denom: "iris-atto", amount: 100000000000000000},
+                gas: 10000,
+                memo: "MaxSon",
+                type: Irisnet.config.iris.tx.transfer.type,
+                msg: {
+                    to: "iaa1lsudh3c5sn5xnwv8ewte0qpt4l7c82hh8zquzq",
+                    coins: [
+                        {
+                            denom: "iris-atto",
+                            amount: "1475664988324501700000000"
+                        }
+                    ]
+                }
+            };
+
+            let pubkey = "eb5ae9872102ac8f8789b3c70aefcbd6a2bafca472922d04ed199db53df71586916634873021";
+            let sig = "14bc7cccc95e9b92454d25a1b3b5c2ec9ab7d6d04da8405e3899e69643bf76a12d4206a0e8d9c69e2abd58a662b14815b393061fc6376e75b8cb13dc33285f10";
+            let Codec = require("../../util/codec")
+
+            let builder = Irisnet.getBuilder(chain);
+            let signature = {
+                pub_key:Codec.Hex.hexToBytes(pubkey),
+                signature:Codec.Hex.hexToBytes(sig),
+        };
+            //①先用联网的钱包构造一笔交易
+            let stdTx = builder.buildTx(tx);
+            stdTx.SetSignature(signature);
+            console.log("stdtx", JSON.stringify(stdTx.GetData()));
+            let result = stdTx.Hash();
+            console.log("hash", result.hash);
+        });
+
         it('test delegate', function () {
             let tx = {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 56,
+                sequence: 12,
                 fees: fees,
                 gas: gas,
                 memo: memo,
                 type: Irisnet.config.iris.tx.delegate.type,
                 msg: {
-                    validator_addr: "fva19lkvdr6yjluj602ljn9epafqgq2xekxlqrm3n8",
+                    validator_addr: "fva1aake3umjllpd9es5d3qmry4egcne0f8ajd7vdp",
                     delegation: {
                         denom: "iris-atto",
-                        amount: 10000000000000000000
+                        amount: 1000000000000000000000000
                     }
                 }
             };
@@ -145,14 +190,14 @@ describe('CryPto iris test', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 40,
+                sequence: 43,
                 fees: fees,
                 gas: gas,
                 memo: memo,
                 type: Irisnet.config.iris.tx.unbond.type,
                 msg: {
-                    validator_addr: "fva19lkvdr6yjluj602ljn9epafqgq2xekxlqrm3n8",
-                    shares_amount: "10000000000000000000"
+                    validator_addr: "fva1aake3umjllpd9es5d3qmry4egcne0f8ajd7vdp",
+                    shares_amount: "1000000000000000000000000"
                 }
             };
 
@@ -172,7 +217,7 @@ describe('CryPto iris test', function () {
                 msg: {
                     validator_src_addr: "fva1kca5vw7r2k72d5zy0demszmrhdz4dp8t4uat0c",
                     validator_dst_addr: "fva1rz7jxmgsgyjwa6erusxlzrmg2aw3cvyf3c3x6v",
-                    shares_amount: "10000000000000000000"
+                    shares_amount: "1000000000000000000000000"
                 }
             };
 
@@ -190,7 +235,7 @@ describe('CryPto iris test', function () {
                 gas: gas,
                 memo: memo,
                 type: Irisnet.config.iris.tx.withdrawDelegationRewardsAll.type,
-                mode: Irisnet.config.iris.mode.try
+                //mode: Irisnet.config.iris.mode.try
             };
 
             execute(tx);
@@ -207,7 +252,7 @@ describe('CryPto iris test', function () {
                 memo: memo,
                 type: Irisnet.config.iris.tx.withdrawDelegationReward.type,
                 msg: {
-                    validator_addr: "fva1kca5vw7r2k72d5zy0demszmrhdz4dp8t4uat0c",
+                    validator_addr: "fva1aake3umjllpd9es5d3qmry4egcne0f8ajd7vdp",
                 }
             };
 
@@ -368,7 +413,7 @@ describe('CryPto iris test', function () {
         let stdTx = builder.buildAndSignTx(tx, privateKey);
         console.log("======stdTx======");
         console.log(JSON.stringify(stdTx.GetData()));
-        // console.log("======待提交交易======");
+        console.log(JSON.stringify(stdTx));
         let result = stdTx.Hash();
         //console.log("data:", result.data);
         console.log("hash", result.hash);
