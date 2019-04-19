@@ -1,6 +1,7 @@
 'use strict';
 
 const BECH32 = require('bech32');
+const BN = require('BN');
 
 /**
  * 处理编码/解码
@@ -109,7 +110,6 @@ const uvarint = class{
     static encode(u) {
         let buf = Buffer.alloc(10);
         let i = 0;
-        const BN = require("bn");
         while (u >= 0x80) {
             buf[i] = new BN(u).or(new BN(0x80));
             u >>= 7;
