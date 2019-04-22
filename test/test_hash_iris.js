@@ -1,21 +1,22 @@
-const Irisnet = require('../../index');
+const Irisnet = require('../index');
+const common = require('./common');
 const chai = require('chai');
 const assert = chai.assert;
 
 
-const lcdServer ="http://irisnet-lcd.dev.rainbow.one";
+const url ="http://irisnet-lcd.dev.rainbow.one/tx/broadcast";
+const chainName ="iris";
+const threshold = 10;
+const chain_id = "rainbow-dev";
 
-describe('CryPto iris test', function () {
-
-    let chain_id = "rainbow-dev";
+describe('iris hash', function () {
 
     it('test transfer hash', function () {
         let crypto = Irisnet.getCrypto('iris', 'testnet');
         let account1 = crypto.create();
         let sequence = 1;
         let base = 1000000000000000000;
-        for (let i = 1; i <= 100; i++) {
-            console.log(i);
+        for (let i = 1; i <= threshold; i++) {
             let account2 = crypto.create();
             let tx = {
                 chain_id: chain_id,
@@ -24,7 +25,7 @@ describe('CryPto iris test', function () {
                 sequence: sequence,
                 fees: {denom: "iris-atto", amount: 100000000000000000},
                 gas: 10000,
-                memo: randomWord(100),
+                memo: common.randomWord(100),
                 type: Irisnet.config.iris.tx.transfer.type,
                 msg: {
                     to: account2.address,
@@ -36,7 +37,7 @@ describe('CryPto iris test', function () {
                     ]
                 }
             };
-            execute(tx,account1.privateKey);
+            common.verifyTx(url,tx,account1.privateKey,chainName,verify);
             sequence++;
         }
     });
@@ -45,10 +46,7 @@ describe('CryPto iris test', function () {
         let crypto = Irisnet.getCrypto('iris', 'testnet');
         let account1 = crypto.create();
         let sequence = 1;
-        let base = 1000000000000000000;
-        for (let i = 1; i <= 100; i++) {
-            console.log(i);
-            let account2 = crypto.create();
+        for (let i = 1; i <= threshold; i++) {
             let tx = {
                 chain_id: chain_id,
                 from: account1.address,
@@ -56,7 +54,7 @@ describe('CryPto iris test', function () {
                 sequence: sequence,
                 fees: {denom: "iris-atto", amount: 100000000000000000},
                 gas: 10000,
-                memo: randomWord(100),
+                memo: common.randomWord(100),
                 type: Irisnet.config.iris.tx.delegate.type,
                 msg: {
                     validator_addr: "fva1aake3umjllpd9es5d3qmry4egcne0f8ajd7vdp",
@@ -66,37 +64,14 @@ describe('CryPto iris test', function () {
                     }
                 }
             };
-            execute(tx,account1.privateKey);
+            common.verifyTx(url,tx,account1.privateKey,chainName,verify);
             sequence++;
         }
     });
 });
 
-function randomWord(range) {
-    let str = "",
-        arr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 
-    for (let i = 0; i < range; i++) {
-        let pos = Math.round(Math.random() * (arr.length - 1));
-        str += arr[pos];
-    }
-    return str;
+function verify(act,exp,data) {
+    assert.strictEqual(act.hash,exp.hash,JSON.stringify(data))
 }
 
-function execute(tx,privateKey,chain = 'iris') {
-    let builder = Irisnet.getBuilder(chain,'testnet');
-    let stdTx = builder.buildAndSignTx(tx, privateKey);
-    let exp = stdTx.Hash();
-    let payload = stdTx.GetData();
-    let url = lcdServer + "/tx/broadcast";
-    let response = sendHttpRequest("POST",url,payload);
-    assert.strictEqual(response.hash,exp.hash,JSON.stringify(payload))
-}
-
-function sendHttpRequest(method,url, payload) {
-    let req = require('sync-request');
-    let res = req(method, url, {
-        json: payload,
-    });
-    return JSON.parse(res.getBody('utf8'))
-}
