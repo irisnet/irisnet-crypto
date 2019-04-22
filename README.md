@@ -96,7 +96,7 @@ let hash = stdTx.Hash();
 
 *GetData* will return the constructed and signed transaction,you can call lcd's 'tx/broadcast'(cosmos:/txs) to send the transaction.
 
-*Hash* is used to calculate the hash of the transaction,prevent server response from being unavailable due to timeout. You can use hash to confirm if the transaction was successful.For specific usage, please refer to the test case  [iris](./chains/iris/test.js) and [cosmos](./chains/cosmos/test.js)
+*Hash* is used to calculate the hash of the transaction,prevent server response from being unavailable due to timeout. You can use hash to confirm if the transaction was successful.For specific usage, please refer to the [test case](./test)
         
 ### Requirements
 
