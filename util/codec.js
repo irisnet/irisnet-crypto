@@ -1,6 +1,7 @@
 'use strict';
 
 const BECH32 = require('bech32');
+const BN = require('BN');
 
 /**
  * 处理编码/解码
@@ -104,7 +105,62 @@ const bech32 = class {
     }
 };
 
+const uvarint = class{
+
+    static encode(u) {
+        let buf = Buffer.alloc(10);
+        let i = 0;
+        while (u >= 0x80) {
+            buf[i] = new BN(u).or(new BN(0x80));
+            u >>= 7;
+            i++;
+        }
+        buf[i] = new BN(u);
+        return buf.slice(0, i + 1);
+    }
+
+    static decode(bz) {
+        let res = this.uvarint(bz);
+        let x  = res.x;
+        let s = res.s;
+        if (s <= 0) {
+            throw new Error("decode failed");
+        }
+        return {
+            "u":x,
+            "n":s
+        }
+    }
+
+    static uvarint(buf){
+        let x = 0;
+        let s = 0;
+        for(let i = 0;i<buf.length;i++) {
+            let b = buf[i];
+            if (b < 0x80) {
+                if (i > 9 || i === 9 && b > 1) {
+                    return{
+                        x: 0,
+                        s : -(i + 1)
+                    }
+                }
+                return{
+                    x: (x | b<<s),
+                    s : i + 1
+                }
+            }
+            x |= b&0x7f << s;
+            s += 7
+        }
+        return {
+            x: x,
+            s :s
+        }
+    }
+};
+
 Codec.Hex = hex;
 Codec.Bech32 = bech32;
+Codec.Uvarint = uvarint;
 
 module.exports = Codec;

@@ -37,8 +37,8 @@ describe('CryPto iris test', function () {
         });
 
         it('test recover', function () {
-            let crypto = Irisnet.getCrypto(Irisnet.config.chain.iris,"testnet");
-            let account = crypto.recover("");
+            let crypto = Irisnet.getCrypto(Irisnet.config.chain.cosmos);
+            let account = crypto.recover("capital stereo dentist reunion point body army expect best guess sight output legend adult curve climb pencil state common vendor stereo title fee adult");
             console.log(account);
             //console.log(codec.Bech32.fromBech32("fap1addwnpepqtdme789cpm8zww058ndlhzpwst3s0mxnhdhu5uyps0wjucaufha6v3ce99"))
         });
