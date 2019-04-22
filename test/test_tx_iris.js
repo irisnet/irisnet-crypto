@@ -1,67 +1,13 @@
-const Irisnet = require('../../index');
+const Irisnet = require('../index');
 const chai = require('chai');
-const util = require('../../util/utils');
-const codec = require('../../util/codec');
 const assert = chai.assert;
 
+const common = require('./common');
+const url ="http://irisnet-lcd.dev.rainbow.one/tx/broadcast";
+const chainName ="iris";
 
-describe('CryPto iris test', function () {
 
-    //测试账户相关信息
-    describe('test account', function () {
-        it('test create and recover', function () {
-            let str = "";
-            for (let i = 0;i<300000;i++){
-                let crypto = Irisnet.getCrypto(Irisnet.config.chain.iris,'testnet');
-                let keyPair = crypto.create(Irisnet.config.language.en);
-                let keyPair2 = crypto.recover(keyPair.phrase, Irisnet.config.language.en);
-                console.log(i);
-                assert.deepEqual(keyPair, keyPair2);
-                str += (JSON.stringify(keyPair) + "\n")
-            }
-            let fs = require("fs");
-            fs.writeFileSync('./input.txt',str);
-            fs.close()
-        });
-
-        it('test import', function () {
-            let crypto = Irisnet.getCrypto(Irisnet.config.chain.iris);
-            let account = crypto.import("55A3160577979EC014A2CE85C430E1FF0FF06EFD230B7CE41AEAE2EF00EDF175")
-            assert.deepEqual(account, {
-                    address: 'faa1ljemm0yznz58qxxs8xyak7fashcfxf5lssn6jm',
-                    phrase: null,
-                    privateKey: '55A3160577979EC014A2CE85C430E1FF0FF06EFD230B7CE41AEAE2EF00EDF175',
-                    publicKey: 'fap1addwnpepqtdme789cpm8zww058ndlhzpwst3s0mxnhdhu5uyps0wjucaufha6v3ce99'
-                }
-            );
-        });
-
-        it('test recover', function () {
-            let crypto = Irisnet.getCrypto(Irisnet.config.chain.iris,"testnet");
-            let account = crypto.recover("");
-            console.log(account);
-            //console.log(codec.Bech32.fromBech32("fap1addwnpepqtdme789cpm8zww058ndlhzpwst3s0mxnhdhu5uyps0wjucaufha6v3ce99"))
-        });
-
-        it('test hasRepeatElement', function () {
-            let testStr = "detect jealous tumble tumble";
-            let result = util.hasRepeatElement(testStr, " ");
-            assert.isTrue(result);
-
-            result = util.hasRepeatElement("detect jealous layer", " ");
-            assert.isNotTrue(result);
-
-            let arr = ["detect","jealous","jealous","layer"];
-            result = util.hasRepeatElement(arr);
-            assert.isTrue(result);
-
-            let arr2 = ["detect","jealous","layer"];
-            result = util.hasRepeatElement(arr2);
-            assert.isNotTrue(result);
-
-        });
-    });
-
+describe('iris transaction', function () {
 
     let chain_id = "hash";
     let from = "faa1aake3umjllpd9es5d3qmry4egcne0f8a8u5rsx";
@@ -74,8 +20,9 @@ describe('CryPto iris test', function () {
     let chain = Irisnet.config.chain.iris;
 
 
+
     //测试热钱包相关交易
-    describe('test wallet tx', function () {
+    describe('test warm wallet tx', function () {
         it('test simulate transfer', function () {
             let tx = {
                 chain_id: chain_id,
@@ -122,45 +69,7 @@ describe('CryPto iris test', function () {
                 }
             };
 
-            execute(tx);
-        });
-
-        it('test build', function () {
-            let tx = {
-                chain_id: "irishub",
-                from: "iaa1wcsa554l5lx99ylu94ujlxuu6jkvacvpp63ajc",
-                account_number: 8001,
-                sequence: 3,
-                fees: {denom: "iris-atto", amount: 100000000000000000},
-                gas: 10000,
-                memo: "MaxSon",
-                type: Irisnet.config.iris.tx.transfer.type,
-                msg: {
-                    to: "iaa1lsudh3c5sn5xnwv8ewte0qpt4l7c82hh8zquzq",
-                    coins: [
-                        {
-                            denom: "iris-atto",
-                            amount: "1475664988324501700000000"
-                        }
-                    ]
-                }
-            };
-
-            let pubkey = "eb5ae9872102ac8f8789b3c70aefcbd6a2bafca472922d04ed199db53df71586916634873021";
-            let sig = "14bc7cccc95e9b92454d25a1b3b5c2ec9ab7d6d04da8405e3899e69643bf76a12d4206a0e8d9c69e2abd58a662b14815b393061fc6376e75b8cb13dc33285f10";
-            let Codec = require("../../util/codec")
-
-            let builder = Irisnet.getBuilder(chain);
-            let signature = {
-                pub_key:Codec.Hex.hexToBytes(pubkey),
-                signature:Codec.Hex.hexToBytes(sig),
-        };
-            //①先用联网的钱包构造一笔交易
-            let stdTx = builder.buildTx(tx);
-            stdTx.SetSignature(signature);
-            console.log("stdtx", JSON.stringify(stdTx.GetData()));
-            let result = stdTx.Hash();
-            console.log("hash", result.hash);
+            common.verifyTx(url,tx,privateKey,chainName,verify);
         });
 
         it('test delegate', function () {
@@ -182,7 +91,7 @@ describe('CryPto iris test', function () {
                 }
             };
 
-            execute(tx);
+            common.verifyTx(url,tx,privateKey,chainName,verify);
         });
 
         it('test BeginUnbonding', function () {
@@ -201,7 +110,7 @@ describe('CryPto iris test', function () {
                 }
             };
 
-            execute(tx);
+            common.verifyTx(url,tx,privateKey,chainName,verify);
         });
 
         it('test BeginRedelegate', function () {
@@ -221,7 +130,7 @@ describe('CryPto iris test', function () {
                 }
             };
 
-            execute(tx);
+            common.verifyTx(url,tx,privateKey,chainName,verify);
         });
 
 
@@ -238,7 +147,7 @@ describe('CryPto iris test', function () {
                 //mode: Irisnet.config.iris.mode.try
             };
 
-            execute(tx);
+            common.verifyTx(url,tx,privateKey,chainName,verify);
         });
 
         it('test MsgWithdrawDelegatorReward', function () {
@@ -256,12 +165,12 @@ describe('CryPto iris test', function () {
                 }
             };
 
-            execute(tx);
+            common.verifyTx(url,tx,privateKey,chainName,verify);
         });
     });
 
     //测试冷钱包相关交易
-    describe('test ledger wallet tx ', function () {
+    describe('test cold wallet tx ', function () {
         it('test transfer', function () {
             let tx = {
                 chain_id: chain_id,
@@ -381,8 +290,9 @@ describe('CryPto iris test', function () {
             extracted(tx);
         });
     });
+
     //冷钱包调用
-    function extracted(tx,chain = 'iris') {
+    function extracted(tx, chain = 'iris') {
         let builder = Irisnet.getBuilder(chain);
         //①先用联网的钱包构造一笔交易
         let stdTx = builder.buildTx(tx);
@@ -400,23 +310,16 @@ describe('CryPto iris test', function () {
         //以下步骤为异常处理：在请求irishub-server超时的时候，服务器可能没有任何返回结果，这笔交易状态为止，所以需要客户端计算出
         //本次交易的hash，校准该笔交易的状态。调用步骤③结构的Hash，可以得到交易hash以及本次交易内容的base64编码（以后考虑使用该编码内容替换
         // GetPostData,解耦crypto和irishub交易结构的依赖）
+
+        let resp = common.sendBySync("POST",url,stdTx.GetData());
         let result = stdTx.Hash();
         console.log("data:", result.data);
         console.log("hash", result.hash);
+
+        console.log(`hash=${result.hash}`)
+        assert.notExists(resp.code,`tx commit failed,${resp.raw_log}`);
         //console.log("displayContent", JSON.stringify(stdTx.GetDisplayContent()));
 
-    }
-
-    //热钱包调用
-    function execute(tx,chain = 'iris') {
-        let builder = Irisnet.getBuilder(chain,'testnet');
-        let stdTx = builder.buildAndSignTx(tx, privateKey);
-        console.log("======stdTx======");
-        console.log(JSON.stringify(stdTx.GetData()));
-        console.log(JSON.stringify(stdTx));
-        let result = stdTx.Hash();
-        //console.log("data:", result.data);
-        console.log("hash", result.hash);
     }
 
     //simulate
@@ -431,3 +334,7 @@ describe('CryPto iris test', function () {
         console.log("hash", result.hash);
     }
 });
+
+function verify(act,exp,data) {
+    assert.notExists(act.check_tx.code,`tx commit failed,${act.check_tx.log}`);
+}
