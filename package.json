@@ -4,7 +4,7 @@
   "description": "irisnet-crypto",
   "main": "index.js",
   "scripts": {
-    "test": "mocha ./chains/iris/test_hash.js"
+    "test": "mocha test/{test_hash_cosmos,test_hash_iris,test_account}.js --timeout 10000"
   },
   "repository": {
     "type": "git",
@@ -27,25 +27,22 @@
     "bech32": "^1.1.3",
     "bignumber.js": "^5.0.0",
     "bip39": "^2.5.0",
-    "bluebird": "^3.5.1",
     "bn": "git+https://github.com/shineabel/bn.git",
     "create-hmac": "^1.1.7",
     "ethereumjs-tx": "^1.3.0",
     "ethereumjs-util": "^5.1.2",
-    "js-crc": "^0.2.0",
     "old": "^0.2.0",
     "randombytes": "^2.0.6",
     "ripemd160": "^2.0.1",
     "secp256k1": "3.5.0",
     "sha256": "^0.2.0",
     "text-encoding": "^0.7.0",
-    "tweetnacl": "^1.0.0",
-    "web3": "git+https://github.com/ethereum/web3.js.git",
     "protobufjs": "^6.8.8"
   },
   "devDependencies": {
     "chai": "^4.1.2",
     "mocha": "^4.1.0",
-    "sync-request": "^6.1.0"
+    "sync-request": "^6.1.0",
+    "isomorphic-fetch": "^2.2.1"
   }
 }
