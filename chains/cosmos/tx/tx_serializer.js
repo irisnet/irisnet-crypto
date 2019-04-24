@@ -1,6 +1,7 @@
 const root = require('./tx');
 const amino = require('../../base');
 const config = require('../../../config');
+const codec = require('../../../util/codec');
 
 /**
  *
@@ -63,17 +64,19 @@ class TxSerializer {
         //填充txMsgBuf第一位编码字节(数组标识)
         buf = Buffer.concat([buf, txMsgBuf.slice(0, 1)]);
 
+        let t = codec.Uvarint.decode(txMsgBuf.slice(1));
+
         //填充txMsgBuf加入前缀后的编码长度
-        let uvintMsgBuf = EncodeUvarint(msgPreBuf.length + txMsgBuf[1]);
+        let uvintMsgBuf = codec.Uvarint.encode(msgPreBuf.length + t.u);
         buf = Buffer.concat([buf, uvintMsgBuf]);
 
         //填充msg amion编码前缀
         buf = Buffer.concat([buf, msgPreBuf]);
 
         //填充交易内容字节
-        buf = Buffer.concat([buf, txMsgBuf.slice(DecodeUvarint(txMsgBuf[1]) + 1)]);
+        buf = Buffer.concat([buf, txMsgBuf.slice(t.n + 1)]);
 
-        let uvarintBuf = Buffer.from(EncodeUvarint(buf.length));
+        let uvarintBuf = Buffer.from(codec.Uvarint.encode(buf.length));
         let bz = Buffer.concat([uvarintBuf, buf]);
 
         const crypto = require('crypto');
@@ -87,25 +90,4 @@ class TxSerializer {
         }
     }
 }
-function EncodeUvarint(u) {
-    let buf = Buffer.alloc(10);
-    let i = 0;
-    const BN = require("bn");
-    while (u >= 0x80) {
-        buf[i] = new BN(u).or(new BN(0x80));
-        u >>= 7;
-        i++;
-    }
-    buf[i] = new BN(u);
-    return buf.slice(0, i + 1);
-}
-
-function DecodeUvarint(u) {
-    if (u >= 0x80) {
-        return 2
-    }
-    return 1
-}
-
-
 module.exports = TxSerializer;

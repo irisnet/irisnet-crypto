@@ -137,7 +137,7 @@ class StdTx {
                 signatures: signatures,
                 memo: this.memo
             },
-            'return': 'block'
+            'mode': 'sync'
         }
     }
 

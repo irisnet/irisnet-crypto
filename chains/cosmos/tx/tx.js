@@ -119,15 +119,15 @@ $root.cosmos = (function() {
             while (reader.pos < end) {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
-                case 1:
-                    message.denom = reader.string();
-                    break;
-                case 2:
-                    message.amount = reader.string();
-                    break;
-                default:
-                    reader.skipType(tag & 7);
-                    break;
+                    case 1:
+                        message.denom = reader.string();
+                        break;
+                    case 2:
+                        message.amount = reader.string();
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
                 }
             }
             if (!message.hasOwnProperty("denom"))
@@ -342,20 +342,20 @@ $root.cosmos = (function() {
             while (reader.pos < end) {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
-                case 1:
-                    message.FromAddress = reader.bytes();
-                    break;
-                case 2:
-                    message.ToAddress = reader.bytes();
-                    break;
-                case 3:
-                    if (!(message.Amount && message.Amount.length))
-                        message.Amount = [];
-                    message.Amount.push($root.cosmos.Coin.decode(reader, reader.uint32()));
-                    break;
-                default:
-                    reader.skipType(tag & 7);
-                    break;
+                    case 1:
+                        message.FromAddress = reader.bytes();
+                        break;
+                    case 2:
+                        message.ToAddress = reader.bytes();
+                        break;
+                    case 3:
+                        if (!(message.Amount && message.Amount.length))
+                            message.Amount = [];
+                        message.Amount.push($root.cosmos.Coin.decode(reader, reader.uint32()));
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
                 }
             }
             if (!message.hasOwnProperty("FromAddress"))
@@ -506,9 +506,9 @@ $root.cosmos = (function() {
          * Properties of a MsgDelegate.
          * @memberof cosmos
          * @interface IMsgDelegate
-         * @property {Uint8Array} DelegatorAddr MsgDelegate DelegatorAddr
-         * @property {Uint8Array} ValidatorAddr MsgDelegate ValidatorAddr
-         * @property {cosmos.ICoin} Value MsgDelegate Value
+         * @property {Uint8Array} DelegatorAddress MsgDelegate DelegatorAddress
+         * @property {Uint8Array} ValidatorAddress MsgDelegate ValidatorAddress
+         * @property {cosmos.ICoin} Amount MsgDelegate Amount
          */
 
         /**
@@ -527,28 +527,28 @@ $root.cosmos = (function() {
         }
 
         /**
-         * MsgDelegate DelegatorAddr.
-         * @member {Uint8Array} DelegatorAddr
+         * MsgDelegate DelegatorAddress.
+         * @member {Uint8Array} DelegatorAddress
          * @memberof cosmos.MsgDelegate
          * @instance
          */
-        MsgDelegate.prototype.DelegatorAddr = $util.newBuffer([]);
+        MsgDelegate.prototype.DelegatorAddress = $util.newBuffer([]);
 
         /**
-         * MsgDelegate ValidatorAddr.
-         * @member {Uint8Array} ValidatorAddr
+         * MsgDelegate ValidatorAddress.
+         * @member {Uint8Array} ValidatorAddress
          * @memberof cosmos.MsgDelegate
          * @instance
          */
-        MsgDelegate.prototype.ValidatorAddr = $util.newBuffer([]);
+        MsgDelegate.prototype.ValidatorAddress = $util.newBuffer([]);
 
         /**
-         * MsgDelegate Value.
-         * @member {cosmos.ICoin} Value
+         * MsgDelegate Amount.
+         * @member {cosmos.ICoin} Amount
          * @memberof cosmos.MsgDelegate
          * @instance
          */
-        MsgDelegate.prototype.Value = null;
+        MsgDelegate.prototype.Amount = null;
 
         /**
          * Creates a new MsgDelegate instance using the specified properties.
@@ -574,9 +574,9 @@ $root.cosmos = (function() {
         MsgDelegate.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.DelegatorAddr);
-            writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.ValidatorAddr);
-            $root.cosmos.Coin.encode(message.Value, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+            writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.DelegatorAddress);
+            writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.ValidatorAddress);
+            $root.cosmos.Coin.encode(message.Amount, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
             return writer;
         };
 
@@ -611,26 +611,26 @@ $root.cosmos = (function() {
             while (reader.pos < end) {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
-                case 1:
-                    message.DelegatorAddr = reader.bytes();
-                    break;
-                case 2:
-                    message.ValidatorAddr = reader.bytes();
-                    break;
-                case 3:
-                    message.Value = $root.cosmos.Coin.decode(reader, reader.uint32());
-                    break;
-                default:
-                    reader.skipType(tag & 7);
-                    break;
+                    case 1:
+                        message.DelegatorAddress = reader.bytes();
+                        break;
+                    case 2:
+                        message.ValidatorAddress = reader.bytes();
+                        break;
+                    case 3:
+                        message.Amount = $root.cosmos.Coin.decode(reader, reader.uint32());
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
                 }
             }
-            if (!message.hasOwnProperty("DelegatorAddr"))
-                throw $util.ProtocolError("missing required 'DelegatorAddr'", { instance: message });
-            if (!message.hasOwnProperty("ValidatorAddr"))
-                throw $util.ProtocolError("missing required 'ValidatorAddr'", { instance: message });
-            if (!message.hasOwnProperty("Value"))
-                throw $util.ProtocolError("missing required 'Value'", { instance: message });
+            if (!message.hasOwnProperty("DelegatorAddress"))
+                throw $util.ProtocolError("missing required 'DelegatorAddress'", { instance: message });
+            if (!message.hasOwnProperty("ValidatorAddress"))
+                throw $util.ProtocolError("missing required 'ValidatorAddress'", { instance: message });
+            if (!message.hasOwnProperty("Amount"))
+                throw $util.ProtocolError("missing required 'Amount'", { instance: message });
             return message;
         };
 
@@ -661,14 +661,14 @@ $root.cosmos = (function() {
         MsgDelegate.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
-            if (!(message.DelegatorAddr && typeof message.DelegatorAddr.length === "number" || $util.isString(message.DelegatorAddr)))
-                return "DelegatorAddr: buffer expected";
-            if (!(message.ValidatorAddr && typeof message.ValidatorAddr.length === "number" || $util.isString(message.ValidatorAddr)))
-                return "ValidatorAddr: buffer expected";
+            if (!(message.DelegatorAddress && typeof message.DelegatorAddress.length === "number" || $util.isString(message.DelegatorAddress)))
+                return "DelegatorAddress: buffer expected";
+            if (!(message.ValidatorAddress && typeof message.ValidatorAddress.length === "number" || $util.isString(message.ValidatorAddress)))
+                return "ValidatorAddress: buffer expected";
             {
-                var error = $root.cosmos.Coin.verify(message.Value);
+                var error = $root.cosmos.Coin.verify(message.Amount);
                 if (error)
-                    return "Value." + error;
+                    return "Amount." + error;
             }
             return null;
         };
@@ -685,20 +685,20 @@ $root.cosmos = (function() {
             if (object instanceof $root.cosmos.MsgDelegate)
                 return object;
             var message = new $root.cosmos.MsgDelegate();
-            if (object.DelegatorAddr != null)
-                if (typeof object.DelegatorAddr === "string")
-                    $util.base64.decode(object.DelegatorAddr, message.DelegatorAddr = $util.newBuffer($util.base64.length(object.DelegatorAddr)), 0);
-                else if (object.DelegatorAddr.length)
-                    message.DelegatorAddr = object.DelegatorAddr;
-            if (object.ValidatorAddr != null)
-                if (typeof object.ValidatorAddr === "string")
-                    $util.base64.decode(object.ValidatorAddr, message.ValidatorAddr = $util.newBuffer($util.base64.length(object.ValidatorAddr)), 0);
-                else if (object.ValidatorAddr.length)
-                    message.ValidatorAddr = object.ValidatorAddr;
-            if (object.Value != null) {
-                if (typeof object.Value !== "object")
-                    throw TypeError(".cosmos.MsgDelegate.Value: object expected");
-                message.Value = $root.cosmos.Coin.fromObject(object.Value);
+            if (object.DelegatorAddress != null)
+                if (typeof object.DelegatorAddress === "string")
+                    $util.base64.decode(object.DelegatorAddress, message.DelegatorAddress = $util.newBuffer($util.base64.length(object.DelegatorAddress)), 0);
+                else if (object.DelegatorAddress.length)
+                    message.DelegatorAddress = object.DelegatorAddress;
+            if (object.ValidatorAddress != null)
+                if (typeof object.ValidatorAddress === "string")
+                    $util.base64.decode(object.ValidatorAddress, message.ValidatorAddress = $util.newBuffer($util.base64.length(object.ValidatorAddress)), 0);
+                else if (object.ValidatorAddress.length)
+                    message.ValidatorAddress = object.ValidatorAddress;
+            if (object.Amount != null) {
+                if (typeof object.Amount !== "object")
+                    throw TypeError(".cosmos.MsgDelegate.Amount: object expected");
+                message.Amount = $root.cosmos.Coin.fromObject(object.Amount);
             }
             return message;
         };
@@ -718,27 +718,27 @@ $root.cosmos = (function() {
             var object = {};
             if (options.defaults) {
                 if (options.bytes === String)
-                    object.DelegatorAddr = "";
+                    object.DelegatorAddress = "";
                 else {
-                    object.DelegatorAddr = [];
+                    object.DelegatorAddress = [];
                     if (options.bytes !== Array)
-                        object.DelegatorAddr = $util.newBuffer(object.DelegatorAddr);
+                        object.DelegatorAddress = $util.newBuffer(object.DelegatorAddress);
                 }
                 if (options.bytes === String)
-                    object.ValidatorAddr = "";
+                    object.ValidatorAddress = "";
                 else {
-                    object.ValidatorAddr = [];
+                    object.ValidatorAddress = [];
                     if (options.bytes !== Array)
-                        object.ValidatorAddr = $util.newBuffer(object.ValidatorAddr);
+                        object.ValidatorAddress = $util.newBuffer(object.ValidatorAddress);
                 }
-                object.Value = null;
+                object.Amount = null;
             }
-            if (message.DelegatorAddr != null && message.hasOwnProperty("DelegatorAddr"))
-                object.DelegatorAddr = options.bytes === String ? $util.base64.encode(message.DelegatorAddr, 0, message.DelegatorAddr.length) : options.bytes === Array ? Array.prototype.slice.call(message.DelegatorAddr) : message.DelegatorAddr;
-            if (message.ValidatorAddr != null && message.hasOwnProperty("ValidatorAddr"))
-                object.ValidatorAddr = options.bytes === String ? $util.base64.encode(message.ValidatorAddr, 0, message.ValidatorAddr.length) : options.bytes === Array ? Array.prototype.slice.call(message.ValidatorAddr) : message.ValidatorAddr;
-            if (message.Value != null && message.hasOwnProperty("Value"))
-                object.Value = $root.cosmos.Coin.toObject(message.Value, options);
+            if (message.DelegatorAddress != null && message.hasOwnProperty("DelegatorAddress"))
+                object.DelegatorAddress = options.bytes === String ? $util.base64.encode(message.DelegatorAddress, 0, message.DelegatorAddress.length) : options.bytes === Array ? Array.prototype.slice.call(message.DelegatorAddress) : message.DelegatorAddress;
+            if (message.ValidatorAddress != null && message.hasOwnProperty("ValidatorAddress"))
+                object.ValidatorAddress = options.bytes === String ? $util.base64.encode(message.ValidatorAddress, 0, message.ValidatorAddress.length) : options.bytes === Array ? Array.prototype.slice.call(message.ValidatorAddress) : message.ValidatorAddress;
+            if (message.Amount != null && message.hasOwnProperty("Amount"))
+                object.Amount = $root.cosmos.Coin.toObject(message.Amount, options);
             return object;
         };
 
@@ -762,9 +762,9 @@ $root.cosmos = (function() {
          * Properties of a MsgUndelegate.
          * @memberof cosmos
          * @interface IMsgUndelegate
-         * @property {Uint8Array} DelegatorAddr MsgUndelegate DelegatorAddr
-         * @property {Uint8Array} ValidatorAddr MsgUndelegate ValidatorAddr
-         * @property {string} SharesAmount MsgUndelegate SharesAmount
+         * @property {Uint8Array} DelegatorAddress MsgUndelegate DelegatorAddress
+         * @property {Uint8Array} ValidatorAddress MsgUndelegate ValidatorAddress
+         * @property {cosmos.ICoin} Amount MsgUndelegate Amount
          */
 
         /**
@@ -783,28 +783,28 @@ $root.cosmos = (function() {
         }
 
         /**
-         * MsgUndelegate DelegatorAddr.
-         * @member {Uint8Array} DelegatorAddr
+         * MsgUndelegate DelegatorAddress.
+         * @member {Uint8Array} DelegatorAddress
          * @memberof cosmos.MsgUndelegate
          * @instance
          */
-        MsgUndelegate.prototype.DelegatorAddr = $util.newBuffer([]);
+        MsgUndelegate.prototype.DelegatorAddress = $util.newBuffer([]);
 
         /**
-         * MsgUndelegate ValidatorAddr.
-         * @member {Uint8Array} ValidatorAddr
+         * MsgUndelegate ValidatorAddress.
+         * @member {Uint8Array} ValidatorAddress
          * @memberof cosmos.MsgUndelegate
          * @instance
          */
-        MsgUndelegate.prototype.ValidatorAddr = $util.newBuffer([]);
+        MsgUndelegate.prototype.ValidatorAddress = $util.newBuffer([]);
 
         /**
-         * MsgUndelegate SharesAmount.
-         * @member {string} SharesAmount
+         * MsgUndelegate Amount.
+         * @member {cosmos.ICoin} Amount
          * @memberof cosmos.MsgUndelegate
          * @instance
          */
-        MsgUndelegate.prototype.SharesAmount = "";
+        MsgUndelegate.prototype.Amount = null;
 
         /**
          * Creates a new MsgUndelegate instance using the specified properties.
@@ -830,11 +830,9 @@ $root.cosmos = (function() {
         MsgUndelegate.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.DelegatorAddr);
-            writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.ValidatorAddr);
-            let shares = message.SharesAmount.replace(".","");
-            shares = shares.replace(/\b(0+)/gi,"");
-            writer.uint32(/* id 3, wireType 2 =*/26).string(shares);
+            writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.DelegatorAddress);
+            writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.ValidatorAddress);
+            $root.cosmos.Coin.encode(message.Amount, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
             return writer;
         };
 
@@ -869,26 +867,26 @@ $root.cosmos = (function() {
             while (reader.pos < end) {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
-                case 1:
-                    message.DelegatorAddr = reader.bytes();
-                    break;
-                case 2:
-                    message.ValidatorAddr = reader.bytes();
-                    break;
-                case 3:
-                    message.SharesAmount = reader.string();
-                    break;
-                default:
-                    reader.skipType(tag & 7);
-                    break;
+                    case 1:
+                        message.DelegatorAddress = reader.bytes();
+                        break;
+                    case 2:
+                        message.ValidatorAddress = reader.bytes();
+                        break;
+                    case 3:
+                        message.Amount = $root.cosmos.Coin.decode(reader, reader.uint32());
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
                 }
             }
-            if (!message.hasOwnProperty("DelegatorAddr"))
-                throw $util.ProtocolError("missing required 'DelegatorAddr'", { instance: message });
-            if (!message.hasOwnProperty("ValidatorAddr"))
-                throw $util.ProtocolError("missing required 'ValidatorAddr'", { instance: message });
-            if (!message.hasOwnProperty("SharesAmount"))
-                throw $util.ProtocolError("missing required 'SharesAmount'", { instance: message });
+            if (!message.hasOwnProperty("DelegatorAddress"))
+                throw $util.ProtocolError("missing required 'DelegatorAddress'", { instance: message });
+            if (!message.hasOwnProperty("ValidatorAddress"))
+                throw $util.ProtocolError("missing required 'ValidatorAddress'", { instance: message });
+            if (!message.hasOwnProperty("Amount"))
+                throw $util.ProtocolError("missing required 'Amount'", { instance: message });
             return message;
         };
 
@@ -919,12 +917,15 @@ $root.cosmos = (function() {
         MsgUndelegate.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
-            if (!(message.DelegatorAddr && typeof message.DelegatorAddr.length === "number" || $util.isString(message.DelegatorAddr)))
-                return "DelegatorAddr: buffer expected";
-            if (!(message.ValidatorAddr && typeof message.ValidatorAddr.length === "number" || $util.isString(message.ValidatorAddr)))
-                return "ValidatorAddr: buffer expected";
-            if (!$util.isString(message.SharesAmount))
-                return "SharesAmount: string expected";
+            if (!(message.DelegatorAddress && typeof message.DelegatorAddress.length === "number" || $util.isString(message.DelegatorAddress)))
+                return "DelegatorAddress: buffer expected";
+            if (!(message.ValidatorAddress && typeof message.ValidatorAddress.length === "number" || $util.isString(message.ValidatorAddress)))
+                return "ValidatorAddress: buffer expected";
+            {
+                var error = $root.cosmos.Coin.verify(message.Amount);
+                if (error)
+                    return "Amount." + error;
+            }
             return null;
         };
 
@@ -940,18 +941,21 @@ $root.cosmos = (function() {
             if (object instanceof $root.cosmos.MsgUndelegate)
                 return object;
             var message = new $root.cosmos.MsgUndelegate();
-            if (object.DelegatorAddr != null)
-                if (typeof object.DelegatorAddr === "string")
-                    $util.base64.decode(object.DelegatorAddr, message.DelegatorAddr = $util.newBuffer($util.base64.length(object.DelegatorAddr)), 0);
-                else if (object.DelegatorAddr.length)
-                    message.DelegatorAddr = object.DelegatorAddr;
-            if (object.ValidatorAddr != null)
-                if (typeof object.ValidatorAddr === "string")
-                    $util.base64.decode(object.ValidatorAddr, message.ValidatorAddr = $util.newBuffer($util.base64.length(object.ValidatorAddr)), 0);
-                else if (object.ValidatorAddr.length)
-                    message.ValidatorAddr = object.ValidatorAddr;
-            if (object.SharesAmount != null)
-                message.SharesAmount = String(object.SharesAmount);
+            if (object.DelegatorAddress != null)
+                if (typeof object.DelegatorAddress === "string")
+                    $util.base64.decode(object.DelegatorAddress, message.DelegatorAddress = $util.newBuffer($util.base64.length(object.DelegatorAddress)), 0);
+                else if (object.DelegatorAddress.length)
+                    message.DelegatorAddress = object.DelegatorAddress;
+            if (object.ValidatorAddress != null)
+                if (typeof object.ValidatorAddress === "string")
+                    $util.base64.decode(object.ValidatorAddress, message.ValidatorAddress = $util.newBuffer($util.base64.length(object.ValidatorAddress)), 0);
+                else if (object.ValidatorAddress.length)
+                    message.ValidatorAddress = object.ValidatorAddress;
+            if (object.Amount != null) {
+                if (typeof object.Amount !== "object")
+                    throw TypeError(".cosmos.MsgUndelegate.Amount: object expected");
+                message.Amount = $root.cosmos.Coin.fromObject(object.Amount);
+            }
             return message;
         };
 
@@ -970,27 +974,27 @@ $root.cosmos = (function() {
             var object = {};
             if (options.defaults) {
                 if (options.bytes === String)
-                    object.DelegatorAddr = "";
+                    object.DelegatorAddress = "";
                 else {
-                    object.DelegatorAddr = [];
+                    object.DelegatorAddress = [];
                     if (options.bytes !== Array)
-                        object.DelegatorAddr = $util.newBuffer(object.DelegatorAddr);
+                        object.DelegatorAddress = $util.newBuffer(object.DelegatorAddress);
                 }
                 if (options.bytes === String)
-                    object.ValidatorAddr = "";
+                    object.ValidatorAddress = "";
                 else {
-                    object.ValidatorAddr = [];
+                    object.ValidatorAddress = [];
                     if (options.bytes !== Array)
-                        object.ValidatorAddr = $util.newBuffer(object.ValidatorAddr);
+                        object.ValidatorAddress = $util.newBuffer(object.ValidatorAddress);
                 }
-                object.SharesAmount = "";
+                object.Amount = null;
             }
-            if (message.DelegatorAddr != null && message.hasOwnProperty("DelegatorAddr"))
-                object.DelegatorAddr = options.bytes === String ? $util.base64.encode(message.DelegatorAddr, 0, message.DelegatorAddr.length) : options.bytes === Array ? Array.prototype.slice.call(message.DelegatorAddr) : message.DelegatorAddr;
-            if (message.ValidatorAddr != null && message.hasOwnProperty("ValidatorAddr"))
-                object.ValidatorAddr = options.bytes === String ? $util.base64.encode(message.ValidatorAddr, 0, message.ValidatorAddr.length) : options.bytes === Array ? Array.prototype.slice.call(message.ValidatorAddr) : message.ValidatorAddr;
-            if (message.SharesAmount != null && message.hasOwnProperty("SharesAmount"))
-                object.SharesAmount = message.SharesAmount;
+            if (message.DelegatorAddress != null && message.hasOwnProperty("DelegatorAddress"))
+                object.DelegatorAddress = options.bytes === String ? $util.base64.encode(message.DelegatorAddress, 0, message.DelegatorAddress.length) : options.bytes === Array ? Array.prototype.slice.call(message.DelegatorAddress) : message.DelegatorAddress;
+            if (message.ValidatorAddress != null && message.hasOwnProperty("ValidatorAddress"))
+                object.ValidatorAddress = options.bytes === String ? $util.base64.encode(message.ValidatorAddress, 0, message.ValidatorAddress.length) : options.bytes === Array ? Array.prototype.slice.call(message.ValidatorAddress) : message.ValidatorAddress;
+            if (message.Amount != null && message.hasOwnProperty("Amount"))
+                object.Amount = $root.cosmos.Coin.toObject(message.Amount, options);
             return object;
         };
 
@@ -1014,10 +1018,10 @@ $root.cosmos = (function() {
          * Properties of a MsgBeginRedelegate.
          * @memberof cosmos
          * @interface IMsgBeginRedelegate
-         * @property {Uint8Array} DelegatorAddr MsgBeginRedelegate DelegatorAddr
-         * @property {Uint8Array} ValidatorSrcAddr MsgBeginRedelegate ValidatorSrcAddr
-         * @property {Uint8Array} ValidatorDstAddr MsgBeginRedelegate ValidatorDstAddr
-         * @property {string} SharesAmount MsgBeginRedelegate SharesAmount
+         * @property {Uint8Array} DelegatorAddress MsgBeginRedelegate DelegatorAddress
+         * @property {Uint8Array} ValidatorSrcAddress MsgBeginRedelegate ValidatorSrcAddress
+         * @property {Uint8Array} ValidatorDstAddress MsgBeginRedelegate ValidatorDstAddress
+         * @property {cosmos.ICoin} Amount MsgBeginRedelegate Amount
          */
 
         /**
@@ -1036,36 +1040,36 @@ $root.cosmos = (function() {
         }
 
         /**
-         * MsgBeginRedelegate DelegatorAddr.
-         * @member {Uint8Array} DelegatorAddr
+         * MsgBeginRedelegate DelegatorAddress.
+         * @member {Uint8Array} DelegatorAddress
          * @memberof cosmos.MsgBeginRedelegate
          * @instance
          */
-        MsgBeginRedelegate.prototype.DelegatorAddr = $util.newBuffer([]);
+        MsgBeginRedelegate.prototype.DelegatorAddress = $util.newBuffer([]);
 
         /**
-         * MsgBeginRedelegate ValidatorSrcAddr.
-         * @member {Uint8Array} ValidatorSrcAddr
+         * MsgBeginRedelegate ValidatorSrcAddress.
+         * @member {Uint8Array} ValidatorSrcAddress
          * @memberof cosmos.MsgBeginRedelegate
          * @instance
          */
-        MsgBeginRedelegate.prototype.ValidatorSrcAddr = $util.newBuffer([]);
+        MsgBeginRedelegate.prototype.ValidatorSrcAddress = $util.newBuffer([]);
 
         /**
-         * MsgBeginRedelegate ValidatorDstAddr.
-         * @member {Uint8Array} ValidatorDstAddr
+         * MsgBeginRedelegate ValidatorDstAddress.
+         * @member {Uint8Array} ValidatorDstAddress
          * @memberof cosmos.MsgBeginRedelegate
          * @instance
          */
-        MsgBeginRedelegate.prototype.ValidatorDstAddr = $util.newBuffer([]);
+        MsgBeginRedelegate.prototype.ValidatorDstAddress = $util.newBuffer([]);
 
         /**
-         * MsgBeginRedelegate SharesAmount.
-         * @member {string} SharesAmount
+         * MsgBeginRedelegate Amount.
+         * @member {cosmos.ICoin} Amount
          * @memberof cosmos.MsgBeginRedelegate
          * @instance
          */
-        MsgBeginRedelegate.prototype.SharesAmount = "";
+        MsgBeginRedelegate.prototype.Amount = null;
 
         /**
          * Creates a new MsgBeginRedelegate instance using the specified properties.
@@ -1091,12 +1095,10 @@ $root.cosmos = (function() {
         MsgBeginRedelegate.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.DelegatorAddr);
-            writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.ValidatorSrcAddr);
-            writer.uint32(/* id 3, wireType 2 =*/26).bytes(message.ValidatorDstAddr);
-            let shares = message.SharesAmount.replace(".","");
-            shares = shares.replace(/\b(0+)/gi,"");
-            writer.uint32(/* id 3, wireType 2 =*/34).string(shares);
+            writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.DelegatorAddress);
+            writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.ValidatorSrcAddress);
+            writer.uint32(/* id 3, wireType 2 =*/26).bytes(message.ValidatorDstAddress);
+            $root.cosmos.Coin.encode(message.Amount, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
             return writer;
         };
 
@@ -1131,31 +1133,31 @@ $root.cosmos = (function() {
             while (reader.pos < end) {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
-                case 1:
-                    message.DelegatorAddr = reader.bytes();
-                    break;
-                case 2:
-                    message.ValidatorSrcAddr = reader.bytes();
-                    break;
-                case 3:
-                    message.ValidatorDstAddr = reader.bytes();
-                    break;
-                case 4:
-                    message.SharesAmount = reader.string();
-                    break;
-                default:
-                    reader.skipType(tag & 7);
-                    break;
+                    case 1:
+                        message.DelegatorAddress = reader.bytes();
+                        break;
+                    case 2:
+                        message.ValidatorSrcAddress = reader.bytes();
+                        break;
+                    case 3:
+                        message.ValidatorDstAddress = reader.bytes();
+                        break;
+                    case 4:
+                        message.Amount = $root.cosmos.Coin.decode(reader, reader.uint32());
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
                 }
             }
-            if (!message.hasOwnProperty("DelegatorAddr"))
-                throw $util.ProtocolError("missing required 'DelegatorAddr'", { instance: message });
-            if (!message.hasOwnProperty("ValidatorSrcAddr"))
-                throw $util.ProtocolError("missing required 'ValidatorSrcAddr'", { instance: message });
-            if (!message.hasOwnProperty("ValidatorDstAddr"))
-                throw $util.ProtocolError("missing required 'ValidatorDstAddr'", { instance: message });
-            if (!message.hasOwnProperty("SharesAmount"))
-                throw $util.ProtocolError("missing required 'SharesAmount'", { instance: message });
+            if (!message.hasOwnProperty("DelegatorAddress"))
+                throw $util.ProtocolError("missing required 'DelegatorAddress'", { instance: message });
+            if (!message.hasOwnProperty("ValidatorSrcAddress"))
+                throw $util.ProtocolError("missing required 'ValidatorSrcAddress'", { instance: message });
+            if (!message.hasOwnProperty("ValidatorDstAddress"))
+                throw $util.ProtocolError("missing required 'ValidatorDstAddress'", { instance: message });
+            if (!message.hasOwnProperty("Amount"))
+                throw $util.ProtocolError("missing required 'Amount'", { instance: message });
             return message;
         };
 
@@ -1186,14 +1188,17 @@ $root.cosmos = (function() {
         MsgBeginRedelegate.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
-            if (!(message.DelegatorAddr && typeof message.DelegatorAddr.length === "number" || $util.isString(message.DelegatorAddr)))
-                return "DelegatorAddr: buffer expected";
-            if (!(message.ValidatorSrcAddr && typeof message.ValidatorSrcAddr.length === "number" || $util.isString(message.ValidatorSrcAddr)))
-                return "ValidatorSrcAddr: buffer expected";
-            if (!(message.ValidatorDstAddr && typeof message.ValidatorDstAddr.length === "number" || $util.isString(message.ValidatorDstAddr)))
-                return "ValidatorDstAddr: buffer expected";
-            if (!$util.isString(message.SharesAmount))
-                return "SharesAmount: string expected";
+            if (!(message.DelegatorAddress && typeof message.DelegatorAddress.length === "number" || $util.isString(message.DelegatorAddress)))
+                return "DelegatorAddress: buffer expected";
+            if (!(message.ValidatorSrcAddress && typeof message.ValidatorSrcAddress.length === "number" || $util.isString(message.ValidatorSrcAddress)))
+                return "ValidatorSrcAddress: buffer expected";
+            if (!(message.ValidatorDstAddress && typeof message.ValidatorDstAddress.length === "number" || $util.isString(message.ValidatorDstAddress)))
+                return "ValidatorDstAddress: buffer expected";
+            {
+                var error = $root.cosmos.Coin.verify(message.Amount);
+                if (error)
+                    return "Amount." + error;
+            }
             return null;
         };
 
@@ -1209,23 +1214,26 @@ $root.cosmos = (function() {
             if (object instanceof $root.cosmos.MsgBeginRedelegate)
                 return object;
             var message = new $root.cosmos.MsgBeginRedelegate();
-            if (object.DelegatorAddr != null)
-                if (typeof object.DelegatorAddr === "string")
-                    $util.base64.decode(object.DelegatorAddr, message.DelegatorAddr = $util.newBuffer($util.base64.length(object.DelegatorAddr)), 0);
-                else if (object.DelegatorAddr.length)
-                    message.DelegatorAddr = object.DelegatorAddr;
-            if (object.ValidatorSrcAddr != null)
-                if (typeof object.ValidatorSrcAddr === "string")
-                    $util.base64.decode(object.ValidatorSrcAddr, message.ValidatorSrcAddr = $util.newBuffer($util.base64.length(object.ValidatorSrcAddr)), 0);
-                else if (object.ValidatorSrcAddr.length)
-                    message.ValidatorSrcAddr = object.ValidatorSrcAddr;
-            if (object.ValidatorDstAddr != null)
-                if (typeof object.ValidatorDstAddr === "string")
-                    $util.base64.decode(object.ValidatorDstAddr, message.ValidatorDstAddr = $util.newBuffer($util.base64.length(object.ValidatorDstAddr)), 0);
-                else if (object.ValidatorDstAddr.length)
-                    message.ValidatorDstAddr = object.ValidatorDstAddr;
-            if (object.SharesAmount != null)
-                message.SharesAmount = String(object.SharesAmount);
+            if (object.DelegatorAddress != null)
+                if (typeof object.DelegatorAddress === "string")
+                    $util.base64.decode(object.DelegatorAddress, message.DelegatorAddress = $util.newBuffer($util.base64.length(object.DelegatorAddress)), 0);
+                else if (object.DelegatorAddress.length)
+                    message.DelegatorAddress = object.DelegatorAddress;
+            if (object.ValidatorSrcAddress != null)
+                if (typeof object.ValidatorSrcAddress === "string")
+                    $util.base64.decode(object.ValidatorSrcAddress, message.ValidatorSrcAddress = $util.newBuffer($util.base64.length(object.ValidatorSrcAddress)), 0);
+                else if (object.ValidatorSrcAddress.length)
+                    message.ValidatorSrcAddress = object.ValidatorSrcAddress;
+            if (object.ValidatorDstAddress != null)
+                if (typeof object.ValidatorDstAddress === "string")
+                    $util.base64.decode(object.ValidatorDstAddress, message.ValidatorDstAddress = $util.newBuffer($util.base64.length(object.ValidatorDstAddress)), 0);
+                else if (object.ValidatorDstAddress.length)
+                    message.ValidatorDstAddress = object.ValidatorDstAddress;
+            if (object.Amount != null) {
+                if (typeof object.Amount !== "object")
+                    throw TypeError(".cosmos.MsgBeginRedelegate.Amount: object expected");
+                message.Amount = $root.cosmos.Coin.fromObject(object.Amount);
+            }
             return message;
         };
 
@@ -1244,36 +1252,36 @@ $root.cosmos = (function() {
             var object = {};
             if (options.defaults) {
                 if (options.bytes === String)
-                    object.DelegatorAddr = "";
+                    object.DelegatorAddress = "";
                 else {
-                    object.DelegatorAddr = [];
+                    object.DelegatorAddress = [];
                     if (options.bytes !== Array)
-                        object.DelegatorAddr = $util.newBuffer(object.DelegatorAddr);
+                        object.DelegatorAddress = $util.newBuffer(object.DelegatorAddress);
                 }
                 if (options.bytes === String)
-                    object.ValidatorSrcAddr = "";
+                    object.ValidatorSrcAddress = "";
                 else {
-                    object.ValidatorSrcAddr = [];
+                    object.ValidatorSrcAddress = [];
                     if (options.bytes !== Array)
-                        object.ValidatorSrcAddr = $util.newBuffer(object.ValidatorSrcAddr);
+                        object.ValidatorSrcAddress = $util.newBuffer(object.ValidatorSrcAddress);
                 }
                 if (options.bytes === String)
-                    object.ValidatorDstAddr = "";
+                    object.ValidatorDstAddress = "";
                 else {
-                    object.ValidatorDstAddr = [];
+                    object.ValidatorDstAddress = [];
                     if (options.bytes !== Array)
-                        object.ValidatorDstAddr = $util.newBuffer(object.ValidatorDstAddr);
+                        object.ValidatorDstAddress = $util.newBuffer(object.ValidatorDstAddress);
                 }
-                object.SharesAmount = "";
+                object.Amount = null;
             }
-            if (message.DelegatorAddr != null && message.hasOwnProperty("DelegatorAddr"))
-                object.DelegatorAddr = options.bytes === String ? $util.base64.encode(message.DelegatorAddr, 0, message.DelegatorAddr.length) : options.bytes === Array ? Array.prototype.slice.call(message.DelegatorAddr) : message.DelegatorAddr;
-            if (message.ValidatorSrcAddr != null && message.hasOwnProperty("ValidatorSrcAddr"))
-                object.ValidatorSrcAddr = options.bytes === String ? $util.base64.encode(message.ValidatorSrcAddr, 0, message.ValidatorSrcAddr.length) : options.bytes === Array ? Array.prototype.slice.call(message.ValidatorSrcAddr) : message.ValidatorSrcAddr;
-            if (message.ValidatorDstAddr != null && message.hasOwnProperty("ValidatorDstAddr"))
-                object.ValidatorDstAddr = options.bytes === String ? $util.base64.encode(message.ValidatorDstAddr, 0, message.ValidatorDstAddr.length) : options.bytes === Array ? Array.prototype.slice.call(message.ValidatorDstAddr) : message.ValidatorDstAddr;
-            if (message.SharesAmount != null && message.hasOwnProperty("SharesAmount"))
-                object.SharesAmount = message.SharesAmount;
+            if (message.DelegatorAddress != null && message.hasOwnProperty("DelegatorAddress"))
+                object.DelegatorAddress = options.bytes === String ? $util.base64.encode(message.DelegatorAddress, 0, message.DelegatorAddress.length) : options.bytes === Array ? Array.prototype.slice.call(message.DelegatorAddress) : message.DelegatorAddress;
+            if (message.ValidatorSrcAddress != null && message.hasOwnProperty("ValidatorSrcAddress"))
+                object.ValidatorSrcAddress = options.bytes === String ? $util.base64.encode(message.ValidatorSrcAddress, 0, message.ValidatorSrcAddress.length) : options.bytes === Array ? Array.prototype.slice.call(message.ValidatorSrcAddress) : message.ValidatorSrcAddress;
+            if (message.ValidatorDstAddress != null && message.hasOwnProperty("ValidatorDstAddress"))
+                object.ValidatorDstAddress = options.bytes === String ? $util.base64.encode(message.ValidatorDstAddress, 0, message.ValidatorDstAddress.length) : options.bytes === Array ? Array.prototype.slice.call(message.ValidatorDstAddress) : message.ValidatorDstAddress;
+            if (message.Amount != null && message.hasOwnProperty("Amount"))
+                object.Amount = $root.cosmos.Coin.toObject(message.Amount, options);
             return object;
         };
 
@@ -1297,8 +1305,8 @@ $root.cosmos = (function() {
          * Properties of a MsgSetWithdrawAddress.
          * @memberof cosmos
          * @interface IMsgSetWithdrawAddress
-         * @property {Uint8Array} DelegatorAddr MsgSetWithdrawAddress DelegatorAddr
-         * @property {Uint8Array} WithdrawAddr MsgSetWithdrawAddress WithdrawAddr
+         * @property {Uint8Array} DelegatorAddress MsgSetWithdrawAddress DelegatorAddress
+         * @property {Uint8Array} WithdrawAddress MsgSetWithdrawAddress WithdrawAddress
          */
 
         /**
@@ -1317,20 +1325,20 @@ $root.cosmos = (function() {
         }
 
         /**
-         * MsgSetWithdrawAddress DelegatorAddr.
-         * @member {Uint8Array} DelegatorAddr
+         * MsgSetWithdrawAddress DelegatorAddress.
+         * @member {Uint8Array} DelegatorAddress
          * @memberof cosmos.MsgSetWithdrawAddress
          * @instance
          */
-        MsgSetWithdrawAddress.prototype.DelegatorAddr = $util.newBuffer([]);
+        MsgSetWithdrawAddress.prototype.DelegatorAddress = $util.newBuffer([]);
 
         /**
-         * MsgSetWithdrawAddress WithdrawAddr.
-         * @member {Uint8Array} WithdrawAddr
+         * MsgSetWithdrawAddress WithdrawAddress.
+         * @member {Uint8Array} WithdrawAddress
          * @memberof cosmos.MsgSetWithdrawAddress
          * @instance
          */
-        MsgSetWithdrawAddress.prototype.WithdrawAddr = $util.newBuffer([]);
+        MsgSetWithdrawAddress.prototype.WithdrawAddress = $util.newBuffer([]);
 
         /**
          * Creates a new MsgSetWithdrawAddress instance using the specified properties.
@@ -1356,8 +1364,8 @@ $root.cosmos = (function() {
         MsgSetWithdrawAddress.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.DelegatorAddr);
-            writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.WithdrawAddr);
+            writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.DelegatorAddress);
+            writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.WithdrawAddress);
             return writer;
         };
 
@@ -1392,21 +1400,21 @@ $root.cosmos = (function() {
             while (reader.pos < end) {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
-                case 1:
-                    message.DelegatorAddr = reader.bytes();
-                    break;
-                case 2:
-                    message.WithdrawAddr = reader.bytes();
-                    break;
-                default:
-                    reader.skipType(tag & 7);
-                    break;
+                    case 1:
+                        message.DelegatorAddress = reader.bytes();
+                        break;
+                    case 2:
+                        message.WithdrawAddress = reader.bytes();
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
                 }
             }
-            if (!message.hasOwnProperty("DelegatorAddr"))
-                throw $util.ProtocolError("missing required 'DelegatorAddr'", { instance: message });
-            if (!message.hasOwnProperty("WithdrawAddr"))
-                throw $util.ProtocolError("missing required 'WithdrawAddr'", { instance: message });
+            if (!message.hasOwnProperty("DelegatorAddress"))
+                throw $util.ProtocolError("missing required 'DelegatorAddress'", { instance: message });
+            if (!message.hasOwnProperty("WithdrawAddress"))
+                throw $util.ProtocolError("missing required 'WithdrawAddress'", { instance: message });
             return message;
         };
 
@@ -1437,10 +1445,10 @@ $root.cosmos = (function() {
         MsgSetWithdrawAddress.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
-            if (!(message.DelegatorAddr && typeof message.DelegatorAddr.length === "number" || $util.isString(message.DelegatorAddr)))
-                return "DelegatorAddr: buffer expected";
-            if (!(message.WithdrawAddr && typeof message.WithdrawAddr.length === "number" || $util.isString(message.WithdrawAddr)))
-                return "WithdrawAddr: buffer expected";
+            if (!(message.DelegatorAddress && typeof message.DelegatorAddress.length === "number" || $util.isString(message.DelegatorAddress)))
+                return "DelegatorAddress: buffer expected";
+            if (!(message.WithdrawAddress && typeof message.WithdrawAddress.length === "number" || $util.isString(message.WithdrawAddress)))
+                return "WithdrawAddress: buffer expected";
             return null;
         };
 
@@ -1456,16 +1464,16 @@ $root.cosmos = (function() {
             if (object instanceof $root.cosmos.MsgSetWithdrawAddress)
                 return object;
             var message = new $root.cosmos.MsgSetWithdrawAddress();
-            if (object.DelegatorAddr != null)
-                if (typeof object.DelegatorAddr === "string")
-                    $util.base64.decode(object.DelegatorAddr, message.DelegatorAddr = $util.newBuffer($util.base64.length(object.DelegatorAddr)), 0);
-                else if (object.DelegatorAddr.length)
-                    message.DelegatorAddr = object.DelegatorAddr;
-            if (object.WithdrawAddr != null)
-                if (typeof object.WithdrawAddr === "string")
-                    $util.base64.decode(object.WithdrawAddr, message.WithdrawAddr = $util.newBuffer($util.base64.length(object.WithdrawAddr)), 0);
-                else if (object.WithdrawAddr.length)
-                    message.WithdrawAddr = object.WithdrawAddr;
+            if (object.DelegatorAddress != null)
+                if (typeof object.DelegatorAddress === "string")
+                    $util.base64.decode(object.DelegatorAddress, message.DelegatorAddress = $util.newBuffer($util.base64.length(object.DelegatorAddress)), 0);
+                else if (object.DelegatorAddress.length)
+                    message.DelegatorAddress = object.DelegatorAddress;
+            if (object.WithdrawAddress != null)
+                if (typeof object.WithdrawAddress === "string")
+                    $util.base64.decode(object.WithdrawAddress, message.WithdrawAddress = $util.newBuffer($util.base64.length(object.WithdrawAddress)), 0);
+                else if (object.WithdrawAddress.length)
+                    message.WithdrawAddress = object.WithdrawAddress;
             return message;
         };
 
@@ -1484,24 +1492,24 @@ $root.cosmos = (function() {
             var object = {};
             if (options.defaults) {
                 if (options.bytes === String)
-                    object.DelegatorAddr = "";
+                    object.DelegatorAddress = "";
                 else {
-                    object.DelegatorAddr = [];
+                    object.DelegatorAddress = [];
                     if (options.bytes !== Array)
-                        object.DelegatorAddr = $util.newBuffer(object.DelegatorAddr);
+                        object.DelegatorAddress = $util.newBuffer(object.DelegatorAddress);
                 }
                 if (options.bytes === String)
-                    object.WithdrawAddr = "";
+                    object.WithdrawAddress = "";
                 else {
-                    object.WithdrawAddr = [];
+                    object.WithdrawAddress = [];
                     if (options.bytes !== Array)
-                        object.WithdrawAddr = $util.newBuffer(object.WithdrawAddr);
+                        object.WithdrawAddress = $util.newBuffer(object.WithdrawAddress);
                 }
             }
-            if (message.DelegatorAddr != null && message.hasOwnProperty("DelegatorAddr"))
-                object.DelegatorAddr = options.bytes === String ? $util.base64.encode(message.DelegatorAddr, 0, message.DelegatorAddr.length) : options.bytes === Array ? Array.prototype.slice.call(message.DelegatorAddr) : message.DelegatorAddr;
-            if (message.WithdrawAddr != null && message.hasOwnProperty("WithdrawAddr"))
-                object.WithdrawAddr = options.bytes === String ? $util.base64.encode(message.WithdrawAddr, 0, message.WithdrawAddr.length) : options.bytes === Array ? Array.prototype.slice.call(message.WithdrawAddr) : message.WithdrawAddr;
+            if (message.DelegatorAddress != null && message.hasOwnProperty("DelegatorAddress"))
+                object.DelegatorAddress = options.bytes === String ? $util.base64.encode(message.DelegatorAddress, 0, message.DelegatorAddress.length) : options.bytes === Array ? Array.prototype.slice.call(message.DelegatorAddress) : message.DelegatorAddress;
+            if (message.WithdrawAddress != null && message.hasOwnProperty("WithdrawAddress"))
+                object.WithdrawAddress = options.bytes === String ? $util.base64.encode(message.WithdrawAddress, 0, message.WithdrawAddress.length) : options.bytes === Array ? Array.prototype.slice.call(message.WithdrawAddress) : message.WithdrawAddress;
             return object;
         };
 
@@ -1525,8 +1533,8 @@ $root.cosmos = (function() {
          * Properties of a MsgWithdrawDelegatorReward.
          * @memberof cosmos
          * @interface IMsgWithdrawDelegatorReward
-         * @property {Uint8Array} DelegatorAddr MsgWithdrawDelegatorReward DelegatorAddr
-         * @property {Uint8Array} ValidatorAddr MsgWithdrawDelegatorReward ValidatorAddr
+         * @property {Uint8Array} DelegatorAddress MsgWithdrawDelegatorReward DelegatorAddress
+         * @property {Uint8Array} ValidatorAddress MsgWithdrawDelegatorReward ValidatorAddress
          */
 
         /**
@@ -1545,20 +1553,20 @@ $root.cosmos = (function() {
         }
 
         /**
-         * MsgWithdrawDelegatorReward DelegatorAddr.
-         * @member {Uint8Array} DelegatorAddr
+         * MsgWithdrawDelegatorReward DelegatorAddress.
+         * @member {Uint8Array} DelegatorAddress
          * @memberof cosmos.MsgWithdrawDelegatorReward
          * @instance
          */
-        MsgWithdrawDelegatorReward.prototype.DelegatorAddr = $util.newBuffer([]);
+        MsgWithdrawDelegatorReward.prototype.DelegatorAddress = $util.newBuffer([]);
 
         /**
-         * MsgWithdrawDelegatorReward ValidatorAddr.
-         * @member {Uint8Array} ValidatorAddr
+         * MsgWithdrawDelegatorReward ValidatorAddress.
+         * @member {Uint8Array} ValidatorAddress
          * @memberof cosmos.MsgWithdrawDelegatorReward
          * @instance
          */
-        MsgWithdrawDelegatorReward.prototype.ValidatorAddr = $util.newBuffer([]);
+        MsgWithdrawDelegatorReward.prototype.ValidatorAddress = $util.newBuffer([]);
 
         /**
          * Creates a new MsgWithdrawDelegatorReward instance using the specified properties.
@@ -1584,8 +1592,8 @@ $root.cosmos = (function() {
         MsgWithdrawDelegatorReward.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.DelegatorAddr);
-            writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.ValidatorAddr);
+            writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.DelegatorAddress);
+            writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.ValidatorAddress);
             return writer;
         };
 
@@ -1620,21 +1628,21 @@ $root.cosmos = (function() {
             while (reader.pos < end) {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
-                case 1:
-                    message.DelegatorAddr = reader.bytes();
-                    break;
-                case 2:
-                    message.ValidatorAddr = reader.bytes();
-                    break;
-                default:
-                    reader.skipType(tag & 7);
-                    break;
+                    case 1:
+                        message.DelegatorAddress = reader.bytes();
+                        break;
+                    case 2:
+                        message.ValidatorAddress = reader.bytes();
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
                 }
             }
-            if (!message.hasOwnProperty("DelegatorAddr"))
-                throw $util.ProtocolError("missing required 'DelegatorAddr'", { instance: message });
-            if (!message.hasOwnProperty("ValidatorAddr"))
-                throw $util.ProtocolError("missing required 'ValidatorAddr'", { instance: message });
+            if (!message.hasOwnProperty("DelegatorAddress"))
+                throw $util.ProtocolError("missing required 'DelegatorAddress'", { instance: message });
+            if (!message.hasOwnProperty("ValidatorAddress"))
+                throw $util.ProtocolError("missing required 'ValidatorAddress'", { instance: message });
             return message;
         };
 
@@ -1665,10 +1673,10 @@ $root.cosmos = (function() {
         MsgWithdrawDelegatorReward.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
-            if (!(message.DelegatorAddr && typeof message.DelegatorAddr.length === "number" || $util.isString(message.DelegatorAddr)))
-                return "DelegatorAddr: buffer expected";
-            if (!(message.ValidatorAddr && typeof message.ValidatorAddr.length === "number" || $util.isString(message.ValidatorAddr)))
-                return "ValidatorAddr: buffer expected";
+            if (!(message.DelegatorAddress && typeof message.DelegatorAddress.length === "number" || $util.isString(message.DelegatorAddress)))
+                return "DelegatorAddress: buffer expected";
+            if (!(message.ValidatorAddress && typeof message.ValidatorAddress.length === "number" || $util.isString(message.ValidatorAddress)))
+                return "ValidatorAddress: buffer expected";
             return null;
         };
 
@@ -1684,16 +1692,16 @@ $root.cosmos = (function() {
             if (object instanceof $root.cosmos.MsgWithdrawDelegatorReward)
                 return object;
             var message = new $root.cosmos.MsgWithdrawDelegatorReward();
-            if (object.DelegatorAddr != null)
-                if (typeof object.DelegatorAddr === "string")
-                    $util.base64.decode(object.DelegatorAddr, message.DelegatorAddr = $util.newBuffer($util.base64.length(object.DelegatorAddr)), 0);
-                else if (object.DelegatorAddr.length)
-                    message.DelegatorAddr = object.DelegatorAddr;
-            if (object.ValidatorAddr != null)
-                if (typeof object.ValidatorAddr === "string")
-                    $util.base64.decode(object.ValidatorAddr, message.ValidatorAddr = $util.newBuffer($util.base64.length(object.ValidatorAddr)), 0);
-                else if (object.ValidatorAddr.length)
-                    message.ValidatorAddr = object.ValidatorAddr;
+            if (object.DelegatorAddress != null)
+                if (typeof object.DelegatorAddress === "string")
+                    $util.base64.decode(object.DelegatorAddress, message.DelegatorAddress = $util.newBuffer($util.base64.length(object.DelegatorAddress)), 0);
+                else if (object.DelegatorAddress.length)
+                    message.DelegatorAddress = object.DelegatorAddress;
+            if (object.ValidatorAddress != null)
+                if (typeof object.ValidatorAddress === "string")
+                    $util.base64.decode(object.ValidatorAddress, message.ValidatorAddress = $util.newBuffer($util.base64.length(object.ValidatorAddress)), 0);
+                else if (object.ValidatorAddress.length)
+                    message.ValidatorAddress = object.ValidatorAddress;
             return message;
         };
 
@@ -1712,24 +1720,24 @@ $root.cosmos = (function() {
             var object = {};
             if (options.defaults) {
                 if (options.bytes === String)
-                    object.DelegatorAddr = "";
+                    object.DelegatorAddress = "";
                 else {
-                    object.DelegatorAddr = [];
+                    object.DelegatorAddress = [];
                     if (options.bytes !== Array)
-                        object.DelegatorAddr = $util.newBuffer(object.DelegatorAddr);
+                        object.DelegatorAddress = $util.newBuffer(object.DelegatorAddress);
                 }
                 if (options.bytes === String)
-                    object.ValidatorAddr = "";
+                    object.ValidatorAddress = "";
                 else {
-                    object.ValidatorAddr = [];
+                    object.ValidatorAddress = [];
                     if (options.bytes !== Array)
-                        object.ValidatorAddr = $util.newBuffer(object.ValidatorAddr);
+                        object.ValidatorAddress = $util.newBuffer(object.ValidatorAddress);
                 }
             }
-            if (message.DelegatorAddr != null && message.hasOwnProperty("DelegatorAddr"))
-                object.DelegatorAddr = options.bytes === String ? $util.base64.encode(message.DelegatorAddr, 0, message.DelegatorAddr.length) : options.bytes === Array ? Array.prototype.slice.call(message.DelegatorAddr) : message.DelegatorAddr;
-            if (message.ValidatorAddr != null && message.hasOwnProperty("ValidatorAddr"))
-                object.ValidatorAddr = options.bytes === String ? $util.base64.encode(message.ValidatorAddr, 0, message.ValidatorAddr.length) : options.bytes === Array ? Array.prototype.slice.call(message.ValidatorAddr) : message.ValidatorAddr;
+            if (message.DelegatorAddress != null && message.hasOwnProperty("DelegatorAddress"))
+                object.DelegatorAddress = options.bytes === String ? $util.base64.encode(message.DelegatorAddress, 0, message.DelegatorAddress.length) : options.bytes === Array ? Array.prototype.slice.call(message.DelegatorAddress) : message.DelegatorAddress;
+            if (message.ValidatorAddress != null && message.hasOwnProperty("ValidatorAddress"))
+                object.ValidatorAddress = options.bytes === String ? $util.base64.encode(message.ValidatorAddress, 0, message.ValidatorAddress.length) : options.bytes === Array ? Array.prototype.slice.call(message.ValidatorAddress) : message.ValidatorAddress;
             return object;
         };
 
@@ -1753,7 +1761,7 @@ $root.cosmos = (function() {
          * Properties of a MsgWithdrawValidatorCommission.
          * @memberof cosmos
          * @interface IMsgWithdrawValidatorCommission
-         * @property {Uint8Array} ValidatorAddr MsgWithdrawValidatorCommission ValidatorAddr
+         * @property {Uint8Array} ValidatorAddress MsgWithdrawValidatorCommission ValidatorAddress
          */
 
         /**
@@ -1772,12 +1780,12 @@ $root.cosmos = (function() {
         }
 
         /**
-         * MsgWithdrawValidatorCommission ValidatorAddr.
-         * @member {Uint8Array} ValidatorAddr
+         * MsgWithdrawValidatorCommission ValidatorAddress.
+         * @member {Uint8Array} ValidatorAddress
          * @memberof cosmos.MsgWithdrawValidatorCommission
          * @instance
          */
-        MsgWithdrawValidatorCommission.prototype.ValidatorAddr = $util.newBuffer([]);
+        MsgWithdrawValidatorCommission.prototype.ValidatorAddress = $util.newBuffer([]);
 
         /**
          * Creates a new MsgWithdrawValidatorCommission instance using the specified properties.
@@ -1803,7 +1811,7 @@ $root.cosmos = (function() {
         MsgWithdrawValidatorCommission.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.ValidatorAddr);
+            writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.ValidatorAddress);
             return writer;
         };
 
@@ -1838,16 +1846,16 @@ $root.cosmos = (function() {
             while (reader.pos < end) {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
-                case 1:
-                    message.ValidatorAddr = reader.bytes();
-                    break;
-                default:
-                    reader.skipType(tag & 7);
-                    break;
+                    case 1:
+                        message.ValidatorAddress = reader.bytes();
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
                 }
             }
-            if (!message.hasOwnProperty("ValidatorAddr"))
-                throw $util.ProtocolError("missing required 'ValidatorAddr'", { instance: message });
+            if (!message.hasOwnProperty("ValidatorAddress"))
+                throw $util.ProtocolError("missing required 'ValidatorAddress'", { instance: message });
             return message;
         };
 
@@ -1878,8 +1886,8 @@ $root.cosmos = (function() {
         MsgWithdrawValidatorCommission.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
-            if (!(message.ValidatorAddr && typeof message.ValidatorAddr.length === "number" || $util.isString(message.ValidatorAddr)))
-                return "ValidatorAddr: buffer expected";
+            if (!(message.ValidatorAddress && typeof message.ValidatorAddress.length === "number" || $util.isString(message.ValidatorAddress)))
+                return "ValidatorAddress: buffer expected";
             return null;
         };
 
@@ -1895,11 +1903,11 @@ $root.cosmos = (function() {
             if (object instanceof $root.cosmos.MsgWithdrawValidatorCommission)
                 return object;
             var message = new $root.cosmos.MsgWithdrawValidatorCommission();
-            if (object.ValidatorAddr != null)
-                if (typeof object.ValidatorAddr === "string")
-                    $util.base64.decode(object.ValidatorAddr, message.ValidatorAddr = $util.newBuffer($util.base64.length(object.ValidatorAddr)), 0);
-                else if (object.ValidatorAddr.length)
-                    message.ValidatorAddr = object.ValidatorAddr;
+            if (object.ValidatorAddress != null)
+                if (typeof object.ValidatorAddress === "string")
+                    $util.base64.decode(object.ValidatorAddress, message.ValidatorAddress = $util.newBuffer($util.base64.length(object.ValidatorAddress)), 0);
+                else if (object.ValidatorAddress.length)
+                    message.ValidatorAddress = object.ValidatorAddress;
             return message;
         };
 
@@ -1918,14 +1926,14 @@ $root.cosmos = (function() {
             var object = {};
             if (options.defaults)
                 if (options.bytes === String)
-                    object.ValidatorAddr = "";
+                    object.ValidatorAddress = "";
                 else {
-                    object.ValidatorAddr = [];
+                    object.ValidatorAddress = [];
                     if (options.bytes !== Array)
-                        object.ValidatorAddr = $util.newBuffer(object.ValidatorAddr);
+                        object.ValidatorAddress = $util.newBuffer(object.ValidatorAddress);
                 }
-            if (message.ValidatorAddr != null && message.hasOwnProperty("ValidatorAddr"))
-                object.ValidatorAddr = options.bytes === String ? $util.base64.encode(message.ValidatorAddr, 0, message.ValidatorAddr.length) : options.bytes === Array ? Array.prototype.slice.call(message.ValidatorAddr) : message.ValidatorAddr;
+            if (message.ValidatorAddress != null && message.hasOwnProperty("ValidatorAddress"))
+                object.ValidatorAddress = options.bytes === String ? $util.base64.encode(message.ValidatorAddress, 0, message.ValidatorAddress.length) : options.bytes === Array ? Array.prototype.slice.call(message.ValidatorAddress) : message.ValidatorAddress;
             return object;
         };
 
@@ -2047,17 +2055,17 @@ $root.cosmos = (function() {
             while (reader.pos < end) {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
-                case 1:
-                    if (!(message.amount && message.amount.length))
-                        message.amount = [];
-                    message.amount.push($root.cosmos.Coin.decode(reader, reader.uint32()));
-                    break;
-                case 2:
-                    message.gas = reader.int64();
-                    break;
-                default:
-                    reader.skipType(tag & 7);
-                    break;
+                    case 1:
+                        if (!(message.amount && message.amount.length))
+                            message.amount = [];
+                        message.amount.push($root.cosmos.Coin.decode(reader, reader.uint32()));
+                        break;
+                    case 2:
+                        message.gas = reader.int64();
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
                 }
             }
             if (!message.hasOwnProperty("gas"))
@@ -2289,15 +2297,15 @@ $root.cosmos = (function() {
             while (reader.pos < end) {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
-                case 1:
-                    message.pubKey = reader.bytes();
-                    break;
-                case 2:
-                    message.signature = reader.bytes();
-                    break;
-                default:
-                    reader.skipType(tag & 7);
-                    break;
+                    case 1:
+                        message.pubKey = reader.bytes();
+                        break;
+                    case 2:
+                        message.signature = reader.bytes();
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
                 }
             }
             if (!message.hasOwnProperty("pubKey"))
@@ -2544,25 +2552,25 @@ $root.cosmos = (function() {
             while (reader.pos < end) {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
-                case 1:
-                    if (!(message.msg && message.msg.length))
-                        message.msg = [];
-                    message.msg.push(reader.bytes());
-                    break;
-                case 2:
-                    message.fee = $root.cosmos.StdFee.decode(reader, reader.uint32());
-                    break;
-                case 3:
-                    if (!(message.signatures && message.signatures.length))
-                        message.signatures = [];
-                    message.signatures.push($root.cosmos.StdSignature.decode(reader, reader.uint32()));
-                    break;
-                case 4:
-                    message.memo = reader.string();
-                    break;
-                default:
-                    reader.skipType(tag & 7);
-                    break;
+                    case 1:
+                        if (!(message.msg && message.msg.length))
+                            message.msg = [];
+                        message.msg.push(reader.bytes());
+                        break;
+                    case 2:
+                        message.fee = $root.cosmos.StdFee.decode(reader, reader.uint32());
+                        break;
+                    case 3:
+                        if (!(message.signatures && message.signatures.length))
+                            message.signatures = [];
+                        message.signatures.push($root.cosmos.StdSignature.decode(reader, reader.uint32()));
+                        break;
+                    case 4:
+                        message.memo = reader.string();
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
                 }
             }
             if (!message.hasOwnProperty("fee"))
