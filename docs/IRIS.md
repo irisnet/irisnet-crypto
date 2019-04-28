@@ -91,7 +91,7 @@ The parameters are as follows:
             "validator_addr": "fva1kca5vw7r2k72d5zy0demszmrhdz4dp8t4uat0c"
         }
         ```
-When you have constructed the request parameters, you can call crypto's signature method.
+When you have constructed the request parameters, you can call crypto's signing method.
 
 1. Import the crypto library
     ```js
