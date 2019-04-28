@@ -105,11 +105,11 @@ When you have constructed the request parameters, you can call crypto's signing 
 
 3. Construct and sign a transaction
     ```js
-    let stdTx = builder.buildAndSignTx(request,privateKeyey);
+    let stdTx = builder.buildAndSignTx(request,privateKey);
     ```
     *buildAndSignTx* has two parameters:
       - request : first mentioned above
-      - privateKeyey : your private key(hex)
+      - privateKey : your private key(hex)
 
 4. Get the signed transaction content
     ```js
