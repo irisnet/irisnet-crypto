@@ -30,7 +30,7 @@ class IrisBuilder extends Builder {
                 msg = Stake.CreateMsgDelegate(req);
                 break;
             }
-            case Config.iris.tx.unbond.type: {
+            case Config.iris.tx.undelegate.type: {
                 msg = Stake.CreateMsgBeginUnbonding(req);
                 break;
             }

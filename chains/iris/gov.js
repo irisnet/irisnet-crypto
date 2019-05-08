@@ -2,7 +2,7 @@
 
 const Builder = require("../../builder");
 const Utils = require('../../util/utils');
-const Amino = require('./amino');
+const Amino = require('../base');
 const Bank = require('./bank');
 
 class SubmitProposalMsg extends Builder.Msg{

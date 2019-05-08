@@ -9,7 +9,7 @@ const Random = require('randombytes');
 const Secp256k1 = require('secp256k1');
 const BN = require("bn");
 const Config = require('../../config');
-const Amino = require('./amino');
+const Amino = require('../base');
 
 class CosmosKeypair {
 

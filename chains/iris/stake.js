@@ -2,7 +2,7 @@
 
 const Builder = require("../../builder");
 const Utils = require('../../util/utils');
-const Amino = require('./amino');
+const Amino = require('../base');
 const Config = require('../../config');
 
 class MsgDelegate extends Builder.Msg {
@@ -72,7 +72,7 @@ class MsgDelegate extends Builder.Msg {
 
 class MsgBeginUnbonding extends Builder.Msg {
     constructor(delegator_addr, validator_addr, shares_amount) {
-        super(Config.iris.tx.unbond.prefix);
+        super(Config.iris.tx.undelegate.prefix);
         this.delegator_addr = delegator_addr;
         this.validator_addr = validator_addr;
         this.shares_amount = shares_amount;
@@ -102,7 +102,7 @@ class MsgBeginUnbonding extends Builder.Msg {
     }
 
     Type() {
-        return Config.iris.tx.unbond.prefix;
+        return Config.iris.tx.undelegate.prefix;
     }
 
     GetMsg() {
