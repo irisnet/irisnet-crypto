@@ -4,7 +4,7 @@ Irisnet-crypto has completed the docking cosmos main network(chain-id:cosmoshub-
 
 - Transfer
 - Delegate
-- Unbond
+- Undelegate
 - Redelegate
 - SetWithdrawAddress
 - WithdrawDelegationReward

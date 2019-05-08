@@ -4,7 +4,7 @@ Irisnet-crypto has completed the docking irisnet main network(chain-id:irishub)ï
 
 - Transfer
 - Delegate
-- Unbond
+- Undelegate
 - Redelegate
 - WithdrawDelegationRewardsAll
 - WithdrawDelegationReward
