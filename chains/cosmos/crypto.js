@@ -1,7 +1,7 @@
 'use strict';
 const Crypto = require("../../crypto");
 const Old = require('old');
-const CosmosKeypair = require('./cosmos_keypair');
+const CosmosKeypair = require('./keypair');
 const Codec = require("../../util/codec");
 const Utils = require("../../util/utils");
 const Config = require('../../config');
