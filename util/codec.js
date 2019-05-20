@@ -35,7 +35,7 @@ const hex = class {
 
     static stringToHex(str){
         let bytes = [];
-        for(var i = 0; i < str.length; i++){
+        for(let i = 0; i < str.length; i++){
             bytes.push(str.charCodeAt(i).toString(16));
         }
         return bytes.join("");

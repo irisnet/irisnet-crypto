@@ -53,13 +53,13 @@ class Builder {
     static getBuilder(chainName) {
         switch (chainName) {
             case Config.chain.iris: {
-                return require('./chains/iris/iris_builder')();
+                return require('./chains/iris/builder')();
             }
             case Config.chain.ethermint: {
                 return require('./chains/ethermint/ethermint_builder')();
             }
             case Config.chain.cosmos: {
-                return require('./chains/cosmos/cosmos_builder')();
+                return require('./chains/cosmos/builder')();
             }
             default: {
                 throw new Error("not correct chain");

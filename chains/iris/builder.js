@@ -4,12 +4,12 @@ const Old = require('old');
 const Bank = require('./bank');
 const Stake = require('./stake');
 const Distribution = require('./distribution');
-const CosmosKeypair = require('./cosmos_keypair');
+const IrisKeypair = require('./keypair');
 const Codec = require("../../util/codec");
 const Config = require('../../config');
-const StdTx = require("./stdTx");
+const Utils = require("../../util/utils");
 
-class CosmosBuilder extends Builder {
+class IrisBuilder extends Builder {
 
 
     /**
@@ -22,39 +22,38 @@ class CosmosBuilder extends Builder {
         let req = super.buildParam(tx);
         let msg;
         switch (req.type) {
-            case Config.cosmos.tx.transfer.type: {
-                msg = Bank.create(req);
+            case Config.iris.tx.transfer.type: {
+                msg = Bank.CreateMsgSend(req);
                 break;
             }
             case Config.iris.tx.delegate.type: {
-                msg = Stake.createMsgDelegate(req);
+                msg = Stake.CreateMsgDelegate(req);
                 break;
             }
-            case Config.cosmos.tx.undelegate.type: {
-                msg = Stake.createMsgUndelegate(req);
+            case Config.iris.tx.undelegate.type: {
+                msg = Stake.CreateMsgBeginUnbonding(req);
                 break;
             }
-            case Config.cosmos.tx.beginRedelegate.type: {
-                msg = Stake.createMsgBeginRedelegate(req);
+            case Config.iris.tx.redelegate.type: {
+                msg = Stake.CreateMsgBeginRedelegate(req);
                 break;
             }
-            case Config.cosmos.tx.setWithdrawAddress.type: {
-                msg = Distribution.CreateMsgSetWithdrawAddress(req);
+            case Config.iris.tx.withdrawDelegationRewardsAll.type: {
+                msg = Distribution.CreateMsgWithdrawDelegatorRewardsAll(req);
                 break;
             }
-            case Config.cosmos.tx.withdrawDelegatorReward.type: {
+            case Config.iris.tx.withdrawDelegationReward.type: {
                 msg = Distribution.CreateMsgWithdrawDelegatorReward(req);
-                break;
-            }
-            case Config.cosmos.tx.withdrawValidatorCommission.type: {
-                msg = Distribution.CreateMsgWithdrawValidatorCommission(req);
                 break;
             }
             default: {
                 throw new Error("not exist tx type");
             }
         }
-        return StdTx.create(req,msg);
+        let stdFee = Bank.NewStdFee(req.fees, req.gas);
+        let signMsg = Bank.NewStdSignMsg(req.chain_id, req.account_number, req.sequence, stdFee, msg, req.memo, req.type);
+        signMsg.ValidateBasic();
+        return Bank.NewStdTx(signMsg);
     }
 
     /**
@@ -68,8 +67,8 @@ class CosmosBuilder extends Builder {
         if (typeof data === "string") {
             data = JSON.parse(data);
         }
-        let signbyte = CosmosKeypair.sign(privateKey, data);
-        let keypair = CosmosKeypair.import(privateKey);
+        let signbyte = IrisKeypair.sign(privateKey, data);
+        let keypair = IrisKeypair.import(privateKey);
 
         return {
             pub_key:Codec.Hex.hexToBytes(keypair.publicKey),
@@ -88,10 +87,16 @@ class CosmosBuilder extends Builder {
      */
     buildAndSignTx(tx, privateKey) {
         let stdTx = this.buildTx(tx);
+        let mode = tx.mode ? tx.mode : Config.iris.mode.normal;
         let signature;
-        signature = this.sign(stdTx.GetSignBytes(),privateKey);
-        stdTx.SetSignature(signature);
+        if (mode === Config.iris.mode.normal) {
+            if (Utils.isEmpty(privateKey)) {
+                throw new Error("privateKey is  empty");
+            }
+            signature = this.sign(stdTx.GetSignBytes(),privateKey);
+            stdTx.SetSignature(signature);
+        }
         return stdTx
     }
 }
-module.exports = Old(CosmosBuilder);
+module.exports = Old(IrisBuilder);

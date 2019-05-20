@@ -4,7 +4,7 @@ const Utils = require('../../util/utils');
 const Codec = require('../../util/codec');
 const Config = require('../../config');
 const Builder = require("../../builder");
-const Amino = require("./amino");
+const Amino = require("../base");
 const TxSerializer = require("./tx/tx_serializer");
 const Base64 = require('base64-node');
 

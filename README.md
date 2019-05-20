@@ -1,64 +1,8 @@
 # irisnet-crypto
 JavaScript crypto library supporting IRISnet/cosmos light client.
-It mainly provides account generation, transaction construction and offline signature functions of irisnet and cosmos. Specifically, it mainly includes:
-
-- IRISnet
-    - Account generate
-    - Account recovery(via mnemonic or privateKey)
-    - Transfer transaction construction and signature
-    - Delegate transaction construction and signature
-    - Unbond transaction construction and signature
-    - Redelegate transaction construction and signature
-    - Delegator Retrieve revenue
-- Cosmos
-    - Account generate
-    - Account recovery(via mnemonic or privateKey)
-    - Transfer transaction construction and signature
-    - Delegate transaction construction and signature
-    - Undelegate transaction construction and signature
-    - Redelegate transaction construction and signature
-    - SetWithdrawAddress transaction construction and signature
-    - WithdrawDelegatorReward transaction construction and signature
-    - WithdrawValidatorCommission transaction construction and signature
-    
-In addition, IRISnet also supports hot and cold wallets, offline signatures of transactions by scanning code.
-## Installation
-
+It mainly provides account generation, transaction construction and offline signing functions of [irisnet](./docs/IRIS.md) and [cosmos](./docs/ATOM.md) You can install this library in the following ways
 ```bash
-npm install irisnet-crypto
-```
-
-## Examples
-
-### import package
-
-```js
-import Irisnet from 'irisnet-crypto';
-```
-
-### Account
-The first step, you need to explain whether the generated wallet is iris or cosmos
-```js
-let crypto = Irisnet.getCrypto('iris');
-```
-
-##### generate account
-```js
-let account = crypto.create('your language');
-// account: {"address":"faa1e4y8urzgjd82447ydlw9tszsm2lxfwdr5hxj4a","phrase":"carbon when squeeze ginger rather science taxi disagree safe season mango teach trust open baby immune nephew youth nothing afraid sick prefer daughter throw","privateKey":"436EB1ACE1D9D8F4EA519D050FF16ADD4B9CAF3D6D0917411857318259022EFF","publicKey":"fap1addwnpepqw36efnhzgurxaq3mxsgf4fjm280dehh20w03u3726arm0deagne5u254g2"}
-```
-The create method has a parameter:language,Used to specify the generated mnemonic language.The default is 'english'.You have the following options to choose from:
-- chinese_simplified
-- japanese
-- spanish
-- english
-
-We recommend choosing 'english'
-
-##### recovery account
-via mnemonic
-```js
-let account = crypto.recover('your seed','your language');
+npm install git+https://github.com/irisnet/irisnet-crypto.git
 ```
 or via privateKey
 
