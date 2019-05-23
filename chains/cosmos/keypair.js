@@ -55,10 +55,6 @@ class CosmosKeypair {
 
         //生成私钥
         let secretKey = this.getPrivateKeyFromSecret(mnemonicS);
-        if(secretKey.length === 31){
-            let pad = Buffer.from([0]);
-            secretKey = Buffer.concat([pad,secretKey]);
-        }
         //构造公钥
         let pubKey = Secp256k1.publicKeyCreate(secretKey);
         pubKey = Amino.MarshalBinary(Config.cosmos.amino.pubKey,pubKey);
@@ -136,10 +132,6 @@ class Hd {
                 part = part.slice(0,part.length -1);
             }
             let idx = parseInt(part);
-            if(data.length === 31){
-                let pad = Buffer.from([0]);
-                data = Buffer.concat([pad,data]);
-            }
             let json = Hd.DerivePrivateKey(data, chainCode, idx, harden);
             data = json.data;
             chainCode = json.chainCode;
@@ -163,7 +155,7 @@ class Hd {
         let data;
         let indexBuffer = Buffer.from([index]);
         if(harden){
-			var c = new BN(index).or(new BN(0x80000000));
+            let c = new BN(index).or(new BN(0x80000000));
 			indexBuffer = c.toBuffer();
 
             let privKeyBuffer = Buffer.from(privKeyBytes);
@@ -183,7 +175,7 @@ class Hd {
         let x = Hd.AddScalars(aInt, bInt);
 
         return {
-            data : x.toBuffer(),
+            data : x,
             chainCode : i64P.chainCode
         }
     }
@@ -192,8 +184,10 @@ class Hd {
         let c = a.add(b);
         const bn = require('secp256k1/lib/js/bn/index');
         let n = bn.n.toBuffer();
-        let x = c.mod(new BN(n));
-        return x
+        let x = c.mod(new BN(n)).toBuffer();
+        let buf = Buffer.alloc(32);
+        buf.fill(x,32 - x.length);
+        return buf
     }
     static Serialize(sig) {
         const sigObj = {r: sig.slice(0, 32), s: sig.slice(32, 64)};

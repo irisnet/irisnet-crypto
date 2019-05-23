@@ -29,8 +29,6 @@ class IrisKeypair {
         let prikeyArr = Buffer.from(new Uint8Array(Codec.Hex.hexToBytes(private_key)));
         let sig = Secp256k1.sign(sig32,prikeyArr);
         //let signature = Buffer.from(Hd.Serialize(sig.signature));
-        //将签名结果加上amino编码前缀(irishub反序列化需要) (cosmos-sdk v0.24.0去掉了前缀)
-        //signature = Amino.MarshalBinary(Config.iris.amino.signature,signature);
         return Array.from(sig.signature)
     }
 
@@ -59,8 +57,7 @@ class IrisKeypair {
         let secretKey = this.getPrivateKeyFromSecret(mnemonicS);
 
         //构造公钥
-        let pubKey = Hd.publicKeyCreate(secretKey);
-        //将公钥加上amino编码前缀(irishub反序列化需要)
+        let pubKey = Secp256k1.publicKeyCreate(secretKey);
         pubKey = Amino.MarshalBinary(Config.iris.amino.pubKey,pubKey);
 
         return {
@@ -76,8 +73,7 @@ class IrisKeypair {
         //生成私钥
         let secretKey = this.getPrivateKeyFromSecret(mnemonic);
         //构造公钥
-        let pubKey = Hd.publicKeyCreate(secretKey);
-        //将公钥加上amino编码前缀(irishub反序列化需要)
+        let pubKey = Secp256k1.publicKeyCreate(secretKey);
         pubKey = Amino.MarshalBinary(Config.iris.amino.pubKey,pubKey);
 
         return {
@@ -101,8 +97,7 @@ class IrisKeypair {
     static import(secretKey){
         let secretBytes = Buffer.from(secretKey,"hex");
         //构造公钥
-        let pubKey = Hd.publicKeyCreate(secretBytes);
-        //将公钥加上amino编码前缀(irishub反序列化需要)
+        let pubKey = Secp256k1.publicKeyCreate(secretBytes);
         pubKey = Amino.MarshalBinary(Config.iris.amino.pubKey,pubKey);
         return {
             "address": this.getAddress(pubKey),
@@ -168,8 +163,7 @@ class Hd {
             data = Buffer.from([0]);
             data = Buffer.concat([data,privKeyBuffer]);
         }else{
-            const pubKey =this.publicKeyCreate(privKeyBytes);
-            // TODO
+            const pubKey =Secp256k1.publicKeyCreate(privKeyBytes);
             if (index ==0){
                 indexBuffer = Buffer.from([0,0,0,0]);
             }
@@ -194,17 +188,7 @@ class Hd {
         let x = c.mod(new BN(n)).toBuffer();
         let buf = Buffer.alloc(32);
         buf.fill(x,32 - x.length);
-        // if(x.length < 32){
-        //     let pad = Buffer.from("");
-        //     for(let i= 0;i <32 - x.length;i++ ){
-        //         pad =  Buffer.concat([pad,Buffer.from([0])]);
-        //     }
-        //     x = Buffer.concat([pad,x]);
-        // }
         return buf
-    }
-    static publicKeyCreate(privKeyBytes){
-        return Secp256k1.publicKeyCreate(privKeyBytes);
     }
 
     static Serialize(sig) {
