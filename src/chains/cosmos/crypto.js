@@ -4,7 +4,7 @@ const Old = require('old');
 const CosmosKeypair = require('./keypair');
 const Codec = require("../../util/codec");
 const Utils = require("../../util/utils");
-const Config = require('../../config');
+const Config = require('../../../config');
 const Bip39 = require('bip39');
 
 class CosmosCrypto extends Crypto {

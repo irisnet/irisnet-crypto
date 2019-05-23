@@ -6,7 +6,7 @@ const Stake = require('./stake');
 const Distribution = require('./distribution');
 const CosmosKeypair = require('./keypair');
 const Codec = require("../../util/codec");
-const Config = require('../../config');
+const Config = require('../../../config');
 const StdTx = require("./stdTx");
 
 class CosmosBuilder extends Builder {

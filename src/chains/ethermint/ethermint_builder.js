@@ -1,7 +1,7 @@
 'use strict';
 
 const Builder = require("../../builder").Builder;
-const BigNumber = require('bignumber.js');
+const BigNumber = require('bignumber.js/bignumber.js');
 const EthereumTx = require('ethereumjs-tx');
 const Old = require('old');
 

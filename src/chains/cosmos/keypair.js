@@ -8,15 +8,15 @@ const Bip39 = require('bip39');
 const Random = require('randombytes');
 const Secp256k1 = require('secp256k1');
 const BN = require("bn");
-const Config = require('../../config');
+const Config = require('../../../config');
 const Amino = require('../base');
 
-class IrisKeypair {
+class CosmosKeypair {
 
     static getPrivateKeyFromSecret(mnemonicS) {
         let seed = Bip39.mnemonicToSeed(mnemonicS);
         let master = Hd.ComputeMastersFromSeed(seed);
-        let derivedPriv = Hd.DerivePrivateKeyForPath(master.secret,master.chainCode,Config.iris.bip39Path);
+        let derivedPriv = Hd.DerivePrivateKeyForPath(master.secret,master.chainCode,Config.cosmos.bip39Path);
         return derivedPriv;
     }
 
@@ -55,10 +55,9 @@ class IrisKeypair {
 
         //生成私钥
         let secretKey = this.getPrivateKeyFromSecret(mnemonicS);
-
         //构造公钥
         let pubKey = Secp256k1.publicKeyCreate(secretKey);
-        pubKey = Amino.MarshalBinary(Config.iris.amino.pubKey,pubKey);
+        pubKey = Amino.MarshalBinary(Config.cosmos.amino.pubKey,pubKey);
 
         return {
             "secret": mnemonicS,
@@ -74,7 +73,7 @@ class IrisKeypair {
         let secretKey = this.getPrivateKeyFromSecret(mnemonic);
         //构造公钥
         let pubKey = Secp256k1.publicKeyCreate(secretKey);
-        pubKey = Amino.MarshalBinary(Config.iris.amino.pubKey,pubKey);
+        pubKey = Amino.MarshalBinary(Config.cosmos.amino.pubKey,pubKey);
 
         return {
             "secret": mnemonic,
@@ -98,7 +97,7 @@ class IrisKeypair {
         let secretBytes = Buffer.from(secretKey,"hex");
         //构造公钥
         let pubKey = Secp256k1.publicKeyCreate(secretBytes);
-        pubKey = Amino.MarshalBinary(Config.iris.amino.pubKey,pubKey);
+        pubKey = Amino.MarshalBinary(Config.cosmos.amino.pubKey,pubKey);
         return {
             "address": this.getAddress(pubKey),
             "privateKey": secretKey,
@@ -107,7 +106,7 @@ class IrisKeypair {
     }
 
     static isValidAddress(address) {
-        let prefix = Config.iris.bech32.accAddr;
+        let prefix = Config.cosmos.bech32.accAddr;
 		return Codec.Bech32.isBech32(prefix,address);
     }
 
@@ -183,14 +182,13 @@ class Hd {
 
     static AddScalars(a, b) {
         let c = a.add(b);
-        const bn = require('secp256k1/lib/js/bn/index');
+        const bn = require('secp256k1/lib/js/bn');
         let n = bn.n.toBuffer();
         let x = c.mod(new BN(n)).toBuffer();
         let buf = Buffer.alloc(32);
         buf.fill(x,32 - x.length);
         return buf
     }
-
     static Serialize(sig) {
         const sigObj = {r: sig.slice(0, 32), s: sig.slice(32, 64)};
         const SignatureFun = require('elliptic/lib/elliptic/ec/signature');
@@ -201,4 +199,4 @@ class Hd {
 }
 
 
-module.exports = IrisKeypair;
+module.exports = CosmosKeypair;

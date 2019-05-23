@@ -1,7 +1,7 @@
 'use strict';
 
 const Utils = require('../../util/utils');
-const Config = require('../../config');
+const Config = require('../../../config');
 const Amino = require("../base");
 const Root = require('./tx/tx');
 

@@ -1,5 +1,5 @@
-const Crypto = require("./crypto");
-const Builder = require("./builder").Builder;
+const Crypto = require("./src/crypto");
+const Builder = require("./src/builder").Builder;
 const config = require('./config');
 
 function getBuilder(chainName,network){
