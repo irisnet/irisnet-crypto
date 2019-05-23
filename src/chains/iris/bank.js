@@ -2,7 +2,7 @@
 
 const Utils = require('../../util/utils');
 const Codec = require('../../util/codec');
-const Config = require('../../config');
+const Config = require('../../../config');
 const Builder = require("../../builder");
 const Amino = require("../base");
 const TxSerializer = require("./tx/tx_serializer");

@@ -103,7 +103,7 @@ describe('iris transaction', function () {
                 fees: fees,
                 gas: gas,
                 memo: memo,
-                type: Irisnet.config.iris.tx.unbond.type,
+                type: Irisnet.config.iris.tx.undelegate.type,
                 msg: {
                     validator_addr: "fva1aake3umjllpd9es5d3qmry4egcne0f8ajd7vdp",
                     shares_amount: "1000000000000000000000000"
@@ -227,7 +227,7 @@ describe('iris transaction', function () {
                 fees: fees,
                 gas: gas,
                 memo: memo,
-                type: Irisnet.config.iris.tx.unbond.type,
+                type: Irisnet.config.iris.tx.undelegate.type,
                 msg: {
                     validator_addr: "fva16h3uazd2wknrae7ql0dqpjw69s5kp44slme6hr",
                     shares_amount: "10000000000000000000"

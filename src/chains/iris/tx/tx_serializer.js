@@ -1,6 +1,6 @@
 const root = require('./tx');
 const amino = require('../../base');
-const config = require('../../../config');
+const config = require('../../../../config');
 const codec = require('../../../util/codec');
 
 /**

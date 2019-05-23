@@ -3,7 +3,7 @@
 const Builder = require("../../builder");
 const Utils = require('../../util/utils');
 const Amino = require('../base');
-const Config = require('../../config');
+const Config = require('../../../config');
 
 class MsgWithdrawDelegatorRewardsAll extends Builder.Msg {
     constructor(delegatorAddr) {

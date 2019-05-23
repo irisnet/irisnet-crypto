@@ -2,7 +2,7 @@
 
 const Codec = require("../util/codec");
 const Sha256 = require("sha256");
-const Config = require('../config');
+const Config = require('../../config');
 const R_Cosmos = require('./cosmos/tx/tx');
 const R_Iris = require('./iris/tx/tx');
 

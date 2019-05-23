@@ -6,7 +6,7 @@ const Stake = require('./stake');
 const Distribution = require('./distribution');
 const IrisKeypair = require('./keypair');
 const Codec = require("../../util/codec");
-const Config = require('../../config');
+const Config = require('../../../config');
 const Utils = require("../../util/utils");
 
 class IrisBuilder extends Builder {
