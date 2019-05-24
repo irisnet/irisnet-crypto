@@ -139,7 +139,7 @@ MsgBeginRedelegate.prototype.GetMsg = function(){
 MsgBeginRedelegate.prototype.GetDisplayContent = function (){
     let delegatorAddress = BECH32.encode(Config.cosmos.bech32.accAddr,this.DelegatorAddress);
     let validatorSrcAddress = BECH32.encode(Config.cosmos.bech32.valAddr,this.ValidatorSrcAddress);
-    let validatorDstAddress = BECH32.encode(Config.cosmos.bech32.valAddr,this.ValidatorSrcAddress);
+    let validatorDstAddress = BECH32.encode(Config.cosmos.bech32.valAddr,this.ValidatorDstAddress);
 
     return {
         i18n_tx_type:"i18n_redelegate",
