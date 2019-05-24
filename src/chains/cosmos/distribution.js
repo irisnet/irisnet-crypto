@@ -66,6 +66,14 @@ MsgWithdrawDelegatorReward.prototype.GetMsg = function(){
         ValidatorAddress: validator_addr
     }
 };
+MsgWithdrawDelegatorReward.prototype.GetDisplayContent = function (){
+    return {
+        i18n_tx_type:"i18n_withdraw_delegation_reward",
+        i18n_delegator_addr:this.DelegatorAddress,
+        i18n_validator_addr:this.ValidatorAddress,
+    }
+};
+
 
 MsgWithdrawValidatorCommission.prototype.type = Config.cosmos.tx.withdrawValidatorCommission.prefix;
 MsgWithdrawValidatorCommission.prototype.GetSignBytes = function () {

@@ -39,6 +39,15 @@ MsgDelegate.prototype.GetMsg = function(){
     }
 };
 
+MsgDelegate.prototype.GetDisplayContent = function (){
+    return {
+        i18n_tx_type:"i18n_delegate",
+        i18n_delegator_addr:this.DelegatorAddress,
+        i18n_validator_addr:this.ValidatorAddress,
+        i18n_amount:this.Amount,
+    }
+};
+
 
 MsgUndelegate.prototype.type = Config.cosmos.tx.undelegate.prefix;
 MsgUndelegate.prototype.GetSignBytes = function () {
@@ -69,6 +78,15 @@ MsgUndelegate.prototype.GetMsg = function(){
         DelegatorAddress: delegator_addr,
         ValidatorAddress: validator_addr,
         Amount: this.Amount
+    }
+};
+
+MsgUndelegate.prototype.GetDisplayContent = function (){
+    return {
+        i18n_tx_type:"i18n_begin_unbonding",
+        i18n_delegator_addr:this.DelegatorAddress,
+        i18n_validator_addr:this.ValidatorAddress,
+        i18n_shares_amount:this.Amount,
     }
 };
 
@@ -111,6 +129,16 @@ MsgBeginRedelegate.prototype.GetMsg = function(){
         ValidatorSrcAddress: validator_src_addr,
         ValidatorDstAddress: validator_dst_addr,
         Amount: this.Amount
+    }
+};
+
+MsgBeginRedelegate.prototype.GetDisplayContent = function (){
+    return {
+        i18n_tx_type:"i18n_redelegate",
+        i18n_delegator_addr:this.DelegatorAddress,
+        i18n_validator_src_addr:this.ValidatorSrcAddress,
+        i18n_validator_dst_addr:this.ValidatorDstAddress,
+        i18n_shares_amount:this.Amount,
     }
 };
 
