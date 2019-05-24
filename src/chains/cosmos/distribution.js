@@ -37,6 +37,8 @@ MsgSetWithdrawAddress.prototype.GetMsg = function(){
     }
 };
 
+MsgSetWithdrawAddress.prototype.GetDisplayContent = function (){};
+
 MsgWithdrawDelegatorReward.prototype.type = Config.cosmos.tx.withdrawDelegatorReward.prefix;
 MsgWithdrawDelegatorReward.prototype.GetSignBytes = function () {
     let msg = {
@@ -67,10 +69,13 @@ MsgWithdrawDelegatorReward.prototype.GetMsg = function(){
     }
 };
 MsgWithdrawDelegatorReward.prototype.GetDisplayContent = function (){
+    let delegatorAddress = BECH32.encode(Config.cosmos.bech32.accAddr,this.DelegatorAddress);
+    let validatorAddress = BECH32.encode(Config.cosmos.bech32.valAddr,this.ValidatorAddress);
+
     return {
         i18n_tx_type:"i18n_withdraw_delegation_reward",
-        i18n_delegator_addr:this.DelegatorAddress,
-        i18n_validator_addr:this.ValidatorAddress,
+        i18n_delegator_addr:delegatorAddress,
+        i18n_validator_addr:validatorAddress,
     }
 };
 
@@ -98,6 +103,7 @@ MsgWithdrawValidatorCommission.prototype.GetMsg = function(){
         ValidatorAddress: validator_addr,
     }
 };
+MsgWithdrawValidatorCommission.prototype.GetDisplayContent = function (){};
 
 module.exports = class Distribution {
     static CreateMsgSetWithdrawAddress(req) {
