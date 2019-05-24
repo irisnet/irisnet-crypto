@@ -40,10 +40,12 @@ MsgDelegate.prototype.GetMsg = function(){
 };
 
 MsgDelegate.prototype.GetDisplayContent = function (){
+    let delegatorAddress = BECH32.encode(Config.cosmos.bech32.accAddr,this.DelegatorAddress);
+    let validatorAddress = BECH32.encode(Config.cosmos.bech32.valAddr,this.ValidatorAddress);
     return {
         i18n_tx_type:"i18n_delegate",
-        i18n_delegator_addr:this.DelegatorAddress,
-        i18n_validator_addr:this.ValidatorAddress,
+        i18n_delegator_addr:delegatorAddress,
+        i18n_validator_addr:validatorAddress,
         i18n_amount:this.Amount,
     }
 };
@@ -82,10 +84,12 @@ MsgUndelegate.prototype.GetMsg = function(){
 };
 
 MsgUndelegate.prototype.GetDisplayContent = function (){
+    let delegatorAddress = BECH32.encode(Config.cosmos.bech32.accAddr,this.DelegatorAddress);
+    let validatorAddress = BECH32.encode(Config.cosmos.bech32.valAddr,this.ValidatorAddress);
     return {
         i18n_tx_type:"i18n_begin_unbonding",
-        i18n_delegator_addr:this.DelegatorAddress,
-        i18n_validator_addr:this.ValidatorAddress,
+        i18n_delegator_addr:delegatorAddress,
+        i18n_validator_addr:validatorAddress,
         i18n_shares_amount:this.Amount,
     }
 };
@@ -133,11 +137,15 @@ MsgBeginRedelegate.prototype.GetMsg = function(){
 };
 
 MsgBeginRedelegate.prototype.GetDisplayContent = function (){
+    let delegatorAddress = BECH32.encode(Config.cosmos.bech32.accAddr,this.DelegatorAddress);
+    let validatorSrcAddress = BECH32.encode(Config.cosmos.bech32.valAddr,this.ValidatorSrcAddress);
+    let validatorDstAddress = BECH32.encode(Config.cosmos.bech32.valAddr,this.ValidatorDstAddress);
+
     return {
         i18n_tx_type:"i18n_redelegate",
-        i18n_delegator_addr:this.DelegatorAddress,
-        i18n_validator_src_addr:this.ValidatorSrcAddress,
-        i18n_validator_dst_addr:this.ValidatorDstAddress,
+        i18n_delegator_addr:delegatorAddress,
+        i18n_validator_src_addr:validatorSrcAddress,
+        i18n_validator_dst_addr:validatorDstAddress,
         i18n_shares_amount:this.Amount,
     }
 };

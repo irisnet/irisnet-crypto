@@ -4,10 +4,10 @@ const Utils = require('../../util/utils');
 const Config = require('../../../config');
 const Amino = require("../base");
 const Root = require('./tx/tx');
+const BECH32 = require('bech32');
 
 const MsgSend = Root.cosmos.MsgSend;
 MsgSend.prototype.GetSignBytes = function () {
-    const BECH32 = require('bech32');
 
     let msg = {
         "from_address": BECH32.encode(Config.cosmos.bech32.accAddr,this.FromAddress),
@@ -41,10 +41,12 @@ MsgSend.prototype.GetMsg = function(){
 
 MsgSend.prototype.type = Config.cosmos.tx.transfer.prefix;
 MsgSend.prototype.GetDisplayContent = function (){
+    let from = BECH32.encode(Config.cosmos.bech32.accAddr,this.FromAddress);
+    let to = BECH32.encode(Config.cosmos.bech32.accAddr,this.ToAddress);
     return {
         i18n_tx_type:"i18n_transfer",
-        i18n_from:this.FromAddress,
-        i18n_to:this.ToAddress,
+        i18n_from:from,
+        i18n_to:to,
         i18n_amount:this.Amount,
     }
 };
