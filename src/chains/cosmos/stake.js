@@ -41,7 +41,7 @@ MsgDelegate.prototype.GetMsg = function(){
 
 MsgDelegate.prototype.GetDisplayContent = function (){
     let delegatorAddress = BECH32.encode(Config.cosmos.bech32.accAddr,this.DelegatorAddress);
-    let validatorAddress = BECH32.encode(Config.cosmos.bech32.valAddr,this.DelegatorAddress);
+    let validatorAddress = BECH32.encode(Config.cosmos.bech32.valAddr,this.ValidatorAddress);
     return {
         i18n_tx_type:"i18n_delegate",
         i18n_delegator_addr:delegatorAddress,
