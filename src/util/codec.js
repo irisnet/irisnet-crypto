@@ -1,7 +1,7 @@
 'use strict';
 
 const BECH32 = require('bech32');
-const BN = require('BN');
+const BN = require('bn');
 
 /**
  * 处理编码/解码
