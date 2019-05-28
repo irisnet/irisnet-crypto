@@ -49,7 +49,12 @@
       "signature": "tendermint/SignatureSecp256k1",
       "pubKey": "tendermint/PubKeySecp256k1"
     },
-    "bip39Path": "44'/118'/0'/0/0"
+    "bip39Path": "44'/118'/0'/0/0",
+    "keystore": {
+      "kdf": "pbkdf2",
+      "cipherAlg": "aes-256-ctr",
+      "c": 262144
+    }
   },
   "cosmos": {
     "tx":{

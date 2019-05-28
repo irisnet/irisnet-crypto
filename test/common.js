@@ -15,6 +15,16 @@ function randomWord(range) {
     return str;
 }
 
+function randomHex(range){
+    let str = "",
+    arr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'];
+    for (let i = 0; i < range; i++) {
+        let pos = Math.round(Math.random() * (arr.length - 1));
+        str += arr[pos];
+    }
+    return str.toUpperCase();
+}
+
 function verifyTx(url, tx, privateKey, chainName,callback) {
     let builder = Irisnet.getBuilder(chainName,"testnet");
     let stdTx = builder.buildAndSignTx(tx, privateKey);
@@ -73,4 +83,4 @@ function sendByAsync(method,url,data){
     })
 }
 
-module.exports = {randomWord,verifyTx,verifyAccount,sendBySync};
+module.exports = {randomWord,randomHex,verifyTx,verifyAccount,sendBySync};

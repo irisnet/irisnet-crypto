@@ -65,6 +65,14 @@ class Crypto {
         throw new Error("not implement");
     }
 
+    exportKeystore(privateKeyHex,password){
+        throw new Error("not implement");
+    }
+
+    importKeystore(keystore, password){
+        throw new Error("not implement");
+    }
+
     /**
      * getCrypto 构建方法，返回具体实现类
      *
