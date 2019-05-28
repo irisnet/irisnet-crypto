@@ -122,7 +122,7 @@ class IrisCrypto extends Crypto {
         const decipher = Cryp.createDecipheriv(keystore.crypto.cipher, derivedKey.slice(0, 32), Buffer.from(keystore.crypto.cipherparams.iv, "hex"));
         const privateKey = Buffer.concat([decipher.update(ciphertext), decipher.final()]).toString("hex");
 
-        return privateKey.toUpperCase()
+        return this.import(privateKey.toUpperCase())
     }
 }
 
