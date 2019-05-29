@@ -66,6 +66,8 @@ class IrisCrypto extends Crypto {
         address = Codec.Bech32.toBech32(Config.iris.bech32.accAddr, address);
         return address;
     }
+
+    // @referance:https://github.com/binance-chain/javascript-sdk/blob/master/src/crypto/index.js
     exportKeystore(privateKeyHex,password){
         const salt = Cryp.randomBytes(32);
         const iv = Cryp.randomBytes(16);
