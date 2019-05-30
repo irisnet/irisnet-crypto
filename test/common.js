@@ -4,6 +4,16 @@ const chai = require('chai');
 const assert = chai.assert;
 const fetch = require('isomorphic-fetch');
 
+const config = {
+  iris:{
+      host : "http://irisnet-lcd.dev.rainbow.one",
+      chainId:"",
+  },
+  cosmos:{
+
+  }
+};
+
 function randomWord(range) {
     let str = "",
         arr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
@@ -28,6 +38,7 @@ function randomHex(range){
 function verifyTx(url, tx, privateKey, chainName,callback) {
     let builder = Irisnet.getBuilder(chainName,"testnet");
     let stdTx = builder.buildAndSignTx(tx, privateKey);
+    console.log(stdTx.GetDisplayContent());
     let exp = stdTx.Hash();
     let payload = stdTx.GetData();
     sendByAsync("POST",url,payload).then(response => {
@@ -59,6 +70,14 @@ function sendBySync(method,url,payload) {
     return JSON.parse(res.getBody('utf8'))
 }
 
+function getSequence(host,address) {
+    let url = `${host}/auth/accounts/${address}`;
+    let req = require('sync-request');
+    let res = req("GET", url);
+    let account = JSON.parse(res.getBody('utf8')).value;
+    return account.sequence
+}
+
 function sendByAsync(method,url,data){
     let payload = {
         method: method,
@@ -83,4 +102,4 @@ function sendByAsync(method,url,data){
     })
 }
 
-module.exports = {randomWord,randomHex,verifyTx,verifyAccount,sendBySync};
+module.exports = {randomWord,randomHex,verifyTx,verifyAccount,sendBySync,getSequence};

@@ -7,6 +7,7 @@ const Utils = require("../../util/utils");
 const Config = require('../../../config');
 const Bip39 = require('bip39');
 const Cryp = require("crypto-browserify");
+const UUID = require("uuid");
 
 class IrisCrypto extends Crypto {
     
@@ -82,17 +83,21 @@ class IrisCrypto extends Crypto {
             prf: "hmac-sha256"
         };
         const derivedKey = Cryp.pbkdf2Sync(Buffer.from(password), salt, kdfparams.c, kdfparams.dklen, "sha256");
-        const cipher = Cryp.createCipheriv(cipherAlg, derivedKey.slice(0, 32), iv);
+        const cipher = Cryp.createCipheriv(cipherAlg, derivedKey.slice(0, 16), iv);
         if (!cipher) {
             throw new Error("Unsupported cipher")
         }
 
         const cipherBuffer = Buffer.concat([cipher.update(Buffer.from(privateKeyHex, "hex")), cipher.final()]);
         const bufferValue = Buffer.concat([derivedKey.slice(16, 32), cipherBuffer]);
-        let hmac = Cryp.createHmac("sha256",bufferValue);
-        const mac = hmac.digest().toString("hex");
+        let hashCiper = Cryp.createHash("sha256");
+        hashCiper.update(bufferValue);
+        const mac = hashCiper.digest().toString("hex");
         return {
             version: 1,
+            id: UUID.v4({
+                random: Cryp.randomBytes(16)
+            }),
             address: address,
             crypto: {
                 ciphertext: cipherBuffer.toString("hex"),
@@ -108,7 +113,6 @@ class IrisCrypto extends Crypto {
     }
     importKeystore(keystore, password){
         const kdfparams = keystore.crypto.kdfparams;
-
         if (kdfparams.prf !== "hmac-sha256") {
             throw new Error("Unsupported parameters to PBKDF2")
         }
@@ -116,12 +120,13 @@ class IrisCrypto extends Crypto {
         const derivedKey = Cryp.pbkdf2Sync(Buffer.from(password), Buffer.from(kdfparams.salt, "hex"), kdfparams.c, kdfparams.dklen, "sha256");
         const ciphertext = Buffer.from(keystore.crypto.ciphertext, "hex");
         const bufferValue = Buffer.concat([derivedKey.slice(16, 32), ciphertext]);
-        let hmac = Cryp.createHmac("sha256",bufferValue);
-        const mac = hmac.digest().toString("hex");
+        let hashCiper = Cryp.createHash("sha256");
+        hashCiper.update(bufferValue);
+        const mac = hashCiper.digest().toString("hex");
         if (mac !==keystore.crypto.mac){
             throw new Error("wrong password")
         }
-        const decipher = Cryp.createDecipheriv(keystore.crypto.cipher, derivedKey.slice(0, 32), Buffer.from(keystore.crypto.cipherparams.iv, "hex"));
+        const decipher = Cryp.createDecipheriv(keystore.crypto.cipher, derivedKey.slice(0, 16), Buffer.from(keystore.crypto.cipherparams.iv, "hex"));
         const privateKey = Buffer.concat([decipher.update(ciphertext), decipher.final()]).toString("hex");
 
         return this.import(privateKey.toUpperCase())

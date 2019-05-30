@@ -52,7 +52,7 @@
     "bip39Path": "44'/118'/0'/0/0",
     "keystore": {
       "kdf": "pbkdf2",
-      "cipherAlg": "aes-256-ctr",
+      "cipherAlg": "aes-128-ctr",
       "c": 262144
     }
   },
