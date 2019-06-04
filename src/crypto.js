@@ -66,6 +66,24 @@ class Crypto {
     }
 
     /**
+     * export keystore data from private and password
+     * @param privateKeyHex user's private key
+     * @param password user's password
+     */
+    exportKeystore(privateKeyHex,password){
+        throw new Error("not implement");
+    }
+
+    /**
+     * import keystore from keystore data and password
+     * @param keystore user's keystore file
+     * @param password user's password
+     */
+    importKeystore(keystore, password){
+        throw new Error("not implement");
+    }
+
+    /**
      * getCrypto 构建方法，返回具体实现类
      *
      * @param chain 链名字

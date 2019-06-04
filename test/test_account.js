@@ -35,6 +35,38 @@ describe('account', function () {
             let path = url.replace("%s",common.randomWord(10));
             common.verifyAccount(path,srcAccount)
         });
+
+        it('should recover', function () {
+            let crypto = Irisnet.getCrypto(chainName, 'testnet');
+            let seed = "tube lonely pause spring gym veteran know want grid tired taxi such same mesh charge orient bracket ozone concert once good quick dry boss";
+            let keyPair2 = crypto.recover(seed, Irisnet.config.language.en);
+            console.log(JSON.stringify(keyPair2))
+        });
+
+        describe('keystore', function () {
+            it('exportKeystore', function () {
+                let privateKey = "55A3160577979EC014A2CE85C430E1FF0FF06EFD230B7CE41AEAE2EF00EDF175";
+                let crypto = Irisnet.getCrypto(chainName, 'testnet');
+                let keystore = crypto.exportKeystore(privateKey,"1234567890");
+            });
+
+            it('importKeystore', function () {
+                let keystore = require("./keystore.json");
+                let privateKey = "55A3160577979EC014A2CE85C430E1FF0FF06EFD230B7CE41AEAE2EF00EDF175";
+                let crypto = Irisnet.getCrypto(chainName, 'testnet');
+                let acc = crypto.importKeystore(keystore,"1234567890");
+                assert.deepEqual(privateKey, acc.privateKey);
+                assert.deepEqual(keystore.address, acc.address);
+            });
+            it('exportKeystore and importKeystore', function () {
+                let crypto = Irisnet.getCrypto(chainName, 'testnet');
+                let privateKey = common.randomHex(64);
+                let password = common.randomWord(10);
+                let keystore = crypto.exportKeystore(privateKey,password);
+                let acc = crypto.importKeystore(keystore,password);
+                assert.deepEqual(privateKey, acc.privateKey);
+            });
+        });
     });
 
     describe('cosmos', function () {

@@ -3,7 +3,8 @@ const common = require('./common');
 const chai = require('chai');
 const assert = chai.assert;
 
-const url ="http://192.168.150.31:31317/txs";
+const host ="http://192.168.150.31:31317";
+const url = host + "/txs";
 //const lcdServer ="http://127.0.0.1:1317/txs";
 
 describe('cosmos transaction', function () {
@@ -17,11 +18,12 @@ describe('cosmos transaction', function () {
     let chainName = "cosmos";
 
     it('test  transfer', function () {
+        let seq = common.getSequence(host,from);
         let tx = {
             chain_id: chain_id,
             from: from,
             account_number: account_number,
-            sequence: 9,
+            sequence: seq,
             fees: fees,
             gas: gas,
             memo:common.randomWord(100) ,
@@ -31,7 +33,7 @@ describe('cosmos transaction', function () {
                 to: "cosmos1cx7ny2znzdegzj27mq2lqavk8dcvc0uysmyzg7",
                 coins: [
                     {
-                        denom: "stake",
+                        denom: "atom",
                         amount: "10"
                     }
                 ]
@@ -42,11 +44,12 @@ describe('cosmos transaction', function () {
     });
 
     it('test delegate', function () {
+        let seq = common.getSequence(host,from);
         let tx = {
             chain_id: chain_id,
             from: from,
             account_number: account_number,
-            sequence: 11,
+            sequence: seq,
             fees: fees,
             gas: gas,
             memo: common.randomWord(100),
@@ -64,11 +67,12 @@ describe('cosmos transaction', function () {
     });
 
     it('test undelegate', function () {
+        let seq = common.getSequence(host,from);
         let tx = {
             chain_id: chain_id,
             from: from,
             account_number: account_number,
-            sequence: 12,
+            sequence: seq,
             fees: fees,
             gas: gas,
             memo: common.randomWord(100),
@@ -86,11 +90,12 @@ describe('cosmos transaction', function () {
     });
 
     it('test beginRedelegate', function () {
+        let seq = common.getSequence(host,from);
         let tx = {
             chain_id: chain_id,
             from: from,
             account_number: account_number,
-            sequence: 14,
+            sequence: seq,
             fees: fees,
             gas: gas,
             memo: common.randomWord(100),
@@ -109,11 +114,12 @@ describe('cosmos transaction', function () {
     });
 
     it('test MsgSetWithdrawAddress', function () {
+        let seq = common.getSequence(host,from);
         let tx = {
             chain_id: chain_id,
             from: from,
             account_number: account_number,
-            sequence: 15,
+            sequence: seq,
             fees: fees,
             gas: gas,
             memo: common.randomWord(100),
@@ -126,11 +132,12 @@ describe('cosmos transaction', function () {
         common.verifyTx(url,tx,privateKey,chainName,verify);
     });
     it('test MsgWithdrawDelegatorReward', function () {
+        let seq = common.getSequence(host,from);
         let tx = {
             chain_id: chain_id,
             from: from,
             account_number: account_number,
-            sequence: 16,
+            sequence: seq,
             fees: fees,
             gas: gas,
             memo: common.randomWord(100),
@@ -144,23 +151,24 @@ describe('cosmos transaction', function () {
     });
 
     //TODO Pending verification
-    it('test MsgWithdrawValidatorCommission', function () {
-        let tx = {
-            chain_id: chain_id,
-            from: from,
-            account_number: account_number,
-            sequence: 6,
-            fees: fees,
-            gas: gas,
-            memo: common.randomWord(100),
-            type: Irisnet.config.cosmos.tx.withdrawValidatorCommission.type,
-            msg: {
-                validator_addr: "cosmosvaloper1qksw0e05eh652yy0zqd7f0e3q4082dxy9qxdx6",
-            }
-        };
-
-        common.verifyTx(url,tx,privateKey,chainName,verify);
-    });
+    // it('test MsgWithdrawValidatorCommission', function () {
+    //     let seq = common.getSequence(host,from);
+    //     let tx = {
+    //         chain_id: chain_id,
+    //         from: from,
+    //         account_number: account_number,
+    //         sequence: seq,
+    //         fees: fees,
+    //         gas: gas,
+    //         memo: common.randomWord(100),
+    //         type: Irisnet.config.cosmos.tx.withdrawValidatorCommission.type,
+    //         msg: {
+    //             validator_addr: "cosmosvaloper1qksw0e05eh652yy0zqd7f0e3q4082dxy9qxdx6",
+    //         }
+    //     };
+    //
+    //     common.verifyTx(url,tx,privateKey,chainName,verify);
+    // });
 });
 
 function verify(act,exp,data) {

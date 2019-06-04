@@ -63,7 +63,6 @@ module.exports = class Bank {
                 });
             });
         }
-        const BECH32 = require('bech32');
         let from = BECH32.decode(req.from).words;
         let to = BECH32.decode(req.msg.to).words;
         let msg = new MsgSend({
