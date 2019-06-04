@@ -38,7 +38,6 @@ function randomHex(range){
 function verifyTx(url, tx, privateKey, chainName,callback) {
     let builder = Irisnet.getBuilder(chainName,"testnet");
     let stdTx = builder.buildAndSignTx(tx, privateKey);
-    console.log(stdTx.GetDisplayContent());
     let exp = stdTx.Hash();
     let payload = stdTx.GetData();
     sendByAsync("POST",url,payload).then(response => {
@@ -72,9 +71,8 @@ function sendBySync(method,url,payload) {
 
 function getSequence(host,address) {
     let url = `${host}/auth/accounts/${address}`;
-    let req = require('sync-request');
-    let res = req("GET", url);
-    let account = JSON.parse(res.getBody('utf8')).value;
+    let res = sendBySync("GET", url);
+    let account = res.value;
     return account.sequence
 }
 

@@ -48,7 +48,6 @@ describe('account', function () {
                 let privateKey = "55A3160577979EC014A2CE85C430E1FF0FF06EFD230B7CE41AEAE2EF00EDF175";
                 let crypto = Irisnet.getCrypto(chainName, 'testnet');
                 let keystore = crypto.exportKeystore(privateKey,"1234567890");
-                console.log(JSON.stringify(keystore))
             });
 
             it('importKeystore', function () {

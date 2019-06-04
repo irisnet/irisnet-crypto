@@ -70,6 +70,12 @@ class IrisCrypto extends Crypto {
 
     // @referance:https://github.com/binance-chain/javascript-sdk/blob/master/src/crypto/index.js
     exportKeystore(privateKeyHex,password){
+        if (Utils.isEmpty(password) || password.length < 8){
+            throw new Error("password's length must be greater than 8")
+        }
+        if (Utils.isEmpty(privateKeyHex)){
+            throw new Error("private key must be not empty")
+        }
         const salt = Cryp.randomBytes(32);
         const iv = Cryp.randomBytes(16);
         const cipherAlg = Config.iris.keystore.cipherAlg;
@@ -94,7 +100,7 @@ class IrisCrypto extends Crypto {
         hashCiper.update(bufferValue);
         const mac = hashCiper.digest().toString("hex");
         return {
-            version: 1,
+            version: "1",
             id: UUID.v4({
                 random: Cryp.randomBytes(16)
             }),
@@ -112,6 +118,13 @@ class IrisCrypto extends Crypto {
         }
     }
     importKeystore(keystore, password){
+        if (Utils.isEmpty(password) || password.length < 8){
+            throw new Error("password's length must be greater than 8")
+        }
+        if (Utils.isEmpty(keystore)){
+            throw new Error("keystore file must be not empty")
+        }
+
         const kdfparams = keystore.crypto.kdfparams;
         if (kdfparams.prf !== "hmac-sha256") {
             throw new Error("Unsupported parameters to PBKDF2")
