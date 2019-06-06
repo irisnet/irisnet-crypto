@@ -51,6 +51,16 @@ MsgSend.prototype.GetDisplayContent = function (){
     }
 };
 
+MsgSend.prototype.toJSON = function(){
+    let from = BECH32.encode(Config.cosmos.bech32.accAddr,this.FromAddress);
+    let to = BECH32.encode(Config.cosmos.bech32.accAddr,this.ToAddress);
+    return {
+        FromAddress: from,
+        ToAddress: to,
+        Amount: this.Amount
+    }
+};
+
 
 module.exports = class Bank {
     static create(req) {

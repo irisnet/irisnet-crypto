@@ -27,10 +27,18 @@ MsgSetWithdrawAddress.prototype.ValidateBasic = function () {
 };
 
 MsgSetWithdrawAddress.prototype.GetMsg = function(){
-    const BECH32 = require('bech32');
     let delegator_addr = BECH32.fromWords(this.DelegatorAddress);
     let withdraw_addr = BECH32.fromWords(this.WithdrawAddress);
 
+    return {
+        DelegatorAddress: delegator_addr,
+        WithdrawAddress: withdraw_addr,
+    }
+};
+
+MsgSetWithdrawAddress.prototype.toJSON = function(){
+    let delegator_addr = BECH32.encode(Config.cosmos.bech32.accAddr,this.DelegatorAddress);
+    let withdraw_addr = BECH32.encode(Config.cosmos.bech32.accAddr,this.WithdrawAddress);
     return {
         DelegatorAddress: delegator_addr,
         WithdrawAddress: withdraw_addr,
@@ -49,6 +57,15 @@ MsgWithdrawDelegatorReward.prototype.GetSignBytes = function () {
     return Amino.MarshalJSON(this.type, sortMsg)
 };
 
+MsgWithdrawDelegatorReward.prototype.toJSON = function(){
+    let delegatorAddr = BECH32.encode(Config.cosmos.bech32.accAddr,this.DelegatorAddress);
+    let validatorAddress = BECH32.encode(Config.cosmos.bech32.accAddr,this.ValidatorAddress);
+    return {
+        DelegatorAddress: delegatorAddr,
+        ValidatorAddress: validatorAddress,
+    }
+};
+
 MsgWithdrawDelegatorReward.prototype.ValidateBasic = function () {
     if (Utils.isEmpty(this.DelegatorAddress)) {
         throw new Error("delegatorAddr is  empty");
@@ -59,7 +76,6 @@ MsgWithdrawDelegatorReward.prototype.ValidateBasic = function () {
 };
 
 MsgWithdrawDelegatorReward.prototype.GetMsg = function(){
-    const BECH32 = require('bech32');
     let delegator_addr = BECH32.fromWords(this.DelegatorAddress);
     let validator_addr = BECH32.fromWords(this.ValidatorAddress);
 
@@ -96,7 +112,6 @@ MsgWithdrawValidatorCommission.prototype.ValidateBasic = function () {
 };
 
 MsgWithdrawValidatorCommission.prototype.GetMsg = function(){
-    const BECH32 = require('bech32');
     let validator_addr = BECH32.fromWords(this.ValidatorAddress);
 
     return {
@@ -104,6 +119,12 @@ MsgWithdrawValidatorCommission.prototype.GetMsg = function(){
     }
 };
 MsgWithdrawValidatorCommission.prototype.GetDisplayContent = function (){};
+MsgWithdrawValidatorCommission.prototype.toJSON = function(){
+    let validatorAddress = BECH32.encode(Config.cosmos.bech32.accAddr,this.ValidatorAddress);
+    return {
+        ValidatorAddress: validatorAddress,
+    }
+};
 
 module.exports = class Distribution {
     static CreateMsgSetWithdrawAddress(req) {
