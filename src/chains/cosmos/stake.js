@@ -28,7 +28,6 @@ MsgDelegate.prototype.ValidateBasic = function () {
 };
 
 MsgDelegate.prototype.GetMsg = function(){
-    const BECH32 = require('bech32');
     let delegator_addr = BECH32.fromWords(this.DelegatorAddress);
     let validator_addr = BECH32.fromWords(this.ValidatorAddress);
 
@@ -47,6 +46,17 @@ MsgDelegate.prototype.GetDisplayContent = function (){
         i18n_delegator_addr:delegatorAddress,
         i18n_validator_addr:validatorAddress,
         i18n_amount:this.Amount,
+    }
+};
+
+MsgDelegate.prototype.toJSON = function(){
+    let delegatorAddress = BECH32.encode(Config.cosmos.bech32.accAddr,this.DelegatorAddress);
+    let validatorAddress = BECH32.encode(Config.cosmos.bech32.valAddr,this.ValidatorAddress);
+
+    return {
+        DelegatorAddress: delegatorAddress,
+        ValidatorAddress: validatorAddress,
+        Amount: this.Amount
     }
 };
 
@@ -72,7 +82,6 @@ MsgUndelegate.prototype.ValidateBasic = function () {
 };
 
 MsgUndelegate.prototype.GetMsg = function(){
-    const BECH32 = require('bech32');
     let delegator_addr = BECH32.fromWords(this.DelegatorAddress);
     let validator_addr = BECH32.fromWords(this.ValidatorAddress);
 
@@ -91,6 +100,17 @@ MsgUndelegate.prototype.GetDisplayContent = function (){
         i18n_delegator_addr:delegatorAddress,
         i18n_validator_addr:validatorAddress,
         i18n_shares_amount:this.Amount,
+    }
+};
+
+MsgUndelegate.prototype.toJSON = function(){
+    let delegatorAddress = BECH32.encode(Config.cosmos.bech32.accAddr,this.DelegatorAddress);
+    let validatorAddress = BECH32.encode(Config.cosmos.bech32.valAddr,this.ValidatorAddress);
+
+    return {
+        DelegatorAddress: delegatorAddress,
+        ValidatorAddress: validatorAddress,
+        Amount: this.Amount
     }
 };
 
@@ -123,7 +143,6 @@ MsgBeginRedelegate.prototype.ValidateBasic = function () {
 };
 
 MsgBeginRedelegate.prototype.GetMsg = function(){
-    const BECH32 = require('bech32');
     let delegator_addr = BECH32.fromWords(this.DelegatorAddress);
     let validator_src_addr = BECH32.fromWords(this.ValidatorSrcAddress);
     let validator_dst_addr = BECH32.fromWords(this.ValidatorDstAddress);
@@ -147,6 +166,19 @@ MsgBeginRedelegate.prototype.GetDisplayContent = function (){
         i18n_validator_src_addr:validatorSrcAddress,
         i18n_validator_dst_addr:validatorDstAddress,
         i18n_shares_amount:this.Amount,
+    }
+};
+
+MsgBeginRedelegate.prototype.toJSON = function(){
+    let delegatorAddress = BECH32.encode(Config.cosmos.bech32.accAddr,this.DelegatorAddress);
+    let validatorSrcAddress = BECH32.encode(Config.cosmos.bech32.valAddr,this.ValidatorSrcAddress);
+    let validatorDstAddress = BECH32.encode(Config.cosmos.bech32.valAddr,this.ValidatorDstAddress);
+
+    return {
+        DelegatorAddress: delegatorAddress,
+        ValidatorSrcAddress: validatorSrcAddress,
+        ValidatorDstAddress: validatorDstAddress,
+        Amount: this.Amount
     }
 };
 
