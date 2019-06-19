@@ -1,29 +1,6 @@
 # irisnet-crypto
 JavaScript crypto library supporting IRISnet/cosmos light client.
-It mainly provides account generation, transaction construction and offline signature functions of irisnet and cosmos. Specifically, it mainly includes:
-
-- IRISnet
-    - Account generate
-    - Account recovery(via mnemonic or privateKey)
-    - Transfer transaction construction and signature
-    - Delegate transaction construction and signature
-    - Unbond transaction construction and signature
-    - Redelegate transaction construction and signature
-    - Delegator Retrieve revenue
-- Cosmos
-    - Account generate
-    - Account recovery(via mnemonic or privateKey)
-    - Transfer transaction construction and signature
-    - Delegate transaction construction and signature
-    - Undelegate transaction construction and signature
-    - Redelegate transaction construction and signature
-    - SetWithdrawAddress transaction construction and signature
-    - WithdrawDelegatorReward transaction construction and signature
-    - WithdrawValidatorCommission transaction construction and signature
-    
-In addition, IRISnet also supports hot and cold wallets, offline signatures of transactions by scanning code.
-## Installation
-
+It mainly provides account generation, transaction construction and offline signing functions of [irisnet](./docs/IRIS.md) and [cosmos](./docs/ATOM.md) You can install this library in the following ways
 ```bash
 npm install git+https://github.com/irisnet/irisnet-crypto.git
 ```
@@ -59,6 +36,7 @@ We recommend choosing 'english'
 via mnemonic
 ```js
 let account = crypto.recover('your seed','your language');
+
 ```
 or via privateKey
 
@@ -96,7 +74,7 @@ let hash = stdTx.Hash();
 
 *GetData* will return the constructed and signed transaction,you can call lcd's 'tx/broadcast'(cosmos:/txs) to send the transaction.
 
-*Hash* is used to calculate the hash of the transaction,prevent server response from being unavailable due to timeout. You can use hash to confirm if the transaction was successful.For specific usage, please refer to the test case  [iris](./chains/iris/test.js) and [cosmos](./chains/cosmos/test.js)
+*Hash* is used to calculate the hash of the transaction,prevent server response from being unavailable due to timeout. You can use hash to confirm if the transaction was successful.For specific usage, please refer to the [test case](./test)
         
 ### Requirements
 
