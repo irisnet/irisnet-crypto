@@ -1,6 +1,7 @@
-const Crypto = require("./crypto");
-const Builder = require("./builder").Builder;
+const Crypto = require("./src/crypto");
+const Builder = require("./src/builder").Builder;
 const config = require('./config');
+const Codec = require('./src/util/codec');
 
 function getBuilder(chainName,network){
     setNetwork(network);
@@ -29,4 +30,4 @@ function setNetwork(network){
     return config
 }
 
-module.exports = {getCrypto,getBuilder,config};
+module.exports = {getCrypto,getBuilder,config,Codec};
