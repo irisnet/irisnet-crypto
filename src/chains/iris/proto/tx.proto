@@ -48,6 +48,20 @@ message MsgWithdrawDelegatorReward {
     required bytes  delegatorAddr = 1;
     required bytes  validatorAddr = 2;
 }
+message SwapInput {
+    required bytes address = 1;
+    required Coin coin = 2;
+}
+message SwapOutput {
+    required bytes address = 1;
+    required Coin coin = 2;
+}
+message MsgSwapOrder {
+    required SwapInput input = 1;
+    required SwapOutput output = 2;
+    required string deadline = 3;//UTC
+    required bool is_buy_order = 4;
+}
 
 message StdFee {
    repeated Coin amount = 1;

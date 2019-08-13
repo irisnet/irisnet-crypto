@@ -4,6 +4,7 @@ const Old = require('old');
 const Bank = require('./bank');
 const Stake = require('./stake');
 const Distribution = require('./distribution');
+const Coinswap = require('./coinswap');
 const IrisKeypair = require('./keypair');
 const Codec = require("../../util/codec");
 const Config = require('../../../config');
@@ -44,6 +45,9 @@ class IrisBuilder extends Builder {
             }
             case Config.iris.tx.withdrawDelegationReward.type: {
                 msg = Distribution.CreateMsgWithdrawDelegatorReward(req);
+                break;
+            } case Config.iris.tx.swapOrder.type: {
+                msg = Coinswap.createMsgSwapOrder(req);
                 break;
             }
             default: {
