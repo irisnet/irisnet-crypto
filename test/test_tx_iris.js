@@ -4,7 +4,7 @@ const assert = chai.assert;
 
 const common = require('./common');
 //const url ="http://irisnet-lcd.dev.rainbow.one/tx/broadcast";
-const url ="http://localhost:1317/tx/broadcast";
+const url ="http://localhost:1317/tx/broadcast?commit=true";
 const chainName ="iris";
 
 
@@ -12,7 +12,7 @@ describe('iris transaction', function () {
 
     let chain_id = "irishub-test";
     let from = "faa1f3vflz39qr5sjzfkqmkzkr5dy7t646wyexy92y";
-    let gas = 10000;
+    let gas = 20000;
     let account_number = 2;
     let fees = {denom: "iris-atto", amount: 600000000000000000};
     let memo = "1";
@@ -177,7 +177,7 @@ describe('iris transaction', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 53,
+                sequence: 21,
                 fees: fees,
                 gas: gas,
                 memo: memo,
@@ -296,7 +296,7 @@ describe('iris transaction', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 26,
+                sequence: 34,
                 fees: fees,
                 gas: gas,
                 memo: memo,
@@ -306,17 +306,17 @@ describe('iris transaction', function () {
                         address:from,
                         coin:{
                             denom: "iris-atto",
-                            amount: "10000000000000000000"
+                            amount: "10000000000000000000000000000000"
                         },
                     },
                     output : {
                         address:from,
                         coin:{
-                            denom: "iris-atto",
-                            amount: "10000000000000000000"
+                            denom: "btc-min",
+                            amount: "1"
                         },
                     },
-                    deadline:new Date().getTime(),
+                    deadline:1565777966877,
                     isBuyOrder:true
                 }
             };
@@ -328,18 +328,18 @@ describe('iris transaction', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 26,
+                sequence: 29,
                 fees: fees,
                 gas: gas,
                 memo: memo,
                 type: Irisnet.config.iris.tx.addLiquidity.type,
                 msg: {
                     max_token : {
-                        denom: "iris-atto",
-                        amount: "10000000000000000000"
+                        denom: "btc-min",
+                        amount: "10"
                     },
-                    exact_iris_amt: "10000000000000000000",
-                    min_liquidity: "10000000000000000000",
+                    exact_iris_amt: "10000000000000000000000",
+                    min_liquidity: "100000000000000000",
                     deadline:new Date().getTime()
                 }
             };
@@ -351,18 +351,18 @@ describe('iris transaction', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 26,
+                sequence: 30,
                 fees: fees,
                 gas: gas,
                 memo: memo,
                 type: Irisnet.config.iris.tx.removeLiquidity.type,
                 msg: {
                     withdraw_liquidity : {
-                        denom: "iris-atto",
-                        amount: "10000000000000000000"
+                        denom: "u-btc-min",
+                        amount: "10000000000000000000000"
                     },
-                    min_iris_amt: "10000000000000000000",
-                    min_token: "10000000000000000000",
+                    min_iris_amt: "10000000000000000",
+                    min_token: "1",
                     deadline:new Date().getTime()
                 }
             };
@@ -372,7 +372,7 @@ describe('iris transaction', function () {
 
     //冷钱包调用
     function extracted(tx, chain = 'iris') {
-        let builder = Irisnet.getBuilder(chain);
+        let builder = Irisnet.getBuilder(chain,'testnet');
         //①先用联网的钱包构造一笔交易
         let stdTx = builder.buildTx(tx);
         //②把步骤①的结构序列化为字符串，装入二维码
@@ -385,7 +385,6 @@ describe('iris transaction', function () {
         //console.log("======待提交交易======");
         //④步骤③的结果调用GetData，得到交易字符串，回传给联网的钱包，并发送该内容给irishub-server
         console.log(JSON.stringify(stdTx.GetData()));
-        console.log(JSON.stringify(stdTx.GetDisplayContent()));
 
         //以下步骤为异常处理：在请求irishub-server超时的时候，服务器可能没有任何返回结果，这笔交易状态为止，所以需要客户端计算出
         //本次交易的hash，校准该笔交易的状态。调用步骤③结构的Hash，可以得到交易hash以及本次交易内容的base64编码（以后考虑使用该编码内容替换
@@ -393,12 +392,9 @@ describe('iris transaction', function () {
 
         let resp = common.sendBySync("POST",url,stdTx.GetData());
         let result = stdTx.Hash();
-        console.log("data:", result.data);
-        console.log("hash", result.hash);
-
         console.log(`hash=${result.hash}`)
         assert.notExists(resp.code,`tx commit failed,${resp.raw_log}`);
-        //console.log("displayContent", JSON.stringify(stdTx.GetDisplayContent()));
+        assert.equal(result.hash,resp.hash)
 
     }
 

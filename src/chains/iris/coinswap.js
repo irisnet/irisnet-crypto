@@ -22,7 +22,7 @@ MsgSwapOrder.prototype.GetSignBytes = function () {
         is_buy_order: this.isBuyOrder
     };
     let sortMsg = Utils.sortObjectKeys(msg);
-    return Amino.MarshalJSON(this.type, sortMsg)
+    return Amino.MarshalJSON(this.type, sortMsg);
 };
 MsgSwapOrder.prototype.ValidateBasic = function () {
     if (Utils.isEmpty(this.input)) {
@@ -39,7 +39,22 @@ MsgSwapOrder.prototype.ValidateBasic = function () {
     }
 };
 MsgSwapOrder.prototype.GetMsg = function () {
-    return this
+    let sender = BECH32.fromWords(this.input.address);
+    let receiver = BECH32.fromWords(this.output.address);
+    let input = {
+        address: sender,
+        coin: this.input.coin
+    };
+    let output = {
+        address: receiver,
+        coin: this.output.coin
+    };
+    return {
+        input: input,
+        output: output,
+        deadline: this.deadline,
+        isBuyOrder: this.isBuyOrder
+    }
 };
 MsgSwapOrder.prototype.GetDisplayContent = function () {
     let sender = BECH32.encode(Config.iris.bech32.accAddr, this.input.address);
@@ -108,7 +123,14 @@ MsgAddLiquidity.prototype.ValidateBasic = function () {
     }
 };
 MsgAddLiquidity.prototype.GetMsg = function () {
-    return this
+    let sender = BECH32.fromWords(this.sender);
+    return {
+        maxToken: this.maxToken,
+        exactIrisAmt: this.exactIrisAmt,
+        minLiquidity: this.minLiquidity,
+        deadline: this.deadline,
+        sender: sender
+    }
 };
 MsgAddLiquidity.prototype.GetDisplayContent = function () {
     let sender = BECH32.encode(Config.iris.bech32.accAddr, this.sender);
@@ -164,7 +186,14 @@ MsgRemoveLiquidity.prototype.ValidateBasic = function () {
     }
 };
 MsgRemoveLiquidity.prototype.GetMsg = function () {
-    return this
+    let sender = BECH32.fromWords(this.sender);
+    return {
+        minToken: this.minToken,
+        withdrawLiquidity: this.withdrawLiquidity,
+        minIrisAmt: this.minIrisAmt,
+        deadline: this.deadline,
+        sender: sender
+    }
 };
 MsgRemoveLiquidity.prototype.GetDisplayContent = function () {
     let sender = BECH32.encode(Config.iris.bech32.accAddr, this.sender);
@@ -188,7 +217,7 @@ MsgRemoveLiquidity.prototype.toJSON = function () {
     }
 };
 
-module.exports = class Stake {
+module.exports = class CoinSwap {
     static createMsgAddLiquidity(req) {
         let maxToken = {
             denom: req.msg.max_token.denom,
@@ -200,7 +229,7 @@ module.exports = class Stake {
             maxToken: maxToken,
             exactIrisAmt: exactIrisAmt,
             minLiquidity: minLiquidity,
-            deadline: req.msg.deadline,
+            deadline: Utils.toString(req.msg.deadline),
             sender: BECH32.decode(req.from).words
         })
     }
@@ -216,7 +245,7 @@ module.exports = class Stake {
             minToken: minToken,
             withdrawLiquidity: withdrawLiquidity,
             minIrisAmt: minIrisAmt,
-            deadline: req.msg.deadline,
+            deadline: Utils.toString(req.msg.deadline),
             sender: BECH32.decode(req.from).words
         })
     }
@@ -242,7 +271,7 @@ module.exports = class Stake {
         return new MsgSwapOrder({
             input: input,
             output: output,
-            deadline: req.msg.deadline,
+            deadline: Utils.toString(req.msg.deadline),
             isBuyOrder: req.msg.isBuyOrder,
         });
     }

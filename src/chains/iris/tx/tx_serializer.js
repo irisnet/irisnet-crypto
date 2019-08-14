@@ -56,6 +56,7 @@ class TxSerializer {
 
         //stdTx amion编码前缀[auth/StdTx]
         let txPreBuf = Buffer.from(amino.GetRegisterInfo(config.iris.tx.stdTx.prefix).prefix);
+
         let msgPreBuf = Buffer.from(info.prefix);
 
         let buf = Buffer.from("");
@@ -79,7 +80,6 @@ class TxSerializer {
 
         let uvarintBuf = Buffer.from(codec.Uvarint.encode(buf.length));
         let bz = Buffer.concat([uvarintBuf, buf]);
-
 
         const crypto = require('crypto');
         const hash = crypto.createHash('sha256');
