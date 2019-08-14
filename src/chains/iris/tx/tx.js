@@ -2912,6 +2912,616 @@ $root.irisnet = (function() {
             return MsgSwapOrder;
         })();
 
+        tx.MsgAddLiquidity = (function() {
+
+            /**
+             * Properties of a MsgAddLiquidity.
+             * @memberof irisnet.tx
+             * @interface IMsgAddLiquidity
+             * @property {irisnet.tx.ICoin} maxToken MsgAddLiquidity maxToken
+             * @property {string} exactIrisAmt MsgAddLiquidity exactIrisAmt
+             * @property {string} minLiquidity MsgAddLiquidity minLiquidity
+             * @property {number|Long} deadline MsgAddLiquidity deadline
+             * @property {Uint8Array} sender MsgAddLiquidity sender
+             */
+
+            /**
+             * Constructs a new MsgAddLiquidity.
+             * @memberof irisnet.tx
+             * @classdesc Represents a MsgAddLiquidity.
+             * @implements IMsgAddLiquidity
+             * @constructor
+             * @param {irisnet.tx.IMsgAddLiquidity=} [properties] Properties to set
+             */
+            function MsgAddLiquidity(properties) {
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+
+            /**
+             * MsgAddLiquidity maxToken.
+             * @member {irisnet.tx.ICoin} maxToken
+             * @memberof irisnet.tx.MsgAddLiquidity
+             * @instance
+             */
+            MsgAddLiquidity.prototype.maxToken = null;
+
+            /**
+             * MsgAddLiquidity exactIrisAmt.
+             * @member {string} exactIrisAmt
+             * @memberof irisnet.tx.MsgAddLiquidity
+             * @instance
+             */
+            MsgAddLiquidity.prototype.exactIrisAmt = "";
+
+            /**
+             * MsgAddLiquidity minLiquidity.
+             * @member {string} minLiquidity
+             * @memberof irisnet.tx.MsgAddLiquidity
+             * @instance
+             */
+            MsgAddLiquidity.prototype.minLiquidity = "";
+
+            /**
+             * MsgAddLiquidity deadline.
+             * @member {number|Long} deadline
+             * @memberof irisnet.tx.MsgAddLiquidity
+             * @instance
+             */
+            MsgAddLiquidity.prototype.deadline = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * MsgAddLiquidity sender.
+             * @member {Uint8Array} sender
+             * @memberof irisnet.tx.MsgAddLiquidity
+             * @instance
+             */
+            MsgAddLiquidity.prototype.sender = $util.newBuffer([]);
+
+            /**
+             * Creates a new MsgAddLiquidity instance using the specified properties.
+             * @function create
+             * @memberof irisnet.tx.MsgAddLiquidity
+             * @static
+             * @param {irisnet.tx.IMsgAddLiquidity=} [properties] Properties to set
+             * @returns {irisnet.tx.MsgAddLiquidity} MsgAddLiquidity instance
+             */
+            MsgAddLiquidity.create = function create(properties) {
+                return new MsgAddLiquidity(properties);
+            };
+
+            /**
+             * Encodes the specified MsgAddLiquidity message. Does not implicitly {@link irisnet.tx.MsgAddLiquidity.verify|verify} messages.
+             * @function encode
+             * @memberof irisnet.tx.MsgAddLiquidity
+             * @static
+             * @param {irisnet.tx.IMsgAddLiquidity} message MsgAddLiquidity message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MsgAddLiquidity.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                $root.irisnet.tx.Coin.encode(message.maxToken, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                writer.uint32(/* id 2, wireType 2 =*/18).string(message.exactIrisAmt);
+                writer.uint32(/* id 3, wireType 2 =*/26).string(message.minLiquidity);
+                writer.uint32(/* id 4, wireType 0 =*/32).int64(message.deadline);
+                writer.uint32(/* id 5, wireType 2 =*/42).bytes(message.sender);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified MsgAddLiquidity message, length delimited. Does not implicitly {@link irisnet.tx.MsgAddLiquidity.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof irisnet.tx.MsgAddLiquidity
+             * @static
+             * @param {irisnet.tx.IMsgAddLiquidity} message MsgAddLiquidity message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MsgAddLiquidity.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+
+            /**
+             * Decodes a MsgAddLiquidity message from the specified reader or buffer.
+             * @function decode
+             * @memberof irisnet.tx.MsgAddLiquidity
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {irisnet.tx.MsgAddLiquidity} MsgAddLiquidity
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MsgAddLiquidity.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.irisnet.tx.MsgAddLiquidity();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
+                        case 1:
+                            message.maxToken = $root.irisnet.tx.Coin.decode(reader, reader.uint32());
+                            break;
+                        case 2:
+                            message.exactIrisAmt = reader.string();
+                            break;
+                        case 3:
+                            message.minLiquidity = reader.string();
+                            break;
+                        case 4:
+                            message.deadline = reader.int64();
+                            break;
+                        case 5:
+                            message.sender = reader.bytes();
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                    }
+                }
+                if (!message.hasOwnProperty("maxToken"))
+                    throw $util.ProtocolError("missing required 'maxToken'", { instance: message });
+                if (!message.hasOwnProperty("exactIrisAmt"))
+                    throw $util.ProtocolError("missing required 'exactIrisAmt'", { instance: message });
+                if (!message.hasOwnProperty("minLiquidity"))
+                    throw $util.ProtocolError("missing required 'minLiquidity'", { instance: message });
+                if (!message.hasOwnProperty("deadline"))
+                    throw $util.ProtocolError("missing required 'deadline'", { instance: message });
+                if (!message.hasOwnProperty("sender"))
+                    throw $util.ProtocolError("missing required 'sender'", { instance: message });
+                return message;
+            };
+
+            /**
+             * Decodes a MsgAddLiquidity message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof irisnet.tx.MsgAddLiquidity
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {irisnet.tx.MsgAddLiquidity} MsgAddLiquidity
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MsgAddLiquidity.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a MsgAddLiquidity message.
+             * @function verify
+             * @memberof irisnet.tx.MsgAddLiquidity
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            MsgAddLiquidity.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                {
+                    var error = $root.irisnet.tx.Coin.verify(message.maxToken);
+                    if (error)
+                        return "maxToken." + error;
+                }
+                if (!$util.isString(message.exactIrisAmt))
+                    return "exactIrisAmt: string expected";
+                if (!$util.isString(message.minLiquidity))
+                    return "minLiquidity: string expected";
+                if (!$util.isInteger(message.deadline) && !(message.deadline && $util.isInteger(message.deadline.low) && $util.isInteger(message.deadline.high)))
+                    return "deadline: integer|Long expected";
+                if (!(message.sender && typeof message.sender.length === "number" || $util.isString(message.sender)))
+                    return "sender: buffer expected";
+                return null;
+            };
+
+            /**
+             * Creates a MsgAddLiquidity message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof irisnet.tx.MsgAddLiquidity
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {irisnet.tx.MsgAddLiquidity} MsgAddLiquidity
+             */
+            MsgAddLiquidity.fromObject = function fromObject(object) {
+                if (object instanceof $root.irisnet.tx.MsgAddLiquidity)
+                    return object;
+                var message = new $root.irisnet.tx.MsgAddLiquidity();
+                if (object.maxToken != null) {
+                    if (typeof object.maxToken !== "object")
+                        throw TypeError(".irisnet.tx.MsgAddLiquidity.maxToken: object expected");
+                    message.maxToken = $root.irisnet.tx.Coin.fromObject(object.maxToken);
+                }
+                if (object.exactIrisAmt != null)
+                    message.exactIrisAmt = String(object.exactIrisAmt);
+                if (object.minLiquidity != null)
+                    message.minLiquidity = String(object.minLiquidity);
+                if (object.deadline != null)
+                    if ($util.Long)
+                        (message.deadline = $util.Long.fromValue(object.deadline)).unsigned = false;
+                    else if (typeof object.deadline === "string")
+                        message.deadline = parseInt(object.deadline, 10);
+                    else if (typeof object.deadline === "number")
+                        message.deadline = object.deadline;
+                    else if (typeof object.deadline === "object")
+                        message.deadline = new $util.LongBits(object.deadline.low >>> 0, object.deadline.high >>> 0).toNumber();
+                if (object.sender != null)
+                    if (typeof object.sender === "string")
+                        $util.base64.decode(object.sender, message.sender = $util.newBuffer($util.base64.length(object.sender)), 0);
+                    else if (object.sender.length)
+                        message.sender = object.sender;
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a MsgAddLiquidity message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof irisnet.tx.MsgAddLiquidity
+             * @static
+             * @param {irisnet.tx.MsgAddLiquidity} message MsgAddLiquidity
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            MsgAddLiquidity.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults) {
+                    object.maxToken = null;
+                    object.exactIrisAmt = "";
+                    object.minLiquidity = "";
+                    if ($util.Long) {
+                        var long = new $util.Long(0, 0, false);
+                        object.deadline = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                    } else
+                        object.deadline = options.longs === String ? "0" : 0;
+                    if (options.bytes === String)
+                        object.sender = "";
+                    else {
+                        object.sender = [];
+                        if (options.bytes !== Array)
+                            object.sender = $util.newBuffer(object.sender);
+                    }
+                }
+                if (message.maxToken != null && message.hasOwnProperty("maxToken"))
+                    object.maxToken = $root.irisnet.tx.Coin.toObject(message.maxToken, options);
+                if (message.exactIrisAmt != null && message.hasOwnProperty("exactIrisAmt"))
+                    object.exactIrisAmt = message.exactIrisAmt;
+                if (message.minLiquidity != null && message.hasOwnProperty("minLiquidity"))
+                    object.minLiquidity = message.minLiquidity;
+                if (message.deadline != null && message.hasOwnProperty("deadline"))
+                    if (typeof message.deadline === "number")
+                        object.deadline = options.longs === String ? String(message.deadline) : message.deadline;
+                    else
+                        object.deadline = options.longs === String ? $util.Long.prototype.toString.call(message.deadline) : options.longs === Number ? new $util.LongBits(message.deadline.low >>> 0, message.deadline.high >>> 0).toNumber() : message.deadline;
+                if (message.sender != null && message.hasOwnProperty("sender"))
+                    object.sender = options.bytes === String ? $util.base64.encode(message.sender, 0, message.sender.length) : options.bytes === Array ? Array.prototype.slice.call(message.sender) : message.sender;
+                return object;
+            };
+
+            /**
+             * Converts this MsgAddLiquidity to JSON.
+             * @function toJSON
+             * @memberof irisnet.tx.MsgAddLiquidity
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            MsgAddLiquidity.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            return MsgAddLiquidity;
+        })();
+
+        tx.MsgRemoveLiquidity = (function() {
+
+            /**
+             * Properties of a MsgRemoveLiquidity.
+             * @memberof irisnet.tx
+             * @interface IMsgRemoveLiquidity
+             * @property {string} minToken MsgRemoveLiquidity minToken
+             * @property {irisnet.tx.ICoin} withdrawLiquidity MsgRemoveLiquidity withdrawLiquidity
+             * @property {string} minIrisAmt MsgRemoveLiquidity minIrisAmt
+             * @property {number|Long} deadline MsgRemoveLiquidity deadline
+             * @property {Uint8Array} sender MsgRemoveLiquidity sender
+             */
+
+            /**
+             * Constructs a new MsgRemoveLiquidity.
+             * @memberof irisnet.tx
+             * @classdesc Represents a MsgRemoveLiquidity.
+             * @implements IMsgRemoveLiquidity
+             * @constructor
+             * @param {irisnet.tx.IMsgRemoveLiquidity=} [properties] Properties to set
+             */
+            function MsgRemoveLiquidity(properties) {
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+
+            /**
+             * MsgRemoveLiquidity minToken.
+             * @member {string} minToken
+             * @memberof irisnet.tx.MsgRemoveLiquidity
+             * @instance
+             */
+            MsgRemoveLiquidity.prototype.minToken = "";
+
+            /**
+             * MsgRemoveLiquidity withdrawLiquidity.
+             * @member {irisnet.tx.ICoin} withdrawLiquidity
+             * @memberof irisnet.tx.MsgRemoveLiquidity
+             * @instance
+             */
+            MsgRemoveLiquidity.prototype.withdrawLiquidity = null;
+
+            /**
+             * MsgRemoveLiquidity minIrisAmt.
+             * @member {string} minIrisAmt
+             * @memberof irisnet.tx.MsgRemoveLiquidity
+             * @instance
+             */
+            MsgRemoveLiquidity.prototype.minIrisAmt = "";
+
+            /**
+             * MsgRemoveLiquidity deadline.
+             * @member {number|Long} deadline
+             * @memberof irisnet.tx.MsgRemoveLiquidity
+             * @instance
+             */
+            MsgRemoveLiquidity.prototype.deadline = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * MsgRemoveLiquidity sender.
+             * @member {Uint8Array} sender
+             * @memberof irisnet.tx.MsgRemoveLiquidity
+             * @instance
+             */
+            MsgRemoveLiquidity.prototype.sender = $util.newBuffer([]);
+
+            /**
+             * Creates a new MsgRemoveLiquidity instance using the specified properties.
+             * @function create
+             * @memberof irisnet.tx.MsgRemoveLiquidity
+             * @static
+             * @param {irisnet.tx.IMsgRemoveLiquidity=} [properties] Properties to set
+             * @returns {irisnet.tx.MsgRemoveLiquidity} MsgRemoveLiquidity instance
+             */
+            MsgRemoveLiquidity.create = function create(properties) {
+                return new MsgRemoveLiquidity(properties);
+            };
+
+            /**
+             * Encodes the specified MsgRemoveLiquidity message. Does not implicitly {@link irisnet.tx.MsgRemoveLiquidity.verify|verify} messages.
+             * @function encode
+             * @memberof irisnet.tx.MsgRemoveLiquidity
+             * @static
+             * @param {irisnet.tx.IMsgRemoveLiquidity} message MsgRemoveLiquidity message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MsgRemoveLiquidity.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                writer.uint32(/* id 1, wireType 2 =*/10).string(message.minToken);
+                $root.irisnet.tx.Coin.encode(message.withdrawLiquidity, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+                writer.uint32(/* id 3, wireType 2 =*/26).string(message.minIrisAmt);
+                writer.uint32(/* id 4, wireType 0 =*/32).int64(message.deadline);
+                writer.uint32(/* id 5, wireType 2 =*/42).bytes(message.sender);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified MsgRemoveLiquidity message, length delimited. Does not implicitly {@link irisnet.tx.MsgRemoveLiquidity.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof irisnet.tx.MsgRemoveLiquidity
+             * @static
+             * @param {irisnet.tx.IMsgRemoveLiquidity} message MsgRemoveLiquidity message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MsgRemoveLiquidity.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+
+            /**
+             * Decodes a MsgRemoveLiquidity message from the specified reader or buffer.
+             * @function decode
+             * @memberof irisnet.tx.MsgRemoveLiquidity
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {irisnet.tx.MsgRemoveLiquidity} MsgRemoveLiquidity
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MsgRemoveLiquidity.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.irisnet.tx.MsgRemoveLiquidity();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
+                        case 1:
+                            message.minToken = reader.string();
+                            break;
+                        case 2:
+                            message.withdrawLiquidity = $root.irisnet.tx.Coin.decode(reader, reader.uint32());
+                            break;
+                        case 3:
+                            message.minIrisAmt = reader.string();
+                            break;
+                        case 4:
+                            message.deadline = reader.int64();
+                            break;
+                        case 5:
+                            message.sender = reader.bytes();
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                    }
+                }
+                if (!message.hasOwnProperty("minToken"))
+                    throw $util.ProtocolError("missing required 'minToken'", { instance: message });
+                if (!message.hasOwnProperty("withdrawLiquidity"))
+                    throw $util.ProtocolError("missing required 'withdrawLiquidity'", { instance: message });
+                if (!message.hasOwnProperty("minIrisAmt"))
+                    throw $util.ProtocolError("missing required 'minIrisAmt'", { instance: message });
+                if (!message.hasOwnProperty("deadline"))
+                    throw $util.ProtocolError("missing required 'deadline'", { instance: message });
+                if (!message.hasOwnProperty("sender"))
+                    throw $util.ProtocolError("missing required 'sender'", { instance: message });
+                return message;
+            };
+
+            /**
+             * Decodes a MsgRemoveLiquidity message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof irisnet.tx.MsgRemoveLiquidity
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {irisnet.tx.MsgRemoveLiquidity} MsgRemoveLiquidity
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MsgRemoveLiquidity.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a MsgRemoveLiquidity message.
+             * @function verify
+             * @memberof irisnet.tx.MsgRemoveLiquidity
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            MsgRemoveLiquidity.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (!$util.isString(message.minToken))
+                    return "minToken: string expected";
+                {
+                    var error = $root.irisnet.tx.Coin.verify(message.withdrawLiquidity);
+                    if (error)
+                        return "withdrawLiquidity." + error;
+                }
+                if (!$util.isString(message.minIrisAmt))
+                    return "minIrisAmt: string expected";
+                if (!$util.isInteger(message.deadline) && !(message.deadline && $util.isInteger(message.deadline.low) && $util.isInteger(message.deadline.high)))
+                    return "deadline: integer|Long expected";
+                if (!(message.sender && typeof message.sender.length === "number" || $util.isString(message.sender)))
+                    return "sender: buffer expected";
+                return null;
+            };
+
+            /**
+             * Creates a MsgRemoveLiquidity message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof irisnet.tx.MsgRemoveLiquidity
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {irisnet.tx.MsgRemoveLiquidity} MsgRemoveLiquidity
+             */
+            MsgRemoveLiquidity.fromObject = function fromObject(object) {
+                if (object instanceof $root.irisnet.tx.MsgRemoveLiquidity)
+                    return object;
+                var message = new $root.irisnet.tx.MsgRemoveLiquidity();
+                if (object.minToken != null)
+                    message.minToken = String(object.minToken);
+                if (object.withdrawLiquidity != null) {
+                    if (typeof object.withdrawLiquidity !== "object")
+                        throw TypeError(".irisnet.tx.MsgRemoveLiquidity.withdrawLiquidity: object expected");
+                    message.withdrawLiquidity = $root.irisnet.tx.Coin.fromObject(object.withdrawLiquidity);
+                }
+                if (object.minIrisAmt != null)
+                    message.minIrisAmt = String(object.minIrisAmt);
+                if (object.deadline != null)
+                    if ($util.Long)
+                        (message.deadline = $util.Long.fromValue(object.deadline)).unsigned = false;
+                    else if (typeof object.deadline === "string")
+                        message.deadline = parseInt(object.deadline, 10);
+                    else if (typeof object.deadline === "number")
+                        message.deadline = object.deadline;
+                    else if (typeof object.deadline === "object")
+                        message.deadline = new $util.LongBits(object.deadline.low >>> 0, object.deadline.high >>> 0).toNumber();
+                if (object.sender != null)
+                    if (typeof object.sender === "string")
+                        $util.base64.decode(object.sender, message.sender = $util.newBuffer($util.base64.length(object.sender)), 0);
+                    else if (object.sender.length)
+                        message.sender = object.sender;
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a MsgRemoveLiquidity message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof irisnet.tx.MsgRemoveLiquidity
+             * @static
+             * @param {irisnet.tx.MsgRemoveLiquidity} message MsgRemoveLiquidity
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            MsgRemoveLiquidity.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults) {
+                    object.minToken = "";
+                    object.withdrawLiquidity = null;
+                    object.minIrisAmt = "";
+                    if ($util.Long) {
+                        var long = new $util.Long(0, 0, false);
+                        object.deadline = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                    } else
+                        object.deadline = options.longs === String ? "0" : 0;
+                    if (options.bytes === String)
+                        object.sender = "";
+                    else {
+                        object.sender = [];
+                        if (options.bytes !== Array)
+                            object.sender = $util.newBuffer(object.sender);
+                    }
+                }
+                if (message.minToken != null && message.hasOwnProperty("minToken"))
+                    object.minToken = message.minToken;
+                if (message.withdrawLiquidity != null && message.hasOwnProperty("withdrawLiquidity"))
+                    object.withdrawLiquidity = $root.irisnet.tx.Coin.toObject(message.withdrawLiquidity, options);
+                if (message.minIrisAmt != null && message.hasOwnProperty("minIrisAmt"))
+                    object.minIrisAmt = message.minIrisAmt;
+                if (message.deadline != null && message.hasOwnProperty("deadline"))
+                    if (typeof message.deadline === "number")
+                        object.deadline = options.longs === String ? String(message.deadline) : message.deadline;
+                    else
+                        object.deadline = options.longs === String ? $util.Long.prototype.toString.call(message.deadline) : options.longs === Number ? new $util.LongBits(message.deadline.low >>> 0, message.deadline.high >>> 0).toNumber() : message.deadline;
+                if (message.sender != null && message.hasOwnProperty("sender"))
+                    object.sender = options.bytes === String ? $util.base64.encode(message.sender, 0, message.sender.length) : options.bytes === Array ? Array.prototype.slice.call(message.sender) : message.sender;
+                return object;
+            };
+
+            /**
+             * Converts this MsgRemoveLiquidity to JSON.
+             * @function toJSON
+             * @memberof irisnet.tx.MsgRemoveLiquidity
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            MsgRemoveLiquidity.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            return MsgRemoveLiquidity;
+        })();
+
         tx.StdFee = (function() {
 
             /**

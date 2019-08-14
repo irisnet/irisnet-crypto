@@ -25,6 +25,14 @@
         "type": "withdraw_delegation_reward",
         "prefix": "irishub/distr/MsgWithdrawDelegationReward"
       },
+      "addLiquidity": {
+        "type": "add_liquidity",
+        "prefix": "irishub/coinswap/MsgAddLiquidity"
+      },
+      "removeLiquidity": {
+        "type": "remove_liquidity",
+        "prefix": "irishub/coinswap/MsgRemoveLiquidity"
+      },
       "swapOrder": {
         "type": "swap_order",
         "prefix": "irishub/coinswap/MsgSwapOrder"

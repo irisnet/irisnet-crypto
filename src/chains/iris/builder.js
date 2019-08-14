@@ -46,6 +46,12 @@ class IrisBuilder extends Builder {
             case Config.iris.tx.withdrawDelegationReward.type: {
                 msg = Distribution.CreateMsgWithdrawDelegatorReward(req);
                 break;
+            } case Config.iris.tx.addLiquidity.type: {
+                msg = Coinswap.createMsgAddLiquidity(req);
+                break;
+            } case Config.iris.tx.removeLiquidity.type: {
+                msg = Coinswap.createMsgRemoveLiquidity(req);
+                break;
             } case Config.iris.tx.swapOrder.type: {
                 msg = Coinswap.createMsgSwapOrder(req);
                 break;

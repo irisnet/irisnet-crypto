@@ -99,4 +99,6 @@ amino.RegisterConcrete(R_Iris.irisnet.tx.MsgWithdrawDelegatorRewardsAll, Config.
 amino.RegisterConcrete(R_Iris.irisnet.tx.MsgWithdrawDelegatorReward, Config.iris.tx.withdrawDelegationReward.prefix);
 amino.RegisterConcrete(R_Iris.irisnet.tx.StdTx, Config.iris.tx.stdTx.prefix);
 amino.RegisterConcrete(R_Iris.irisnet.tx.MsgSwapOrder, Config.iris.tx.swapOrder.prefix);
+amino.RegisterConcrete(R_Iris.irisnet.tx.MsgAddLiquidity, Config.iris.tx.addLiquidity.prefix);
+amino.RegisterConcrete(R_Iris.irisnet.tx.MsgRemoveLiquidity, Config.iris.tx.removeLiquidity.prefix);
 module.exports = amino;

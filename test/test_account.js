@@ -38,7 +38,7 @@ describe('account', function () {
 
         it('should recover', function () {
             let crypto = Irisnet.getCrypto(chainName, 'testnet');
-            let seed = "tube lonely pause spring gym veteran know want grid tired taxi such same mesh charge orient bracket ozone concert once good quick dry boss";
+            let seed = "error nerve credit mail coyote melt property afford design wool dune sibling loan tunnel acid joke father bid home pupil giant share age warrior";
             let keyPair2 = crypto.recover(seed, Irisnet.config.language.en);
             console.log(JSON.stringify(keyPair2))
         });

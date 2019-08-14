@@ -70,6 +70,14 @@ message MsgAddLiquidity {
     required bytes sender = 5;
 }
 
+message MsgRemoveLiquidity {
+    required string minToken = 1;
+    required Coin withdrawLiquidity = 2;
+    required string minIrisAmt = 3;
+    required int64 deadline = 4;
+    required bytes sender = 5;
+}
+
 message StdFee {
    repeated Coin amount = 1;
    required int64 gas = 2;
