@@ -289,38 +289,6 @@ describe('iris transaction', function () {
 
             extracted(tx);
         });
-
-        it('test MsgSwapOrder', function () {
-            let tx = {
-                chain_id: chain_id,
-                from: from,
-                account_number: account_number,
-                sequence: 26,
-                fees: fees,
-                gas: gas,
-                memo: memo,
-                type: Irisnet.config.iris.tx.swapOrder.type,
-                msg: {
-                    input : {
-                        address:from,
-                        coin:{
-                            denom: "iris-atto",
-                            amount: "10000000000000000000"
-                        },
-                    },
-                    output : {
-                        address:from,
-                        coin:{
-                            denom: "iris-atto",
-                            amount: "10000000000000000000"
-                        },
-                    },
-                    deadline:new Date(),
-                    isBuyOrder:true
-                }
-            };
-            extracted(tx);
-        });
     });
 
     //冷钱包调用

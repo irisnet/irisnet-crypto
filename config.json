@@ -25,10 +25,6 @@
         "type": "withdraw_delegation_reward",
         "prefix": "irishub/distr/MsgWithdrawDelegationReward"
       },
-      "swapOrder": {
-        "type": "swap_order",
-        "prefix": "irishub/coinswap/MsgSwapOrder"
-      },
       "stdTx": {
         "type": "",
         "prefix": "irishub/bank/StdTx"

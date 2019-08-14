@@ -94,15 +94,4 @@ describe('account', function () {
             assert.equal(srcAccount.publicKey, dstaccount.publicKey);
         });
     });
-    it('should toUTCString', function () {
-        const utils = require("../src/util/utils");
-        let i = 1;
-        while (i <= 1000){
-            let date = new Date();
-
-            //assert.equal(date.toISOString(),utils.toUTCString(date));
-            console.log(date.toISOString() + "=====" + utils.toUTCString(date) );
-            i ++
-        }
-    });
 });

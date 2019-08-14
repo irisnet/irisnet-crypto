@@ -8,16 +8,16 @@ module.exports = class Utils {
                 if (Array.isArray(obj[k])) {
                     let p = [];
                     obj[k].forEach(function (item) {
-                        if (item != null && typeof (item) === "object") {
+                        if (item != null && typeof(item) === "object") {
                             p.push(sort(item));
                         } else {
                             p.push(item);
                         }
                     });
                     tmp[k] = p;
-                } else if (obj[k] != null && typeof (obj[k]) === "object") {
+                } else if (obj[k] != null && typeof(obj[k]) === "object") {
                     tmp[k] = sort(obj[k]);
-                } else if (obj[k] != null && typeof (obj[k]) === "function") {
+                } else if (obj[k] != null && typeof(obj[k]) === "function") {
                     tmp[k] = evil(obj[k].toString())
                 } else {
                     tmp[k] = new String(obj[k]).toString();
@@ -62,9 +62,9 @@ module.exports = class Utils {
         }
     }
 
-    static hasRepeatElement(target, splitChar) {
-        if (!(target instanceof Array)) {
-            if (this.isEmpty(splitChar)) {
+    static hasRepeatElement(target,splitChar){
+        if (!(target instanceof Array)){
+            if (this.isEmpty(splitChar)){
                 throw new Error("split char is empty");
             }
             target = target.split(splitChar)
@@ -72,23 +72,6 @@ module.exports = class Utils {
         let srcLen = target.length;
         let eSet = new Set(target);
         return !(srcLen == eSet.size)
-    }
-
-    static marshalUTCString(date) {
-        let utcDateStr = date.toISOString();
-        let nanoIndex = utcDateStr.lastIndexOf(".");
-        let prefix = utcDateStr.substr(0, nanoIndex);
-        let nano = utcDateStr.substr(nanoIndex + 1, utcDateStr.length - 1);
-        let index = nano.length - 2;
-        let offset = 0;
-        while (index >= 0 && nano[index] === "0") {
-            index--
-        }
-        if (index < 0) {
-            return `${prefix}Z`
-        }
-        let suffix = nano.substr(0, index + 1);
-        return `${prefix}.${suffix}Z`
     }
 };
 

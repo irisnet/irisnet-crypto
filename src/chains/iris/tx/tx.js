@@ -128,15 +128,15 @@ $root.irisnet = (function() {
                 while (reader.pos < end) {
                     var tag = reader.uint32();
                     switch (tag >>> 3) {
-                        case 1:
-                            message.denom = reader.string();
-                            break;
-                        case 2:
-                            message.amount = reader.string();
-                            break;
-                        default:
-                            reader.skipType(tag & 7);
-                            break;
+                    case 1:
+                        message.denom = reader.string();
+                        break;
+                    case 2:
+                        message.amount = reader.string();
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
                     }
                 }
                 if (!message.hasOwnProperty("denom"))
@@ -341,17 +341,17 @@ $root.irisnet = (function() {
                 while (reader.pos < end) {
                     var tag = reader.uint32();
                     switch (tag >>> 3) {
-                        case 1:
-                            message.address = reader.bytes();
-                            break;
-                        case 2:
-                            if (!(message.coins && message.coins.length))
-                                message.coins = [];
-                            message.coins.push($root.irisnet.tx.Coin.decode(reader, reader.uint32()));
-                            break;
-                        default:
-                            reader.skipType(tag & 7);
-                            break;
+                    case 1:
+                        message.address = reader.bytes();
+                        break;
+                    case 2:
+                        if (!(message.coins && message.coins.length))
+                            message.coins = [];
+                        message.coins.push($root.irisnet.tx.Coin.decode(reader, reader.uint32()));
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
                     }
                 }
                 if (!message.hasOwnProperty("address"))
@@ -581,17 +581,17 @@ $root.irisnet = (function() {
                 while (reader.pos < end) {
                     var tag = reader.uint32();
                     switch (tag >>> 3) {
-                        case 1:
-                            message.address = reader.bytes();
-                            break;
-                        case 2:
-                            if (!(message.coins && message.coins.length))
-                                message.coins = [];
-                            message.coins.push($root.irisnet.tx.Coin.decode(reader, reader.uint32()));
-                            break;
-                        default:
-                            reader.skipType(tag & 7);
-                            break;
+                    case 1:
+                        message.address = reader.bytes();
+                        break;
+                    case 2:
+                        if (!(message.coins && message.coins.length))
+                            message.coins = [];
+                        message.coins.push($root.irisnet.tx.Coin.decode(reader, reader.uint32()));
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
                     }
                 }
                 if (!message.hasOwnProperty("address"))
@@ -824,19 +824,19 @@ $root.irisnet = (function() {
                 while (reader.pos < end) {
                     var tag = reader.uint32();
                     switch (tag >>> 3) {
-                        case 1:
-                            if (!(message.input && message.input.length))
-                                message.input = [];
-                            message.input.push($root.irisnet.tx.Input.decode(reader, reader.uint32()));
-                            break;
-                        case 2:
-                            if (!(message.output && message.output.length))
-                                message.output = [];
-                            message.output.push($root.irisnet.tx.Output.decode(reader, reader.uint32()));
-                            break;
-                        default:
-                            reader.skipType(tag & 7);
-                            break;
+                    case 1:
+                        if (!(message.input && message.input.length))
+                            message.input = [];
+                        message.input.push($root.irisnet.tx.Input.decode(reader, reader.uint32()));
+                        break;
+                    case 2:
+                        if (!(message.output && message.output.length))
+                            message.output = [];
+                        message.output.push($root.irisnet.tx.Output.decode(reader, reader.uint32()));
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
                     }
                 }
                 return message;
@@ -1080,18 +1080,18 @@ $root.irisnet = (function() {
                 while (reader.pos < end) {
                     var tag = reader.uint32();
                     switch (tag >>> 3) {
-                        case 1:
-                            message.delegatorAddr = reader.bytes();
-                            break;
-                        case 2:
-                            message.validatorAddr = reader.bytes();
-                            break;
-                        case 3:
-                            message.delegation = $root.irisnet.tx.Coin.decode(reader, reader.uint32());
-                            break;
-                        default:
-                            reader.skipType(tag & 7);
-                            break;
+                    case 1:
+                        message.delegatorAddr = reader.bytes();
+                        break;
+                    case 2:
+                        message.validatorAddr = reader.bytes();
+                        break;
+                    case 3:
+                        message.delegation = $root.irisnet.tx.Coin.decode(reader, reader.uint32());
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
                     }
                 }
                 if (!message.hasOwnProperty("delegatorAddr"))
@@ -1337,18 +1337,18 @@ $root.irisnet = (function() {
                 while (reader.pos < end) {
                     var tag = reader.uint32();
                     switch (tag >>> 3) {
-                        case 1:
-                            message.delegatorAddr = reader.bytes();
-                            break;
-                        case 2:
-                            message.validatorAddr = reader.bytes();
-                            break;
-                        case 3:
-                            message.sharesAmount = reader.string();
-                            break;
-                        default:
-                            reader.skipType(tag & 7);
-                            break;
+                    case 1:
+                        message.delegatorAddr = reader.bytes();
+                        break;
+                    case 2:
+                        message.validatorAddr = reader.bytes();
+                        break;
+                    case 3:
+                        message.sharesAmount = reader.string();
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
                     }
                 }
                 if (!message.hasOwnProperty("delegatorAddr"))
@@ -1598,21 +1598,21 @@ $root.irisnet = (function() {
                 while (reader.pos < end) {
                     var tag = reader.uint32();
                     switch (tag >>> 3) {
-                        case 1:
-                            message.delegatorAddr = reader.bytes();
-                            break;
-                        case 2:
-                            message.validatorSrcAddr = reader.bytes();
-                            break;
-                        case 3:
-                            message.validatorDstAddr = reader.bytes();
-                            break;
-                        case 4:
-                            message.sharesAmount = reader.string();
-                            break;
-                        default:
-                            reader.skipType(tag & 7);
-                            break;
+                    case 1:
+                        message.delegatorAddr = reader.bytes();
+                        break;
+                    case 2:
+                        message.validatorSrcAddr = reader.bytes();
+                        break;
+                    case 3:
+                        message.validatorDstAddr = reader.bytes();
+                        break;
+                    case 4:
+                        message.sharesAmount = reader.string();
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
                     }
                 }
                 if (!message.hasOwnProperty("delegatorAddr"))
@@ -1849,12 +1849,12 @@ $root.irisnet = (function() {
                 while (reader.pos < end) {
                     var tag = reader.uint32();
                     switch (tag >>> 3) {
-                        case 1:
-                            message.delegatorAddr = reader.bytes();
-                            break;
-                        default:
-                            reader.skipType(tag & 7);
-                            break;
+                    case 1:
+                        message.delegatorAddr = reader.bytes();
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
                     }
                 }
                 if (!message.hasOwnProperty("delegatorAddr"))
@@ -2055,15 +2055,15 @@ $root.irisnet = (function() {
                 while (reader.pos < end) {
                     var tag = reader.uint32();
                     switch (tag >>> 3) {
-                        case 1:
-                            message.delegatorAddr = reader.bytes();
-                            break;
-                        case 2:
-                            message.validatorAddr = reader.bytes();
-                            break;
-                        default:
-                            reader.skipType(tag & 7);
-                            break;
+                    case 1:
+                        message.delegatorAddr = reader.bytes();
+                        break;
+                    case 2:
+                        message.validatorAddr = reader.bytes();
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
                     }
                 }
                 if (!message.hasOwnProperty("delegatorAddr"))
@@ -2182,722 +2182,6 @@ $root.irisnet = (function() {
             return MsgWithdrawDelegatorReward;
         })();
 
-        tx.SwapInput = (function() {
-
-            /**
-             * Properties of a SwapInput.
-             * @memberof irisnet.tx
-             * @interface ISwapInput
-             * @property {Uint8Array} address SwapInput address
-             * @property {irisnet.tx.ICoin} coin SwapInput coin
-             */
-
-            /**
-             * Constructs a new SwapInput.
-             * @memberof irisnet.tx
-             * @classdesc Represents a SwapInput.
-             * @implements ISwapInput
-             * @constructor
-             * @param {irisnet.tx.ISwapInput=} [properties] Properties to set
-             */
-            function SwapInput(properties) {
-                if (properties)
-                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                        if (properties[keys[i]] != null)
-                            this[keys[i]] = properties[keys[i]];
-            }
-
-            /**
-             * SwapInput address.
-             * @member {Uint8Array} address
-             * @memberof irisnet.tx.SwapInput
-             * @instance
-             */
-            SwapInput.prototype.address = $util.newBuffer([]);
-
-            /**
-             * SwapInput coin.
-             * @member {irisnet.tx.ICoin} coin
-             * @memberof irisnet.tx.SwapInput
-             * @instance
-             */
-            SwapInput.prototype.coin = null;
-
-            /**
-             * Creates a new SwapInput instance using the specified properties.
-             * @function create
-             * @memberof irisnet.tx.SwapInput
-             * @static
-             * @param {irisnet.tx.ISwapInput=} [properties] Properties to set
-             * @returns {irisnet.tx.SwapInput} SwapInput instance
-             */
-            SwapInput.create = function create(properties) {
-                return new SwapInput(properties);
-            };
-
-            /**
-             * Encodes the specified SwapInput message. Does not implicitly {@link irisnet.tx.SwapInput.verify|verify} messages.
-             * @function encode
-             * @memberof irisnet.tx.SwapInput
-             * @static
-             * @param {irisnet.tx.ISwapInput} message SwapInput message or plain object to encode
-             * @param {$protobuf.Writer} [writer] Writer to encode to
-             * @returns {$protobuf.Writer} Writer
-             */
-            SwapInput.encode = function encode(message, writer) {
-                if (!writer)
-                    writer = $Writer.create();
-                writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.address);
-                $root.irisnet.tx.Coin.encode(message.coin, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                return writer;
-            };
-
-            /**
-             * Encodes the specified SwapInput message, length delimited. Does not implicitly {@link irisnet.tx.SwapInput.verify|verify} messages.
-             * @function encodeDelimited
-             * @memberof irisnet.tx.SwapInput
-             * @static
-             * @param {irisnet.tx.ISwapInput} message SwapInput message or plain object to encode
-             * @param {$protobuf.Writer} [writer] Writer to encode to
-             * @returns {$protobuf.Writer} Writer
-             */
-            SwapInput.encodeDelimited = function encodeDelimited(message, writer) {
-                return this.encode(message, writer).ldelim();
-            };
-
-            /**
-             * Decodes a SwapInput message from the specified reader or buffer.
-             * @function decode
-             * @memberof irisnet.tx.SwapInput
-             * @static
-             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-             * @param {number} [length] Message length if known beforehand
-             * @returns {irisnet.tx.SwapInput} SwapInput
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            SwapInput.decode = function decode(reader, length) {
-                if (!(reader instanceof $Reader))
-                    reader = $Reader.create(reader);
-                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.irisnet.tx.SwapInput();
-                while (reader.pos < end) {
-                    var tag = reader.uint32();
-                    switch (tag >>> 3) {
-                        case 1:
-                            message.address = reader.bytes();
-                            break;
-                        case 2:
-                            message.coin = $root.irisnet.tx.Coin.decode(reader, reader.uint32());
-                            break;
-                        default:
-                            reader.skipType(tag & 7);
-                            break;
-                    }
-                }
-                if (!message.hasOwnProperty("address"))
-                    throw $util.ProtocolError("missing required 'address'", { instance: message });
-                if (!message.hasOwnProperty("coin"))
-                    throw $util.ProtocolError("missing required 'coin'", { instance: message });
-                return message;
-            };
-
-            /**
-             * Decodes a SwapInput message from the specified reader or buffer, length delimited.
-             * @function decodeDelimited
-             * @memberof irisnet.tx.SwapInput
-             * @static
-             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-             * @returns {irisnet.tx.SwapInput} SwapInput
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            SwapInput.decodeDelimited = function decodeDelimited(reader) {
-                if (!(reader instanceof $Reader))
-                    reader = new $Reader(reader);
-                return this.decode(reader, reader.uint32());
-            };
-
-            /**
-             * Verifies a SwapInput message.
-             * @function verify
-             * @memberof irisnet.tx.SwapInput
-             * @static
-             * @param {Object.<string,*>} message Plain object to verify
-             * @returns {string|null} `null` if valid, otherwise the reason why it is not
-             */
-            SwapInput.verify = function verify(message) {
-                if (typeof message !== "object" || message === null)
-                    return "object expected";
-                if (!(message.address && typeof message.address.length === "number" || $util.isString(message.address)))
-                    return "address: buffer expected";
-                {
-                    var error = $root.irisnet.tx.Coin.verify(message.coin);
-                    if (error)
-                        return "coin." + error;
-                }
-                return null;
-            };
-
-            /**
-             * Creates a SwapInput message from a plain object. Also converts values to their respective internal types.
-             * @function fromObject
-             * @memberof irisnet.tx.SwapInput
-             * @static
-             * @param {Object.<string,*>} object Plain object
-             * @returns {irisnet.tx.SwapInput} SwapInput
-             */
-            SwapInput.fromObject = function fromObject(object) {
-                if (object instanceof $root.irisnet.tx.SwapInput)
-                    return object;
-                var message = new $root.irisnet.tx.SwapInput();
-                if (object.address != null)
-                    if (typeof object.address === "string")
-                        $util.base64.decode(object.address, message.address = $util.newBuffer($util.base64.length(object.address)), 0);
-                    else if (object.address.length)
-                        message.address = object.address;
-                if (object.coin != null) {
-                    if (typeof object.coin !== "object")
-                        throw TypeError(".irisnet.tx.SwapInput.coin: object expected");
-                    message.coin = $root.irisnet.tx.Coin.fromObject(object.coin);
-                }
-                return message;
-            };
-
-            /**
-             * Creates a plain object from a SwapInput message. Also converts values to other types if specified.
-             * @function toObject
-             * @memberof irisnet.tx.SwapInput
-             * @static
-             * @param {irisnet.tx.SwapInput} message SwapInput
-             * @param {$protobuf.IConversionOptions} [options] Conversion options
-             * @returns {Object.<string,*>} Plain object
-             */
-            SwapInput.toObject = function toObject(message, options) {
-                if (!options)
-                    options = {};
-                var object = {};
-                if (options.defaults) {
-                    if (options.bytes === String)
-                        object.address = "";
-                    else {
-                        object.address = [];
-                        if (options.bytes !== Array)
-                            object.address = $util.newBuffer(object.address);
-                    }
-                    object.coin = null;
-                }
-                if (message.address != null && message.hasOwnProperty("address"))
-                    object.address = options.bytes === String ? $util.base64.encode(message.address, 0, message.address.length) : options.bytes === Array ? Array.prototype.slice.call(message.address) : message.address;
-                if (message.coin != null && message.hasOwnProperty("coin"))
-                    object.coin = $root.irisnet.tx.Coin.toObject(message.coin, options);
-                return object;
-            };
-
-            /**
-             * Converts this SwapInput to JSON.
-             * @function toJSON
-             * @memberof irisnet.tx.SwapInput
-             * @instance
-             * @returns {Object.<string,*>} JSON object
-             */
-            SwapInput.prototype.toJSON = function toJSON() {
-                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-            };
-
-            return SwapInput;
-        })();
-
-        tx.SwapOutput = (function() {
-
-            /**
-             * Properties of a SwapOutput.
-             * @memberof irisnet.tx
-             * @interface ISwapOutput
-             * @property {Uint8Array} address SwapOutput address
-             * @property {irisnet.tx.ICoin} coin SwapOutput coin
-             */
-
-            /**
-             * Constructs a new SwapOutput.
-             * @memberof irisnet.tx
-             * @classdesc Represents a SwapOutput.
-             * @implements ISwapOutput
-             * @constructor
-             * @param {irisnet.tx.ISwapOutput=} [properties] Properties to set
-             */
-            function SwapOutput(properties) {
-                if (properties)
-                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                        if (properties[keys[i]] != null)
-                            this[keys[i]] = properties[keys[i]];
-            }
-
-            /**
-             * SwapOutput address.
-             * @member {Uint8Array} address
-             * @memberof irisnet.tx.SwapOutput
-             * @instance
-             */
-            SwapOutput.prototype.address = $util.newBuffer([]);
-
-            /**
-             * SwapOutput coin.
-             * @member {irisnet.tx.ICoin} coin
-             * @memberof irisnet.tx.SwapOutput
-             * @instance
-             */
-            SwapOutput.prototype.coin = null;
-
-            /**
-             * Creates a new SwapOutput instance using the specified properties.
-             * @function create
-             * @memberof irisnet.tx.SwapOutput
-             * @static
-             * @param {irisnet.tx.ISwapOutput=} [properties] Properties to set
-             * @returns {irisnet.tx.SwapOutput} SwapOutput instance
-             */
-            SwapOutput.create = function create(properties) {
-                return new SwapOutput(properties);
-            };
-
-            /**
-             * Encodes the specified SwapOutput message. Does not implicitly {@link irisnet.tx.SwapOutput.verify|verify} messages.
-             * @function encode
-             * @memberof irisnet.tx.SwapOutput
-             * @static
-             * @param {irisnet.tx.ISwapOutput} message SwapOutput message or plain object to encode
-             * @param {$protobuf.Writer} [writer] Writer to encode to
-             * @returns {$protobuf.Writer} Writer
-             */
-            SwapOutput.encode = function encode(message, writer) {
-                if (!writer)
-                    writer = $Writer.create();
-                writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.address);
-                $root.irisnet.tx.Coin.encode(message.coin, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                return writer;
-            };
-
-            /**
-             * Encodes the specified SwapOutput message, length delimited. Does not implicitly {@link irisnet.tx.SwapOutput.verify|verify} messages.
-             * @function encodeDelimited
-             * @memberof irisnet.tx.SwapOutput
-             * @static
-             * @param {irisnet.tx.ISwapOutput} message SwapOutput message or plain object to encode
-             * @param {$protobuf.Writer} [writer] Writer to encode to
-             * @returns {$protobuf.Writer} Writer
-             */
-            SwapOutput.encodeDelimited = function encodeDelimited(message, writer) {
-                return this.encode(message, writer).ldelim();
-            };
-
-            /**
-             * Decodes a SwapOutput message from the specified reader or buffer.
-             * @function decode
-             * @memberof irisnet.tx.SwapOutput
-             * @static
-             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-             * @param {number} [length] Message length if known beforehand
-             * @returns {irisnet.tx.SwapOutput} SwapOutput
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            SwapOutput.decode = function decode(reader, length) {
-                if (!(reader instanceof $Reader))
-                    reader = $Reader.create(reader);
-                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.irisnet.tx.SwapOutput();
-                while (reader.pos < end) {
-                    var tag = reader.uint32();
-                    switch (tag >>> 3) {
-                        case 1:
-                            message.address = reader.bytes();
-                            break;
-                        case 2:
-                            message.coin = $root.irisnet.tx.Coin.decode(reader, reader.uint32());
-                            break;
-                        default:
-                            reader.skipType(tag & 7);
-                            break;
-                    }
-                }
-                if (!message.hasOwnProperty("address"))
-                    throw $util.ProtocolError("missing required 'address'", { instance: message });
-                if (!message.hasOwnProperty("coin"))
-                    throw $util.ProtocolError("missing required 'coin'", { instance: message });
-                return message;
-            };
-
-            /**
-             * Decodes a SwapOutput message from the specified reader or buffer, length delimited.
-             * @function decodeDelimited
-             * @memberof irisnet.tx.SwapOutput
-             * @static
-             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-             * @returns {irisnet.tx.SwapOutput} SwapOutput
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            SwapOutput.decodeDelimited = function decodeDelimited(reader) {
-                if (!(reader instanceof $Reader))
-                    reader = new $Reader(reader);
-                return this.decode(reader, reader.uint32());
-            };
-
-            /**
-             * Verifies a SwapOutput message.
-             * @function verify
-             * @memberof irisnet.tx.SwapOutput
-             * @static
-             * @param {Object.<string,*>} message Plain object to verify
-             * @returns {string|null} `null` if valid, otherwise the reason why it is not
-             */
-            SwapOutput.verify = function verify(message) {
-                if (typeof message !== "object" || message === null)
-                    return "object expected";
-                if (!(message.address && typeof message.address.length === "number" || $util.isString(message.address)))
-                    return "address: buffer expected";
-                {
-                    var error = $root.irisnet.tx.Coin.verify(message.coin);
-                    if (error)
-                        return "coin." + error;
-                }
-                return null;
-            };
-
-            /**
-             * Creates a SwapOutput message from a plain object. Also converts values to their respective internal types.
-             * @function fromObject
-             * @memberof irisnet.tx.SwapOutput
-             * @static
-             * @param {Object.<string,*>} object Plain object
-             * @returns {irisnet.tx.SwapOutput} SwapOutput
-             */
-            SwapOutput.fromObject = function fromObject(object) {
-                if (object instanceof $root.irisnet.tx.SwapOutput)
-                    return object;
-                var message = new $root.irisnet.tx.SwapOutput();
-                if (object.address != null)
-                    if (typeof object.address === "string")
-                        $util.base64.decode(object.address, message.address = $util.newBuffer($util.base64.length(object.address)), 0);
-                    else if (object.address.length)
-                        message.address = object.address;
-                if (object.coin != null) {
-                    if (typeof object.coin !== "object")
-                        throw TypeError(".irisnet.tx.SwapOutput.coin: object expected");
-                    message.coin = $root.irisnet.tx.Coin.fromObject(object.coin);
-                }
-                return message;
-            };
-
-            /**
-             * Creates a plain object from a SwapOutput message. Also converts values to other types if specified.
-             * @function toObject
-             * @memberof irisnet.tx.SwapOutput
-             * @static
-             * @param {irisnet.tx.SwapOutput} message SwapOutput
-             * @param {$protobuf.IConversionOptions} [options] Conversion options
-             * @returns {Object.<string,*>} Plain object
-             */
-            SwapOutput.toObject = function toObject(message, options) {
-                if (!options)
-                    options = {};
-                var object = {};
-                if (options.defaults) {
-                    if (options.bytes === String)
-                        object.address = "";
-                    else {
-                        object.address = [];
-                        if (options.bytes !== Array)
-                            object.address = $util.newBuffer(object.address);
-                    }
-                    object.coin = null;
-                }
-                if (message.address != null && message.hasOwnProperty("address"))
-                    object.address = options.bytes === String ? $util.base64.encode(message.address, 0, message.address.length) : options.bytes === Array ? Array.prototype.slice.call(message.address) : message.address;
-                if (message.coin != null && message.hasOwnProperty("coin"))
-                    object.coin = $root.irisnet.tx.Coin.toObject(message.coin, options);
-                return object;
-            };
-
-            /**
-             * Converts this SwapOutput to JSON.
-             * @function toJSON
-             * @memberof irisnet.tx.SwapOutput
-             * @instance
-             * @returns {Object.<string,*>} JSON object
-             */
-            SwapOutput.prototype.toJSON = function toJSON() {
-                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-            };
-
-            return SwapOutput;
-        })();
-
-        tx.MsgSwapOrder = (function() {
-
-            /**
-             * Properties of a MsgSwapOrder.
-             * @memberof irisnet.tx
-             * @interface IMsgSwapOrder
-             * @property {irisnet.tx.ISwapInput} input MsgSwapOrder input
-             * @property {irisnet.tx.ISwapOutput} output MsgSwapOrder output
-             * @property {string} deadline MsgSwapOrder deadline
-             * @property {boolean} isBuyOrder MsgSwapOrder isBuyOrder
-             */
-
-            /**
-             * Constructs a new MsgSwapOrder.
-             * @memberof irisnet.tx
-             * @classdesc Represents a MsgSwapOrder.
-             * @implements IMsgSwapOrder
-             * @constructor
-             * @param {irisnet.tx.IMsgSwapOrder=} [properties] Properties to set
-             */
-            function MsgSwapOrder(properties) {
-                if (properties)
-                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                        if (properties[keys[i]] != null)
-                            this[keys[i]] = properties[keys[i]];
-            }
-
-            /**
-             * MsgSwapOrder input.
-             * @member {irisnet.tx.ISwapInput} input
-             * @memberof irisnet.tx.MsgSwapOrder
-             * @instance
-             */
-            MsgSwapOrder.prototype.input = null;
-
-            /**
-             * MsgSwapOrder output.
-             * @member {irisnet.tx.ISwapOutput} output
-             * @memberof irisnet.tx.MsgSwapOrder
-             * @instance
-             */
-            MsgSwapOrder.prototype.output = null;
-
-            /**
-             * MsgSwapOrder deadline.
-             * @member {string} deadline
-             * @memberof irisnet.tx.MsgSwapOrder
-             * @instance
-             */
-            MsgSwapOrder.prototype.deadline = "";
-
-            /**
-             * MsgSwapOrder isBuyOrder.
-             * @member {boolean} isBuyOrder
-             * @memberof irisnet.tx.MsgSwapOrder
-             * @instance
-             */
-            MsgSwapOrder.prototype.isBuyOrder = false;
-
-            /**
-             * Creates a new MsgSwapOrder instance using the specified properties.
-             * @function create
-             * @memberof irisnet.tx.MsgSwapOrder
-             * @static
-             * @param {irisnet.tx.IMsgSwapOrder=} [properties] Properties to set
-             * @returns {irisnet.tx.MsgSwapOrder} MsgSwapOrder instance
-             */
-            MsgSwapOrder.create = function create(properties) {
-                return new MsgSwapOrder(properties);
-            };
-
-            /**
-             * Encodes the specified MsgSwapOrder message. Does not implicitly {@link irisnet.tx.MsgSwapOrder.verify|verify} messages.
-             * @function encode
-             * @memberof irisnet.tx.MsgSwapOrder
-             * @static
-             * @param {irisnet.tx.IMsgSwapOrder} message MsgSwapOrder message or plain object to encode
-             * @param {$protobuf.Writer} [writer] Writer to encode to
-             * @returns {$protobuf.Writer} Writer
-             */
-            MsgSwapOrder.encode = function encode(message, writer) {
-                if (!writer)
-                    writer = $Writer.create();
-                $root.irisnet.tx.SwapInput.encode(message.input, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                $root.irisnet.tx.SwapOutput.encode(message.output, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                writer.uint32(/* id 3, wireType 2 =*/26).string(message.deadline);
-                writer.uint32(/* id 4, wireType 0 =*/32).bool(message.isBuyOrder);
-                return writer;
-            };
-
-            /**
-             * Encodes the specified MsgSwapOrder message, length delimited. Does not implicitly {@link irisnet.tx.MsgSwapOrder.verify|verify} messages.
-             * @function encodeDelimited
-             * @memberof irisnet.tx.MsgSwapOrder
-             * @static
-             * @param {irisnet.tx.IMsgSwapOrder} message MsgSwapOrder message or plain object to encode
-             * @param {$protobuf.Writer} [writer] Writer to encode to
-             * @returns {$protobuf.Writer} Writer
-             */
-            MsgSwapOrder.encodeDelimited = function encodeDelimited(message, writer) {
-                return this.encode(message, writer).ldelim();
-            };
-
-            /**
-             * Decodes a MsgSwapOrder message from the specified reader or buffer.
-             * @function decode
-             * @memberof irisnet.tx.MsgSwapOrder
-             * @static
-             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-             * @param {number} [length] Message length if known beforehand
-             * @returns {irisnet.tx.MsgSwapOrder} MsgSwapOrder
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            MsgSwapOrder.decode = function decode(reader, length) {
-                if (!(reader instanceof $Reader))
-                    reader = $Reader.create(reader);
-                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.irisnet.tx.MsgSwapOrder();
-                while (reader.pos < end) {
-                    var tag = reader.uint32();
-                    switch (tag >>> 3) {
-                        case 1:
-                            message.input = $root.irisnet.tx.SwapInput.decode(reader, reader.uint32());
-                            break;
-                        case 2:
-                            message.output = $root.irisnet.tx.SwapOutput.decode(reader, reader.uint32());
-                            break;
-                        case 3:
-                            message.deadline = reader.string();
-                            break;
-                        case 4:
-                            message.isBuyOrder = reader.bool();
-                            break;
-                        default:
-                            reader.skipType(tag & 7);
-                            break;
-                    }
-                }
-                if (!message.hasOwnProperty("input"))
-                    throw $util.ProtocolError("missing required 'input'", { instance: message });
-                if (!message.hasOwnProperty("output"))
-                    throw $util.ProtocolError("missing required 'output'", { instance: message });
-                if (!message.hasOwnProperty("deadline"))
-                    throw $util.ProtocolError("missing required 'deadline'", { instance: message });
-                if (!message.hasOwnProperty("isBuyOrder"))
-                    throw $util.ProtocolError("missing required 'isBuyOrder'", { instance: message });
-                return message;
-            };
-
-            /**
-             * Decodes a MsgSwapOrder message from the specified reader or buffer, length delimited.
-             * @function decodeDelimited
-             * @memberof irisnet.tx.MsgSwapOrder
-             * @static
-             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-             * @returns {irisnet.tx.MsgSwapOrder} MsgSwapOrder
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            MsgSwapOrder.decodeDelimited = function decodeDelimited(reader) {
-                if (!(reader instanceof $Reader))
-                    reader = new $Reader(reader);
-                return this.decode(reader, reader.uint32());
-            };
-
-            /**
-             * Verifies a MsgSwapOrder message.
-             * @function verify
-             * @memberof irisnet.tx.MsgSwapOrder
-             * @static
-             * @param {Object.<string,*>} message Plain object to verify
-             * @returns {string|null} `null` if valid, otherwise the reason why it is not
-             */
-            MsgSwapOrder.verify = function verify(message) {
-                if (typeof message !== "object" || message === null)
-                    return "object expected";
-                {
-                    var error = $root.irisnet.tx.SwapInput.verify(message.input);
-                    if (error)
-                        return "input." + error;
-                }
-                {
-                    var error = $root.irisnet.tx.SwapOutput.verify(message.output);
-                    if (error)
-                        return "output." + error;
-                }
-                if (!$util.isString(message.deadline))
-                    return "deadline: string expected";
-                if (typeof message.isBuyOrder !== "boolean")
-                    return "isBuyOrder: boolean expected";
-                return null;
-            };
-
-            /**
-             * Creates a MsgSwapOrder message from a plain object. Also converts values to their respective internal types.
-             * @function fromObject
-             * @memberof irisnet.tx.MsgSwapOrder
-             * @static
-             * @param {Object.<string,*>} object Plain object
-             * @returns {irisnet.tx.MsgSwapOrder} MsgSwapOrder
-             */
-            MsgSwapOrder.fromObject = function fromObject(object) {
-                if (object instanceof $root.irisnet.tx.MsgSwapOrder)
-                    return object;
-                var message = new $root.irisnet.tx.MsgSwapOrder();
-                if (object.input != null) {
-                    if (typeof object.input !== "object")
-                        throw TypeError(".irisnet.tx.MsgSwapOrder.input: object expected");
-                    message.input = $root.irisnet.tx.SwapInput.fromObject(object.input);
-                }
-                if (object.output != null) {
-                    if (typeof object.output !== "object")
-                        throw TypeError(".irisnet.tx.MsgSwapOrder.output: object expected");
-                    message.output = $root.irisnet.tx.SwapOutput.fromObject(object.output);
-                }
-                if (object.deadline != null)
-                    message.deadline = String(object.deadline);
-                if (object.isBuyOrder != null)
-                    message.isBuyOrder = Boolean(object.isBuyOrder);
-                return message;
-            };
-
-            /**
-             * Creates a plain object from a MsgSwapOrder message. Also converts values to other types if specified.
-             * @function toObject
-             * @memberof irisnet.tx.MsgSwapOrder
-             * @static
-             * @param {irisnet.tx.MsgSwapOrder} message MsgSwapOrder
-             * @param {$protobuf.IConversionOptions} [options] Conversion options
-             * @returns {Object.<string,*>} Plain object
-             */
-            MsgSwapOrder.toObject = function toObject(message, options) {
-                if (!options)
-                    options = {};
-                var object = {};
-                if (options.defaults) {
-                    object.input = null;
-                    object.output = null;
-                    object.deadline = "";
-                    object.isBuyOrder = false;
-                }
-                if (message.input != null && message.hasOwnProperty("input"))
-                    object.input = $root.irisnet.tx.SwapInput.toObject(message.input, options);
-                if (message.output != null && message.hasOwnProperty("output"))
-                    object.output = $root.irisnet.tx.SwapOutput.toObject(message.output, options);
-                if (message.deadline != null && message.hasOwnProperty("deadline"))
-                    object.deadline = message.deadline;
-                if (message.isBuyOrder != null && message.hasOwnProperty("isBuyOrder"))
-                    object.isBuyOrder = message.isBuyOrder;
-                return object;
-            };
-
-            /**
-             * Converts this MsgSwapOrder to JSON.
-             * @function toJSON
-             * @memberof irisnet.tx.MsgSwapOrder
-             * @instance
-             * @returns {Object.<string,*>} JSON object
-             */
-            MsgSwapOrder.prototype.toJSON = function toJSON() {
-                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-            };
-
-            return MsgSwapOrder;
-        })();
-
         tx.StdFee = (function() {
 
             /**
@@ -3002,17 +2286,17 @@ $root.irisnet = (function() {
                 while (reader.pos < end) {
                     var tag = reader.uint32();
                     switch (tag >>> 3) {
-                        case 1:
-                            if (!(message.amount && message.amount.length))
-                                message.amount = [];
-                            message.amount.push($root.irisnet.tx.Coin.decode(reader, reader.uint32()));
-                            break;
-                        case 2:
-                            message.gas = reader.int64();
-                            break;
-                        default:
-                            reader.skipType(tag & 7);
-                            break;
+                    case 1:
+                        if (!(message.amount && message.amount.length))
+                            message.amount = [];
+                        message.amount.push($root.irisnet.tx.Coin.decode(reader, reader.uint32()));
+                        break;
+                    case 2:
+                        message.gas = reader.int64();
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
                     }
                 }
                 if (!message.hasOwnProperty("gas"))
@@ -3271,21 +2555,21 @@ $root.irisnet = (function() {
                 while (reader.pos < end) {
                     var tag = reader.uint32();
                     switch (tag >>> 3) {
-                        case 1:
-                            message.pubKey = reader.bytes();
-                            break;
-                        case 2:
-                            message.signature = reader.bytes();
-                            break;
-                        case 3:
-                            message.accountNumber = reader.int64();
-                            break;
-                        case 4:
-                            message.sequence = reader.int64();
-                            break;
-                        default:
-                            reader.skipType(tag & 7);
-                            break;
+                    case 1:
+                        message.pubKey = reader.bytes();
+                        break;
+                    case 2:
+                        message.signature = reader.bytes();
+                        break;
+                    case 3:
+                        message.accountNumber = reader.int64();
+                        break;
+                    case 4:
+                        message.sequence = reader.int64();
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
                     }
                 }
                 if (!message.hasOwnProperty("pubKey"))
@@ -3578,25 +2862,25 @@ $root.irisnet = (function() {
                 while (reader.pos < end) {
                     var tag = reader.uint32();
                     switch (tag >>> 3) {
-                        case 1:
-                            if (!(message.msgs && message.msgs.length))
-                                message.msgs = [];
-                            message.msgs.push(reader.bytes());
-                            break;
-                        case 2:
-                            message.fee = $root.irisnet.tx.StdFee.decode(reader, reader.uint32());
-                            break;
-                        case 3:
-                            if (!(message.signatures && message.signatures.length))
-                                message.signatures = [];
-                            message.signatures.push($root.irisnet.tx.StdSignature.decode(reader, reader.uint32()));
-                            break;
-                        case 4:
-                            message.memo = reader.string();
-                            break;
-                        default:
-                            reader.skipType(tag & 7);
-                            break;
+                    case 1:
+                        if (!(message.msgs && message.msgs.length))
+                            message.msgs = [];
+                        message.msgs.push(reader.bytes());
+                        break;
+                    case 2:
+                        message.fee = $root.irisnet.tx.StdFee.decode(reader, reader.uint32());
+                        break;
+                    case 3:
+                        if (!(message.signatures && message.signatures.length))
+                            message.signatures = [];
+                        message.signatures.push($root.irisnet.tx.StdSignature.decode(reader, reader.uint32()));
+                        break;
+                    case 4:
+                        message.memo = reader.string();
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
                     }
                 }
                 if (!message.hasOwnProperty("fee"))
