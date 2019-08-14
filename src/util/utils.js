@@ -73,23 +73,6 @@ module.exports = class Utils {
         let eSet = new Set(target);
         return !(srcLen == eSet.size)
     }
-
-    static marshalUTCString(date) {
-        let utcDateStr = date.toISOString();
-        let nanoIndex = utcDateStr.lastIndexOf(".");
-        let prefix = utcDateStr.substr(0, nanoIndex);
-        let nano = utcDateStr.substr(nanoIndex + 1, utcDateStr.length - 1);
-        let index = nano.length - 2;
-        let offset = 0;
-        while (index >= 0 && nano[index] === "0") {
-            index--
-        }
-        if (index < 0) {
-            return `${prefix}Z`
-        }
-        let suffix = nano.substr(0, index + 1);
-        return `${prefix}.${suffix}Z`
-    }
 };
 
 function evil(fn) {

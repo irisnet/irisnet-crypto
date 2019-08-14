@@ -95,11 +95,10 @@ module.exports = class Stake {
                 amount: Utils.toString(req.msg.output.coin.amount),
             },
         };
-        let deadline = Utils.marshalUTCString(req.msg.deadline);
         return new MsgSwapOrder({
             input:input,
             output:output,
-            deadline:deadline,
+            deadline:req.msg.deadline,
             isBuyOrder:req.msg.isBuyOrder,
         });
     }

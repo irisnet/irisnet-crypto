@@ -315,7 +315,7 @@ describe('iris transaction', function () {
                             amount: "10000000000000000000"
                         },
                     },
-                    deadline:new Date(),
+                    deadline:new Date().getTime(),
                     isBuyOrder:true
                 }
             };

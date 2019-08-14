@@ -59,8 +59,15 @@ message SwapOutput {
 message MsgSwapOrder {
     required SwapInput input = 1;
     required SwapOutput output = 2;
-    required string deadline = 3;//UTC
-    required bool is_buy_order = 4;
+    required int64 deadline = 3;
+    required bool isBuyOrder = 4;
+}
+message MsgAddLiquidity {
+    required Coin maxToken = 1;
+    required string exactIrisAmt = 2;
+    required string minLiquidity = 3;
+    required int64 deadline = 4;
+    required bytes sender = 5;
 }
 
 message StdFee {

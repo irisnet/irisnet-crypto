@@ -2640,7 +2640,7 @@ $root.irisnet = (function() {
              * @interface IMsgSwapOrder
              * @property {irisnet.tx.ISwapInput} input MsgSwapOrder input
              * @property {irisnet.tx.ISwapOutput} output MsgSwapOrder output
-             * @property {string} deadline MsgSwapOrder deadline
+             * @property {number|Long} deadline MsgSwapOrder deadline
              * @property {boolean} isBuyOrder MsgSwapOrder isBuyOrder
              */
 
@@ -2677,11 +2677,11 @@ $root.irisnet = (function() {
 
             /**
              * MsgSwapOrder deadline.
-             * @member {string} deadline
+             * @member {number|Long} deadline
              * @memberof irisnet.tx.MsgSwapOrder
              * @instance
              */
-            MsgSwapOrder.prototype.deadline = "";
+            MsgSwapOrder.prototype.deadline = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
 
             /**
              * MsgSwapOrder isBuyOrder.
@@ -2717,7 +2717,7 @@ $root.irisnet = (function() {
                     writer = $Writer.create();
                 $root.irisnet.tx.SwapInput.encode(message.input, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
                 $root.irisnet.tx.SwapOutput.encode(message.output, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                writer.uint32(/* id 3, wireType 2 =*/26).string(message.deadline);
+                writer.uint32(/* id 3, wireType 0 =*/24).int64(message.deadline);
                 writer.uint32(/* id 4, wireType 0 =*/32).bool(message.isBuyOrder);
                 return writer;
             };
@@ -2760,7 +2760,7 @@ $root.irisnet = (function() {
                             message.output = $root.irisnet.tx.SwapOutput.decode(reader, reader.uint32());
                             break;
                         case 3:
-                            message.deadline = reader.string();
+                            message.deadline = reader.int64();
                             break;
                         case 4:
                             message.isBuyOrder = reader.bool();
@@ -2818,8 +2818,8 @@ $root.irisnet = (function() {
                     if (error)
                         return "output." + error;
                 }
-                if (!$util.isString(message.deadline))
-                    return "deadline: string expected";
+                if (!$util.isInteger(message.deadline) && !(message.deadline && $util.isInteger(message.deadline.low) && $util.isInteger(message.deadline.high)))
+                    return "deadline: integer|Long expected";
                 if (typeof message.isBuyOrder !== "boolean")
                     return "isBuyOrder: boolean expected";
                 return null;
@@ -2848,7 +2848,14 @@ $root.irisnet = (function() {
                     message.output = $root.irisnet.tx.SwapOutput.fromObject(object.output);
                 }
                 if (object.deadline != null)
-                    message.deadline = String(object.deadline);
+                    if ($util.Long)
+                        (message.deadline = $util.Long.fromValue(object.deadline)).unsigned = false;
+                    else if (typeof object.deadline === "string")
+                        message.deadline = parseInt(object.deadline, 10);
+                    else if (typeof object.deadline === "number")
+                        message.deadline = object.deadline;
+                    else if (typeof object.deadline === "object")
+                        message.deadline = new $util.LongBits(object.deadline.low >>> 0, object.deadline.high >>> 0).toNumber();
                 if (object.isBuyOrder != null)
                     message.isBuyOrder = Boolean(object.isBuyOrder);
                 return message;
@@ -2870,7 +2877,11 @@ $root.irisnet = (function() {
                 if (options.defaults) {
                     object.input = null;
                     object.output = null;
-                    object.deadline = "";
+                    if ($util.Long) {
+                        var long = new $util.Long(0, 0, false);
+                        object.deadline = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                    } else
+                        object.deadline = options.longs === String ? "0" : 0;
                     object.isBuyOrder = false;
                 }
                 if (message.input != null && message.hasOwnProperty("input"))
@@ -2878,7 +2889,10 @@ $root.irisnet = (function() {
                 if (message.output != null && message.hasOwnProperty("output"))
                     object.output = $root.irisnet.tx.SwapOutput.toObject(message.output, options);
                 if (message.deadline != null && message.hasOwnProperty("deadline"))
-                    object.deadline = message.deadline;
+                    if (typeof message.deadline === "number")
+                        object.deadline = options.longs === String ? String(message.deadline) : message.deadline;
+                    else
+                        object.deadline = options.longs === String ? $util.Long.prototype.toString.call(message.deadline) : options.longs === Number ? new $util.LongBits(message.deadline.low >>> 0, message.deadline.high >>> 0).toNumber() : message.deadline;
                 if (message.isBuyOrder != null && message.hasOwnProperty("isBuyOrder"))
                     object.isBuyOrder = message.isBuyOrder;
                 return object;
