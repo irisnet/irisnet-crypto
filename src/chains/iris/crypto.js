@@ -68,7 +68,7 @@ class IrisCrypto extends Crypto {
         return address;
     }
 
-    // @referance:https://github.com/binance-chain/javascript-sdk/blob/master/src/crypto/index.js
+    // @see:https://github.com/binance-chain/javascript-sdk/blob/master/src/crypto/index.js
     exportKeystore(privateKeyHex,password){
         if (Utils.isEmpty(password) || password.length < 8){
             throw new Error("password's length must be greater than 8")

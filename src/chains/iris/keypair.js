@@ -96,6 +96,11 @@ class IrisKeypair {
 
     static import(secretKey){
         let secretBytes = Buffer.from(secretKey,"hex");
+        //compatible with previous versions of bugs
+        if(secretBytes.length === 31){
+            let pad = Buffer.from([0]);
+            secretBytes = Buffer.concat([pad,secretBytes]);
+        }
         //构造公钥
         let pubKey = Secp256k1.publicKeyCreate(secretBytes);
         pubKey = Amino.MarshalBinary(Config.iris.amino.pubKey,pubKey);

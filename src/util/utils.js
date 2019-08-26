@@ -53,7 +53,7 @@ module.exports = class Utils {
 
     static toString(str) {
         if (typeof str === "number") {
-            str = str.toLocaleString();
+            str = str.toLocaleString("en");
             return str.replace(/[,]/g, '');
         } else if (this.isEmpty(str)) {
             return ""
