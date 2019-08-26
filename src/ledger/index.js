@@ -17,25 +17,11 @@
 
 
 const LedgerApp = require("./ledger-app");
-const TransportU2F = require("@ledgerhq/hw-transport-u2f");
-const TransportWebUSB = require('@ledgerhq/hw-transport-webusb');
-
 const Ledger = module.exports;
-Ledger.create = async function(transportType, scrambleKey = 'CSM'){
-    let transport;
-    switch (transportType) {
-        case "WebUSB": {
-            transport = await TransportWebUSB.create();
-            break
-        }
-        case "U2F" : {
-            transport = await TransportU2F.create(10000);
-            break
-        }
+Ledger.create = async function(transport, scrambleKey = 'CSM'){
+    if(transport === ""){
+        transport = require("@ledgerhq/hw-transport-webusb").default
     }
     return new LedgerApp(transport,scrambleKey)
-};
-Ledger.createWithTransport = async function(transport,scrambleKey = 'CSM'){
-  return new LedgerApp(transport,scrambleKey)
 };
 module.exports = Ledger;
