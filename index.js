@@ -13,6 +13,10 @@ function getCrypto(chainName,network){
     return Crypto.getCrypto(chainName)
 }
 
+function getLedger(){
+    return require('./src/ledger')
+}
+
 function setNetwork(network){
     if(network && network === 'testnet'){
         config.iris.bech32 = {
@@ -30,4 +34,4 @@ function setNetwork(network){
     return config
 }
 
-module.exports = {getCrypto,getBuilder,config,Codec};
+module.exports = {getCrypto,getBuilder,getLedger,config,Codec};
