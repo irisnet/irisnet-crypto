@@ -35,4 +35,7 @@ Ledger.create = async function(transportType, scrambleKey = 'CSM'){
     }
     return new LedgerApp(transport,scrambleKey)
 };
+Ledger.createWithTransport = async function(transport,scrambleKey = 'CSM'){
+  return new LedgerApp(transport,scrambleKey)
+};
 module.exports = Ledger;
