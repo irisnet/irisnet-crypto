@@ -2,6 +2,7 @@ const Irisnet = require('../index');
 const chai = require('chai');
 const assert = chai.assert;
 const common = require('./common');
+const utils = require('../src/util/utils');
 
 
 describe('account', function () {
@@ -38,7 +39,7 @@ describe('account', function () {
 
         it('should recover', function () {
             let crypto = Irisnet.getCrypto(chainName, 'testnet');
-            let seed = "tube lonely pause spring gym veteran know want grid tired taxi such same mesh charge orient bracket ozone concert once good quick dry boss";
+            let seed = "error nerve credit mail coyote melt property afford design wool dune sibling loan tunnel acid joke father bid home pupil giant share age warrior";
             let keyPair2 = crypto.recover(seed, Irisnet.config.language.en);
             console.log(JSON.stringify(keyPair2))
         });
@@ -92,6 +93,15 @@ describe('account', function () {
             assert.equal(srcAccount.address, dstaccount.address);
             assert.equal(srcAccount.privateKey, dstaccount.privateKey);
             assert.equal(srcAccount.publicKey, dstaccount.publicKey);
+        });
+
+        it('should utils', function () {
+            assert.equal(utils.toDecString("0.1"),"0.1000000000");
+            assert.equal(utils.toDecString("1"),"1.0000000000");
+            assert.equal(utils.toDecString("1.0"),"1.0000000000");
+            assert.equal(utils.toDecString("1.0000000000"),"1.0000000000");
+            //assert.ifError(utils.toDecString("1.1234567890123456789012"));
+            assert.equal(utils.toDecString("10000000000000000000000"),"10000000000000000000000.0000000000");
         });
     });
 });
