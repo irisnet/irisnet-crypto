@@ -103,11 +103,11 @@ class StdTx {
         let signatures = [];
         if (this.signatures){
             this.signatures.forEach(function(sig) {
-                let publicKey = "";
+                let publicKey = sig.pubKey;
                 let signature = "";
-                if (sig.pubKey.length > 33) {
+                if (publicKey.length > 33) {
                     //去掉amino编码前缀
-                    publicKey = sig.pubKey.slice(5, sig.pubKey.length)
+                    publicKey = publicKey.slice(5, publicKey.length)
                 }
                 publicKey = Base64.encode(publicKey);
 
