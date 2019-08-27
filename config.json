@@ -53,7 +53,7 @@
     "keystore": {
       "kdf": "pbkdf2",
       "cipherAlg": "aes-128-ctr",
-      "c": 10000
+      "c": 262144
     }
   },
   "cosmos": {

@@ -69,7 +69,11 @@ class IrisCrypto extends Crypto {
     }
 
     // @see:https://github.com/binance-chain/javascript-sdk/blob/master/src/crypto/index.js
-    exportKeystore(privateKeyHex,password){
+    exportKeystore(privateKeyHex,password,opts = {
+        kdf: "pbkdf2",
+        cipherAlg: "aes-128-ctr",
+        c: 262144
+    }){
         if (Utils.isEmpty(password) || password.length < 8){
             throw new Error("password's length must be greater than 8")
         }
@@ -78,14 +82,15 @@ class IrisCrypto extends Crypto {
         }
         const salt = Cryp.randomBytes(32);
         const iv = Cryp.randomBytes(16);
-        const cipherAlg = Config.iris.keystore.cipherAlg;
-        const kdf = Config.iris.keystore.kdf;
+        const cipherAlg = opts.cipherAlg ? opts.cipherAlg : Config.iris.keystore.cipherAlg;
+        const kdf = opts.kdf ? opts.kdf : Config.iris.keystore.kdf;
+        const c = opts.c ? opts.c : Config.iris.keystore.c;
         const address = this.import(privateKeyHex).address;
 
         const kdfparams = {
             dklen: 32,
             salt: salt.toString("hex"),
-            c: Config.iris.keystore.c,
+            c: c,
             prf: "hmac-sha256"
         };
         const derivedKey = Cryp.pbkdf2Sync(Buffer.from(password), salt, kdfparams.c, kdfparams.dklen, "sha256");
