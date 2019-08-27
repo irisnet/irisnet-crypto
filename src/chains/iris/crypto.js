@@ -69,11 +69,7 @@ class IrisCrypto extends Crypto {
     }
 
     // @see:https://github.com/binance-chain/javascript-sdk/blob/master/src/crypto/index.js
-    exportKeystore(privateKeyHex,password,opts = {
-        kdf: "pbkdf2",
-        cipherAlg: "aes-128-ctr",
-        c: 262144
-    }){
+    exportKeystore(privateKeyHex,password,opts = {}){
         if (Utils.isEmpty(password) || password.length < 8){
             throw new Error("password's length must be greater than 8")
         }
