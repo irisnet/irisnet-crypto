@@ -367,7 +367,7 @@ module.exports = class IrisApp {
         return chunks;
     }
     async sign(path, message) {
-        const chunks = signGetChunks(path, message);
+        const chunks = this.signGetChunks(path, message);
         return this.signSendChunk(1, chunks.length, chunks[0], [0x9000])
             .then(
                 async (response) => {
