@@ -409,7 +409,7 @@ module.exports = class IrisApp {
                     const sigR = signature.slice(rOffset, rOffset + rLen); // skip e.g. 3045022100 and pad
                     const sigS = signature.slice(sOffset);
                     result.signature = Buffer.concat([sigR, sigS]);
-                    if (signature.length !== 64) {
+                    if (result.signature.length !== 64) {
                         throw new Error(`Ledger assertion failed: incorrect signature length ${signature.length}`)
                     }
                     return {
