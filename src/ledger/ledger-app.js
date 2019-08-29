@@ -367,24 +367,51 @@ module.exports = class IrisApp {
         return chunks;
     }
     async sign(path, message) {
-        const chunks = this.signGetChunks(path, message);
+        const chunks = signGetChunks(path, message);
         return this.signSendChunk(1, chunks.length, chunks[0], [0x9000])
             .then(
                 async (response) => {
                     let result = {
                         return_code: response.return_code,
                         error_message: response.error_message,
-                        signature: null,
+                        signature: response.signature,
                     };
 
-                    for (let i = 1; i < chunks.length; i += 1) {
-                        // eslint-disable-next-line no-await-in-loop
-                        result = await this.signSendChunk(1 + i, chunks.length, chunks[i]);
-                        if (result.return_code !== 0x9000) {
-                            break;
+                    if (response.return_code === 0x9000) {
+                        for (let i = 1; i < chunks.length; i += 1) {
+                            // eslint-disable-next-line no-await-in-loop
+                            result = await this.signSendChunk(1 + i, chunks.length, chunks[i]);
+                            if (result.return_code !== 0x9000) {
+                                break;
+                            }
                         }
                     }
-
+                    const { signature } = result;
+                    if (!signature || !signature.length) {
+                        throw new Error('Ledger assertion failed: Expected a non-empty signature from the device');
+                    }
+                    if (signature[0] !== 0x30) {
+                        throw new Error('Ledger assertion failed: Expected a signature header of 0x30');
+                    }
+                    // decode DER string format
+                    let rOffset = 4;
+                    let rLen = signature[3];
+                    // eslint-disable-next-line max-len
+                    const sLen = signature[4 + rLen + 1]; // skip over following 0x02 type prefix for s
+                    let sOffset = signature.length - sLen;
+                    // we can safely ignore the first byte in the 33 bytes cases
+                    if (rLen === 33) {
+                        rOffset += 1; // chop off 0x00 padding
+                        rLen -= 1;
+                    }
+                    if (sLen === 33) sOffset += 1; // as above
+                    // eslint-disable-next-line max-len
+                    const sigR = signature.slice(rOffset, rOffset + rLen); // skip e.g. 3045022100 and pad
+                    const sigS = signature.slice(sOffset);
+                    result.signature = Buffer.concat([sigR, sigS]);
+                    if (signature.length !== 64) {
+                        throw new Error(`Ledger assertion failed: incorrect signature length ${signature.length}`)
+                    }
                     return {
                         return_code: result.return_code,
                         error_message: result.error_message,
