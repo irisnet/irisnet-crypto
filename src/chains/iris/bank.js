@@ -331,7 +331,7 @@ class StdTx {
 }
 
 module.exports = class Bank {
-    static CreateMsgSend(req) {
+    static createMsgSend(req) {
         let coins = [];
         if (!Utils.isEmpty(req.msg.coins)) {
             req.msg.coins.forEach(function(item) {

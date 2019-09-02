@@ -205,7 +205,7 @@ class MsgBeginRedelegate extends Builder.Msg {
 }
 
 module.exports = class Stake {
-    static CreateMsgDelegate(req) {
+    static createMsgDelegate(req) {
         let delegation = {
             denom: req.msg.delegation.denom,
             amount: Utils.toString(req.msg.delegation.amount),
@@ -214,13 +214,13 @@ module.exports = class Stake {
         return msg;
     }
 
-    static CreateMsgBeginUnbonding(req) {
+    static createMsgBeginUnbonding(req) {
         let shares = Utils.toDecString(req.msg.shares_amount);
         let msg = new MsgBeginUnbonding(req.from, req.msg.validator_addr, shares);
         return msg;
     }
 
-    static CreateMsgBeginRedelegate(req) {
+    static createMsgBeginRedelegate(req) {
         let shares = Utils.toDecString(req.msg.shares_amount);
         let msg = new MsgBeginRedelegate(req.from, req.msg.validator_src_addr, req.msg.validator_dst_addr, shares);
         return msg;

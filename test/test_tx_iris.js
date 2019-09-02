@@ -3,20 +3,20 @@ const chai = require('chai');
 const assert = chai.assert;
 
 const common = require('./common');
-const url ="http://irisnet-lcd.dev.rainbow.one/tx/broadcast";
+const url ="http://10.1.4.124:1317/tx/broadcast?commit=true";
 const chainName ="iris";
 
 
 describe('iris transaction', function () {
 
-    let chain_id = "hash";
-    let from = "faa1aake3umjllpd9es5d3qmry4egcne0f8a8u5rsx";
-    let gas = 10000;
-    let account_number = 0;
+    let chain_id = "irishub-test";
+    let from = "faa1f3vflz39qr5sjzfkqmkzkr5dy7t646wyexy92y";
+    let gas = 20000;
+    let account_number = 2;
     let fees = {denom: "iris-atto", amount: 600000000000000000};
     let memo = "1";
-    let privateKey = "465820F3AC6B406F8D599E558ACC48A135C57A2537CB96EF544A3D66449E7D63";
-    let pubKey = "fap1addwnpepqtdme789cpm8zww058ndlhzpwst3s0mxnhdhu5uyps0wjucaufha6v3ce99";
+    let privateKey = "80D45E1FAB9ACF59254F23C376E3AEAF139C847CD7A3126CDFD5216568730C90";
+    let pubKey = "fap1addwnpepqwqw5pshzzswemf6t00xvf0ccf2fxslaz40dp76uyad5mgujfju4zt8km3u";
     let chain = Irisnet.config.chain.iris;
 
 
@@ -289,16 +289,61 @@ describe('iris transaction', function () {
 
             extracted(tx);
         });
+
+        it('test MsgDeposit', function () {
+            let tx = {
+                chain_id: chain_id,
+                from: from,
+                account_number: account_number,
+                sequence: 11,
+                fees: fees,
+                gas: gas,
+                memo: memo,
+                type: Irisnet.config.iris.tx.deposit.type,
+                msg: {
+                    proposal_id : 3,
+                    amount : [
+                        {
+                            denom: "iris-atto",
+                            amount: 3000000000000000000000
+                        }
+                    ]
+                }
+            };
+
+            extracted(tx);
+        });
+
+        it('test MsgVote', function () {
+            this.timeout(10000);
+            let tx = {
+                chain_id: chain_id,
+                from: from,
+                account_number: account_number,
+                sequence: 13,
+                fees: fees,
+                gas: gas,
+                memo: memo,
+                type: Irisnet.config.iris.tx.vote.type,
+                msg: {
+                    proposal_id : 3,
+                    option: 0x01
+                }
+            };
+
+            extracted(tx);
+        });
     });
 
     //冷钱包调用
     function extracted(tx, chain = 'iris') {
-        let builder = Irisnet.getBuilder(chain);
+        let builder = Irisnet.getBuilder(chain,'testnet');
         //①先用联网的钱包构造一笔交易
         let stdTx = builder.buildTx(tx);
         //②把步骤①的结构序列化为字符串，装入二维码
         let signStr = JSON.stringify(stdTx.GetSignBytes());
         //③用未联网的钱包(存有账户秘钥)扫描步骤②的二维码，拿到待签名的字符串，调用signTx签名
+        console.log("GetSignBytes:", signStr);
         let signature = builder.sign(signStr, privateKey);
         //④
         let signatureStr = JSON.stringify(signature);//二维码字符串
@@ -311,12 +356,14 @@ describe('iris transaction', function () {
         //本次交易的hash，校准该笔交易的状态。调用步骤③结构的Hash，可以得到交易hash以及本次交易内容的base64编码（以后考虑使用该编码内容替换
         // GetPostData,解耦crypto和irishub交易结构的依赖）
 
-        let resp = common.sendBySync("POST",url,stdTx.GetData());
+        let postTx = stdTx.GetData();
+        postTx.mode = "commit";
+        let resp = common.sendBySync("POST",url,postTx);
         let result = stdTx.Hash();
         console.log("data:", result.data);
         console.log("hash", result.hash);
 
-        console.log(`hash=${result.hash}`)
+        console.log(`hash=${result.hash}`);
         assert.notExists(resp.code,`tx commit failed,${resp.raw_log}`);
         //console.log("displayContent", JSON.stringify(stdTx.GetDisplayContent()));
 
