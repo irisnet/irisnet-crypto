@@ -25,6 +25,14 @@
         "type": "withdraw_delegation_reward",
         "prefix": "irishub/distr/MsgWithdrawDelegationReward"
       },
+      "deposit": {
+        "type": "deposit",
+        "prefix": "irishub/gov/MsgDeposit"
+      },
+      "vote": {
+        "type": "vote",
+        "prefix": "irishub/gov/MsgVote"
+      },
       "stdTx": {
         "type": "",
         "prefix": "irishub/bank/StdTx"
