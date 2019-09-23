@@ -19,6 +19,8 @@ module.exports = class Utils {
                     tmp[k] = sort(obj[k]);
                 } else if (obj[k] != null && typeof(obj[k]) === "function") {
                     tmp[k] = evil(obj[k].toString())
+                } else if (obj[k] != null && typeof (obj[k]) === "boolean") {
+                    tmp[k] = obj[k]
                 } else {
                     tmp[k] = new String(obj[k]).toString();
                 }

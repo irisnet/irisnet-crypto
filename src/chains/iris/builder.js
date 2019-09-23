@@ -5,6 +5,7 @@ const Bank = require('./bank');
 const Stake = require('./stake');
 const Distribution = require('./distribution');
 const Gov = require('./gov');
+const Coinswap = require('./coinswap');
 const IrisKeypair = require('./keypair');
 const Codec = require("../../util/codec");
 const Config = require('../../../config');
@@ -53,6 +54,18 @@ class IrisBuilder extends Builder {
             }
             case Config.iris.tx.vote.type: {
                 msg = Gov.createMsgVote(req);
+                break;
+            }
+            case Config.iris.tx.addLiquidity.type: {
+                msg = Coinswap.createMsgAddLiquidity(req);
+                break;
+            }
+            case Config.iris.tx.removeLiquidity.type: {
+                msg = Coinswap.createMsgRemoveLiquidity(req);
+                break;
+            }
+            case Config.iris.tx.swapOrder.type: {
+                msg = Coinswap.createMsgSwapOrder(req);
                 break;
             }
             default: {

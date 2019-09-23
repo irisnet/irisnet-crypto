@@ -33,6 +33,18 @@
         "type": "vote",
         "prefix": "irishub/gov/MsgVote"
       },
+      "addLiquidity": {
+        "type": "add_liquidity",
+        "prefix": "irishub/coinswap/MsgAddLiquidity"
+      },
+      "removeLiquidity": {
+        "type": "remove_liquidity",
+        "prefix": "irishub/coinswap/MsgRemoveLiquidity"
+      },
+      "swapOrder": {
+        "type": "swap_order",
+        "prefix": "irishub/coinswap/MsgSwapOrder"
+      },
       "stdTx": {
         "type": "",
         "prefix": "irishub/bank/StdTx"

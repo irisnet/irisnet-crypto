@@ -61,6 +61,36 @@ message MsgVote {
     required uint64 option = 3;
 }
 
+message SwapInput {
+    required bytes address = 1;
+    required Coin coin = 2;
+}
+message SwapOutput {
+    required bytes address = 1;
+    required Coin coin = 2;
+}
+message MsgSwapOrder {
+    required SwapInput input = 1;
+    required SwapOutput output = 2;
+    required int64 deadline = 3;
+    required bool isBuyOrder = 4;
+}
+message MsgAddLiquidity {
+    required Coin maxToken = 1;
+    required string exactIrisAmt = 2;
+    required string minLiquidity = 3;
+    required int64 deadline = 4;
+    required bytes sender = 5;
+}
+
+message MsgRemoveLiquidity {
+    required string minToken = 1;
+    required Coin withdrawLiquidity = 2;
+    required string minIrisAmt = 3;
+    required int64 deadline = 4;
+    required bytes sender = 5;
+}
+
 message StdFee {
    repeated Coin amount = 1;
    required int64 gas = 2;

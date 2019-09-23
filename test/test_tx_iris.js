@@ -333,6 +333,84 @@ describe('iris transaction', function () {
 
             extracted(tx);
         });
+
+        it('test MsgSwapOrder', function () {
+            let tx = {
+                chain_id: chain_id,
+                from: from,
+                account_number: account_number,
+                sequence: 34,
+                fees: fees,
+                gas: gas,
+                memo: memo,
+                type: Irisnet.config.iris.tx.swapOrder.type,
+                msg: {
+                    input : {
+                        address:from,
+                        coin:{
+                            denom: "iris-atto",
+                            amount: "10000000000000000000000000000000"
+                        },
+                    },
+                    output : {
+                        address:from,
+                        coin:{
+                            denom: "btc-min",
+                            amount: "1"
+                        },
+                    },
+                    deadline:1565777966877,
+                    isBuyOrder:true
+                }
+            };
+            extracted(tx);
+        });
+
+        it('test MsgAddLiquidity', function () {
+            let tx = {
+                chain_id: chain_id,
+                from: from,
+                account_number: account_number,
+                sequence: 29,
+                fees: fees,
+                gas: gas,
+                memo: memo,
+                type: Irisnet.config.iris.tx.addLiquidity.type,
+                msg: {
+                    max_token : {
+                        denom: "btc-min",
+                        amount: "10"
+                    },
+                    exact_iris_amt: "10000000000000000000000",
+                    min_liquidity: "100000000000000000",
+                    deadline:new Date().getTime()
+                }
+            };
+            extracted(tx);
+        });
+
+        it('test MsgRemoveLiquidity', function () {
+            let tx = {
+                chain_id: chain_id,
+                from: from,
+                account_number: account_number,
+                sequence: 30,
+                fees: fees,
+                gas: gas,
+                memo: memo,
+                type: Irisnet.config.iris.tx.removeLiquidity.type,
+                msg: {
+                    withdraw_liquidity : {
+                        denom: "u-btc-min",
+                        amount: "10000000000000000000000"
+                    },
+                    min_iris_amt: "10000000000000000",
+                    min_token: "1",
+                    deadline:new Date().getTime()
+                }
+            };
+            extracted(tx);
+        });
     });
 
     //冷钱包调用
@@ -364,8 +442,9 @@ describe('iris transaction', function () {
         console.log("hash", result.hash);
 
         console.log(`hash=${result.hash}`);
+        console.log(`hash=${result.hash}`)
         assert.notExists(resp.code,`tx commit failed,${resp.raw_log}`);
-        //console.log("displayContent", JSON.stringify(stdTx.GetDisplayContent()));
+        assert.equal(result.hash,resp.hash)
 
     }
 
@@ -384,4 +463,5 @@ describe('iris transaction', function () {
 
 function verify(act,exp,data) {
     assert.notExists(act.check_tx.code,`tx commit failed,${act.check_tx.log}`);
+    assert.equal(act.hash,exp.hash)
 }
