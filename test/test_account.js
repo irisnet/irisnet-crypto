@@ -39,7 +39,7 @@ describe('account', function () {
 
         it('should recover', function () {
             let crypto = Irisnet.getCrypto(chainName, 'testnet');
-            let seed = "error nerve credit mail coyote melt property afford design wool dune sibling loan tunnel acid joke father bid home pupil giant share age warrior";
+            let seed = "surprise absurd mind pitch soccer foil zone orange type recall butter wisdom cigar situate grab ladder display loyal impose curtain syrup great retire best";
             let keyPair2 = crypto.recover(seed, Irisnet.config.language.en);
             console.log(JSON.stringify(keyPair2))
         });
@@ -102,6 +102,13 @@ describe('account', function () {
             assert.equal(utils.toDecString("1.0000000000"),"1.0000000000");
             //assert.ifError(utils.toDecString("1.1234567890123456789012"));
             assert.equal(utils.toDecString("10000000000000000000000"),"10000000000000000000000.0000000000");
+        });
+
+        it('should recover', function () {
+            let crypto = Irisnet.getCrypto(chainName, 'testnet');
+            let seed = "trend rude bike panic vocal aim silent corn between express mix chapter special peace emotion subject rude cheap jacket angry run squeeze yard cinnamon";
+            let keyPair2 = crypto.recover(seed, Irisnet.config.language.en);
+            console.log(JSON.stringify(keyPair2))
         });
     });
 });
