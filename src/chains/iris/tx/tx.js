@@ -1951,6 +1951,335 @@ $root.cosmos = (function() {
         return MsgWithdrawValidatorCommission;
     })();
 
+    cosmos.MsgTransfer = (function() {
+
+        /**
+         * Properties of a MsgTransfer.
+         * @memberof cosmos
+         * @interface IMsgTransfer
+         * @property {string} SrcPort MsgTransfer SrcPort
+         * @property {string} SrcChannel MsgTransfer SrcChannel
+         * @property {string} Denomination MsgTransfer Denomination
+         * @property {string} Amount MsgTransfer Amount
+         * @property {Uint8Array} Sender MsgTransfer Sender
+         * @property {string} Receiver MsgTransfer Receiver
+         * @property {boolean} Source MsgTransfer Source
+         */
+
+        /**
+         * Constructs a new MsgTransfer.
+         * @memberof cosmos
+         * @classdesc Represents a MsgTransfer.
+         * @implements IMsgTransfer
+         * @constructor
+         * @param {cosmos.IMsgTransfer=} [properties] Properties to set
+         */
+        function MsgTransfer(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * MsgTransfer SrcPort.
+         * @member {string} SrcPort
+         * @memberof cosmos.MsgTransfer
+         * @instance
+         */
+        MsgTransfer.prototype.SrcPort = "";
+
+        /**
+         * MsgTransfer SrcChannel.
+         * @member {string} SrcChannel
+         * @memberof cosmos.MsgTransfer
+         * @instance
+         */
+        MsgTransfer.prototype.SrcChannel = "";
+
+        /**
+         * MsgTransfer Denomination.
+         * @member {string} Denomination
+         * @memberof cosmos.MsgTransfer
+         * @instance
+         */
+        MsgTransfer.prototype.Denomination = "";
+
+        /**
+         * MsgTransfer Amount.
+         * @member {string} Amount
+         * @memberof cosmos.MsgTransfer
+         * @instance
+         */
+        MsgTransfer.prototype.Amount = "";
+
+        /**
+         * MsgTransfer Sender.
+         * @member {Uint8Array} Sender
+         * @memberof cosmos.MsgTransfer
+         * @instance
+         */
+        MsgTransfer.prototype.Sender = $util.newBuffer([]);
+
+        /**
+         * MsgTransfer Receiver.
+         * @member {string} Receiver
+         * @memberof cosmos.MsgTransfer
+         * @instance
+         */
+        MsgTransfer.prototype.Receiver = "";
+
+        /**
+         * MsgTransfer Source.
+         * @member {boolean} Source
+         * @memberof cosmos.MsgTransfer
+         * @instance
+         */
+        MsgTransfer.prototype.Source = false;
+
+        /**
+         * Creates a new MsgTransfer instance using the specified properties.
+         * @function create
+         * @memberof cosmos.MsgTransfer
+         * @static
+         * @param {cosmos.IMsgTransfer=} [properties] Properties to set
+         * @returns {cosmos.MsgTransfer} MsgTransfer instance
+         */
+        MsgTransfer.create = function create(properties) {
+            return new MsgTransfer(properties);
+        };
+
+        /**
+         * Encodes the specified MsgTransfer message. Does not implicitly {@link cosmos.MsgTransfer.verify|verify} messages.
+         * @function encode
+         * @memberof cosmos.MsgTransfer
+         * @static
+         * @param {cosmos.IMsgTransfer} message MsgTransfer message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        MsgTransfer.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            writer.uint32(/* id 1, wireType 2 =*/10).string(message.SrcPort);
+            writer.uint32(/* id 2, wireType 2 =*/18).string(message.SrcChannel);
+            writer.uint32(/* id 3, wireType 2 =*/26).string(message.Denomination);
+            writer.uint32(/* id 4, wireType 2 =*/34).string(message.Amount);
+            writer.uint32(/* id 5, wireType 2 =*/42).bytes(message.Sender);
+            writer.uint32(/* id 6, wireType 2 =*/50).string(message.Receiver);
+            writer.uint32(/* id 7, wireType 0 =*/56).bool(message.Source);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified MsgTransfer message, length delimited. Does not implicitly {@link cosmos.MsgTransfer.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof cosmos.MsgTransfer
+         * @static
+         * @param {cosmos.IMsgTransfer} message MsgTransfer message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        MsgTransfer.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a MsgTransfer message from the specified reader or buffer.
+         * @function decode
+         * @memberof cosmos.MsgTransfer
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {cosmos.MsgTransfer} MsgTransfer
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        MsgTransfer.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.cosmos.MsgTransfer();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                    case 1:
+                        message.SrcPort = reader.string();
+                        break;
+                    case 2:
+                        message.SrcChannel = reader.string();
+                        break;
+                    case 3:
+                        message.Denomination = reader.string();
+                        break;
+                    case 4:
+                        message.Amount = reader.string();
+                        break;
+                    case 5:
+                        message.Sender = reader.bytes();
+                        break;
+                    case 6:
+                        message.Receiver = reader.string();
+                        break;
+                    case 7:
+                        message.Source = reader.bool();
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
+                }
+            }
+            if (!message.hasOwnProperty("SrcPort"))
+                throw $util.ProtocolError("missing required 'SrcPort'", { instance: message });
+            if (!message.hasOwnProperty("SrcChannel"))
+                throw $util.ProtocolError("missing required 'SrcChannel'", { instance: message });
+            if (!message.hasOwnProperty("Denomination"))
+                throw $util.ProtocolError("missing required 'Denomination'", { instance: message });
+            if (!message.hasOwnProperty("Amount"))
+                throw $util.ProtocolError("missing required 'Amount'", { instance: message });
+            if (!message.hasOwnProperty("Sender"))
+                throw $util.ProtocolError("missing required 'Sender'", { instance: message });
+            if (!message.hasOwnProperty("Receiver"))
+                throw $util.ProtocolError("missing required 'Receiver'", { instance: message });
+            if (!message.hasOwnProperty("Source"))
+                throw $util.ProtocolError("missing required 'Source'", { instance: message });
+            return message;
+        };
+
+        /**
+         * Decodes a MsgTransfer message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof cosmos.MsgTransfer
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {cosmos.MsgTransfer} MsgTransfer
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        MsgTransfer.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a MsgTransfer message.
+         * @function verify
+         * @memberof cosmos.MsgTransfer
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        MsgTransfer.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (!$util.isString(message.SrcPort))
+                return "SrcPort: string expected";
+            if (!$util.isString(message.SrcChannel))
+                return "SrcChannel: string expected";
+            if (!$util.isString(message.Denomination))
+                return "Denomination: string expected";
+            if (!$util.isString(message.Amount))
+                return "Amount: string expected";
+            if (!(message.Sender && typeof message.Sender.length === "number" || $util.isString(message.Sender)))
+                return "Sender: buffer expected";
+            if (!$util.isString(message.Receiver))
+                return "Receiver: string expected";
+            if (typeof message.Source !== "boolean")
+                return "Source: boolean expected";
+            return null;
+        };
+
+        /**
+         * Creates a MsgTransfer message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof cosmos.MsgTransfer
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {cosmos.MsgTransfer} MsgTransfer
+         */
+        MsgTransfer.fromObject = function fromObject(object) {
+            if (object instanceof $root.cosmos.MsgTransfer)
+                return object;
+            var message = new $root.cosmos.MsgTransfer();
+            if (object.SrcPort != null)
+                message.SrcPort = String(object.SrcPort);
+            if (object.SrcChannel != null)
+                message.SrcChannel = String(object.SrcChannel);
+            if (object.Denomination != null)
+                message.Denomination = String(object.Denomination);
+            if (object.Amount != null)
+                message.Amount = String(object.Amount);
+            if (object.Sender != null)
+                if (typeof object.Sender === "string")
+                    $util.base64.decode(object.Sender, message.Sender = $util.newBuffer($util.base64.length(object.Sender)), 0);
+                else if (object.Sender.length)
+                    message.Sender = object.Sender;
+            if (object.Receiver != null)
+                message.Receiver = String(object.Receiver);
+            if (object.Source != null)
+                message.Source = Boolean(object.Source);
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a MsgTransfer message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof cosmos.MsgTransfer
+         * @static
+         * @param {cosmos.MsgTransfer} message MsgTransfer
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        MsgTransfer.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.defaults) {
+                object.SrcPort = "";
+                object.SrcChannel = "";
+                object.Denomination = "";
+                object.Amount = "";
+                if (options.bytes === String)
+                    object.Sender = "";
+                else {
+                    object.Sender = [];
+                    if (options.bytes !== Array)
+                        object.Sender = $util.newBuffer(object.Sender);
+                }
+                object.Receiver = "";
+                object.Source = false;
+            }
+            if (message.SrcPort != null && message.hasOwnProperty("SrcPort"))
+                object.SrcPort = message.SrcPort;
+            if (message.SrcChannel != null && message.hasOwnProperty("SrcChannel"))
+                object.SrcChannel = message.SrcChannel;
+            if (message.Denomination != null && message.hasOwnProperty("Denomination"))
+                object.Denomination = message.Denomination;
+            if (message.Amount != null && message.hasOwnProperty("Amount"))
+                object.Amount = message.Amount;
+            if (message.Sender != null && message.hasOwnProperty("Sender"))
+                object.Sender = options.bytes === String ? $util.base64.encode(message.Sender, 0, message.Sender.length) : options.bytes === Array ? Array.prototype.slice.call(message.Sender) : message.Sender;
+            if (message.Receiver != null && message.hasOwnProperty("Receiver"))
+                object.Receiver = message.Receiver;
+            if (message.Source != null && message.hasOwnProperty("Source"))
+                object.Source = message.Source;
+            return object;
+        };
+
+        /**
+         * Converts this MsgTransfer to JSON.
+         * @function toJSON
+         * @memberof cosmos.MsgTransfer
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        MsgTransfer.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return MsgTransfer;
+    })();
+
     cosmos.StdFee = (function() {
 
         /**

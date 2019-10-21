@@ -9,14 +9,14 @@ const chainName ="iris";
 
 describe('iris transaction', function () {
 
-    let chain_id = "iris-ibc";
-    let from = "faa1t4qxtz45x8q84jrfzvarythmmghkqzj02ct6d6";
-    let gas = 20000;
-    let account_number = 4;
-    let fees = {denom: "iris-atto", amount: 600000000000000000};
+    let chain_id = "chain-a";
+    let from = "faa153gr5zamka0x3n2qp6kxsuxljurnwxq57rxu76";
+    let gas = 100000;
+    let account_number = 3;
+    let fees = {denom: "n0token", amount: 10};
     let memo = "1";
-    let privateKey = "6B72225333DEF0F3447B62E4FB38DE781EF89AF1F73EDC2E3DCF0D2CAC0C714C";
-    let pubKey = "fap1addwnpepqty3z5pq7aju6cw4rfl9ers3u69f0rt02y8rln3aqr5e58c0m98hgk4xp7u";
+    let privateKey = "80AEADB700ABC446784BBFEA54611B93AF2228C7120F992355CC3653A9D5D8ED";
+    let pubKey = "fap1addwnpepq2p9nwycvxxe38qv02ypqfmhvwhz27rclee4gavk42uj04n07jg0xt525wy";
     let chain = Irisnet.config.chain.iris;
 
 
@@ -53,7 +53,7 @@ describe('iris transaction', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 0,
+                sequence: 10,
                 fees: fees,
                 gas: gas,
                 memo: memo,
@@ -62,7 +62,7 @@ describe('iris transaction', function () {
                     to: "faa1s6v9qgu8ye7d884s8kpye64x66znndg8t6eztj",
                     coins: [
                         {
-                            denom: "iris-atto",
+                            denom: "uiris",
                             amount: 10000000
                         }
                     ]
@@ -333,6 +333,31 @@ describe('iris transaction', function () {
 
             extracted(tx);
         });
+
+        it('test IBC Transfer', function () {
+            this.timeout(10000);
+            let tx = {
+                chain_id: chain_id,
+                from: from,
+                account_number: account_number,
+                sequence: 9,
+                fees: fees,
+                gas: gas,
+                memo: memo,
+                type: Irisnet.config.iris.tx.ibcTransfer.type,
+                msg: {
+                    src_port : "port-to-b",
+                    src_channel: "chann-to-b",
+                    denomination: "n0token",
+                    amount: "1",
+                    receiver: "faa1vv0gjuw9e64nds2ngd5d9357fsdtq3u5c3hn65",
+                    source: true
+                }
+            };
+
+            extracted(tx);
+        });
+
     });
 
     //冷钱包调用
@@ -357,7 +382,7 @@ describe('iris transaction', function () {
         // GetPostData,解耦crypto和irishub交易结构的依赖）
 
         let postTx = stdTx.GetData();
-        postTx.mode = "commit";
+        postTx.mode = "block";
         let resp = common.sendBySync("POST",url,postTx);
         let result = stdTx.Hash();
         console.log("data:", result.data);
@@ -384,5 +409,6 @@ describe('iris transaction', function () {
 
 function verify(act,exp,data) {
     console.log(JSON.stringify(act))
+    console.log(JSON.stringify(exp))
     //assert.notExists(act.check_tx.code,`tx commit failed,${act.check_tx.log}`);
 }

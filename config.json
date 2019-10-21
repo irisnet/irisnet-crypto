@@ -33,6 +33,10 @@
         "type": "vote",
         "prefix": "irishub/gov/MsgVote"
       },
+      "ibcTransfer": {
+        "type": "MsgTransfer",
+        "prefix": "ibcmockbank/MsgTransfer"
+      },
       "stdTx": {
         "type": "",
         "prefix": "irishub/bank/StdTx"
@@ -93,6 +97,10 @@
       "withdrawValidatorCommission": {
         "type": "withdraw_validator_commission",
         "prefix": "cosmos-sdk/MsgWithdrawValidatorCommission"
+      },
+      "ibcTransfer": {
+        "type": "MsgTransfer",
+        "prefix": "ibcmockbank/MsgTransfer"
       },
       "stdTx": {
         "type": "stdTx",
