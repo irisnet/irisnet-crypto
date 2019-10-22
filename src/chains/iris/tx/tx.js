@@ -1961,7 +1961,7 @@ $root.cosmos = (function() {
          * @property {string} SrcChannel MsgTransfer SrcChannel
          * @property {string} Denomination MsgTransfer Denomination
          * @property {string} Amount MsgTransfer Amount
-         * @property {Uint8Array} Sender MsgTransfer Sender
+         * @property {string} Sender MsgTransfer Sender
          * @property {string} Receiver MsgTransfer Receiver
          * @property {boolean} Source MsgTransfer Source
          */
@@ -2015,11 +2015,11 @@ $root.cosmos = (function() {
 
         /**
          * MsgTransfer Sender.
-         * @member {Uint8Array} Sender
+         * @member {string} Sender
          * @memberof cosmos.MsgTransfer
          * @instance
          */
-        MsgTransfer.prototype.Sender = $util.newBuffer([]);
+        MsgTransfer.prototype.Sender = "";
 
         /**
          * MsgTransfer Receiver.
@@ -2065,7 +2065,7 @@ $root.cosmos = (function() {
             writer.uint32(/* id 2, wireType 2 =*/18).string(message.SrcChannel);
             writer.uint32(/* id 3, wireType 2 =*/26).string(message.Denomination);
             writer.uint32(/* id 4, wireType 2 =*/34).string(message.Amount);
-            writer.uint32(/* id 5, wireType 2 =*/42).bytes(message.Sender);
+            writer.uint32(/* id 5, wireType 2 =*/42).string(message.Sender);
             writer.uint32(/* id 6, wireType 2 =*/50).string(message.Receiver);
             writer.uint32(/* id 7, wireType 0 =*/56).bool(message.Source);
             return writer;
@@ -2115,7 +2115,7 @@ $root.cosmos = (function() {
                         message.Amount = reader.string();
                         break;
                     case 5:
-                        message.Sender = reader.bytes();
+                        message.Sender = reader.string();
                         break;
                     case 6:
                         message.Receiver = reader.string();
@@ -2180,8 +2180,8 @@ $root.cosmos = (function() {
                 return "Denomination: string expected";
             if (!$util.isString(message.Amount))
                 return "Amount: string expected";
-            if (!(message.Sender && typeof message.Sender.length === "number" || $util.isString(message.Sender)))
-                return "Sender: buffer expected";
+            if (!$util.isString(message.Sender))
+                return "Sender: string expected";
             if (!$util.isString(message.Receiver))
                 return "Receiver: string expected";
             if (typeof message.Source !== "boolean")
@@ -2210,10 +2210,7 @@ $root.cosmos = (function() {
             if (object.Amount != null)
                 message.Amount = String(object.Amount);
             if (object.Sender != null)
-                if (typeof object.Sender === "string")
-                    $util.base64.decode(object.Sender, message.Sender = $util.newBuffer($util.base64.length(object.Sender)), 0);
-                else if (object.Sender.length)
-                    message.Sender = object.Sender;
+                message.Sender = String(object.Sender);
             if (object.Receiver != null)
                 message.Receiver = String(object.Receiver);
             if (object.Source != null)
@@ -2239,13 +2236,7 @@ $root.cosmos = (function() {
                 object.SrcChannel = "";
                 object.Denomination = "";
                 object.Amount = "";
-                if (options.bytes === String)
-                    object.Sender = "";
-                else {
-                    object.Sender = [];
-                    if (options.bytes !== Array)
-                        object.Sender = $util.newBuffer(object.Sender);
-                }
+                object.Sender = "";
                 object.Receiver = "";
                 object.Source = false;
             }
@@ -2258,7 +2249,7 @@ $root.cosmos = (function() {
             if (message.Amount != null && message.hasOwnProperty("Amount"))
                 object.Amount = message.Amount;
             if (message.Sender != null && message.hasOwnProperty("Sender"))
-                object.Sender = options.bytes === String ? $util.base64.encode(message.Sender, 0, message.Sender.length) : options.bytes === Array ? Array.prototype.slice.call(message.Sender) : message.Sender;
+                object.Sender = message.Sender;
             if (message.Receiver != null && message.hasOwnProperty("Receiver"))
                 object.Receiver = message.Receiver;
             if (message.Source != null && message.hasOwnProperty("Source"))

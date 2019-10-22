@@ -12,7 +12,7 @@ MsgTransfer.prototype.GetSignBytes = function () {
         src_channel: this.SrcChannel,
         denomination: this.Denomination,
         amount: this.Amount,
-        sender: BECH32.encode(Config.iris.bech32.accAddr, this.Sender),
+        sender: this.Sender,
         receiver: this.Receiver,
         source: this.Source
     };
@@ -45,41 +45,37 @@ MsgTransfer.prototype.ValidateBasic = function () {
 };
 
 MsgTransfer.prototype.GetMsg = function () {
-    let sender = BECH32.fromWords(this.Sender);
-
     return {
         SrcPort: this.SrcPort,
         SrcChannel: this.SrcChannel,
         Denomination: this.Denomination,
         Amount: this.Amount,
-        Sender: sender,
+        Sender: this.Sender,
         Receiver: this.Receiver,
         Source: this.Source
     }
 };
 
 MsgTransfer.prototype.GetDisplayContent = function () {
-    let sender = BECH32.encode(Config.cosmos.bech32.accAddr, this.Sender);
     return {
         i18n_tx_type: "i18n_ibc_transfer",
         i18n_src_port: this.SrcPort,
         i18n_src_channel: this.SrcChannel,
         i18n_denomination: this.Denomination,
         i18n_amount: this.Amount,
-        i18n_sender: sender,
+        i18n_sender: this.Sender,
         i18n_receiver: this.Receiver,
         i18n_source: this.Source
     }
 };
 
 MsgTransfer.prototype.toJSON = function () {
-    let sender = BECH32.encode(Config.cosmos.bech32.accAddr, this.Sender);
     return {
         SrcPort: this.SrcPort,
         SrcChannel: this.SrcChannel,
         Denomination: this.Denomination,
         Amount: this.Amount,
-        Sender: sender,
+        Sender: this.Sender,
         Receiver: this.Receiver,
         Source: this.Source
     }
@@ -87,13 +83,12 @@ MsgTransfer.prototype.toJSON = function () {
 
 module.exports = class IBC {
     static createMsgTransfer(req) {
-        let sender = BECH32.decode(req.from).words;
         return new MsgTransfer({
             SrcPort: req.msg.src_port,
             SrcChannel: req.msg.src_channel,
             Denomination: req.msg.denomination,
             Amount: Utils.toString(req.msg.amount),
-            Sender: sender,
+            Sender: req.from,
             Receiver: req.msg.receiver,
             Source: req.msg.source
         });

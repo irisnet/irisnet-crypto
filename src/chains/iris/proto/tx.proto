@@ -50,7 +50,7 @@ message MsgTransfer {
     required string SrcChannel = 2;
     required string Denomination = 3;
     required string Amount = 4;
-    required bytes Sender = 5;
+    required string Sender = 5;
     required string Receiver = 6;
     required bool Source = 7;
 }

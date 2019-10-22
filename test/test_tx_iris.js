@@ -340,7 +340,7 @@ describe('iris transaction', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 9,
+                sequence: 30,
                 fees: fees,
                 gas: gas,
                 memo: memo,
@@ -385,10 +385,8 @@ describe('iris transaction', function () {
         postTx.mode = "block";
         let resp = common.sendBySync("POST",url,postTx);
         let result = stdTx.Hash();
-        console.log("data:", result.data);
-        console.log("hash", result.hash);
-
-        console.log(`hash=${result.hash}`);
+        console.log("hash", resp.txhash);
+        assert.equal(result.hash,resp.txhash)
         assert.notExists(resp.code,`tx commit failed,${resp.raw_log}`);
         //console.log("displayContent", JSON.stringify(stdTx.GetDisplayContent()));
 
