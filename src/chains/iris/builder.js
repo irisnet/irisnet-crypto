@@ -35,7 +35,7 @@ class CosmosBuilder extends Builder {
                 msg = Stake.createMsgUndelegate(req);
                 break;
             }
-            case Config.iris.tx.beginRedelegate.type: {
+            case Config.cosmos.tx.beginRedelegate.type: {
                 msg = Stake.createMsgBeginRedelegate(req);
                 break;
             }
