@@ -39,9 +39,10 @@ describe('account', function () {
 
         it('should recover', function () {
             let crypto = Irisnet.getCrypto(chainName, 'testnet');
-            let seed = "crouch gym pluck category sound obvious suggest mixture hip still legal despair floor truth steel little marble arm laundry venture often attitude ahead cupboard";
-            let keyPair2 = crypto.recover(seed, Irisnet.config.language.en);
-            console.log(JSON.stringify(keyPair2))
+            // let seed = "crouch gym pluck category sound obvious suggest mixture hip still legal despair floor truth steel little marble arm laundry venture often attitude ahead cupboard";
+            // let keyPair2 = crypto.recover(seed, Irisnet.config.language.en);
+            // console.log(JSON.stringify(keyPair2))
+            console.log(crypto.isValidAddress("faa1d2a77z8q0atuh4u4m7y3j65c25hdmjms3zt8vz"))
         });
 
         describe('keystore', function () {

@@ -16,7 +16,7 @@ class CosmosKeypair {
     static getPrivateKeyFromSecret(mnemonicS) {
         let seed = Bip39.mnemonicToSeed(mnemonicS);
         let master = Hd.ComputeMastersFromSeed(seed);
-        let derivedPriv = Hd.DerivePrivateKeyForPath(master.secret,master.chainCode,Config.cosmos.bip39Path);
+        let derivedPriv = Hd.DerivePrivateKeyForPath(master.secret,master.chainCode,Config.iris.bip39Path);
         return derivedPriv;
     }
 
@@ -57,7 +57,7 @@ class CosmosKeypair {
         let secretKey = this.getPrivateKeyFromSecret(mnemonicS);
         //构造公钥
         let pubKey = Secp256k1.publicKeyCreate(secretKey);
-        pubKey = Amino.MarshalBinary(Config.cosmos.amino.pubKey,pubKey);
+        pubKey = Amino.MarshalBinary(Config.iris.amino.pubKey,pubKey);
 
         return {
             "secret": mnemonicS,
@@ -73,7 +73,7 @@ class CosmosKeypair {
         let secretKey = this.getPrivateKeyFromSecret(mnemonic);
         //构造公钥
         let pubKey = Secp256k1.publicKeyCreate(secretKey);
-        pubKey = Amino.MarshalBinary(Config.cosmos.amino.pubKey,pubKey);
+        pubKey = Amino.MarshalBinary(Config.iris.amino.pubKey,pubKey);
 
         return {
             "secret": mnemonic,
@@ -97,7 +97,7 @@ class CosmosKeypair {
         let secretBytes = Buffer.from(secretKey,"hex");
         //构造公钥
         let pubKey = Secp256k1.publicKeyCreate(secretBytes);
-        pubKey = Amino.MarshalBinary(Config.cosmos.amino.pubKey,pubKey);
+        pubKey = Amino.MarshalBinary(Config.iris.amino.pubKey,pubKey);
         return {
             "address": this.getAddress(pubKey),
             "privateKey": secretKey,
@@ -106,7 +106,7 @@ class CosmosKeypair {
     }
 
     static isValidAddress(address) {
-        let prefix = Config.cosmos.bech32.accAddr;
+        let prefix = Config.iris.bech32.accAddr;
 		return Codec.Bech32.isBech32(prefix,address);
     }
 

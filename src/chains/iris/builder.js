@@ -23,7 +23,7 @@ class CosmosBuilder extends Builder {
         let req = super.buildParam(tx);
         let msg;
         switch (req.type) {
-            case Config.cosmos.tx.transfer.type: {
+            case Config.iris.tx.transfer.type: {
                 msg = Bank.create(req);
                 break;
             }
@@ -31,11 +31,11 @@ class CosmosBuilder extends Builder {
                 msg = Stake.createMsgDelegate(req);
                 break;
             }
-            case Config.cosmos.tx.undelegate.type: {
+            case Config.iris.tx.undelegate.type: {
                 msg = Stake.createMsgUndelegate(req);
                 break;
             }
-            case Config.cosmos.tx.beginRedelegate.type: {
+            case Config.iris.tx.beginRedelegate.type: {
                 msg = Stake.createMsgBeginRedelegate(req);
                 break;
             }
