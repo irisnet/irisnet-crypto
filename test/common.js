@@ -41,7 +41,7 @@ async function verifyTx(url, tx, privateKey, chainName,callback) {
     //console.log(JSON.stringify(stdTx));
     let exp = stdTx.Hash();
     //console.log(JSON.stringify(exp));
-    let payload = stdTx.GetData();
+    let payload = stdTx.GetData("block");
     let response = await sendByAsync("POST",url,payload);
     callback(response,exp,payload);
 

@@ -99,7 +99,16 @@ class StdTx {
 
     }
 
-    GetData() {
+    /**
+     *
+     * @param mode string {block|sync|async}
+     *    block: the client waits for the tx to be committed in a block.
+     *    sync: the client waits for a CheckTx execution response only.
+     *    async: the client returns immediately without execute CheckTx
+     * @returns {{mode: string, tx: {msg: [], fee: {amount: *, gas: string}, memo: *, signatures: []}}}
+     * @constructor
+     */
+    GetData(mode = 'sync') {
         let signatures = [];
         if (this.signatures){
             this.signatures.forEach(function(sig) {
@@ -137,7 +146,7 @@ class StdTx {
                 signatures: signatures,
                 memo: this.memo
             },
-            'mode': 'sync'
+            'mode': mode
         }
     }
 
