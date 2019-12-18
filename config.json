@@ -96,7 +96,7 @@
       },
       "stdTx": {
         "type": "stdTx",
-        "prefix": "auth/StdTx"
+        "prefix": "cosmos-sdk/StdTx"
       }
     },
     "bech32": {
