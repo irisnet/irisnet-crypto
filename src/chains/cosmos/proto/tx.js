@@ -119,15 +119,15 @@ $root.cosmos = (function() {
             while (reader.pos < end) {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
-                    case 1:
-                        message.denom = reader.string();
-                        break;
-                    case 2:
-                        message.amount = reader.string();
-                        break;
-                    default:
-                        reader.skipType(tag & 7);
-                        break;
+                case 1:
+                    message.denom = reader.string();
+                    break;
+                case 2:
+                    message.amount = reader.string();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
                 }
             }
             if (!message.hasOwnProperty("denom"))
@@ -342,20 +342,20 @@ $root.cosmos = (function() {
             while (reader.pos < end) {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
-                    case 1:
-                        message.FromAddress = reader.bytes();
-                        break;
-                    case 2:
-                        message.ToAddress = reader.bytes();
-                        break;
-                    case 3:
-                        if (!(message.Amount && message.Amount.length))
-                            message.Amount = [];
-                        message.Amount.push($root.cosmos.Coin.decode(reader, reader.uint32()));
-                        break;
-                    default:
-                        reader.skipType(tag & 7);
-                        break;
+                case 1:
+                    message.FromAddress = reader.bytes();
+                    break;
+                case 2:
+                    message.ToAddress = reader.bytes();
+                    break;
+                case 3:
+                    if (!(message.Amount && message.Amount.length))
+                        message.Amount = [];
+                    message.Amount.push($root.cosmos.Coin.decode(reader, reader.uint32()));
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
                 }
             }
             if (!message.hasOwnProperty("FromAddress"))
@@ -611,18 +611,18 @@ $root.cosmos = (function() {
             while (reader.pos < end) {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
-                    case 1:
-                        message.DelegatorAddress = reader.bytes();
-                        break;
-                    case 2:
-                        message.ValidatorAddress = reader.bytes();
-                        break;
-                    case 3:
-                        message.Amount = $root.cosmos.Coin.decode(reader, reader.uint32());
-                        break;
-                    default:
-                        reader.skipType(tag & 7);
-                        break;
+                case 1:
+                    message.DelegatorAddress = reader.bytes();
+                    break;
+                case 2:
+                    message.ValidatorAddress = reader.bytes();
+                    break;
+                case 3:
+                    message.Amount = $root.cosmos.Coin.decode(reader, reader.uint32());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
                 }
             }
             if (!message.hasOwnProperty("DelegatorAddress"))
@@ -867,18 +867,18 @@ $root.cosmos = (function() {
             while (reader.pos < end) {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
-                    case 1:
-                        message.DelegatorAddress = reader.bytes();
-                        break;
-                    case 2:
-                        message.ValidatorAddress = reader.bytes();
-                        break;
-                    case 3:
-                        message.Amount = $root.cosmos.Coin.decode(reader, reader.uint32());
-                        break;
-                    default:
-                        reader.skipType(tag & 7);
-                        break;
+                case 1:
+                    message.DelegatorAddress = reader.bytes();
+                    break;
+                case 2:
+                    message.ValidatorAddress = reader.bytes();
+                    break;
+                case 3:
+                    message.Amount = $root.cosmos.Coin.decode(reader, reader.uint32());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
                 }
             }
             if (!message.hasOwnProperty("DelegatorAddress"))
@@ -1133,21 +1133,21 @@ $root.cosmos = (function() {
             while (reader.pos < end) {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
-                    case 1:
-                        message.DelegatorAddress = reader.bytes();
-                        break;
-                    case 2:
-                        message.ValidatorSrcAddress = reader.bytes();
-                        break;
-                    case 3:
-                        message.ValidatorDstAddress = reader.bytes();
-                        break;
-                    case 4:
-                        message.Amount = $root.cosmos.Coin.decode(reader, reader.uint32());
-                        break;
-                    default:
-                        reader.skipType(tag & 7);
-                        break;
+                case 1:
+                    message.DelegatorAddress = reader.bytes();
+                    break;
+                case 2:
+                    message.ValidatorSrcAddress = reader.bytes();
+                    break;
+                case 3:
+                    message.ValidatorDstAddress = reader.bytes();
+                    break;
+                case 4:
+                    message.Amount = $root.cosmos.Coin.decode(reader, reader.uint32());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
                 }
             }
             if (!message.hasOwnProperty("DelegatorAddress"))
@@ -1400,15 +1400,15 @@ $root.cosmos = (function() {
             while (reader.pos < end) {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
-                    case 1:
-                        message.DelegatorAddress = reader.bytes();
-                        break;
-                    case 2:
-                        message.WithdrawAddress = reader.bytes();
-                        break;
-                    default:
-                        reader.skipType(tag & 7);
-                        break;
+                case 1:
+                    message.DelegatorAddress = reader.bytes();
+                    break;
+                case 2:
+                    message.WithdrawAddress = reader.bytes();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
                 }
             }
             if (!message.hasOwnProperty("DelegatorAddress"))
@@ -1628,15 +1628,15 @@ $root.cosmos = (function() {
             while (reader.pos < end) {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
-                    case 1:
-                        message.DelegatorAddress = reader.bytes();
-                        break;
-                    case 2:
-                        message.ValidatorAddress = reader.bytes();
-                        break;
-                    default:
-                        reader.skipType(tag & 7);
-                        break;
+                case 1:
+                    message.DelegatorAddress = reader.bytes();
+                    break;
+                case 2:
+                    message.ValidatorAddress = reader.bytes();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
                 }
             }
             if (!message.hasOwnProperty("DelegatorAddress"))
@@ -1846,12 +1846,12 @@ $root.cosmos = (function() {
             while (reader.pos < end) {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
-                    case 1:
-                        message.ValidatorAddress = reader.bytes();
-                        break;
-                    default:
-                        reader.skipType(tag & 7);
-                        break;
+                case 1:
+                    message.ValidatorAddress = reader.bytes();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
                 }
             }
             if (!message.hasOwnProperty("ValidatorAddress"))
@@ -2601,17 +2601,17 @@ $root.cosmos = (function() {
             while (reader.pos < end) {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
-                    case 1:
-                        if (!(message.amount && message.amount.length))
-                            message.amount = [];
-                        message.amount.push($root.cosmos.Coin.decode(reader, reader.uint32()));
-                        break;
-                    case 2:
-                        message.gas = reader.int64();
-                        break;
-                    default:
-                        reader.skipType(tag & 7);
-                        break;
+                case 1:
+                    if (!(message.amount && message.amount.length))
+                        message.amount = [];
+                    message.amount.push($root.cosmos.Coin.decode(reader, reader.uint32()));
+                    break;
+                case 2:
+                    message.gas = reader.int64();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
                 }
             }
             if (!message.hasOwnProperty("gas"))
@@ -2843,15 +2843,15 @@ $root.cosmos = (function() {
             while (reader.pos < end) {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
-                    case 1:
-                        message.pubKey = reader.bytes();
-                        break;
-                    case 2:
-                        message.signature = reader.bytes();
-                        break;
-                    default:
-                        reader.skipType(tag & 7);
-                        break;
+                case 1:
+                    message.pubKey = reader.bytes();
+                    break;
+                case 2:
+                    message.signature = reader.bytes();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
                 }
             }
             if (!message.hasOwnProperty("pubKey"))
@@ -3062,7 +3062,7 @@ $root.cosmos = (function() {
             if (message.signatures != null && message.signatures.length)
                 for (var i = 0; i < message.signatures.length; ++i)
                     $root.cosmos.StdSignature.encode(message.signatures[i], writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-            if (message.memo != null && message.hasOwnProperty("memo") && message.memo !== "")
+            if (message.memo != null && message.hasOwnProperty("memo"))
                 writer.uint32(/* id 4, wireType 2 =*/34).string(message.memo);
             return writer;
         };
@@ -3098,25 +3098,25 @@ $root.cosmos = (function() {
             while (reader.pos < end) {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
-                    case 1:
-                        if (!(message.msg && message.msg.length))
-                            message.msg = [];
-                        message.msg.push(reader.bytes());
-                        break;
-                    case 2:
-                        message.fee = $root.cosmos.StdFee.decode(reader, reader.uint32());
-                        break;
-                    case 3:
-                        if (!(message.signatures && message.signatures.length))
-                            message.signatures = [];
-                        message.signatures.push($root.cosmos.StdSignature.decode(reader, reader.uint32()));
-                        break;
-                    case 4:
-                        message.memo = reader.string();
-                        break;
-                    default:
-                        reader.skipType(tag & 7);
-                        break;
+                case 1:
+                    if (!(message.msg && message.msg.length))
+                        message.msg = [];
+                    message.msg.push(reader.bytes());
+                    break;
+                case 2:
+                    message.fee = $root.cosmos.StdFee.decode(reader, reader.uint32());
+                    break;
+                case 3:
+                    if (!(message.signatures && message.signatures.length))
+                        message.signatures = [];
+                    message.signatures.push($root.cosmos.StdSignature.decode(reader, reader.uint32()));
+                    break;
+                case 4:
+                    message.memo = reader.string();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
                 }
             }
             if (!message.hasOwnProperty("fee"))
