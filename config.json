@@ -94,6 +94,14 @@
         "type": "withdraw_validator_commission",
         "prefix": "cosmos-sdk/MsgWithdrawValidatorCommission"
       },
+      "deposit": {
+        "type": "deposit",
+        "prefix": "cosmos-sdk/MsgDeposit"
+      },
+      "vote": {
+        "type": "vote",
+        "prefix": "cosmos-sdk/MsgVote"
+      },
       "stdTx": {
         "type": "stdTx",
         "prefix": "cosmos-sdk/StdTx"

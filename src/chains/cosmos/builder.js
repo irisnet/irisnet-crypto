@@ -4,6 +4,7 @@ const Old = require('old');
 const Bank = require('./bank');
 const Stake = require('./stake');
 const Distribution = require('./distribution');
+const Gov = require('./gov');
 const CosmosKeypair = require('./keypair');
 const Codec = require("../../util/codec");
 const Config = require('../../../config');
@@ -48,6 +49,14 @@ class CosmosBuilder extends Builder {
             }
             case Config.cosmos.tx.withdrawValidatorCommission.type: {
                 msg = Distribution.CreateMsgWithdrawValidatorCommission(req);
+                break;
+            }
+            case Config.cosmos.tx.deposit.type: {
+                msg = Gov.createMsgDeposit(req);
+                break;
+            }
+            case Config.cosmos.tx.vote.type: {
+                msg = Gov.createMsgVote(req);
                 break;
             }
             default: {
