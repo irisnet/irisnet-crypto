@@ -2,7 +2,7 @@ const Config = require('../../../config');
 const Root = require('./tx/tx');
 const BECH32 = require('bech32');
 const Utils = require('../../util/utils');
-
+const Amino = require("../base");
 
 const voteOptionMapping = {
     0x00: 'Empty',
@@ -12,16 +12,17 @@ const voteOptionMapping = {
     0x04: 'NoWithVeto'
 };
 
-const MsgDeposit = Root.irisnet.tx.MsgDeposit;
-MsgDeposit.prototype.type = Config.iris.tx.deposit.prefix;
+const MsgDeposit = Root.cosmos.MsgDeposit;
+MsgDeposit.prototype.type = Config.cosmos.tx.deposit.prefix;
 MsgDeposit.prototype.GetSignBytes = function () {
-    let depositor = BECH32.encode(Config.iris.bech32.accAddr, this.depositor);
+    let depositor = BECH32.encode(Config.cosmos.bech32.accAddr, this.depositor);
     let signMsg = {
         proposal_id: `${this.proposalID}`,
         depositor: depositor,
         amount: this.amount
     };
-    return Utils.sortObjectKeys(signMsg);
+    let sortMsg = Utils.sortObjectKeys(signMsg);
+    return Amino.MarshalJSON(this.type, sortMsg)
 };
 
 MsgDeposit.prototype.ValidateBasic = function () {
@@ -46,7 +47,7 @@ MsgDeposit.prototype.GetMsg = function () {
 };
 
 MsgDeposit.prototype.GetDisplayContent = function () {
-    let depositor = BECH32.encode(Config.iris.bech32.accAddr, this.depositor);
+    let depositor = BECH32.encode(Config.cosmos.bech32.accAddr, this.depositor);
     return {
         i18n_tx_type: "i18n_deposit",
         i18n_proposal_id:this.proposalID,
@@ -55,7 +56,7 @@ MsgDeposit.prototype.GetDisplayContent = function () {
     }
 };
 MsgDeposit.prototype.toJSON = function () {
-    let depositor = BECH32.encode(Config.iris.bech32.accAddr, this.depositor);
+    let depositor = BECH32.encode(Config.cosmos.bech32.accAddr, this.depositor);
     return {
         proposal_id: this.proposalID,
         depositor: depositor,
@@ -63,16 +64,17 @@ MsgDeposit.prototype.toJSON = function () {
     }
 };
 
-const MsgVote = Root.irisnet.tx.MsgVote;
-MsgVote.prototype.type = Config.iris.tx.vote.prefix;
+const MsgVote = Root.cosmos.MsgVote;
+MsgVote.prototype.type = Config.cosmos.tx.vote.prefix;
 MsgVote.prototype.GetSignBytes = function () {
-    let voter = BECH32.encode(Config.iris.bech32.accAddr, this.voter);
+    let voter = BECH32.encode(Config.cosmos.bech32.accAddr, this.voter);
     let signMsg = {
         proposal_id: `${this.proposalID}`,
         voter: voter,
         option: voteOptionMapping[this.option]
     };
-    return Utils.sortObjectKeys(signMsg);
+    let sortMsg = Utils.sortObjectKeys(signMsg);
+    return Amino.MarshalJSON(this.type, sortMsg)
 };
 MsgVote.prototype.ValidateBasic = function () {
     if (Utils.isEmpty(this.option)) {
@@ -94,7 +96,7 @@ MsgVote.prototype.GetMsg = function () {
     }
 };
 MsgVote.prototype.GetDisplayContent = function () {
-    let voter = BECH32.encode(Config.iris.bech32.accAddr, this.voter);
+    let voter = BECH32.encode(Config.cosmos.bech32.accAddr, this.voter);
     return {
         i18n_tx_type: "i18n_vote",
         i18n_proposal_id: this.proposalID,
@@ -103,7 +105,7 @@ MsgVote.prototype.GetDisplayContent = function () {
     }
 };
 MsgVote.prototype.toJSON = function () {
-    let voter = BECH32.encode(Config.iris.bech32.accAddr, this.voter);
+    let voter = BECH32.encode(Config.cosmos.bech32.accAddr, this.voter);
     return {
         proposal_id: this.proposalID,
         voter: voter,

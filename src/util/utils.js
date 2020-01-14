@@ -53,13 +53,31 @@ module.exports = class Utils {
 
     static toString(str) {
         if (typeof str === "number") {
-            str = str.toLocaleString();
+            str = str.toLocaleString("en");
             return str.replace(/[,]/g, '');
         } else if (this.isEmpty(str)) {
             return ""
         } else {
             return str.toString()
         }
+    }
+
+    static toDecString(str,precision = 10){
+        if(str === "" || str === null) return str;
+        let item = str.split(".");
+        if(item[1] && item[1].length > precision){
+            throw Error(`too much precision, maximum ${precision}, len decimal ${item[1].length}`);
+        }
+        let suffix = "";
+        if (item.length === 1){
+            suffix = "."
+        }
+        let bit = item[1] ? precision - item[1].length : precision;
+        while (bit > 0){
+            suffix = `${suffix}0`;
+            bit--
+        }
+        return `${str}${suffix}`
     }
 
     static hasRepeatElement(target,splitChar){

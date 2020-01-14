@@ -25,6 +25,14 @@
         "type": "withdraw_delegation_reward",
         "prefix": "irishub/distr/MsgWithdrawDelegationReward"
       },
+      "deposit": {
+        "type": "deposit",
+        "prefix": "irishub/gov/MsgDeposit"
+      },
+      "vote": {
+        "type": "vote",
+        "prefix": "irishub/gov/MsgVote"
+      },
       "stdTx": {
         "type": "",
         "prefix": "irishub/bank/StdTx"
@@ -53,7 +61,7 @@
     "keystore": {
       "kdf": "pbkdf2",
       "cipherAlg": "aes-128-ctr",
-      "c": 262144
+      "c": 10000
     }
   },
   "cosmos": {
@@ -86,9 +94,17 @@
         "type": "withdraw_validator_commission",
         "prefix": "cosmos-sdk/MsgWithdrawValidatorCommission"
       },
+      "deposit": {
+        "type": "deposit",
+        "prefix": "cosmos-sdk/MsgDeposit"
+      },
+      "vote": {
+        "type": "vote",
+        "prefix": "cosmos-sdk/MsgVote"
+      },
       "stdTx": {
         "type": "stdTx",
-        "prefix": "auth/StdTx"
+        "prefix": "cosmos-sdk/StdTx"
       }
     },
     "bech32": {

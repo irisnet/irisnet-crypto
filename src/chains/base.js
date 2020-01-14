@@ -87,6 +87,8 @@ amino.RegisterConcrete(R_Cosmos.cosmos.MsgWithdrawDelegatorReward, Config.cosmos
 amino.RegisterConcrete(R_Cosmos.cosmos.MsgWithdrawValidatorCommission, Config.cosmos.tx.withdrawValidatorCommission.prefix);
 amino.RegisterConcrete(R_Cosmos.cosmos.MsgUndelegate, Config.cosmos.tx.undelegate.prefix);
 amino.RegisterConcrete(R_Cosmos.cosmos.MsgBeginRedelegate, Config.cosmos.tx.beginRedelegate.prefix);
+amino.RegisterConcrete(R_Cosmos.cosmos.MsgDeposit, Config.cosmos.tx.deposit.prefix);
+amino.RegisterConcrete(R_Cosmos.cosmos.MsgVote, Config.cosmos.tx.vote.prefix);
 amino.RegisterConcrete(R_Cosmos.cosmos.StdTx, Config.cosmos.tx.stdTx.prefix);
 
 amino.RegisterConcrete(null, Config.iris.amino.pubKey);
@@ -97,5 +99,7 @@ amino.RegisterConcrete(R_Iris.irisnet.tx.MsgBeginRedelegate, Config.iris.tx.rede
 amino.RegisterConcrete(R_Iris.irisnet.tx.MsgBeginUnbonding, Config.iris.tx.undelegate.prefix);
 amino.RegisterConcrete(R_Iris.irisnet.tx.MsgWithdrawDelegatorRewardsAll, Config.iris.tx.withdrawDelegationRewardsAll.prefix);
 amino.RegisterConcrete(R_Iris.irisnet.tx.MsgWithdrawDelegatorReward, Config.iris.tx.withdrawDelegationReward.prefix);
+amino.RegisterConcrete(R_Iris.irisnet.tx.MsgDeposit, Config.iris.tx.deposit.prefix);
+amino.RegisterConcrete(R_Iris.irisnet.tx.MsgVote, Config.iris.tx.vote.prefix);
 amino.RegisterConcrete(R_Iris.irisnet.tx.StdTx, Config.iris.tx.stdTx.prefix);
 module.exports = amino;

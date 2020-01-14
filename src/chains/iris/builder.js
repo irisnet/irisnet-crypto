@@ -4,6 +4,7 @@ const Old = require('old');
 const Bank = require('./bank');
 const Stake = require('./stake');
 const Distribution = require('./distribution');
+const Gov = require('./gov');
 const IrisKeypair = require('./keypair');
 const Codec = require("../../util/codec");
 const Config = require('../../../config');
@@ -23,27 +24,35 @@ class IrisBuilder extends Builder {
         let msg;
         switch (req.type) {
             case Config.iris.tx.transfer.type: {
-                msg = Bank.CreateMsgSend(req);
+                msg = Bank.createMsgSend(req);
                 break;
             }
             case Config.iris.tx.delegate.type: {
-                msg = Stake.CreateMsgDelegate(req);
+                msg = Stake.createMsgDelegate(req);
                 break;
             }
             case Config.iris.tx.undelegate.type: {
-                msg = Stake.CreateMsgBeginUnbonding(req);
+                msg = Stake.createMsgBeginUnbonding(req);
                 break;
             }
             case Config.iris.tx.redelegate.type: {
-                msg = Stake.CreateMsgBeginRedelegate(req);
+                msg = Stake.createMsgBeginRedelegate(req);
                 break;
             }
             case Config.iris.tx.withdrawDelegationRewardsAll.type: {
-                msg = Distribution.CreateMsgWithdrawDelegatorRewardsAll(req);
+                msg = Distribution.createMsgWithdrawDelegatorRewardsAll(req);
                 break;
             }
             case Config.iris.tx.withdrawDelegationReward.type: {
-                msg = Distribution.CreateMsgWithdrawDelegatorReward(req);
+                msg = Distribution.createMsgWithdrawDelegatorReward(req);
+                break;
+            }
+            case Config.iris.tx.deposit.type: {
+                msg = Gov.createMsgDeposit(req);
+                break;
+            }
+            case Config.iris.tx.vote.type: {
+                msg = Gov.createMsgVote(req);
                 break;
             }
             default: {

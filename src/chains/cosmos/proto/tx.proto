@@ -45,6 +45,18 @@ message MsgWithdrawValidatorCommission {
     required bytes ValidatorAddress = 1;
 }
 
+message MsgDeposit {
+    required int64 proposalID = 1;
+    required bytes depositor = 2;
+    repeated Coin amount = 3;
+}
+
+message MsgVote {
+    required int64 proposalID = 1;
+    required bytes voter = 2;
+    required uint64 option = 3;
+}
+
 message StdFee {
     repeated Coin amount = 1;
     required int64 gas = 2;

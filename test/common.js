@@ -35,30 +35,24 @@ function randomHex(range){
     return str.toUpperCase();
 }
 
-function verifyTx(url, tx, privateKey, chainName,callback) {
+async function verifyTx(url, tx, privateKey, chainName,callback) {
     let builder = Irisnet.getBuilder(chainName,"testnet");
     let stdTx = builder.buildAndSignTx(tx, privateKey);
     let exp = stdTx.Hash();
     let payload = stdTx.GetData();
-    sendByAsync("POST",url,payload).then(response => {
-        callback(response,exp,payload);
-    }).catch(e =>{
-        console.log(`lcd request failed`,e)
-    });
+    let response = await sendByAsync("POST",url,payload);
+    callback(response,exp,payload);
 
 }
 
-function verifyAccount(url, account){
+async function verifyAccount(url, account){
     let payload = {
         password: "1234567890",
         seed: account.phrase
     };
-    sendByAsync("POST",url,payload).then(response => {
-        assert.strictEqual(response.address,account.address);
-        assert.strictEqual(response.pub_key,account.publicKey)
-    }).catch(e =>{
-        console.log(`lcd request failed`,e)
-    });
+    let response = await sendByAsync("POST",url,payload);
+    assert.strictEqual(response.address,account.address);
+    assert.strictEqual(response.pub_key,account.publicKey);
 }
 
 function sendBySync(method,url,payload) {
@@ -72,7 +66,7 @@ function sendBySync(method,url,payload) {
 function getSequence(host,address) {
     let url = `${host}/auth/accounts/${address}`;
     let res = sendBySync("GET", url);
-    let account = res.value;
+    let account = res.result.value;
     return account.sequence
 }
 

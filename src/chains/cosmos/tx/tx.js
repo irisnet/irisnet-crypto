@@ -1951,6 +1951,552 @@ $root.cosmos = (function() {
         return MsgWithdrawValidatorCommission;
     })();
 
+    cosmos.MsgDeposit = (function() {
+
+        /**
+         * Properties of a MsgDeposit.
+         * @memberof cosmos
+         * @interface IMsgDeposit
+         * @property {number|Long} proposalID MsgDeposit proposalID
+         * @property {Uint8Array} depositor MsgDeposit depositor
+         * @property {Array.<cosmos.ICoin>|null} [amount] MsgDeposit amount
+         */
+
+        /**
+         * Constructs a new MsgDeposit.
+         * @memberof cosmos
+         * @classdesc Represents a MsgDeposit.
+         * @implements IMsgDeposit
+         * @constructor
+         * @param {cosmos.IMsgDeposit=} [properties] Properties to set
+         */
+        function MsgDeposit(properties) {
+            this.amount = [];
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * MsgDeposit proposalID.
+         * @member {number|Long} proposalID
+         * @memberof cosmos.MsgDeposit
+         * @instance
+         */
+        MsgDeposit.prototype.proposalID = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+        /**
+         * MsgDeposit depositor.
+         * @member {Uint8Array} depositor
+         * @memberof cosmos.MsgDeposit
+         * @instance
+         */
+        MsgDeposit.prototype.depositor = $util.newBuffer([]);
+
+        /**
+         * MsgDeposit amount.
+         * @member {Array.<cosmos.ICoin>} amount
+         * @memberof cosmos.MsgDeposit
+         * @instance
+         */
+        MsgDeposit.prototype.amount = $util.emptyArray;
+
+        /**
+         * Creates a new MsgDeposit instance using the specified properties.
+         * @function create
+         * @memberof cosmos.MsgDeposit
+         * @static
+         * @param {cosmos.IMsgDeposit=} [properties] Properties to set
+         * @returns {cosmos.MsgDeposit} MsgDeposit instance
+         */
+        MsgDeposit.create = function create(properties) {
+            return new MsgDeposit(properties);
+        };
+
+        /**
+         * Encodes the specified MsgDeposit message. Does not implicitly {@link cosmos.MsgDeposit.verify|verify} messages.
+         * @function encode
+         * @memberof cosmos.MsgDeposit
+         * @static
+         * @param {cosmos.IMsgDeposit} message MsgDeposit message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        MsgDeposit.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            writer.uint32(/* id 1, wireType 0 =*/8).int64(message.proposalID);
+            writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.depositor);
+            if (message.amount != null && message.amount.length)
+                for (var i = 0; i < message.amount.length; ++i)
+                    $root.cosmos.Coin.encode(message.amount[i], writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+            return writer;
+        };
+
+        /**
+         * Encodes the specified MsgDeposit message, length delimited. Does not implicitly {@link cosmos.MsgDeposit.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof cosmos.MsgDeposit
+         * @static
+         * @param {cosmos.IMsgDeposit} message MsgDeposit message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        MsgDeposit.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a MsgDeposit message from the specified reader or buffer.
+         * @function decode
+         * @memberof cosmos.MsgDeposit
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {cosmos.MsgDeposit} MsgDeposit
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        MsgDeposit.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.cosmos.MsgDeposit();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.proposalID = reader.int64();
+                    break;
+                case 2:
+                    message.depositor = reader.bytes();
+                    break;
+                case 3:
+                    if (!(message.amount && message.amount.length))
+                        message.amount = [];
+                    message.amount.push($root.cosmos.Coin.decode(reader, reader.uint32()));
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            if (!message.hasOwnProperty("proposalID"))
+                throw $util.ProtocolError("missing required 'proposalID'", { instance: message });
+            if (!message.hasOwnProperty("depositor"))
+                throw $util.ProtocolError("missing required 'depositor'", { instance: message });
+            return message;
+        };
+
+        /**
+         * Decodes a MsgDeposit message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof cosmos.MsgDeposit
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {cosmos.MsgDeposit} MsgDeposit
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        MsgDeposit.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a MsgDeposit message.
+         * @function verify
+         * @memberof cosmos.MsgDeposit
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        MsgDeposit.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (!$util.isInteger(message.proposalID) && !(message.proposalID && $util.isInteger(message.proposalID.low) && $util.isInteger(message.proposalID.high)))
+                return "proposalID: integer|Long expected";
+            if (!(message.depositor && typeof message.depositor.length === "number" || $util.isString(message.depositor)))
+                return "depositor: buffer expected";
+            if (message.amount != null && message.hasOwnProperty("amount")) {
+                if (!Array.isArray(message.amount))
+                    return "amount: array expected";
+                for (var i = 0; i < message.amount.length; ++i) {
+                    var error = $root.cosmos.Coin.verify(message.amount[i]);
+                    if (error)
+                        return "amount." + error;
+                }
+            }
+            return null;
+        };
+
+        /**
+         * Creates a MsgDeposit message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof cosmos.MsgDeposit
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {cosmos.MsgDeposit} MsgDeposit
+         */
+        MsgDeposit.fromObject = function fromObject(object) {
+            if (object instanceof $root.cosmos.MsgDeposit)
+                return object;
+            var message = new $root.cosmos.MsgDeposit();
+            if (object.proposalID != null)
+                if ($util.Long)
+                    (message.proposalID = $util.Long.fromValue(object.proposalID)).unsigned = false;
+                else if (typeof object.proposalID === "string")
+                    message.proposalID = parseInt(object.proposalID, 10);
+                else if (typeof object.proposalID === "number")
+                    message.proposalID = object.proposalID;
+                else if (typeof object.proposalID === "object")
+                    message.proposalID = new $util.LongBits(object.proposalID.low >>> 0, object.proposalID.high >>> 0).toNumber();
+            if (object.depositor != null)
+                if (typeof object.depositor === "string")
+                    $util.base64.decode(object.depositor, message.depositor = $util.newBuffer($util.base64.length(object.depositor)), 0);
+                else if (object.depositor.length)
+                    message.depositor = object.depositor;
+            if (object.amount) {
+                if (!Array.isArray(object.amount))
+                    throw TypeError(".cosmos.MsgDeposit.amount: array expected");
+                message.amount = [];
+                for (var i = 0; i < object.amount.length; ++i) {
+                    if (typeof object.amount[i] !== "object")
+                        throw TypeError(".cosmos.MsgDeposit.amount: object expected");
+                    message.amount[i] = $root.cosmos.Coin.fromObject(object.amount[i]);
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a MsgDeposit message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof cosmos.MsgDeposit
+         * @static
+         * @param {cosmos.MsgDeposit} message MsgDeposit
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        MsgDeposit.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.arrays || options.defaults)
+                object.amount = [];
+            if (options.defaults) {
+                if ($util.Long) {
+                    var long = new $util.Long(0, 0, false);
+                    object.proposalID = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                } else
+                    object.proposalID = options.longs === String ? "0" : 0;
+                if (options.bytes === String)
+                    object.depositor = "";
+                else {
+                    object.depositor = [];
+                    if (options.bytes !== Array)
+                        object.depositor = $util.newBuffer(object.depositor);
+                }
+            }
+            if (message.proposalID != null && message.hasOwnProperty("proposalID"))
+                if (typeof message.proposalID === "number")
+                    object.proposalID = options.longs === String ? String(message.proposalID) : message.proposalID;
+                else
+                    object.proposalID = options.longs === String ? $util.Long.prototype.toString.call(message.proposalID) : options.longs === Number ? new $util.LongBits(message.proposalID.low >>> 0, message.proposalID.high >>> 0).toNumber() : message.proposalID;
+            if (message.depositor != null && message.hasOwnProperty("depositor"))
+                object.depositor = options.bytes === String ? $util.base64.encode(message.depositor, 0, message.depositor.length) : options.bytes === Array ? Array.prototype.slice.call(message.depositor) : message.depositor;
+            if (message.amount && message.amount.length) {
+                object.amount = [];
+                for (var j = 0; j < message.amount.length; ++j)
+                    object.amount[j] = $root.cosmos.Coin.toObject(message.amount[j], options);
+            }
+            return object;
+        };
+
+        /**
+         * Converts this MsgDeposit to JSON.
+         * @function toJSON
+         * @memberof cosmos.MsgDeposit
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        MsgDeposit.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return MsgDeposit;
+    })();
+
+    cosmos.MsgVote = (function() {
+
+        /**
+         * Properties of a MsgVote.
+         * @memberof cosmos
+         * @interface IMsgVote
+         * @property {number|Long} proposalID MsgVote proposalID
+         * @property {Uint8Array} voter MsgVote voter
+         * @property {number|Long} option MsgVote option
+         */
+
+        /**
+         * Constructs a new MsgVote.
+         * @memberof cosmos
+         * @classdesc Represents a MsgVote.
+         * @implements IMsgVote
+         * @constructor
+         * @param {cosmos.IMsgVote=} [properties] Properties to set
+         */
+        function MsgVote(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * MsgVote proposalID.
+         * @member {number|Long} proposalID
+         * @memberof cosmos.MsgVote
+         * @instance
+         */
+        MsgVote.prototype.proposalID = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+        /**
+         * MsgVote voter.
+         * @member {Uint8Array} voter
+         * @memberof cosmos.MsgVote
+         * @instance
+         */
+        MsgVote.prototype.voter = $util.newBuffer([]);
+
+        /**
+         * MsgVote option.
+         * @member {number|Long} option
+         * @memberof cosmos.MsgVote
+         * @instance
+         */
+        MsgVote.prototype.option = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+        /**
+         * Creates a new MsgVote instance using the specified properties.
+         * @function create
+         * @memberof cosmos.MsgVote
+         * @static
+         * @param {cosmos.IMsgVote=} [properties] Properties to set
+         * @returns {cosmos.MsgVote} MsgVote instance
+         */
+        MsgVote.create = function create(properties) {
+            return new MsgVote(properties);
+        };
+
+        /**
+         * Encodes the specified MsgVote message. Does not implicitly {@link cosmos.MsgVote.verify|verify} messages.
+         * @function encode
+         * @memberof cosmos.MsgVote
+         * @static
+         * @param {cosmos.IMsgVote} message MsgVote message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        MsgVote.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            writer.uint32(/* id 1, wireType 0 =*/8).int64(message.proposalID);
+            writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.voter);
+            writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.option);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified MsgVote message, length delimited. Does not implicitly {@link cosmos.MsgVote.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof cosmos.MsgVote
+         * @static
+         * @param {cosmos.IMsgVote} message MsgVote message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        MsgVote.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a MsgVote message from the specified reader or buffer.
+         * @function decode
+         * @memberof cosmos.MsgVote
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {cosmos.MsgVote} MsgVote
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        MsgVote.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.cosmos.MsgVote();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.proposalID = reader.int64();
+                    break;
+                case 2:
+                    message.voter = reader.bytes();
+                    break;
+                case 3:
+                    message.option = reader.uint64();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            if (!message.hasOwnProperty("proposalID"))
+                throw $util.ProtocolError("missing required 'proposalID'", { instance: message });
+            if (!message.hasOwnProperty("voter"))
+                throw $util.ProtocolError("missing required 'voter'", { instance: message });
+            if (!message.hasOwnProperty("option"))
+                throw $util.ProtocolError("missing required 'option'", { instance: message });
+            return message;
+        };
+
+        /**
+         * Decodes a MsgVote message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof cosmos.MsgVote
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {cosmos.MsgVote} MsgVote
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        MsgVote.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a MsgVote message.
+         * @function verify
+         * @memberof cosmos.MsgVote
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        MsgVote.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (!$util.isInteger(message.proposalID) && !(message.proposalID && $util.isInteger(message.proposalID.low) && $util.isInteger(message.proposalID.high)))
+                return "proposalID: integer|Long expected";
+            if (!(message.voter && typeof message.voter.length === "number" || $util.isString(message.voter)))
+                return "voter: buffer expected";
+            if (!$util.isInteger(message.option) && !(message.option && $util.isInteger(message.option.low) && $util.isInteger(message.option.high)))
+                return "option: integer|Long expected";
+            return null;
+        };
+
+        /**
+         * Creates a MsgVote message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof cosmos.MsgVote
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {cosmos.MsgVote} MsgVote
+         */
+        MsgVote.fromObject = function fromObject(object) {
+            if (object instanceof $root.cosmos.MsgVote)
+                return object;
+            var message = new $root.cosmos.MsgVote();
+            if (object.proposalID != null)
+                if ($util.Long)
+                    (message.proposalID = $util.Long.fromValue(object.proposalID)).unsigned = false;
+                else if (typeof object.proposalID === "string")
+                    message.proposalID = parseInt(object.proposalID, 10);
+                else if (typeof object.proposalID === "number")
+                    message.proposalID = object.proposalID;
+                else if (typeof object.proposalID === "object")
+                    message.proposalID = new $util.LongBits(object.proposalID.low >>> 0, object.proposalID.high >>> 0).toNumber();
+            if (object.voter != null)
+                if (typeof object.voter === "string")
+                    $util.base64.decode(object.voter, message.voter = $util.newBuffer($util.base64.length(object.voter)), 0);
+                else if (object.voter.length)
+                    message.voter = object.voter;
+            if (object.option != null)
+                if ($util.Long)
+                    (message.option = $util.Long.fromValue(object.option)).unsigned = true;
+                else if (typeof object.option === "string")
+                    message.option = parseInt(object.option, 10);
+                else if (typeof object.option === "number")
+                    message.option = object.option;
+                else if (typeof object.option === "object")
+                    message.option = new $util.LongBits(object.option.low >>> 0, object.option.high >>> 0).toNumber(true);
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a MsgVote message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof cosmos.MsgVote
+         * @static
+         * @param {cosmos.MsgVote} message MsgVote
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        MsgVote.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.defaults) {
+                if ($util.Long) {
+                    var long = new $util.Long(0, 0, false);
+                    object.proposalID = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                } else
+                    object.proposalID = options.longs === String ? "0" : 0;
+                if (options.bytes === String)
+                    object.voter = "";
+                else {
+                    object.voter = [];
+                    if (options.bytes !== Array)
+                        object.voter = $util.newBuffer(object.voter);
+                }
+                if ($util.Long) {
+                    var long = new $util.Long(0, 0, true);
+                    object.option = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                } else
+                    object.option = options.longs === String ? "0" : 0;
+            }
+            if (message.proposalID != null && message.hasOwnProperty("proposalID"))
+                if (typeof message.proposalID === "number")
+                    object.proposalID = options.longs === String ? String(message.proposalID) : message.proposalID;
+                else
+                    object.proposalID = options.longs === String ? $util.Long.prototype.toString.call(message.proposalID) : options.longs === Number ? new $util.LongBits(message.proposalID.low >>> 0, message.proposalID.high >>> 0).toNumber() : message.proposalID;
+            if (message.voter != null && message.hasOwnProperty("voter"))
+                object.voter = options.bytes === String ? $util.base64.encode(message.voter, 0, message.voter.length) : options.bytes === Array ? Array.prototype.slice.call(message.voter) : message.voter;
+            if (message.option != null && message.hasOwnProperty("option"))
+                if (typeof message.option === "number")
+                    object.option = options.longs === String ? String(message.option) : message.option;
+                else
+                    object.option = options.longs === String ? $util.Long.prototype.toString.call(message.option) : options.longs === Number ? new $util.LongBits(message.option.low >>> 0, message.option.high >>> 0).toNumber(true) : message.option;
+            return object;
+        };
+
+        /**
+         * Converts this MsgVote to JSON.
+         * @function toJSON
+         * @memberof cosmos.MsgVote
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        MsgVote.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return MsgVote;
+    })();
+
     cosmos.StdFee = (function() {
 
         /**

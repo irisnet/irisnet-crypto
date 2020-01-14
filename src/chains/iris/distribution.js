@@ -101,11 +101,11 @@ class MsgWithdrawDelegatorReward extends Builder.Msg {
 
 module.exports = class Distribution {
 
-    static CreateMsgWithdrawDelegatorRewardsAll(req) {
+    static createMsgWithdrawDelegatorRewardsAll(req) {
         return new MsgWithdrawDelegatorRewardsAll(req.from);
     }
 
-    static CreateMsgWithdrawDelegatorReward(req) {
+    static createMsgWithdrawDelegatorReward(req) {
         return new MsgWithdrawDelegatorReward(req.from,req.msg.validator_addr);
     }
 };
