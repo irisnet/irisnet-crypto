@@ -16,17 +16,13 @@ class MsgWithdrawDelegatorRewardsAll extends Builder.Msg {
             "delegator_addr": this.delegator_addr,
         };
         let sortMsg = Utils.sortObjectKeys(msg);
-        return Amino.MarshalJSON(this.Type(), sortMsg)
+        return Amino.MarshalJSON(this.type, sortMsg)
     }
 
     ValidateBasic() {
         if (Utils.isEmpty(this.delegator_addr)) {
             throw new Error("delegatorAddr is empty");
         }
-    }
-
-    Type() {
-        return Config.iris.tx.withdrawDelegationRewardsAll.prefix;
     }
 
     GetMsg() {
@@ -60,7 +56,7 @@ class MsgWithdrawDelegatorReward extends Builder.Msg {
             "validator_addr": this.validator_addr,
         };
         let sortMsg = Utils.sortObjectKeys(msg);
-        return Amino.MarshalJSON(this.Type(), sortMsg)
+        return Amino.MarshalJSON(this.type, sortMsg)
     }
 
     ValidateBasic() {
@@ -72,9 +68,6 @@ class MsgWithdrawDelegatorReward extends Builder.Msg {
         }
     }
 
-    Type() {
-        return Config.iris.tx.withdrawDelegationReward.prefix;
-    }
 
     GetMsg() {
         const BECH32 = require('bech32');
@@ -112,7 +105,7 @@ class MsgSetWithdrawAddress extends Builder.Msg {
             "withdraw_addr": this.withdraw_addr,
         };
         let sortMsg = Utils.sortObjectKeys(msg);
-        return Amino.MarshalJSON(this.Type(), sortMsg)
+        return Amino.MarshalJSON(this.type, sortMsg)
     }
 
     ValidateBasic() {
@@ -124,9 +117,6 @@ class MsgSetWithdrawAddress extends Builder.Msg {
         }
     }
 
-    Type() {
-        return Config.iris.tx.setWithdrawAddress.prefix;
-    }
 
     GetMsg() {
         const BECH32 = require('bech32');
