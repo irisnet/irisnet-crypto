@@ -47,6 +47,10 @@ class IrisBuilder extends Builder {
                 msg = Distribution.createMsgWithdrawDelegatorReward(req);
                 break;
             }
+            case Config.iris.tx.setWithdrawAddress.type: {
+                msg = Distribution.createMsgSetWithdrawAddress(req);
+                break;
+            }
             case Config.iris.tx.deposit.type: {
                 msg = Gov.createMsgDeposit(req);
                 break;

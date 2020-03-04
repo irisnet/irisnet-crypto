@@ -3,19 +3,19 @@ const chai = require('chai');
 const assert = chai.assert;
 
 const common = require('./common');
-const url ="http://10.1.4.124:1317/tx/broadcast?commit=true";
+const url ="https://irisnet-lcd.dev.bianjie.ai/tx/broadcast?commit=true";
 const chainName ="iris";
 
 
 describe('iris transaction', function () {
 
-    let chain_id = "irishub-test";
-    let from = "faa1f3vflz39qr5sjzfkqmkzkr5dy7t646wyexy92y";
-    let gas = 20000;
-    let account_number = 2;
+    let chain_id = "rainbow-dev";
+    let from = "faa1ljemm0yznz58qxxs8xyak7fashcfxf5lssn6jm";
+    let gas = 100000;
+    let account_number = 6;
     let fees = {denom: "iris-atto", amount: 600000000000000000};
     let memo = "1";
-    let privateKey = "80D45E1FAB9ACF59254F23C376E3AEAF139C847CD7A3126CDFD5216568730C90";
+    let privateKey = "55A3160577979EC014A2CE85C430E1FF0FF06EFD230B7CE41AEAE2EF00EDF175";
     let pubKey = "fap1addwnpepqwqw5pshzzswemf6t00xvf0ccf2fxslaz40dp76uyad5mgujfju4zt8km3u";
     let chain = Irisnet.config.chain.iris;
 
@@ -155,13 +155,31 @@ describe('iris transaction', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 42,
+                sequence: 94,
                 fees: fees,
                 gas: gas,
                 memo: memo,
                 type: Irisnet.config.iris.tx.withdrawDelegationReward.type,
                 msg: {
-                    validator_addr: "fva1aake3umjllpd9es5d3qmry4egcne0f8ajd7vdp",
+                    validator_addr: "fva16jr2kxm8xwaux7tkv0sux0qgn8xqp9nkj27ane",
+                }
+            };
+
+            common.verifyTx(url,tx,privateKey,chainName,verify);
+        });
+
+        it('test MsgSetWithdrawAddress', function () {
+            let tx = {
+                chain_id: chain_id,
+                from: from,
+                account_number: account_number,
+                sequence: 109,
+                fees: fees,
+                gas: gas,
+                memo: memo,
+                type: Irisnet.config.iris.tx.setWithdrawAddress.type,
+                msg: {
+                    withdraw_addr: "faa1ljemm0yznz58qxxs8xyak7fashcfxf5lssn6jm",
                 }
             };
 
@@ -290,6 +308,24 @@ describe('iris transaction', function () {
             extracted(tx);
         });
 
+        it('test MsgSetWithdrawAddress', function () {
+            let tx = {
+                chain_id: chain_id,
+                from: from,
+                account_number: account_number,
+                sequence: 112,
+                fees: fees,
+                gas: gas,
+                memo: memo,
+                type: Irisnet.config.iris.tx.setWithdrawAddress.type,
+                msg: {
+                    withdraw_addr: "faa1ljemm0yznz58qxxs8xyak7fashcfxf5lssn6jm",
+                }
+            };
+
+            extracted(tx);
+        });
+
         it('test MsgDeposit', function () {
             let tx = {
                 chain_id: chain_id,
@@ -383,5 +419,6 @@ describe('iris transaction', function () {
 });
 
 function verify(act,exp,data) {
+    console.log('result:',act,exp,data);
     assert.notExists(act.check_tx.code,`tx commit failed,${act.check_tx.log}`);
 }

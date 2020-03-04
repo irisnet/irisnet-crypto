@@ -45,7 +45,13 @@ MsgSetWithdrawAddress.prototype.toJSON = function(){
     }
 };
 
-MsgSetWithdrawAddress.prototype.GetDisplayContent = function (){};
+MsgSetWithdrawAddress.prototype.GetDisplayContent = function (){
+    return {
+        i18n_tx_type:"i18n_set_withdraw_address",
+        i18n_delegator_addr:this.DelegatorAddress,
+        i18n_withdraw_addr:this.WithdrawAddress,
+    };
+};
 
 MsgWithdrawDelegatorReward.prototype.type = Config.cosmos.tx.withdrawDelegatorReward.prefix;
 MsgWithdrawDelegatorReward.prototype.GetSignBytes = function () {

@@ -99,6 +99,58 @@ class MsgWithdrawDelegatorReward extends Builder.Msg {
     }
 }
 
+class MsgSetWithdrawAddress extends Builder.Msg {
+    constructor(delegatorAddr,withdraw_addr) {
+        super(Config.iris.tx.setWithdrawAddress.prefix);
+        this.delegator_addr = delegatorAddr;
+        this.withdraw_addr = withdraw_addr;
+    }
+
+    GetSignBytes() {
+        let msg = {
+            "delegator_addr": this.delegator_addr,
+            "withdraw_addr": this.withdraw_addr,
+        };
+        let sortMsg = Utils.sortObjectKeys(msg);
+        return Amino.MarshalJSON(this.Type(), sortMsg)
+    }
+
+    ValidateBasic() {
+        if (Utils.isEmpty(this.delegator_addr)) {
+            throw new Error("delegatorAddr is empty");
+        }
+        if (Utils.isEmpty(this.withdraw_addr)) {
+            throw new Error("withdraw_addr is empty");
+        }
+    }
+
+    Type() {
+        return Config.iris.tx.setWithdrawAddress.prefix;
+    }
+
+    GetMsg() {
+        const BECH32 = require('bech32');
+        let delegator_key = BECH32.decode(this.delegator_addr);
+        let delegator_addr = BECH32.fromWords(delegator_key.words);
+
+        let withdraw_key = BECH32.decode(this.withdraw_addr);
+        let withdraw_addr = BECH32.fromWords(withdraw_key.words);
+
+        return {
+            delegatorAddr: delegator_addr,
+            withdrawAddr: withdraw_addr,
+        }
+    }
+
+    GetDisplayContent(){
+        return {
+            i18n_tx_type:"i18n_set_withdraw_address",
+            i18n_delegator_addr:this.delegator_addr,
+            i18n_withdraw_addr:this.withdraw_addr,
+        }
+    }
+}
+
 module.exports = class Distribution {
 
     static createMsgWithdrawDelegatorRewardsAll(req) {
@@ -107,5 +159,9 @@ module.exports = class Distribution {
 
     static createMsgWithdrawDelegatorReward(req) {
         return new MsgWithdrawDelegatorReward(req.from,req.msg.validator_addr);
+    }
+
+    static createMsgSetWithdrawAddress(req) {
+        return new MsgSetWithdrawAddress(req.from,req.msg.withdraw_addr);
     }
 };

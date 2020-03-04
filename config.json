@@ -25,6 +25,10 @@
         "type": "withdraw_delegation_reward",
         "prefix": "irishub/distr/MsgWithdrawDelegationReward"
       },
+      "setWithdrawAddress": {
+        "type": "set_withdraw_address",
+        "prefix": "irishub/distr/MsgModifyWithdrawAddress"
+      },
       "deposit": {
         "type": "deposit",
         "prefix": "irishub/gov/MsgDeposit"

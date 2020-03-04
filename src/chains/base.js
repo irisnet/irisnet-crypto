@@ -99,6 +99,7 @@ amino.RegisterConcrete(R_Iris.irisnet.tx.MsgBeginRedelegate, Config.iris.tx.rede
 amino.RegisterConcrete(R_Iris.irisnet.tx.MsgBeginUnbonding, Config.iris.tx.undelegate.prefix);
 amino.RegisterConcrete(R_Iris.irisnet.tx.MsgWithdrawDelegatorRewardsAll, Config.iris.tx.withdrawDelegationRewardsAll.prefix);
 amino.RegisterConcrete(R_Iris.irisnet.tx.MsgWithdrawDelegatorReward, Config.iris.tx.withdrawDelegationReward.prefix);
+amino.RegisterConcrete(R_Iris.irisnet.tx.MsgSetWithdrawAddress, Config.iris.tx.setWithdrawAddress.prefix);
 amino.RegisterConcrete(R_Iris.irisnet.tx.MsgDeposit, Config.iris.tx.deposit.prefix);
 amino.RegisterConcrete(R_Iris.irisnet.tx.MsgVote, Config.iris.tx.vote.prefix);
 amino.RegisterConcrete(R_Iris.irisnet.tx.StdTx, Config.iris.tx.stdTx.prefix);

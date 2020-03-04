@@ -49,6 +49,11 @@ message MsgWithdrawDelegatorReward {
     required bytes  validatorAddr = 2;
 }
 
+message MsgSetWithdrawAddress {
+    required bytes  delegatorAddr = 1;
+    required bytes  withdrawAddr = 2;
+}
+
 message MsgDeposit {
     required int64 proposalID = 1;
     required bytes depositor = 2;
