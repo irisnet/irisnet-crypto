@@ -1758,6 +1758,202 @@ $root.irisnet = (function() {
             return MsgBeginRedelegate;
         })();
 
+        tx.MsgWithdrawValidatorRewardsAll = (function() {
+
+            /**
+             * Properties of a MsgWithdrawValidatorRewardsAll.
+             * @memberof irisnet.tx
+             * @interface IMsgWithdrawValidatorRewardsAll
+             * @property {Uint8Array} validatorAddr MsgWithdrawValidatorRewardsAll validatorAddr
+             */
+
+            /**
+             * Constructs a new MsgWithdrawValidatorRewardsAll.
+             * @memberof irisnet.tx
+             * @classdesc Represents a MsgWithdrawValidatorRewardsAll.
+             * @implements IMsgWithdrawValidatorRewardsAll
+             * @constructor
+             * @param {irisnet.tx.IMsgWithdrawValidatorRewardsAll=} [properties] Properties to set
+             */
+            function MsgWithdrawValidatorRewardsAll(properties) {
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+
+            /**
+             * MsgWithdrawValidatorRewardsAll validatorAddr.
+             * @member {Uint8Array} validatorAddr
+             * @memberof irisnet.tx.MsgWithdrawValidatorRewardsAll
+             * @instance
+             */
+            MsgWithdrawValidatorRewardsAll.prototype.validatorAddr = $util.newBuffer([]);
+
+            /**
+             * Creates a new MsgWithdrawValidatorRewardsAll instance using the specified properties.
+             * @function create
+             * @memberof irisnet.tx.MsgWithdrawValidatorRewardsAll
+             * @static
+             * @param {irisnet.tx.IMsgWithdrawValidatorRewardsAll=} [properties] Properties to set
+             * @returns {irisnet.tx.MsgWithdrawValidatorRewardsAll} MsgWithdrawValidatorRewardsAll instance
+             */
+            MsgWithdrawValidatorRewardsAll.create = function create(properties) {
+                return new MsgWithdrawValidatorRewardsAll(properties);
+            };
+
+            /**
+             * Encodes the specified MsgWithdrawValidatorRewardsAll message. Does not implicitly {@link irisnet.tx.MsgWithdrawValidatorRewardsAll.verify|verify} messages.
+             * @function encode
+             * @memberof irisnet.tx.MsgWithdrawValidatorRewardsAll
+             * @static
+             * @param {irisnet.tx.IMsgWithdrawValidatorRewardsAll} message MsgWithdrawValidatorRewardsAll message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MsgWithdrawValidatorRewardsAll.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.validatorAddr);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified MsgWithdrawValidatorRewardsAll message, length delimited. Does not implicitly {@link irisnet.tx.MsgWithdrawValidatorRewardsAll.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof irisnet.tx.MsgWithdrawValidatorRewardsAll
+             * @static
+             * @param {irisnet.tx.IMsgWithdrawValidatorRewardsAll} message MsgWithdrawValidatorRewardsAll message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MsgWithdrawValidatorRewardsAll.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+
+            /**
+             * Decodes a MsgWithdrawValidatorRewardsAll message from the specified reader or buffer.
+             * @function decode
+             * @memberof irisnet.tx.MsgWithdrawValidatorRewardsAll
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {irisnet.tx.MsgWithdrawValidatorRewardsAll} MsgWithdrawValidatorRewardsAll
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MsgWithdrawValidatorRewardsAll.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.irisnet.tx.MsgWithdrawValidatorRewardsAll();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
+                    case 1:
+                        message.validatorAddr = reader.bytes();
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
+                    }
+                }
+                if (!message.hasOwnProperty("validatorAddr"))
+                    throw $util.ProtocolError("missing required 'validatorAddr'", { instance: message });
+                return message;
+            };
+
+            /**
+             * Decodes a MsgWithdrawValidatorRewardsAll message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof irisnet.tx.MsgWithdrawValidatorRewardsAll
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {irisnet.tx.MsgWithdrawValidatorRewardsAll} MsgWithdrawValidatorRewardsAll
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MsgWithdrawValidatorRewardsAll.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a MsgWithdrawValidatorRewardsAll message.
+             * @function verify
+             * @memberof irisnet.tx.MsgWithdrawValidatorRewardsAll
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            MsgWithdrawValidatorRewardsAll.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (!(message.validatorAddr && typeof message.validatorAddr.length === "number" || $util.isString(message.validatorAddr)))
+                    return "validatorAddr: buffer expected";
+                return null;
+            };
+
+            /**
+             * Creates a MsgWithdrawValidatorRewardsAll message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof irisnet.tx.MsgWithdrawValidatorRewardsAll
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {irisnet.tx.MsgWithdrawValidatorRewardsAll} MsgWithdrawValidatorRewardsAll
+             */
+            MsgWithdrawValidatorRewardsAll.fromObject = function fromObject(object) {
+                if (object instanceof $root.irisnet.tx.MsgWithdrawValidatorRewardsAll)
+                    return object;
+                var message = new $root.irisnet.tx.MsgWithdrawValidatorRewardsAll();
+                if (object.validatorAddr != null)
+                    if (typeof object.validatorAddr === "string")
+                        $util.base64.decode(object.validatorAddr, message.validatorAddr = $util.newBuffer($util.base64.length(object.validatorAddr)), 0);
+                    else if (object.validatorAddr.length)
+                        message.validatorAddr = object.validatorAddr;
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a MsgWithdrawValidatorRewardsAll message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof irisnet.tx.MsgWithdrawValidatorRewardsAll
+             * @static
+             * @param {irisnet.tx.MsgWithdrawValidatorRewardsAll} message MsgWithdrawValidatorRewardsAll
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            MsgWithdrawValidatorRewardsAll.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults)
+                    if (options.bytes === String)
+                        object.validatorAddr = "";
+                    else {
+                        object.validatorAddr = [];
+                        if (options.bytes !== Array)
+                            object.validatorAddr = $util.newBuffer(object.validatorAddr);
+                    }
+                if (message.validatorAddr != null && message.hasOwnProperty("validatorAddr"))
+                    object.validatorAddr = options.bytes === String ? $util.base64.encode(message.validatorAddr, 0, message.validatorAddr.length) : options.bytes === Array ? Array.prototype.slice.call(message.validatorAddr) : message.validatorAddr;
+                return object;
+            };
+
+            /**
+             * Converts this MsgWithdrawValidatorRewardsAll to JSON.
+             * @function toJSON
+             * @memberof irisnet.tx.MsgWithdrawValidatorRewardsAll
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            MsgWithdrawValidatorRewardsAll.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            return MsgWithdrawValidatorRewardsAll;
+        })();
+
         tx.MsgWithdrawDelegatorRewardsAll = (function() {
 
             /**

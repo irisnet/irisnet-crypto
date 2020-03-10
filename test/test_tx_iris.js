@@ -10,12 +10,12 @@ const chainName ="iris";
 describe('iris transaction', function () {
 
     let chain_id = "rainbow-dev";
-    let from = "faa1ljemm0yznz58qxxs8xyak7fashcfxf5lssn6jm";
+    let from = "faa176dd0tgn38grpc8hpxfmwl6sl8jfmknesgawx7";
     let gas = 100000;
-    let account_number = 6;
+    let account_number = 3;
     let fees = {denom: "iris-atto", amount: 600000000000000000};
     let memo = "1";
-    let privateKey = "55A3160577979EC014A2CE85C430E1FF0FF06EFD230B7CE41AEAE2EF00EDF175";
+    let privateKey = "A3ACB76D1047ED290D3D1E3ABB51375F16D2887DBC6821F43B9965C4D11F00FA";
     let pubKey = "fap1addwnpepqwqw5pshzzswemf6t00xvf0ccf2fxslaz40dp76uyad5mgujfju4zt8km3u";
     let chain = Irisnet.config.chain.iris;
 
@@ -133,13 +133,31 @@ describe('iris transaction', function () {
             common.verifyTx(url,tx,privateKey,chainName,verify);
         });
 
+        it('test MsgWithdrawValidatorRewardsAll', function () {
+            let tx = {
+                chain_id: chain_id,
+                from: from,
+                account_number: account_number,
+                sequence: 32,
+                fees: fees,
+                gas: gas,
+                memo: memo,
+                type: Irisnet.config.iris.tx.withdrawValidatorRewardsAll.type,
+                msg: {
+                    validator_addr: "fva186qhtc62cf6ejlt3erw6zk28mgw8ne7grhmyfn",
+                }
+                //mode: Irisnet.config.iris.mode.try
+            };
+            // extracted(tx);
+            common.verifyTx(url,tx,privateKey,chainName,verify);
+        });
 
         it('test MsgWithdrawDelegatorRewardsAll', function () {
             let tx = {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 55,
+                sequence: 25,
                 fees: fees,
                 gas: gas,
                 memo: memo,

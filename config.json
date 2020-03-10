@@ -17,6 +17,10 @@
         "type": "redelegate",
         "prefix": "irishub/stake/BeginRedelegate"
       },
+      "withdrawValidatorRewardsAll": {
+        "type": "withdraw_validator_rewards_all",
+        "prefix": "irishub/distr/MsgWithdrawValidatorRewardsAll"
+      },
       "withdrawDelegationRewardsAll": {
         "type": "withdraw_delegation_rewards_all",
         "prefix": "irishub/distr/MsgWithdrawDelegationRewardsAll"

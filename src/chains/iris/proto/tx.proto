@@ -40,6 +40,10 @@ message MsgBeginRedelegate {
     required string  sharesAmount = 4;
 }
 
+message MsgWithdrawValidatorRewardsAll {
+    required bytes  validator_addr = 1;
+}
+
 message MsgWithdrawDelegatorRewardsAll {
     required bytes  delegatorAddr = 1;
 }

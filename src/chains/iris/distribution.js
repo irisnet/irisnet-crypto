@@ -5,6 +5,44 @@ const Utils = require('../../util/utils');
 const Amino = require('../base');
 const Config = require('../../../config');
 
+class MsgWithdrawValidatorRewardsAll extends Builder.Msg {
+    constructor(validatorAddr) {
+        super(Config.iris.tx.withdrawValidatorRewardsAll.prefix);
+        this.validator_addr = validatorAddr;
+    }
+
+    GetSignBytes() {
+        let msg = {
+            "validator_addr": this.validator_addr,
+        };
+        let sortMsg = Utils.sortObjectKeys(msg);
+        return Amino.MarshalJSON(this.type, sortMsg)
+    }
+
+    ValidateBasic() {
+        if (Utils.isEmpty(this.validator_addr)) {
+            throw new Error("validatorAddr is empty");
+        }
+    }
+
+    GetMsg() {
+        const BECH32 = require('bech32');
+        let validator_key = BECH32.decode(this.validator_addr);
+        let validator_addr = BECH32.fromWords(validator_key.words);
+
+        return {
+            validatorAddr: validator_addr,
+        }
+    }
+
+    GetDisplayContent(){
+        return {
+            i18n_tx_type:"i18n_rwithdraw_validator_rewards_all",
+            i18n_validator_addr:this.validator_addr,
+        }
+    }
+}
+
 class MsgWithdrawDelegatorRewardsAll extends Builder.Msg {
     constructor(delegatorAddr) {
         super(Config.iris.tx.withdrawDelegationRewardsAll.prefix);
@@ -142,6 +180,10 @@ class MsgSetWithdrawAddress extends Builder.Msg {
 }
 
 module.exports = class Distribution {
+
+    static createMsgWithdrawValidatorRewardsAll(req) {
+        return new MsgWithdrawValidatorRewardsAll(req.msg.validator_addr);
+    }
 
     static createMsgWithdrawDelegatorRewardsAll(req) {
         return new MsgWithdrawDelegatorRewardsAll(req.from);
