@@ -39,12 +39,20 @@ class IrisBuilder extends Builder {
                 msg = Stake.createMsgBeginRedelegate(req);
                 break;
             }
+            case Config.iris.tx.withdrawValidatorRewardsAll.type: {
+                msg = Distribution.createMsgWithdrawValidatorRewardsAll(req);
+                break;
+            }
             case Config.iris.tx.withdrawDelegationRewardsAll.type: {
                 msg = Distribution.createMsgWithdrawDelegatorRewardsAll(req);
                 break;
             }
             case Config.iris.tx.withdrawDelegationReward.type: {
                 msg = Distribution.createMsgWithdrawDelegatorReward(req);
+                break;
+            }
+            case Config.iris.tx.setWithdrawAddress.type: {
+                msg = Distribution.createMsgSetWithdrawAddress(req);
                 break;
             }
             case Config.iris.tx.deposit.type: {

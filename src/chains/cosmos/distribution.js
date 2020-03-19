@@ -45,7 +45,15 @@ MsgSetWithdrawAddress.prototype.toJSON = function(){
     }
 };
 
-MsgSetWithdrawAddress.prototype.GetDisplayContent = function (){};
+MsgSetWithdrawAddress.prototype.GetDisplayContent = function (){
+    let delegator_addr = BECH32.encode(Config.cosmos.bech32.accAddr,this.DelegatorAddress);
+    let withdraw_addr = BECH32.encode(Config.cosmos.bech32.accAddr,this.WithdrawAddress);
+    return {
+        i18n_tx_type:"i18n_set_withdraw_address",
+        i18n_delegator_addr:delegator_addr,
+        i18n_withdraw_addr:withdraw_addr,
+    };
+};
 
 MsgWithdrawDelegatorReward.prototype.type = Config.cosmos.tx.withdrawDelegatorReward.prefix;
 MsgWithdrawDelegatorReward.prototype.GetSignBytes = function () {
