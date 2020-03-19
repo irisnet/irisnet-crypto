@@ -3,7 +3,7 @@ const common = require('./common');
 const chai = require('chai');
 const assert = chai.assert;
 
-const host ="http://192.168.150.31:21317";
+const host ="https://cosmos-lcd.dev.bianjie.ai";
 const url = host + "/txs";
 //const lcdServer ="http://127.0.0.1:1317/txs";
 
@@ -125,12 +125,14 @@ describe('cosmos transaction', function () {
             memo: common.randomWord(100),
             type: Irisnet.config.cosmos.tx.setWithdrawAddress.type,
             msg: {
-                withdraw_addr: "cosmos192xdyxer5hvtrrredragyup2gejv73ztzpa7j3",
+                withdraw_addr: "cosmos1uua4su0gsyu0ymd8n2lyj5vw96nu8sv2jzx6ey",
             }
         };
 
         common.verifyTx(url,tx,privateKey,chainName,verify);
+        // extracted(tx);
     });
+
     it('test MsgWithdrawDelegatorReward', function () {
         let seq = common.getSequence(host,from);
         let tx = {
@@ -226,7 +228,7 @@ describe('cosmos transaction', function () {
 
         console.log(`hash=${result.hash}`);
         assert.notExists(resp.code,`tx commit failed,${resp.raw_log}`);
-        //console.log("displayContent", JSON.stringify(stdTx.GetDisplayContent()));
+        console.log("displayContent", JSON.stringify(stdTx.GetDisplayContent()));
 
     }
 
