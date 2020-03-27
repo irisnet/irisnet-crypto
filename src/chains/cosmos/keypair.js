@@ -13,10 +13,10 @@ const Amino = require('../base');
 
 class CosmosKeypair {
 
-    static getPrivateKeyFromSecret(mnemonicS) {
+    static getPrivateKeyFromSecret(mnemonicS, path) {
         let seed = Bip39.mnemonicToSeed(mnemonicS);
         let master = Hd.ComputeMastersFromSeed(seed);
-        let derivedPriv = Hd.DerivePrivateKeyForPath(master.secret,master.chainCode,Config.cosmos.bip39Path);
+        let derivedPriv = Hd.DerivePrivateKeyForPath(master.secret,master.chainCode, path);
         return derivedPriv;
     }
 
@@ -54,7 +54,7 @@ class CosmosKeypair {
         }
 
         //生成私钥
-        let secretKey = this.getPrivateKeyFromSecret(mnemonicS);
+        let secretKey = this.getPrivateKeyFromSecret(mnemonicS, Config.cosmos.bip39Path);
         //构造公钥
         let pubKey = Secp256k1.publicKeyCreate(secretKey);
         pubKey = Amino.MarshalBinary(Config.cosmos.amino.pubKey,pubKey);
@@ -63,18 +63,17 @@ class CosmosKeypair {
             "secret": mnemonicS,
             "address": this.getAddress(pubKey),
             "privateKey": Codec.Hex.bytesToHex(secretKey),
-            "publicKey": Codec.Hex.bytesToHex(pubKey)
+            "publicKey": Codec.Hex.bytesToHex(pubKey),
         };
     }
 
-    static recover(mnemonic,language){
+    static recover(mnemonic,language, path){
         this.checkSeed(mnemonic,language);
         //生成私钥
-        let secretKey = this.getPrivateKeyFromSecret(mnemonic);
+        let secretKey = this.getPrivateKeyFromSecret(mnemonic, path);
         //构造公钥
         let pubKey = Secp256k1.publicKeyCreate(secretKey);
         pubKey = Amino.MarshalBinary(Config.cosmos.amino.pubKey,pubKey);
-
         return {
             "secret": mnemonic,
             "address": this.getAddress(pubKey),
@@ -85,8 +84,8 @@ class CosmosKeypair {
 
     static checkSeed(mnemonic,language){
         const seed = mnemonic.split(" ");
-        if(seed.length != 12 && seed.length != 24){
-            throw new Error("seed length must be equal 12 or 24");
+        if(seed.length != 12 && seed.length != 15 && seed.length != 18 && seed.length != 21 && seed.length != 24){
+            throw new Error("seed length must be equal 12、15、18、21、24");
         }
         if (!Bip39.validateMnemonic(mnemonic,language)){
             throw new Error("seed is invalid");
@@ -124,9 +123,20 @@ class Hd {
     }
 
     static DerivePrivateKeyForPath(privKeyBytes, chainCode, path) {
+        if (path === 'm' || path === 'M' || path === "m'" || path === "M'") {
+            return privKeyBytes;
+        }
+
         let data = privKeyBytes;
         let parts = path.split("/");
-        parts.forEach(function (part) {
+        parts.forEach(function (part, index) {
+            if (index === 0) {
+                if(!(/^[mM]{1}/.test(part))){
+                    throw new Error('Path must start with "m" or "M"');
+                }
+                return;
+            }
+
             let harden = part.slice(part.length-1,part.length) === "'";
             if (harden) {
                 part = part.slice(0,part.length -1);
@@ -153,7 +163,9 @@ class Hd {
 
     static DerivePrivateKey(privKeyBytes, chainCode, index, harden) {
         let data;
-        let indexBuffer = Buffer.from([index]);
+        // let indexBuffer = Buffer.from([index]);
+        let indexBuffer = Buffer.allocUnsafe(4);
+        indexBuffer.writeUInt32BE(index, 0);
         if(harden){
             let c = new BN(index).or(new BN(0x80000000));
 			indexBuffer = c.toBuffer();
@@ -163,9 +175,9 @@ class Hd {
             data = Buffer.concat([data,privKeyBuffer]);
         }else{
             const pubKey =Secp256k1.publicKeyCreate(privKeyBytes);
-            if (index ==0){
-                indexBuffer = Buffer.from([0,0,0,0]);
-            }
+            // if (index ==0){
+            //     indexBuffer = Buffer.from([0,0,0,0]);
+            // }
             data = pubKey
         }
         data = Buffer.concat([data,indexBuffer]);
