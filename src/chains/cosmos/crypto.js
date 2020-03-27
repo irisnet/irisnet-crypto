@@ -21,14 +21,15 @@ class CosmosCrypto extends Crypto {
                 address: keyPair.address,
                 phrase: keyPair.secret,
                 privateKey: keyPair.privateKey,
-                publicKey: keyPair.publicKey
+                publicKey: keyPair.publicKey,
             });
         }
         return keyPair;
     }
 
-    recover(secret, language) {
-        let keyPair = CosmosKeypair.recover(secret,switchToWordList(language));
+    recover(secret, language, path) {
+        path = path || Config.cosmos.bip39Path;
+        let keyPair = CosmosKeypair.recover(secret,switchToWordList(language), path);
         if (keyPair) {
             return encode({
                 address: keyPair.address,
