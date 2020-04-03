@@ -43,16 +43,8 @@ class IrisKeypair {
         return addr.digest('hex').toUpperCase();
     }
 
-    static create(language) {
-        //生成24位助记词
-        let entropySize = 24 * 11 - 8;
-        let entropy = Random(entropySize / 8);
-        let mnemonicS = Bip39.entropyToMnemonic(entropy,language);
-        while (Util.hasRepeatElement(mnemonicS," ")){
-            entropy = Random(entropySize / 8);
-            mnemonicS = Bip39.entropyToMnemonic(entropy,language);
-        }
-
+    static create(language, mnemonicLength) {
+        let mnemonicS = this.generateMnemonic(language, mnemonicLength);
         //生成私钥
         let secretKey = this.getPrivateKeyFromSecret(mnemonicS, Config.iris.bip39Path);
 
@@ -66,6 +58,32 @@ class IrisKeypair {
             "privateKey": Codec.Hex.bytesToHex(secretKey),
             "publicKey": Codec.Hex.bytesToHex(pubKey),
         };
+    }
+
+    static generateMnemonic(language, mnemonicLength) {
+        //默认生成24位助记词
+        let entropySize = 24 * 11 - 8;
+        switch(mnemonicLength){
+            case 12:
+            entropySize = 12 * 11 - 4;
+            break;
+            case 15:
+            entropySize = 15 * 11 - 5;
+            break;
+            case 18:
+            entropySize = 18 * 11 - 6;
+            break;
+            case 21:
+            entropySize = 21 * 11 - 7;
+            break;
+        }
+        let entropy = Random(entropySize / 8);
+        let mnemonicS = Bip39.entropyToMnemonic(entropy,language);
+        while (Util.hasRepeatElement(mnemonicS," ")){
+            entropy = Random(entropySize / 8);
+            mnemonicS = Bip39.entropyToMnemonic(entropy,language);
+        }
+        return mnemonicS;
     }
 
     static recover(mnemonic,language, path){

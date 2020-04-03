@@ -15,6 +15,17 @@ class Crypto {
     }
 
     /**
+     * 生成指定数量的助记词
+     *
+     * @param language
+     * @param mnemonicLength 12/15/18/21/24
+     * @returns mnemonics
+     */
+    generateMnemonic(language, mnemonicLength) {
+        throw new Error("not implement");
+    }
+
+    /**
      * 通过助记词恢复账户
      *
      * @param (seedphrase:string} 助记词

@@ -14,7 +14,7 @@ class CosmosCrypto extends Crypto {
      * @param language
      * @returns {*}
      */
-    create(language) {
+    create(language, mnemonicLength = 24) {
         let keyPair = CosmosKeypair.create(switchToWordList(language));
         if (keyPair) {
             return encode({
@@ -27,6 +27,16 @@ class CosmosCrypto extends Crypto {
         return keyPair;
     }
 
+    /**
+     *
+     * @param language
+     * @param mnemonicLength 12/15/18/21/24
+     * @returns mnemonics
+     */
+    generateMnemonic(language, mnemonicLength = 24) {
+        return CosmosKeypair.generateMnemonic(switchToWordList(language), mnemonicLength);
+    }
+    
     recover(secret, language, path) {
         path = path || Config.cosmos.bip39Path;
         let keyPair = CosmosKeypair.recover(secret,switchToWordList(language), path);

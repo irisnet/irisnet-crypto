@@ -16,8 +16,8 @@ class IrisCrypto extends Crypto {
      * @param language
      * @returns {*}
      */
-    create(language) {
-        let keyPair = IrisKeypair.create(switchToWordList(language));
+    create(language, mnemonicLength = 24) {
+        let keyPair = IrisKeypair.create(switchToWordList(language), mnemonicLength);
         if (keyPair) {
             return encode({
                 address: keyPair.address,
@@ -27,6 +27,16 @@ class IrisCrypto extends Crypto {
             });
         }
         return keyPair;
+    }
+
+    /**
+     *
+     * @param language
+     * @param mnemonicLength 12/15/18/21/24
+     * @returns mnemonics
+     */
+    generateMnemonic(language, mnemonicLength = 24) {
+        return IrisKeypair.generateMnemonic(switchToWordList(language), mnemonicLength);
     }
 
     recover(secret, language, path) {

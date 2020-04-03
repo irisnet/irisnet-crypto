@@ -26,6 +26,15 @@ describe('account', function () {
             // fs.close()
         });
 
+        it('test generate Mnemonic', function () {
+                let crypto = Irisnet.getCrypto(chainName, 'testnet');
+                [12, 15, 18, 21, 24].forEach((item)=>{
+                    let mnemonics = crypto.generateMnemonic(Irisnet.config.language.en, item);
+                    console.log('==>mnemonics length:',mnemonics.split(' ').length);
+                    console.log('mnemonics:',mnemonics);
+                });
+        });
+
         it('test import', function () {
             let crypto = Irisnet.getCrypto(chainName, 'testnet');
             let srcAccount = crypto.create(Irisnet.config.language.en);
@@ -84,6 +93,15 @@ describe('account', function () {
             // let fs = require("fs");
             // fs.writeFileSync('./input.txt',str);
             // fs.close()
+        });
+
+        it('test generate Mnemonic', function () {
+                let crypto = Irisnet.getCrypto(chainName);
+                [12, 15, 18, 21, 24].forEach((item)=>{
+                    let mnemonics = crypto.generateMnemonic(Irisnet.config.language.en, item);
+                    console.log('==>mnemonics length:',mnemonics.split(' ').length);
+                    console.log('mnemonics:',mnemonics);
+                });
         });
 
         it('test import', function () {
