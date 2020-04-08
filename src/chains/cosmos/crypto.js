@@ -36,7 +36,7 @@ class CosmosCrypto extends Crypto {
     generateMnemonic(language, mnemonicLength = 24) {
         return CosmosKeypair.generateMnemonic(switchToWordList(language), mnemonicLength);
     }
-    
+
     recover(secret, language, path) {
         path = path || Config.cosmos.bip39Path;
         let keyPair = CosmosKeypair.recover(secret,switchToWordList(language), path);
@@ -71,10 +71,23 @@ class CosmosCrypto extends Crypto {
     }
 
     getAddress(publicKey) {
+        if (Codec.Bech32.isBech32(Config.cosmos.bech32.accPub, publicKey)) {
+            publicKey = Codec.Bech32.fromBech32(publicKey);
+        }
         let pubKey = Codec.Hex.hexToBytes(publicKey);
         let address = CosmosKeypair.getAddress(pubKey);
         address = Codec.Bech32.toBech32(Config.cosmos.bech32.accAddr, address);
         return address;
+    }
+
+    encodePublicKey(publicKey){
+        let pubkey = publicKey;
+        if (Codec.Bech32.isBech32(Config.cosmos.bech32.accPub, pubkey)) {
+            pubkey = Codec.Bech32.toBech32(Config.cosmos.bech32.accPub, Codec.Bech32.fromBech32(pubkey));
+        }else if (Codec.Hex.isHex(pubkey)){
+            pubkey = Codec.Bech32.toBech32(Config.cosmos.bech32.accPub, pubkey);
+        }
+        return pubkey;
     }
 }
 

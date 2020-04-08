@@ -77,6 +77,15 @@ class Crypto {
     }
 
     /**
+     * encode PublicKey
+     *
+     * @param (publicKey:string}
+     */
+    encodePublicKey(publicKey){
+        throw new Error("not implement");
+    }
+    
+    /**
      * export keystore data from private and password
      * @param privateKeyHex user's private key
      * @param password user's password

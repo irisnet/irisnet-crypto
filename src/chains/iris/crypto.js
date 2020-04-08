@@ -73,10 +73,23 @@ class IrisCrypto extends Crypto {
     }
 
     getAddress(publicKey) {
+        if (Codec.Bech32.isBech32(Config.iris.bech32.accPub, publicKey)) {
+            publicKey = Codec.Bech32.fromBech32(publicKey);
+        }
         let pubKey = Codec.Hex.hexToBytes(publicKey);
         let address = IrisKeypair.getAddress(pubKey);
         address = Codec.Bech32.toBech32(Config.iris.bech32.accAddr, address);
         return address;
+    }
+
+    encodePublicKey(publicKey){
+        let pubkey = publicKey;
+        if (Codec.Bech32.isBech32(Config.iris.bech32.accPub, pubkey)) {
+            pubkey = Codec.Bech32.toBech32(Config.iris.bech32.accPub, Codec.Bech32.fromBech32(pubkey));
+        }else if (Codec.Hex.isHex(pubkey)){
+            pubkey = Codec.Bech32.toBech32(Config.iris.bech32.accPub, pubkey);
+        }
+        return pubkey;
     }
 
     // @see:https://github.com/binance-chain/javascript-sdk/blob/master/src/crypto/index.js
