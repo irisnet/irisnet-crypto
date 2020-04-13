@@ -137,7 +137,7 @@ class StdTx {
                 signatures: signatures,
                 memo: this.memo
             },
-            type: Config.cosmos.tx.ibcTransfer.prefix
+            type: Config.cosmos.tx.stdTx.prefix
         }
     }
 
