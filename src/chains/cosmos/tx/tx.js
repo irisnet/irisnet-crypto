@@ -1959,7 +1959,7 @@ $root.cosmos = (function() {
          * @interface IMsgTransfer
          * @property {string} SrcPort MsgTransfer SrcPort
          * @property {string} SrcChannel MsgTransfer SrcChannel
-         * @property {string} Denomination MsgTransfer Denomination
+         * @property {string} DestinationHeight MsgTransfer DestinationHeight
          * @property {string} Amount MsgTransfer Amount
          * @property {string} Sender MsgTransfer Sender
          * @property {string} Receiver MsgTransfer Receiver
@@ -1998,20 +1998,20 @@ $root.cosmos = (function() {
         MsgTransfer.prototype.SrcChannel = "";
 
         /**
-         * MsgTransfer Denomination.
-         * @member {string} Denomination
+         * MsgTransfer DestinationHeight.
+         * @member {string} DestinationHeight
          * @memberof cosmos.MsgTransfer
          * @instance
          */
-        MsgTransfer.prototype.Denomination = "";
+        MsgTransfer.prototype.DestinationHeight = "";
 
         /**
          * MsgTransfer Amount.
-         * @member {string} Amount
+         * @member {Array} Amount
          * @memberof cosmos.MsgTransfer
          * @instance
          */
-        MsgTransfer.prototype.Amount = "";
+        MsgTransfer.prototype.Amount = [];
 
         /**
          * MsgTransfer Sender.
@@ -2063,7 +2063,8 @@ $root.cosmos = (function() {
                 writer = $Writer.create();
             writer.uint32(/* id 1, wireType 2 =*/10).string(message.SrcPort);
             writer.uint32(/* id 2, wireType 2 =*/18).string(message.SrcChannel);
-            writer.uint32(/* id 3, wireType 2 =*/26).string(message.Denomination);
+            writer.uint32(/* id 3, wireType 2 =*/26).string(message.DestinationHeight);
+            //todo (Amount is Array)
             writer.uint32(/* id 4, wireType 2 =*/34).string(message.Amount);
             writer.uint32(/* id 5, wireType 2 =*/42).string(message.Sender);
             writer.uint32(/* id 6, wireType 2 =*/50).string(message.Receiver);
@@ -2109,9 +2110,9 @@ $root.cosmos = (function() {
                         message.SrcChannel = reader.string();
                         break;
                     case 3:
-                        message.Denomination = reader.string();
+                        message.DestinationHeight = reader.string();
                         break;
-                    case 4:
+                    case 4://todo(lvshenchao) Amount is Array
                         message.Amount = reader.string();
                         break;
                     case 5:
@@ -2132,8 +2133,8 @@ $root.cosmos = (function() {
                 throw $util.ProtocolError("missing required 'SrcPort'", { instance: message });
             if (!message.hasOwnProperty("SrcChannel"))
                 throw $util.ProtocolError("missing required 'SrcChannel'", { instance: message });
-            if (!message.hasOwnProperty("Denomination"))
-                throw $util.ProtocolError("missing required 'Denomination'", { instance: message });
+            if (!message.hasOwnProperty("DestinationHeight"))
+                throw $util.ProtocolError("missing required 'DestinationHeight'", { instance: message });
             if (!message.hasOwnProperty("Amount"))
                 throw $util.ProtocolError("missing required 'Amount'", { instance: message });
             if (!message.hasOwnProperty("Sender"))
@@ -2176,10 +2177,10 @@ $root.cosmos = (function() {
                 return "SrcPort: string expected";
             if (!$util.isString(message.SrcChannel))
                 return "SrcChannel: string expected";
-            if (!$util.isString(message.Denomination))
-                return "Denomination: string expected";
-            if (!$util.isString(message.Amount))
-                return "Amount: string expected";
+            if (!$util.isString(message.DestinationHeight))
+                return "DestinationHeight: string expected";
+            if (!Array.isArray(message.Amount))
+                return "Amount: array expected";
             if (!$util.isString(message.Sender))
                 return "Sender: string expected";
             if (!$util.isString(message.Receiver))
@@ -2205,10 +2206,10 @@ $root.cosmos = (function() {
                 message.SrcPort = String(object.SrcPort);
             if (object.SrcChannel != null)
                 message.SrcChannel = String(object.SrcChannel);
-            if (object.Denomination != null)
-                message.Denomination = String(object.Denomination);
+            if (object.DestinationHeight != null)
+                message.DestinationHeight = String(object.DestinationHeight);
             if (object.Amount != null)
-                message.Amount = String(object.Amount);
+                message.Amount = object.Amount;
             if (object.Sender != null)
                 message.Sender = String(object.Sender);
             if (object.Receiver != null)
@@ -2234,8 +2235,8 @@ $root.cosmos = (function() {
             if (options.defaults) {
                 object.SrcPort = "";
                 object.SrcChannel = "";
-                object.Denomination = "";
-                object.Amount = "";
+                object.DestinationHeight = "";
+                object.Amount = [];
                 object.Sender = "";
                 object.Receiver = "";
                 object.Source = false;
@@ -2244,8 +2245,8 @@ $root.cosmos = (function() {
                 object.SrcPort = message.SrcPort;
             if (message.SrcChannel != null && message.hasOwnProperty("SrcChannel"))
                 object.SrcChannel = message.SrcChannel;
-            if (message.Denomination != null && message.hasOwnProperty("Denomination"))
-                object.Denomination = message.Denomination;
+            if (message.DestinationHeight != null && message.hasOwnProperty("DestinationHeight"))
+                object.DestinationHeight = message.DestinationHeight;
             if (message.Amount != null && message.hasOwnProperty("Amount"))
                 object.Amount = message.Amount;
             if (message.Sender != null && message.hasOwnProperty("Sender"))

@@ -100,7 +100,7 @@
       },
       "ibcTransfer": {
         "type": "MsgTransfer",
-        "prefix": "ibcmockbank/MsgTransfer"
+        "prefix": "ibc/transfer/MsgTransfer"
       },
       "stdTx": {
         "type": "stdTx",

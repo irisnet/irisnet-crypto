@@ -10,7 +10,7 @@ MsgTransfer.prototype.GetSignBytes = function () {
     let msg = {
         src_port: this.SrcPort,
         src_channel: this.SrcChannel,
-        denomination: this.Denomination,
+        dest_height: this.DestinationHeight,
         amount: this.Amount,
         sender: this.Sender,
         receiver: this.Receiver,
@@ -27,8 +27,8 @@ MsgTransfer.prototype.ValidateBasic = function () {
     if (Utils.isEmpty(this.SrcChannel)) {
         throw new Error("SrcChannel is  empty");
     }
-    if (Utils.isEmpty(this.Denomination)) {
-        throw new Error("Denomination is  empty");
+    if (Utils.isEmpty(this.DestinationHeight)) {
+        throw new Error("DestinationHeight is  empty");
     }
     if (Utils.isEmpty(this.Amount)) {
         throw new Error("Amount is  empty");
@@ -48,7 +48,7 @@ MsgTransfer.prototype.GetMsg = function () {
     return {
         SrcPort: this.SrcPort,
         SrcChannel: this.SrcChannel,
-        Denomination: this.Denomination,
+        DestinationHeight: this.DestinationHeight,
         Amount: this.Amount,
         Sender: this.Sender,
         Receiver: this.Receiver,
@@ -61,7 +61,7 @@ MsgTransfer.prototype.GetDisplayContent = function () {
         i18n_tx_type: "i18n_ibc_transfer",
         i18n_src_port: this.SrcPort,
         i18n_src_channel: this.SrcChannel,
-        i18n_denomination: this.Denomination,
+        i18n_dest_height: this.DestinationHeight,
         i18n_amount: this.Amount,
         i18n_sender: this.Sender,
         i18n_receiver: this.Receiver,
@@ -73,7 +73,7 @@ MsgTransfer.prototype.toJSON = function () {
     return {
         SrcPort: this.SrcPort,
         SrcChannel: this.SrcChannel,
-        Denomination: this.Denomination,
+        DestinationHeight: this.DestinationHeight,
         Amount: this.Amount,
         Sender: this.Sender,
         Receiver: this.Receiver,
@@ -86,7 +86,7 @@ module.exports = class IBC {
         return new MsgTransfer({
             SrcPort: req.msg.src_port,
             SrcChannel: req.msg.src_channel,
-            Denomination: req.msg.denomination,
+            DestinationHeight: req.msg.dest_height,
             Amount: Utils.toString(req.msg.amount),
             Sender: req.from,
             Receiver: req.msg.receiver,
