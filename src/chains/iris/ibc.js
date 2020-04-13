@@ -8,8 +8,8 @@ const MsgTransfer = Root.cosmos.MsgTransfer;
 MsgTransfer.prototype.type = Config.cosmos.tx.ibcTransfer.prefix;
 MsgTransfer.prototype.GetSignBytes = function () {
     let msg = {
-        src_port: this.SrcPort,
-        src_channel: this.SrcChannel,
+        source_port: this.SrcPort,
+        source_channel: this.SrcChannel,
         dest_height: this.DestinationHeight,
         amount: this.Amount,
         sender: this.Sender,
@@ -59,8 +59,8 @@ MsgTransfer.prototype.GetMsg = function () {
 MsgTransfer.prototype.GetDisplayContent = function () {
     return {
         i18n_tx_type: "i18n_ibc_transfer",
-        i18n_src_port: this.SrcPort,
-        i18n_src_channel: this.SrcChannel,
+        i18n_source_port: this.SrcPort,
+        i18n_source_channel: this.SrcChannel,
         i18n_dest_height: this.DestinationHeight,
         i18n_amount: this.Amount,
         i18n_sender: this.Sender,
@@ -84,8 +84,8 @@ MsgTransfer.prototype.toJSON = function () {
 module.exports = class IBC {
     static createMsgTransfer(req) {
         return new MsgTransfer({
-            SrcPort: req.msg.src_port,
-            SrcChannel: req.msg.src_channel,
+            SrcPort: req.msg.source_port,
+            SrcChannel: req.msg.source_channel,
             DestinationHeight: req.msg.dest_height,
             Amount: Utils.toString(req.msg.amount),
             Sender: req.from,

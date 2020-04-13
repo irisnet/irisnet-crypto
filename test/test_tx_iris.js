@@ -346,8 +346,8 @@ describe('iris transaction', function () {
                 memo: memo,
                 type: Irisnet.config.iris.tx.ibcTransfer.type,
                 msg: {
-                    src_port : "port-to-b",
-                    src_channel: "chann-to-b",
+                    source_port : "port-to-b",
+                    source_channel: "chann-to-b",
                     denomination: "n0token",
                     amount: "1",
                     receiver: "faa1vv0gjuw9e64nds2ngd5d9357fsdtq3u5c3hn65",
