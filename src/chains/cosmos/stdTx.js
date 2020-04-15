@@ -131,13 +131,13 @@ class StdTx {
             gas: Utils.toString(this.fee.gas)
         };
         return {
-            'tx': {
+            value: {
                 msg: msgs,
                 fee: fee,
                 signatures: signatures,
                 memo: this.memo
             },
-            'mode': 'sync'
+            type: Config.cosmos.tx.stdTx.prefix
         }
     }
 
