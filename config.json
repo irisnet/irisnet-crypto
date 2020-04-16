@@ -40,6 +40,18 @@
       "stdTx": {
         "type": "",
         "prefix": "irishub/bank/StdTx"
+      },
+      "addLiquidity": {
+        "type": "add_liquidity",
+        "prefix": "irishub/coinswap/MsgAddLiquidity"
+      },
+      "removeLiquidity": {
+        "type": "remove_liquidity",
+        "prefix": "irishub/coinswap/MsgRemoveLiquidity"
+      },
+      "swapOrder": {
+        "type": "swap_order",
+        "prefix": "irishub/coinswap/MsgSwapOrder"
       }
     },
     "mode":{

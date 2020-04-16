@@ -5,6 +5,7 @@ const Bank = require('./bank');
 const Stake = require('./stake');
 const Distribution = require('./distribution');
 const IBC = require('./ibc');
+const Coinswap = require('./coinswap');
 const CosmosKeypair = require('./keypair');
 const Codec = require("../../util/codec");
 const Config = require('../../../config');
@@ -53,6 +54,10 @@ class CosmosBuilder extends Builder {
             }
             case Config.cosmos.tx.ibcTransfer.type: {
                 msg = IBC.createMsgTransfer(req);
+                break;
+            }
+            case Config.iris.tx.swapOrder.type: {
+                msg = Coinswap.createMsgSwapOrder(req);
                 break;
             }
             default: {
