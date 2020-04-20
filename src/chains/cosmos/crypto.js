@@ -15,7 +15,7 @@ class CosmosCrypto extends Crypto {
      * @returns {*}
      */
     create(language, mnemonicLength = 24) {
-        let keyPair = CosmosKeypair.create(switchToWordList(language));
+        let keyPair = CosmosKeypair.create(switchToWordList(language), mnemonicLength);
         if (keyPair) {
             return encode({
                 address: keyPair.address,
