@@ -34,7 +34,7 @@ class CosmosCrypto extends Crypto {
      * @returns mnemonics
      */
     generateMnemonic(language, mnemonicLength = 24) {
-        return IrisKeypair.generateMnemonic(switchToWordList(language), mnemonicLength);
+        return CosmosKeypair.generateMnemonic(switchToWordList(language), mnemonicLength);
     }
 
     recover(secret, language, path) {
