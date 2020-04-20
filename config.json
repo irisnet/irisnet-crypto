@@ -61,7 +61,7 @@
       "signature": "tendermint/SignatureSecp256k1",
       "pubKey": "tendermint/PubKeySecp256k1"
     },
-    "bip39Path": "44'/118'/0'/0/0",
+    "bip39Path": "m/44'/118'/0'/0/0",
     "keystore": {
       "kdf": "pbkdf2",
       "cipherAlg": "aes-128-ctr",
@@ -122,7 +122,7 @@
       "signature": "tendermint/SignatureSecp256k1",
       "pubKey": "tendermint/PubKeySecp256k1"
     },
-    "bip39Path": "44'/118'/0'/0/0"
+    "bip39Path": "m/44'/118'/0'/0/0"
   },
   "language": {
     "cn": "chinese_simplified",

@@ -1,7 +1,7 @@
 'use strict';
 const Crypto = require("../../crypto");
 const Old = require('old');
-const CosmosKeypair = require('./keypair');
+const IrisKeypair = require('./keypair');
 const Codec = require("../../util/codec");
 const Utils = require("../../util/utils");
 const Config = require('../../../config');
@@ -14,21 +14,32 @@ class CosmosCrypto extends Crypto {
      * @param language
      * @returns {*}
      */
-    create(language) {
-        let keyPair = CosmosKeypair.create(switchToWordList(language));
+    create(language, mnemonicLength = 24) {
+        let keyPair = IrisKeypair.create(switchToWordList(language), mnemonicLength);
         if (keyPair) {
             return encode({
                 address: keyPair.address,
                 phrase: keyPair.secret,
                 privateKey: keyPair.privateKey,
-                publicKey: keyPair.publicKey
+                publicKey: keyPair.publicKey,
             });
         }
         return keyPair;
     }
 
-    recover(secret, language) {
-        let keyPair = CosmosKeypair.recover(secret,switchToWordList(language));
+    /**
+     *
+     * @param language
+     * @param mnemonicLength 12/15/18/21/24
+     * @returns mnemonics
+     */
+    generateMnemonic(language, mnemonicLength = 24) {
+        return IrisKeypair.generateMnemonic(switchToWordList(language), mnemonicLength);
+    }
+    
+    recover(secret, language, path) {
+        path = path || Config.iris.bip39Path;
+        let keyPair = IrisKeypair.recover(secret,switchToWordList(language), path);
         if (keyPair) {
             return encode({
                 address: keyPair.address,
@@ -40,7 +51,7 @@ class CosmosCrypto extends Crypto {
     }
 
     import(privateKey) {
-        let keyPair = CosmosKeypair.import(privateKey);
+        let keyPair = IrisKeypair.import(privateKey);
         if (keyPair) {
             return encode({
                 address: keyPair.address,
@@ -52,16 +63,16 @@ class CosmosCrypto extends Crypto {
     }
 
     isValidAddress(address) {
-        return CosmosKeypair.isValidAddress(address);
+        return IrisKeypair.isValidAddress(address);
     }
 
     isValidPrivate(privateKey) {
-        return CosmosKeypair.isValidPrivate(privateKey);
+        return IrisKeypair.isValidPrivate(privateKey);
     }
 
     getAddress(publicKey) {
         let pubKey = Codec.Hex.hexToBytes(publicKey);
-        let address = CosmosKeypair.getAddress(pubKey);
+        let address = IrisKeypair.getAddress(pubKey);
         address = Codec.Bech32.toBech32(Config.iris.bech32.accAddr, address);
         return address;
     }
