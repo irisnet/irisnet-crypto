@@ -30,9 +30,10 @@ class Crypto {
      *
      * @param (seedphrase:string} 助记词
      * @param (language:string} 字符集 (constants.Language.CH_S | constants.Language.JP |constants.Language.SP |constants.Language.EN |)
+     * @param (path:string} 推导path
      * @returns {{address, phrase, privateKey, publicKey}}
      */
-    recover(seedphrase, language) {
+    recover(seedphrase, language, path) {
         throw new Error("not implement");
     }
 
