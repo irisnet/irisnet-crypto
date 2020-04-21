@@ -1963,7 +1963,6 @@ $root.cosmos = (function() {
          * @property {string} Amount MsgTransfer Amount
          * @property {string} Sender MsgTransfer Sender
          * @property {string} Receiver MsgTransfer Receiver
-         * @property {boolean} Source MsgTransfer Source
          */
 
         /**
@@ -2028,15 +2027,6 @@ $root.cosmos = (function() {
          * @instance
          */
         MsgTransfer.prototype.Receiver = "";
-
-        /**
-         * MsgTransfer Source.
-         * @member {boolean} Source
-         * @memberof cosmos.MsgTransfer
-         * @instance
-         */
-        MsgTransfer.prototype.Source = false;
-
         /**
          * Creates a new MsgTransfer instance using the specified properties.
          * @function create
@@ -2141,8 +2131,6 @@ $root.cosmos = (function() {
                 throw $util.ProtocolError("missing required 'Sender'", { instance: message });
             if (!message.hasOwnProperty("Receiver"))
                 throw $util.ProtocolError("missing required 'Receiver'", { instance: message });
-            if (!message.hasOwnProperty("Source"))
-                throw $util.ProtocolError("missing required 'Source'", { instance: message });
             return message;
         };
 
@@ -2185,8 +2173,6 @@ $root.cosmos = (function() {
                 return "Sender: string expected";
             if (!$util.isString(message.Receiver))
                 return "Receiver: string expected";
-            if (typeof message.Source !== "boolean")
-                return "Source: boolean expected";
             return null;
         };
 
@@ -2214,8 +2200,6 @@ $root.cosmos = (function() {
                 message.Sender = String(object.Sender);
             if (object.Receiver != null)
                 message.Receiver = String(object.Receiver);
-            if (object.Source != null)
-                message.Source = Boolean(object.Source);
             return message;
         };
 
@@ -2253,8 +2237,6 @@ $root.cosmos = (function() {
                 object.Sender = message.Sender;
             if (message.Receiver != null && message.hasOwnProperty("Receiver"))
                 object.Receiver = message.Receiver;
-            if (message.Source != null && message.hasOwnProperty("Source"))
-                object.Source = message.Source;
             return object;
         };
 

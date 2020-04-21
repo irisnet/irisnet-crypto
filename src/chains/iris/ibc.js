@@ -13,8 +13,7 @@ MsgTransfer.prototype.GetSignBytes = function () {
         dest_height: this.DestinationHeight,
         amount: this.Amount,
         sender: this.Sender,
-        receiver: this.Receiver,
-        source: this.Source
+        receiver: this.Receiver
     };
     let sortMsg = Utils.sortObjectKeys(msg);
     return Amino.MarshalJSON(this.type, sortMsg)
@@ -39,9 +38,6 @@ MsgTransfer.prototype.ValidateBasic = function () {
     if (Utils.isEmpty(this.Receiver)) {
         throw new Error("Receiver is  empty");
     }
-    if (Utils.isEmpty(this.Source)) {
-        throw new Error("Source is  empty");
-    }
 };
 
 MsgTransfer.prototype.GetMsg = function () {
@@ -51,8 +47,7 @@ MsgTransfer.prototype.GetMsg = function () {
         DestinationHeight: this.DestinationHeight,
         Amount: this.Amount,
         Sender: this.Sender,
-        Receiver: this.Receiver,
-        Source: this.Source
+        Receiver: this.Receiver
     }
 };
 
@@ -64,8 +59,7 @@ MsgTransfer.prototype.GetDisplayContent = function () {
         i18n_dest_height: this.DestinationHeight,
         i18n_amount: this.Amount,
         i18n_sender: this.Sender,
-        i18n_receiver: this.Receiver,
-        i18n_source: this.Source
+        i18n_receiver: this.Receiver
     }
 };
 
@@ -76,8 +70,7 @@ MsgTransfer.prototype.toJSON = function () {
         DestinationHeight: this.DestinationHeight,
         Amount: this.Amount,
         Sender: this.Sender,
-        Receiver: this.Receiver,
-        Source: this.Source
+        Receiver: this.Receiver
     }
 };
 
@@ -89,8 +82,7 @@ module.exports = class IBC {
             DestinationHeight: req.msg.dest_height,
             Amount: Utils.toString(req.msg.amount),
             Sender: req.from,
-            Receiver: req.msg.receiver,
-            Source: req.msg.source
+            Receiver: req.msg.receiver
         });
     }
 };
