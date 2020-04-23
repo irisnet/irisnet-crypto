@@ -51,7 +51,7 @@
       },
       "swapOrder": {
         "type": "swap_order",
-        "prefix": "irishub/coinswap/MsgSwapOrder"
+        "prefix": "irismod/coinswap/MsgSwapOrder"
       }
     },
     "mode":{
