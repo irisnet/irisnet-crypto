@@ -7,14 +7,17 @@ const Utils = require("../../util/utils");
 const Config = require('../../../config');
 const Bip39 = require('bip39');
 
+let accAddress = Config.cosmos.bech32.accAddr;
 class CosmosCrypto extends Crypto {
-    
     /**
      *
      * @param language
      * @returns {*}
      */
-    create(language, mnemonicLength = 24) {
+    create(language, mnemonicLength = 24, accAddr = Config.cosmos.bech32.accAddr) {
+        if (accAddr && accAddr.length) {
+            accAddress = accAddr;
+        }
         let keyPair = CosmosKeypair.create(switchToWordList(language), mnemonicLength);
         if (keyPair) {
             return encode({
@@ -37,8 +40,11 @@ class CosmosCrypto extends Crypto {
         return CosmosKeypair.generateMnemonic(switchToWordList(language), mnemonicLength);
     }
 
-    recover(secret, language, path) {
+    recover(secret, language, path, accAddr = Config.cosmos.bech32.accAddr) {
         path = path || Config.cosmos.bip39Path;
+        if (accAddr && accAddr.length) {
+            accAddress = accAddr;
+        }
         let keyPair = CosmosKeypair.recover(secret,switchToWordList(language), path);
         if (keyPair) {
             return encode({
@@ -76,7 +82,7 @@ class CosmosCrypto extends Crypto {
         }
         let pubKey = Codec.Hex.hexToBytes(publicKey);
         let address = CosmosKeypair.getAddress(pubKey);
-        address = Codec.Bech32.toBech32(Config.cosmos.bech32.accAddr, address);
+        address = Codec.Bech32.toBech32(accAddress, address);
         return address;
     }
 
@@ -97,7 +103,7 @@ function encode(acc){
         switch (Config.cosmos.defaultCoding){
             case Config.cosmos.coding.bech32:{
                 if (Codec.Hex.isHex(acc.address)){
-                    acc.address =  Codec.Bech32.toBech32(Config.cosmos.bech32.accAddr, acc.address);
+                    acc.address =  Codec.Bech32.toBech32(accAddress, acc.address);
                 }
                 if (Codec.Hex.isHex(acc.publicKey)){
                     acc.publicKey = Codec.Bech32.toBech32(Config.cosmos.bech32.accPub, acc.publicKey);

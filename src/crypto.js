@@ -9,9 +9,10 @@ class Crypto {
      *
      * @param (language:string} 字符集 (constants.Language.CH_S | constants.Language.JP |constants.Language.SP |constants.Language.EN |)
      * @param (mnemonicLength:number} 助记词数量
+     * @param (accAddr:string) 地址编码前缀
      * @returns {{address, phrase, privateKey, publicKey}}
      */
-    create(language, mnemonicLength = 24) {
+    create(language, mnemonicLength = 24, accAddr) {
         throw new Error("not implement");
     }
 
@@ -32,9 +33,10 @@ class Crypto {
      * @param (seedphrase:string} 助记词
      * @param (language:string} 字符集 (constants.Language.CH_S | constants.Language.JP |constants.Language.SP |constants.Language.EN |)
      * @param (path:string} 推导path
+     * @param (accAddr:string) 地址编码前缀
      * @returns {{address, phrase, privateKey, publicKey}}
      */
-    recover(seedphrase, language, path) {
+    recover(seedphrase, language, path, accAddr) {
         throw new Error("not implement");
     }
 

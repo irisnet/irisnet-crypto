@@ -10,8 +10,8 @@ const MsgSend = Root.cosmos.MsgSend;
 MsgSend.prototype.GetSignBytes = function () {
 
     let msg = {
-        "from_address": BECH32.encode(Config.cosmos.bech32.accAddr,this.FromAddress),
-        "to_address": BECH32.encode(Config.cosmos.bech32.accAddr,this.ToAddress),
+        "from_address": this.FromAddress,
+        "to_address": this.ToAddress,
         "amount": this.Amount
     };
     let sortMsg = Utils.sortObjectKeys(msg);
@@ -29,8 +29,8 @@ MsgSend.prototype.ValidateBasic = function () {
 
 MsgSend.prototype.GetMsg = function(){
     const BECH32 = require('bech32');
-    let from_address = BECH32.fromWords(this.FromAddress);
-    let to_address = BECH32.fromWords(this.ToAddress);
+    let from_address = this.FromAddress;
+    let to_address = this.ToAddress;
 
     return {
         FromAddress: from_address,
@@ -41,8 +41,8 @@ MsgSend.prototype.GetMsg = function(){
 
 MsgSend.prototype.type = Config.cosmos.tx.transfer.prefix;
 MsgSend.prototype.GetDisplayContent = function (){
-    let from = BECH32.encode(Config.cosmos.bech32.accAddr,this.FromAddress);
-    let to = BECH32.encode(Config.cosmos.bech32.accAddr,this.ToAddress);
+    let from = this.FromAddress;
+    let to = this.ToAddress;
     return {
         i18n_tx_type:"i18n_transfer",
         i18n_from:from,
@@ -52,8 +52,8 @@ MsgSend.prototype.GetDisplayContent = function (){
 };
 
 MsgSend.prototype.toJSON = function(){
-    let from = BECH32.encode(Config.cosmos.bech32.accAddr,this.FromAddress);
-    let to = BECH32.encode(Config.cosmos.bech32.accAddr,this.ToAddress);
+    let from = this.FromAddress;
+    let to = this.ToAddress;
     return {
         FromAddress: from,
         ToAddress: to,
@@ -73,8 +73,8 @@ module.exports = class Bank {
                 });
             });
         }
-        let from = BECH32.decode(req.from).words;
-        let to = BECH32.decode(req.msg.to).words;
+        let from = req.from;
+        let to = req.msg.to;
         let msg = new MsgSend({
             FromAddress:from,
             ToAddress:to,
