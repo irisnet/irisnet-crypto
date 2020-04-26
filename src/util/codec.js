@@ -81,14 +81,14 @@ const bech32 = class {
      * @returns
      */
     static isBech32(prefix, str) {
-        if (!prefix || prefix.length == 0) {
-            return false
-        }
+        // if (!prefix || prefix.length == 0) {
+        //     return false
+        // }
 
-        let preReg = new RegExp('^' + prefix + '1');
-        if (!preReg.test(str) ){
-            return false
-        }
+        // let preReg = new RegExp('^' + prefix + '1');
+        // if (!preReg.test(str) ){
+        //     return false
+        // }
 
         let allReg = new RegExp(/^[0-9a-zA-Z]*$/i);
         if (!allReg.test(str)){
