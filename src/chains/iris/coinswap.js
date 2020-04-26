@@ -7,8 +7,8 @@ const Utils = require('../../util/utils');
 const MsgSwapOrder =Root.cosmos.MsgSwapOrder;
 MsgSwapOrder.prototype.type = Config.iris.tx.swapOrder.prefix;
 MsgSwapOrder.prototype.GetSignBytes = function () {
-    let sender = BECH32.encode(Config.cosmos.bech32.accAddr, this.input.address);
-    let receiver = BECH32.encode(Config.cosmos.bech32.accAddr, this.output.address);
+    let sender = this.input.address;
+    let receiver = this.output.address;
     let msg = {
         input: {
             address: sender,
@@ -39,8 +39,8 @@ MsgSwapOrder.prototype.ValidateBasic = function () {
     }
 };
 MsgSwapOrder.prototype.GetMsg = function () {
-    let sender = BECH32.fromWords(this.input.address);
-    let receiver = BECH32.fromWords(this.output.address);
+    let sender = this.input.address;
+    let receiver = this.output.address;
     let input = {
         address: sender,
         coin: this.input.coin
@@ -57,8 +57,8 @@ MsgSwapOrder.prototype.GetMsg = function () {
     }
 };
 MsgSwapOrder.prototype.GetDisplayContent = function () {
-    let sender = BECH32.encode(Config.cosmos.bech32.accAddr, this.input.address);
-    let receiver = BECH32.encode(Config.cosmos.bech32.accAddr, this.output.address);
+    let sender = this.input.address;
+    let receiver = this.output.address;
     return {
         i18n_tx_type: "i18n_swap_order",
         i18n_input: {
@@ -74,8 +74,8 @@ MsgSwapOrder.prototype.GetDisplayContent = function () {
     }
 };
 MsgSwapOrder.prototype.toJSON = function () {
-    let sender = BECH32.encode(Config.cosmos.bech32.accAddr, this.input.address);
-    let receiver = BECH32.encode(Config.cosmos.bech32.accAddr, this.output.address);
+    let sender = this.input.address;
+    let receiver = this.output.address;
 
     return {
         input: {
@@ -94,7 +94,7 @@ MsgSwapOrder.prototype.toJSON = function () {
 const MsgAddLiquidity =Root.cosmos.MsgAddLiquidity;
 MsgAddLiquidity.prototype.type = Config.iris.tx.addLiquidity.prefix;
 MsgAddLiquidity.prototype.GetSignBytes = function () {
-    let sender = BECH32.encode(Config.cosmos.bech32.accAddr, this.sender);
+    let sender = this.sender;
     let msg = {
         max_token: this.maxToken,
         exact_iris_amt: this.exactIrisAmt,
@@ -123,7 +123,7 @@ MsgAddLiquidity.prototype.ValidateBasic = function () {
     }
 };
 MsgAddLiquidity.prototype.GetMsg = function () {
-    let sender = BECH32.fromWords(this.sender);
+    let sender = this.sender;
     return {
         maxToken: this.maxToken,
         exactIrisAmt: this.exactIrisAmt,
@@ -133,7 +133,7 @@ MsgAddLiquidity.prototype.GetMsg = function () {
     }
 };
 MsgAddLiquidity.prototype.GetDisplayContent = function () {
-    let sender = BECH32.encode(Config.cosmos.bech32.accAddr, this.sender);
+    let sender = this.sender;
     return {
         i18n_tx_type: "i18n_add_liquidity",
         i18n_max_token: this.maxToken,
@@ -144,7 +144,7 @@ MsgAddLiquidity.prototype.GetDisplayContent = function () {
     }
 };
 MsgAddLiquidity.prototype.toJSON = function () {
-    let sender = BECH32.encode(Config.cosmos.bech32.accAddr, this.sender);
+    let sender = this.sender;
     return {
         max_token: this.maxToken,
         exact_iris_amt: this.exactIrisAmt,
@@ -157,7 +157,7 @@ MsgAddLiquidity.prototype.toJSON = function () {
 const MsgRemoveLiquidity =Root.cosmos.MsgRemoveLiquidity;
 MsgRemoveLiquidity.prototype.type = Config.iris.tx.removeLiquidity.prefix;
 MsgRemoveLiquidity.prototype.GetSignBytes = function () {
-    let sender = BECH32.encode(Config.cosmos.bech32.accAddr, this.sender);
+    let sender = this.sender;
     let msg = {
         min_token: this.minToken,
         withdraw_liquidity: this.withdrawLiquidity,
@@ -186,7 +186,7 @@ MsgRemoveLiquidity.prototype.ValidateBasic = function () {
     }
 };
 MsgRemoveLiquidity.prototype.GetMsg = function () {
-    let sender = BECH32.fromWords(this.sender);
+    let sender = this.sender;
     return {
         minToken: this.minToken,
         withdrawLiquidity: this.withdrawLiquidity,
@@ -196,7 +196,7 @@ MsgRemoveLiquidity.prototype.GetMsg = function () {
     }
 };
 MsgRemoveLiquidity.prototype.GetDisplayContent = function () {
-    let sender = BECH32.encode(Config.cosmos.bech32.accAddr, this.sender);
+    let sender = this.sender;
     return {
         i18n_tx_type: "i18n_remove_liquidity",
         i18n_min_token: this.minToken,
@@ -207,7 +207,7 @@ MsgRemoveLiquidity.prototype.GetDisplayContent = function () {
     }
 };
 MsgRemoveLiquidity.prototype.toJSON = function () {
-    let sender = BECH32.encode(Config.cosmos.bech32.accAddr, this.sender);
+    let sender = this.sender;
     return {
         min_token: this.minToken,
         withdraw_liquidity: this.withdrawLiquidity,
@@ -230,7 +230,7 @@ module.exports = class CoinSwap {
             exactIrisAmt: exactIrisAmt,
             minLiquidity: minLiquidity,
             deadline: Utils.toString(req.msg.deadline),
-            sender: BECH32.decode(req.from).words
+            sender: req.from
         })
     }
 
@@ -246,13 +246,13 @@ module.exports = class CoinSwap {
             withdrawLiquidity: withdrawLiquidity,
             minIrisAmt: minIrisAmt,
             deadline: Utils.toString(req.msg.deadline),
-            sender: BECH32.decode(req.from).words
+            sender: req.from
         })
     }
 
     static createMsgSwapOrder(req) {
-        let sender = BECH32.decode(req.msg.input.address).words;
-        let receiver = BECH32.decode(req.msg.output.address).words;
+        let sender = req.msg.input.address;
+        let receiver = req.msg.output.address;
 
         let input = {
             address: sender,

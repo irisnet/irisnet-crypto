@@ -10,6 +10,13 @@ describe('account', function () {
     describe('iris', function () {
         let url ="http://irisnet-lcd.dev.rainbow.one/keys/%s/recover";
         let chainName = Irisnet.config.chain.iris;
+        
+        it('test generateMnemonic', function () {
+            let crypto = Irisnet.getCrypto(chainName, 'testnet');
+            let mnemonic = crypto.generateMnemonic();
+            console.log('mnemonic:',mnemonic);
+        });
+
         it('test create and recover', function () {
             //let str = "";
             for (let i = 0; i < 10; i++) {
