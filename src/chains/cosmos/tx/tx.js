@@ -1959,7 +1959,7 @@ $root.cosmos = (function() {
          * @interface IMsgTransfer
          * @property {string} SourcePort MsgTransfer SourcePort
          * @property {string} SourceChannel MsgTransfer SourceChannel
-         * @property {number|Long} Denomination MsgTransfer Denomination
+         * @property {number|Long} DestHeight MsgTransfer DestHeight
          * @property {cosmos.ICoin} Amount MsgTransfer Amount
          * @property {Uint8Array} Sender MsgTransfer Sender
          * @property {string} Receiver MsgTransfer Receiver
@@ -1997,12 +1997,12 @@ $root.cosmos = (function() {
         MsgTransfer.prototype.SourceChannel = "";
 
         /**
-         * MsgTransfer Denomination.
-         * @member {number|Long} Denomination
+         * MsgTransfer DestHeight.
+         * @member {number|Long} DestHeight
          * @memberof cosmos.MsgTransfer
          * @instance
          */
-        MsgTransfer.prototype.Denomination = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+        MsgTransfer.prototype.DestHeight = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
 
         /**
          * MsgTransfer Amount.
@@ -2054,7 +2054,7 @@ $root.cosmos = (function() {
                 writer = $Writer.create();
             writer.uint32(/* id 1, wireType 2 =*/10).string(message.SourcePort);
             writer.uint32(/* id 2, wireType 2 =*/18).string(message.SourceChannel);
-            writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.Denomination);
+            writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.DestHeight);
             $root.cosmos.Coin.encode(message.Amount, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
             writer.uint32(/* id 5, wireType 2 =*/42).bytes(message.Sender);
             writer.uint32(/* id 6, wireType 2 =*/50).string(message.Receiver);
@@ -2099,7 +2099,7 @@ $root.cosmos = (function() {
                     message.SourceChannel = reader.string();
                     break;
                 case 3:
-                    message.Denomination = reader.uint64();
+                    message.DestHeight = reader.uint64();
                     break;
                 case 4:
                     message.Amount = $root.cosmos.Coin.decode(reader, reader.uint32());
@@ -2119,8 +2119,8 @@ $root.cosmos = (function() {
                 throw $util.ProtocolError("missing required 'SourcePort'", { instance: message });
             if (!message.hasOwnProperty("SourceChannel"))
                 throw $util.ProtocolError("missing required 'SourceChannel'", { instance: message });
-            if (!message.hasOwnProperty("Denomination"))
-                throw $util.ProtocolError("missing required 'Denomination'", { instance: message });
+            if (!message.hasOwnProperty("DestHeight"))
+                throw $util.ProtocolError("missing required 'DestHeight'", { instance: message });
             if (!message.hasOwnProperty("Amount"))
                 throw $util.ProtocolError("missing required 'Amount'", { instance: message });
             if (!message.hasOwnProperty("Sender"))
@@ -2161,8 +2161,8 @@ $root.cosmos = (function() {
                 return "SourcePort: string expected";
             if (!$util.isString(message.SourceChannel))
                 return "SourceChannel: string expected";
-            if (!$util.isInteger(message.Denomination) && !(message.Denomination && $util.isInteger(message.Denomination.low) && $util.isInteger(message.Denomination.high)))
-                return "Denomination: integer|Long expected";
+            if (!$util.isInteger(message.DestHeight) && !(message.DestHeight && $util.isInteger(message.DestHeight.low) && $util.isInteger(message.DestHeight.high)))
+                return "DestHeight: integer|Long expected";
             {
                 var error = $root.cosmos.Coin.verify(message.Amount);
                 if (error)
@@ -2191,15 +2191,15 @@ $root.cosmos = (function() {
                 message.SourcePort = String(object.SourcePort);
             if (object.SourceChannel != null)
                 message.SourceChannel = String(object.SourceChannel);
-            if (object.Denomination != null)
+            if (object.DestHeight != null)
                 if ($util.Long)
-                    (message.Denomination = $util.Long.fromValue(object.Denomination)).unsigned = true;
-                else if (typeof object.Denomination === "string")
-                    message.Denomination = parseInt(object.Denomination, 10);
-                else if (typeof object.Denomination === "number")
-                    message.Denomination = object.Denomination;
-                else if (typeof object.Denomination === "object")
-                    message.Denomination = new $util.LongBits(object.Denomination.low >>> 0, object.Denomination.high >>> 0).toNumber(true);
+                    (message.DestHeight = $util.Long.fromValue(object.DestHeight)).unsigned = true;
+                else if (typeof object.DestHeight === "string")
+                    message.DestHeight = parseInt(object.DestHeight, 10);
+                else if (typeof object.DestHeight === "number")
+                    message.DestHeight = object.DestHeight;
+                else if (typeof object.DestHeight === "object")
+                    message.DestHeight = new $util.LongBits(object.DestHeight.low >>> 0, object.DestHeight.high >>> 0).toNumber(true);
             if (object.Amount != null) {
                 if (typeof object.Amount !== "object")
                     throw TypeError(".cosmos.MsgTransfer.Amount: object expected");
@@ -2233,9 +2233,9 @@ $root.cosmos = (function() {
                 object.SourceChannel = "";
                 if ($util.Long) {
                     var long = new $util.Long(0, 0, true);
-                    object.Denomination = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                    object.DestHeight = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
                 } else
-                    object.Denomination = options.longs === String ? "0" : 0;
+                    object.DestHeight = options.longs === String ? "0" : 0;
                 object.Amount = null;
                 if (options.bytes === String)
                     object.Sender = "";
@@ -2250,11 +2250,11 @@ $root.cosmos = (function() {
                 object.SourcePort = message.SourcePort;
             if (message.SourceChannel != null && message.hasOwnProperty("SourceChannel"))
                 object.SourceChannel = message.SourceChannel;
-            if (message.Denomination != null && message.hasOwnProperty("Denomination"))
-                if (typeof message.Denomination === "number")
-                    object.Denomination = options.longs === String ? String(message.Denomination) : message.Denomination;
+            if (message.DestHeight != null && message.hasOwnProperty("DestHeight"))
+                if (typeof message.DestHeight === "number")
+                    object.DestHeight = options.longs === String ? String(message.DestHeight) : message.DestHeight;
                 else
-                    object.Denomination = options.longs === String ? $util.Long.prototype.toString.call(message.Denomination) : options.longs === Number ? new $util.LongBits(message.Denomination.low >>> 0, message.Denomination.high >>> 0).toNumber(true) : message.Denomination;
+                    object.DestHeight = options.longs === String ? $util.Long.prototype.toString.call(message.DestHeight) : options.longs === Number ? new $util.LongBits(message.DestHeight.low >>> 0, message.DestHeight.high >>> 0).toNumber(true) : message.DestHeight;
             if (message.Amount != null && message.hasOwnProperty("Amount"))
                 object.Amount = $root.cosmos.Coin.toObject(message.Amount, options);
             if (message.Sender != null && message.hasOwnProperty("Sender"))

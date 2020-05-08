@@ -105,18 +105,18 @@ class StdTx {
             this.signatures.forEach(function(sig) {
                 let publicKey = "";
                 let signature = "";
-                if (sig.pubKey.length > 33) {
+                /*if (sig.pubKey.length > 33) {
                     //去掉amino编码前缀
                     publicKey = sig.pubKey.slice(5, sig.pubKey.length)
-                }
-                publicKey = Base64.encode(publicKey);
+                }*/
+                publicKey = Base64.encode(sig.pubKey);
 
                 if (!Utils.isEmpty(sig.signature)) {
                     signature = Base64.encode(sig.signature);
                 }
 
                 signatures.push({
-                    pub_key: Amino.MarshalJSON(Config.iris.amino.pubKey, publicKey),
+                    pub_key: publicKey,
                     signature: signature,
                 })
             });

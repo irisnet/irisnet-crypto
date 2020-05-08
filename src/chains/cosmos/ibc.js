@@ -2,6 +2,7 @@ const Root = require('./tx/tx');
 const Amino = require("../base");
 const Utils = require('../../util/utils');
 const Config = require('../../../config');
+const BECH32 = require('bech32');
 const MsgTransfer = Root.cosmos.MsgTransfer;
 
 MsgTransfer.prototype.type = Config.cosmos.tx.ibcTransfer.prefix;
@@ -9,9 +10,9 @@ MsgTransfer.prototype.GetSignBytes = function () {
     let msg = {
         source_port: this.SourcePort,
         source_channel: this.SourceChannel,
-        dest_height: this.DestHeight,
+        dest_height: Number.parseInt(this.DestHeight),
         amount: this.Amount,
-        sender: this.Sender,
+        sender: BECH32.encode(Config.cosmos.bech32.accAddr,this.Sender),
         receiver: this.Receiver
     };
     let sortMsg = Utils.sortObjectKeys(msg);
@@ -75,12 +76,13 @@ MsgTransfer.prototype.toJSON = function () {
 
 module.exports = class IBC {
     static createMsgTransfer(req) {
+        let sender = BECH32.decode(req.from).words;
         return new MsgTransfer({
             SourcePort: req.msg.source_port,
             SourceChannel: req.msg.source_channel,
             DestHeight: req.msg.dest_height,
             Amount: req.msg.amount,
-            Sender: req.from,
+            Sender: sender,
             Receiver: req.msg.receiver
         });
     }

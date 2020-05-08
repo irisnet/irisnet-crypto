@@ -48,7 +48,7 @@ message MsgWithdrawValidatorCommission {
 message MsgTransfer {
     required string SourcePort = 1;
     required string SourceChannel = 2;
-    required uint64 Denomination = 3;
+    required uint64 DestHeight = 3;
     required Coin Amount = 4;
     required bytes Sender = 5;
     required string Receiver = 6;
