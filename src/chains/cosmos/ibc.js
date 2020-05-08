@@ -2,16 +2,17 @@ const Root = require('./tx/tx');
 const Amino = require("../base");
 const Utils = require('../../util/utils');
 const Config = require('../../../config');
+const BECH32 = require('bech32');
 const MsgTransfer = Root.cosmos.MsgTransfer;
 
 MsgTransfer.prototype.type = Config.cosmos.tx.ibcTransfer.prefix;
 MsgTransfer.prototype.GetSignBytes = function () {
     let msg = {
-        source_port: this.SrcPort,
-        source_channel: this.SrcChannel,
-        dest_height: this.DestinationHeight,
+        source_port: this.SourcePort,
+        source_channel: this.SourceChannel,
+        dest_height: Number.parseInt(this.DestHeight),
         amount: this.Amount,
-        sender: this.Sender,
+        sender: BECH32.encode(Config.cosmos.bech32.accAddr,this.Sender),
         receiver: this.Receiver
     };
     let sortMsg = Utils.sortObjectKeys(msg);
@@ -19,14 +20,14 @@ MsgTransfer.prototype.GetSignBytes = function () {
 };
 
 MsgTransfer.prototype.ValidateBasic = function () {
-    if (Utils.isEmpty(this.SrcPort)) {
-        throw new Error("SrcPort is  empty");
+    if (Utils.isEmpty(this.SourcePort)) {
+        throw new Error("SourcePort is  empty");
     }
-    if (Utils.isEmpty(this.SrcChannel)) {
-        throw new Error("SrcChannel is  empty");
+    if (Utils.isEmpty(this.SourceChannel)) {
+        throw new Error("SourceChannel is  empty");
     }
-    if (Utils.isEmpty(this.DestinationHeight)) {
-        throw new Error("DestinationHeight is  empty");
+    if (Utils.isEmpty(this.DestHeight)) {
+        throw new Error("DestHeight is  empty");
     }
     if (Utils.isEmpty(this.Amount)) {
         throw new Error("Amount is  empty");
@@ -41,9 +42,9 @@ MsgTransfer.prototype.ValidateBasic = function () {
 
 MsgTransfer.prototype.GetMsg = function () {
     return {
-        SrcPort: this.SrcPort,
-        SrcChannel: this.SrcChannel,
-        DestinationHeight: this.DestinationHeight,
+        SourcePort: this.SourcePort,
+        SourceChannel: this.SourceChannel,
+        DestHeight: this.DestHeight,
         Amount: this.Amount,
         Sender: this.Sender,
         Receiver: this.Receiver
@@ -53,9 +54,9 @@ MsgTransfer.prototype.GetMsg = function () {
 MsgTransfer.prototype.GetDisplayContent = function () {
     return {
         i18n_tx_type: "i18n_ibc_transfer",
-        i18n_source_port: this.SrcPort,
-        i18n_source_channel: this.SrcChannel,
-        i18n_dest_height: this.DestinationHeight,
+        i18n_source_port: this.SourcePort,
+        i18n_source_channel: this.SourceChannel,
+        i18n_dest_height: this.DestHeight,
         i18n_amount: this.Amount,
         i18n_sender: this.Sender,
         i18n_receiver: this.Receiver
@@ -64,9 +65,9 @@ MsgTransfer.prototype.GetDisplayContent = function () {
 
 MsgTransfer.prototype.toJSON = function () {
     return {
-        SrcPort: this.SrcPort,
-        SrcChannel: this.SrcChannel,
-        DestinationHeight: this.DestinationHeight,
+        SourcePort: this.SourcePort,
+        SourceChannel: this.SourceChannel,
+        DestHeight: this.DestHeight,
         Amount: this.Amount,
         Sender: this.Sender,
         Receiver: this.Receiver
@@ -75,12 +76,13 @@ MsgTransfer.prototype.toJSON = function () {
 
 module.exports = class IBC {
     static createMsgTransfer(req) {
+        let sender = BECH32.decode(req.from).words;
         return new MsgTransfer({
-            SrcPort: req.msg.source_port,
-            SrcChannel: req.msg.source_channel,
-            DestinationHeight: req.msg.dest_height,
+            SourcePort: req.msg.source_port,
+            SourceChannel: req.msg.source_channel,
+            DestHeight: req.msg.dest_height,
             Amount: req.msg.amount,
-            Sender: req.from,
+            Sender: sender,
             Receiver: req.msg.receiver
         });
     }

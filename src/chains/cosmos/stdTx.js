@@ -103,20 +103,13 @@ class StdTx {
         let signatures = [];
         if (this.signatures){
             this.signatures.forEach(function(sig) {
-                let publicKey = "";
                 let signature = "";
-                if (sig.pubKey.length > 33) {
-                    //去掉amino编码前缀
-                    publicKey = sig.pubKey.slice(5, sig.pubKey.length)
-                }
-                publicKey = Base64.encode(publicKey);
-
                 if (!Utils.isEmpty(sig.signature)) {
                     signature = Base64.encode(sig.signature);
                 }
 
                 signatures.push({
-                    pub_key: Amino.MarshalJSON(Config.cosmos.amino.pubKey, publicKey),
+                    pub_key: Base64.encode(sig.pubKey),
                     signature: signature,
                 })
             });
