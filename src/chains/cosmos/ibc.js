@@ -82,7 +82,7 @@ module.exports = class IBC {
             SourceChannel: req.msg.source_channel,
             DestHeight: req.msg.dest_height,
             Amount: req.msg.amount,
-            Sender: req.msg.sender,
+            Sender: req.from,
             Receiver: req.msg.receiver
         });
     }
