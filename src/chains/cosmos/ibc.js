@@ -76,7 +76,7 @@ MsgTransfer.prototype.toJSON = function () {
 
 module.exports = class IBC {
     static createMsgTransfer(req) {
-        let sender = BECH32.decode(req.from).words;
+        // let sender = BECH32.decode(req.from).words;
         return new MsgTransfer({
             SourcePort: req.msg.source_port,
             SourceChannel: req.msg.source_channel,

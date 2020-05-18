@@ -12,6 +12,7 @@ const codec = require('../../../util/codec');
  *      2: 使用pbjs -t static-module -w commonjs -o tx.js tx.proto生产信息tx编解码文件，注意和原文件比较(需要手动合并)
  *      3: 使用amino 注册新的msg信息
  *      4：TxSerializer类的编解码方法不用修改
+ *      5：将tx.js文件内 "var $root = $protobuf.roots["default"] || ($protobuf.roots["default"] = {});" 修改为 "var $root = {};"
  *
  *
  */
