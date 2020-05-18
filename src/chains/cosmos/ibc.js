@@ -12,7 +12,7 @@ MsgTransfer.prototype.GetSignBytes = function () {
         source_channel: this.SourceChannel,
         dest_height: Number.parseInt(this.DestHeight),
         amount: this.Amount,
-        sender: BECH32.encode(Config.cosmos.bech32.accAddr,this.Sender),
+        sender: this.Sender,
         receiver: this.Receiver
     };
     let sortMsg = Utils.sortObjectKeys(msg);
@@ -82,7 +82,7 @@ module.exports = class IBC {
             SourceChannel: req.msg.source_channel,
             DestHeight: req.msg.dest_height,
             Amount: req.msg.amount,
-            Sender: sender,
+            Sender: req.from,
             Receiver: req.msg.receiver
         });
     }
