@@ -116,7 +116,8 @@ class Crypto {
                 return require('./chains/iris/crypto')();
             }
             case Config.chain.ethermint: {
-                return require('./chains/ethermint/ethermint_crypto')();
+                throw new Error("not implement");
+                // return require('./chains/ethermint/ethermint_crypto')();
             }
             case Config.chain.cosmos: {
                 return require('./chains/cosmos/crypto')();
