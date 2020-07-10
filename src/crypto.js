@@ -115,13 +115,16 @@ class Crypto {
             case Config.chain.iris: {
                 return require('./chains/iris/crypto')();
             }
+            break;
             case Config.chain.ethermint: {
                 throw new Error("not implement");
                 // return require('./chains/ethermint/ethermint_crypto')();
             }
+            break;
             case Config.chain.cosmos: {
                 return require('./chains/cosmos/crypto')();
             }
+            break;
             default: {
                 throw new Error("not correct chain");
             }
