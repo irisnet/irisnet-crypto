@@ -16,21 +16,32 @@ class IrisCrypto extends Crypto {
      * @param language
      * @returns {*}
      */
-    create(language) {
-        let keyPair = IrisKeypair.create(switchToWordList(language));
+    create(language, mnemonicLength = 24) {
+        let keyPair = IrisKeypair.create(switchToWordList(language), mnemonicLength);
         if (keyPair) {
             return encode({
                 address: keyPair.address,
                 phrase: keyPair.secret,
                 privateKey: keyPair.privateKey,
-                publicKey: keyPair.publicKey
+                publicKey: keyPair.publicKey,
             });
         }
         return keyPair;
     }
 
-    recover(secret, language) {
-        let keyPair = IrisKeypair.recover(secret,switchToWordList(language));
+    /**
+     *
+     * @param language
+     * @param mnemonicLength 12/15/18/21/24
+     * @returns mnemonics
+     */
+    generateMnemonic(language, mnemonicLength = 24) {
+        return IrisKeypair.generateMnemonic(switchToWordList(language), mnemonicLength);
+    }
+
+    recover(secret, language, path) {
+        path = path || Config.iris.bip39Path;
+        let keyPair = IrisKeypair.recover(secret,switchToWordList(language), path);
         if (keyPair) {
             return encode({
                 address: keyPair.address,
@@ -62,10 +73,23 @@ class IrisCrypto extends Crypto {
     }
 
     getAddress(publicKey) {
+        if (Codec.Bech32.isBech32(Config.iris.bech32.accPub, publicKey)) {
+            publicKey = Codec.Bech32.fromBech32(publicKey);
+        }
         let pubKey = Codec.Hex.hexToBytes(publicKey);
         let address = IrisKeypair.getAddress(pubKey);
         address = Codec.Bech32.toBech32(Config.iris.bech32.accAddr, address);
         return address;
+    }
+
+    encodePublicKey(publicKey){
+        let pubkey = publicKey;
+        if (Codec.Bech32.isBech32(Config.iris.bech32.accPub, pubkey)) {
+            pubkey = Codec.Bech32.toBech32(Config.iris.bech32.accPub, Codec.Bech32.fromBech32(pubkey));
+        }else if (Codec.Hex.isHex(pubkey)){
+            pubkey = Codec.Bech32.toBech32(Config.iris.bech32.accPub, pubkey);
+        }
+        return pubkey;
     }
 
     // @see:https://github.com/binance-chain/javascript-sdk/blob/master/src/crypto/index.js

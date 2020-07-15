@@ -15,13 +15,25 @@ class Crypto {
     }
 
     /**
+     * 生成指定数量的助记词
+     *
+     * @param language
+     * @param mnemonicLength 12/15/18/21/24
+     * @returns mnemonics
+     */
+    generateMnemonic(language, mnemonicLength) {
+        throw new Error("not implement");
+    }
+
+    /**
      * 通过助记词恢复账户
      *
      * @param (seedphrase:string} 助记词
      * @param (language:string} 字符集 (constants.Language.CH_S | constants.Language.JP |constants.Language.SP |constants.Language.EN |)
+     * @param (path:string} 推导path
      * @returns {{address, phrase, privateKey, publicKey}}
      */
-    recover(seedphrase, language) {
+    recover(seedphrase, language, path) {
         throw new Error("not implement");
     }
 
@@ -66,6 +78,15 @@ class Crypto {
     }
 
     /**
+     * encode PublicKey
+     *
+     * @param (publicKey:string}
+     */
+    encodePublicKey(publicKey){
+        throw new Error("not implement");
+    }
+    
+    /**
      * export keystore data from private and password
      * @param privateKeyHex user's private key
      * @param password user's password
@@ -94,12 +115,16 @@ class Crypto {
             case Config.chain.iris: {
                 return require('./chains/iris/crypto')();
             }
+            break;
             case Config.chain.ethermint: {
-                return require('./chains/ethermint/ethermint_crypto')();
+                throw new Error("not implement");
+                // return require('./chains/ethermint/ethermint_crypto')();
             }
+            break;
             case Config.chain.cosmos: {
                 return require('./chains/cosmos/crypto')();
             }
+            break;
             default: {
                 throw new Error("not correct chain");
             }
