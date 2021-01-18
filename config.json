@@ -11,7 +11,7 @@
       },
       "undelegate": {
         "type": "begin_unbonding",
-        "prefix": "irishub/stake/BeginUnbonding"
+        "prefix": "cosmos-sdk/MsgUndelegate"
       },
       "beginRedelegate": {
         "type": "begin_redelegate",
@@ -31,15 +31,15 @@
       },
       "setWithdrawAddress": {
         "type": "set_withdraw_address",
-        "prefix": "irishub/distr/MsgModifyWithdrawAddress"
+        "prefix": "cosmos-sdk/MsgModifyWithdrawAddress"
       },
       "deposit": {
         "type": "deposit",
-        "prefix": "irishub/gov/MsgDeposit"
+        "prefix": "cosmos-sdk/MsgDeposit"
       },
       "vote": {
         "type": "vote",
-        "prefix": "irishub/gov/MsgVote"
+        "prefix": "cosmos-sdk/MsgVote"
       },
       "stdTx": {
         "type": "",

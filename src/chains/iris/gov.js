@@ -5,17 +5,17 @@ const Utils = require('../../util/utils');
 const Amino = require("../base");
 
 const voteOptionMapping = {
-    0x00: 'Empty',
-    0x01: 'Yes',
-    0x02: 'Abstain',
-    0x03: 'No',
-    0x04: 'NoWithVeto'
+    0x00: 0,
+    0x01: 1,
+    0x02: 2,
+    0x03: 3,
+    0x04: 4
 };
 
-const MsgDeposit = Root.cosmos.MsgDeposit;
-MsgDeposit.prototype.type = Config.cosmos.tx.deposit.prefix;
+const MsgDeposit = Root.irisnet.MsgDeposit;
+MsgDeposit.prototype.type = Config.iris.tx.deposit.prefix;
 MsgDeposit.prototype.GetSignBytes = function () {
-    let depositor = BECH32.encode(Config.cosmos.bech32.accAddr, this.depositor);
+    let depositor = BECH32.encode(Config.iris.bech32.accAddr, this.depositor);
     let signMsg = {
         proposal_id: `${this.proposalID}`,
         depositor: depositor,
@@ -47,7 +47,7 @@ MsgDeposit.prototype.GetMsg = function () {
 };
 
 MsgDeposit.prototype.GetDisplayContent = function () {
-    let depositor = BECH32.encode(Config.cosmos.bech32.accAddr, this.depositor);
+    let depositor = BECH32.encode(Config.iris.bech32.accAddr, this.depositor);
     return {
         i18n_tx_type: "i18n_deposit",
         i18n_proposal_id:this.proposalID,
@@ -56,7 +56,7 @@ MsgDeposit.prototype.GetDisplayContent = function () {
     }
 };
 MsgDeposit.prototype.toJSON = function () {
-    let depositor = BECH32.encode(Config.cosmos.bech32.accAddr, this.depositor);
+    let depositor = BECH32.encode(Config.iris.bech32.accAddr, this.depositor);
     return {
         proposal_id: this.proposalID,
         depositor: depositor,
@@ -64,17 +64,19 @@ MsgDeposit.prototype.toJSON = function () {
     }
 };
 
-const MsgVote = Root.cosmos.MsgVote;
-MsgVote.prototype.type = Config.cosmos.tx.vote.prefix;
+const MsgVote = Root.irisnet.MsgVote;
+MsgVote.prototype.type = Config.iris.tx.vote.prefix;
 MsgVote.prototype.GetSignBytes = function () {
-    let voter = BECH32.encode(Config.cosmos.bech32.accAddr, this.voter);
+    let voter = BECH32.encode(Config.iris.bech32.accAddr, this.voter);
     let signMsg = {
         proposal_id: `${this.proposalID}`,
         voter: voter,
         option: voteOptionMapping[this.option]
     };
     let sortMsg = Utils.sortObjectKeys(signMsg);
-    return Amino.MarshalJSON(this.type, sortMsg)
+    let aminoWrapMsg = Amino.MarshalJSON(this.type, sortMsg)
+    aminoWrapMsg.value.option = voteOptionMapping[this.option]
+    return aminoWrapMsg
 };
 MsgVote.prototype.ValidateBasic = function () {
     if (Utils.isEmpty(this.option)) {
@@ -96,7 +98,7 @@ MsgVote.prototype.GetMsg = function () {
     }
 };
 MsgVote.prototype.GetDisplayContent = function () {
-    let voter = BECH32.encode(Config.cosmos.bech32.accAddr, this.voter);
+    let voter = BECH32.encode(Config.iris.bech32.accAddr, this.voter);
     return {
         i18n_tx_type: "i18n_vote",
         i18n_proposal_id: this.proposalID,
@@ -105,7 +107,7 @@ MsgVote.prototype.GetDisplayContent = function () {
     }
 };
 MsgVote.prototype.toJSON = function () {
-    let voter = BECH32.encode(Config.cosmos.bech32.accAddr, this.voter);
+    let voter = BECH32.encode(Config.iris.bech32.accAddr, this.voter);
     return {
         proposal_id: this.proposalID,
         voter: voter,

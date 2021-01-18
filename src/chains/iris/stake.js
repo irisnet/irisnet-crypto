@@ -201,17 +201,26 @@ module.exports = class Stake {
     }
 
     static createMsgUndelegate(req) {
-        let value = {
-            denom: req.msg.amount.denom,
-            amount: Utils.toString(req.msg.amount.amount),
-        };
+        let amount = null;
+        if (req.msg.amount) {
+            amount = {
+                denom: req.msg.amount.denom,
+                amount: Utils.toString(req.msg.amount.amount),
+            }
+        }else if (req.msg.shares_amount) {
+            amount = {
+                denom: "uiris",
+                amount: Utils.toString(req.msg.shares_amount),
+            }
+        }
+
         let delegator_addr = BECH32.decode(req.from).words;
         let validator_addr = BECH32.decode(req.msg.validator_addr).words;
 
         return new MsgUndelegate({
             DelegatorAddress:delegator_addr,
             ValidatorAddress:validator_addr,
-            Amount:value,
+            Amount:amount,
         });
     }
 

@@ -78,7 +78,7 @@ describe('iris transaction', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 8,
+                sequence: 2,
                 fees: fees,
                 gas: gas,
                 memo: memo,
@@ -95,26 +95,29 @@ describe('iris transaction', function () {
             common.verifyTx(url,tx,privateKey,chainName,verify);
         });
 
-        it('test BeginUnbonding', function () {
+        it('test undelegate', function () {
             let tx = {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 43,
+                sequence: 9,
                 fees: fees,
                 gas: gas,
                 memo: memo,
                 type: Irisnet.config.iris.tx.undelegate.type,
                 msg: {
-                    validator_addr: "fva1aake3umjllpd9es5d3qmry4egcne0f8ajd7vdp",
-                    shares_amount: "1000000000000000000000000"
+                    validator_addr: "iva1t25zmvq8qvzqut4xwxgnhhzdpj9sg4jf3k3ad0",
+                    amount: {
+                        denom: "stake",
+                        amount: "5"
+                    }
                 }
             };
 
             common.verifyTx(url,tx,privateKey,chainName,verify);
         });
 
-        it('test BeginRedelegate', function () {
+        it('test beginRedelegate', function () {
             let tx = {
                 chain_id: chain_id,
                 from: from,
@@ -123,11 +126,14 @@ describe('iris transaction', function () {
                 fees: fees,
                 gas: gas,
                 memo: memo,
-                type: Irisnet.config.iris.tx.redelegate.type,
+                type: Irisnet.config.iris.tx.beginRedelegate.type,
                 msg: {
                     validator_src_addr: "fva1kca5vw7r2k72d5zy0demszmrhdz4dp8t4uat0c",
                     validator_dst_addr: "fva1rz7jxmgsgyjwa6erusxlzrmg2aw3cvyf3c3x6v",
-                    shares_amount: "1000000000000000000000000"
+                    amount: {
+                        denom: "stake",
+                        amount: "5"
+                    }
                 }
             };
 
@@ -199,6 +205,49 @@ describe('iris transaction', function () {
                 type: Irisnet.config.iris.tx.setWithdrawAddress.type,
                 msg: {
                     withdraw_addr: "faa1ljemm0yznz58qxxs8xyak7fashcfxf5lssn6jm",
+                }
+            };
+
+            common.verifyTx(url,tx,privateKey,chainName,verify);
+        });
+        it('test MsgDeposit', function () {
+            let tx = {
+                chain_id: chain_id,
+                from: from,
+                account_number: account_number,
+                sequence: 5,
+                fees: fees,
+                gas: gas,
+                memo: memo,
+                type: Irisnet.config.iris.tx.deposit.type,
+                msg: {
+                    proposal_id : 6,
+                    amount : [
+                        {
+                            denom: "stake",
+                            amount: 10
+                        }
+                    ]
+                }
+            };
+
+            common.verifyTx(url,tx,privateKey,chainName,verify);
+        });
+
+        it('test MsgVote', function () {
+            this.timeout(10000);
+            let tx = {
+                chain_id: chain_id,
+                from: from,
+                account_number: account_number,
+                sequence: 6,
+                fees: fees,
+                gas: gas,
+                memo: memo,
+                type: Irisnet.config.iris.tx.vote.type,
+                msg: {
+                    proposal_id : 6,
+                    option: 0x01
                 }
             };
 
@@ -356,11 +405,11 @@ describe('iris transaction', function () {
                 memo: memo,
                 type: Irisnet.config.iris.tx.deposit.type,
                 msg: {
-                    proposal_id : 3,
+                    proposal_id : 0,
                     amount : [
                         {
-                            denom: "iris-atto",
-                            amount: 3000000000000000000000
+                            denom: "stake",
+                            amount: 10
                         }
                     ]
                 }
@@ -412,13 +461,13 @@ describe('iris transaction', function () {
         // GetPostData,解耦crypto和irishub交易结构的依赖）
 
         let postTx = stdTx.GetData();
-        postTx.mode = "commit";
+        postTx.mode = "block";
         let resp = common.sendBySync("POST",url,postTx);
-        let result = stdTx.Hash();
-        console.log("data:", result.data);
-        console.log("hash", result.hash);
+        // let result = stdTx.Hash();
+        // console.log("data:", result.data);
+        // console.log("hash", result.hash);
 
-        console.log(`hash=${result.hash}`);
+        //console.log(`hash=${result.hash}`);
         assert.notExists(resp.code,`tx commit failed,${resp.raw_log}`);
         //console.log("displayContent", JSON.stringify(stdTx.GetDisplayContent()));
 

@@ -24,7 +24,7 @@ class CosmosBuilder extends Builder {
         let req = super.buildParam(tx);
         let msg;
         switch (req.type) {
-            case Config.cosmos.tx.transfer.type: {
+            case Config.iris.tx.transfer.type: {
                 msg = Bank.create(req);
                 break;
             }
@@ -32,31 +32,31 @@ class CosmosBuilder extends Builder {
                 msg = Stake.createMsgDelegate(req);
                 break;
             }
-            case Config.cosmos.tx.undelegate.type: {
+            case Config.iris.tx.undelegate.type: {
                 msg = Stake.createMsgUndelegate(req);
                 break;
             }
-            case Config.cosmos.tx.beginRedelegate.type: {
+            case Config.iris.tx.beginRedelegate.type: {
                 msg = Stake.createMsgBeginRedelegate(req);
                 break;
             }
-            case Config.cosmos.tx.setWithdrawAddress.type: {
+            case Config.iris.tx.setWithdrawAddress.type: {
                 msg = Distribution.CreateMsgSetWithdrawAddress(req);
                 break;
             }
-            case Config.cosmos.tx.withdrawDelegatorReward.type: {
-                msg = Distribution.CreateMsgWithdrawDelegatorReward(req);
-                break;
-            }
-            case Config.cosmos.tx.withdrawValidatorCommission.type: {
-                msg = Distribution.CreateMsgWithdrawValidatorCommission(req);
-                break;
-            }
-            case Config.cosmos.tx.deposit.type: {
+            // case Config.iris.tx.withdrawDelegatorReward.type: {
+            //     msg = Distribution.CreateMsgWithdrawDelegatorReward(req);
+            //     break;
+            // }
+            // case Config.iris.tx.withdrawValidatorCommission.type: {
+            //     msg = Distribution.CreateMsgWithdrawValidatorCommission(req);
+            //     break;
+            // }
+            case Config.iris.tx.deposit.type: {
                 msg = Gov.createMsgDeposit(req);
                 break;
             }
-            case Config.cosmos.tx.vote.type: {
+            case Config.iris.tx.vote.type: {
                 msg = Gov.createMsgVote(req);
                 break;
             }
