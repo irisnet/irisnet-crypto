@@ -38,11 +38,11 @@ function randomHex(range){
 async function verifyTx(url, tx, privateKey, chainName,callback) {
     let builder = Irisnet.getBuilder(chainName,"testnet");
     let stdTx = builder.buildAndSignTx(tx, privateKey);
-    let exp = stdTx.Hash();
+    //let exp = stdTx.Hash();
     let payload = stdTx.GetData();
     console.log(JSON.stringify(payload))
     let response = sendBySync("POST",url,payload);
-    callback(response,exp,payload);
+    callback(response,null,payload);
 
 }
 

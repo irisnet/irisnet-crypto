@@ -3,15 +3,15 @@ const common = require('./common');
 const chai = require('chai');
 const assert = chai.assert;
 
-const host ="https://cosmos-lcd.dev.bianjie.ai";
+const host ="http://127.0.0.1:1317";
 const url = host + "/txs";
 //const lcdServer ="http://127.0.0.1:1317/txs";
 
 describe('cosmos transaction', function () {
-    let chain_id = "cosmos-dev";
+    let chain_id = "gaia";
     let from = "cosmos1r33tlrh7cawtzxmct7zatau6vdydp0rg5s6vyg";
     let gas = 200000;
-    let account_number = 0;
+    let account_number = 8;
     let fees = {denom: "stake", amount: "2"};
     let privateKey = "67F17C4F34C4353A6AABD5175FD9A7C452CF5AA18C65CC5A539145A928F93ADE";
 
@@ -28,7 +28,7 @@ describe('cosmos transaction', function () {
             gas: gas,
             memo:common.randomWord(100) ,
             type: Irisnet.config.cosmos.tx.transfer.type,
-            return_type: 'sync',
+            return_type: 'block',
             msg: {
                 to: "cosmos1cx7ny2znzdegzj27mq2lqavk8dcvc0uysmyzg7",
                 coins: [
@@ -54,8 +54,9 @@ describe('cosmos transaction', function () {
             gas: gas,
             memo: common.randomWord(100),
             type: Irisnet.config.cosmos.tx.delegate.type,
+            return_type: 'block',
             msg: {
-                validator_addr: "cosmosvaloper1s989l7454j9985p7sy59asy7jz7scqylf7rjpz",
+                validator_addr: "cosmosvaloper1pms5jd6s4nrvq4unpe77v9xe4lwf05prrf8u04",
                 amount: {
                     denom: "stake",
                     amount: "10"
@@ -78,7 +79,7 @@ describe('cosmos transaction', function () {
             memo: common.randomWord(100),
             type: Irisnet.config.cosmos.tx.undelegate.type,
             msg: {
-                validator_addr: "cosmosvaloper1s989l7454j9985p7sy59asy7jz7scqylf7rjpz",
+                validator_addr: "cosmosvaloper1pms5jd6s4nrvq4unpe77v9xe4lwf05prrf8u04",
                 amount: {
                     denom: "stake",
                     amount: "5"
@@ -101,7 +102,7 @@ describe('cosmos transaction', function () {
             memo: common.randomWord(100),
             type: Irisnet.config.cosmos.tx.beginRedelegate.type,
             msg: {
-                validator_src_addr: "cosmosvaloper1s989l7454j9985p7sy59asy7jz7scqylf7rjpz",
+                validator_src_addr: "cosmosvaloper1pms5jd6s4nrvq4unpe77v9xe4lwf05prrf8u04",
                 validator_dst_addr: "cosmosvaloper14xa765k7fz7qfmt2cf4s0ag0pl8vztuvar8qzl",
                 amount: {
                     denom: "stake",
@@ -164,11 +165,11 @@ describe('cosmos transaction', function () {
             memo: common.randomWord(100),
             type: Irisnet.config.cosmos.tx.deposit.type,
             msg: {
-                proposal_id : 22,
+                proposal_id : 1,
                 amount : [
                     {
                         denom: "stake",
-                        amount: 10000
+                        amount: 10
                     }
                 ]
             }
@@ -189,7 +190,7 @@ describe('cosmos transaction', function () {
             memo: common.randomWord(100),
             type: Irisnet.config.cosmos.tx.vote.type,
             msg: {
-                proposal_id : 23,
+                proposal_id : 1,
                 option: 0x02
             }
         };

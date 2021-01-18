@@ -54,7 +54,7 @@ describe('iris transaction', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 6,
+                sequence: 7,
                 fees: fees,
                 gas: gas,
                 memo: memo,

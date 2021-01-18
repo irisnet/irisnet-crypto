@@ -147,16 +147,16 @@ class StdTx {
      *  可以直接将data提交到irishub的/txs接口
      *
      * @returns {{data: *, hash: *}}
+     * @Deprecated
      * @constructor
      */
-    Hash() {
-        //TODO
-        // let result = TxSerializer.encode(this);
-        // return {
-        //     data: this.GetData(),
-        //     hash: result.hash
-        // }
-    }
+    // Hash() {
+    //     let result = TxSerializer.encode(this);
+    //     return {
+    //         data: this.GetData(),
+    //         hash: result.hash
+    //     }
+    // }
 
     GetSignBytes(){
         return this.signMsg.GetSignBytes()
