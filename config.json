@@ -17,17 +17,13 @@
         "type": "begin_redelegate",
         "prefix": "cosmos-sdk/MsgBeginRedelegate"
       },
-      "withdrawValidatorRewardsAll": {
-        "type": "withdraw_validator_rewards_all",
-        "prefix": "irishub/distr/MsgWithdrawValidatorRewardsAll"
-      },
-      "withdrawDelegationRewardsAll": {
-        "type": "withdraw_delegation_rewards_all",
-        "prefix": "irishub/distr/MsgWithdrawDelegationRewardsAll"
-      },
-      "withdrawDelegationReward": {
+      "withdrawDelegatorReward": {
         "type": "withdraw_delegation_reward",
-        "prefix": "irishub/distr/MsgWithdrawDelegationReward"
+        "prefix": "cosmos-sdk/MsgWithdrawDelegationReward"
+      },
+      "withdrawValidatorCommission": {
+        "type": "withdraw_validator_commission",
+        "prefix": "cosmos-sdk/MsgWithdrawValidatorCommission"
       },
       "setWithdrawAddress": {
         "type": "set_withdraw_address",

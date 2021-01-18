@@ -3,8 +3,8 @@ const chai = require('chai');
 const assert = chai.assert;
 
 const common = require('./common');
-//const url ="http://irisnet-lcd.dev.rainbow.one/tx/broadcast";
-const url ="http://localhost:1317/txs";
+const host ="http://127.0.0.1:1317";
+const url = host + "/txs";
 const chainName ="iris";
 
 
@@ -24,37 +24,13 @@ describe('iris transaction', function () {
 
     //测试热钱包相关交易
     describe('test warm wallet tx', function () {
-        it('test simulate transfer', function () {
-            let tx = {
-                chain_id: chain_id,
-                from: from,
-                account_number: account_number,
-                sequence: 57,
-                fees: fees,
-                gas: gas,
-                memo: memo,
-                type: Irisnet.config.iris.tx.transfer.type,
-                mode: Irisnet.config.iris.mode.try,
-                msg: {
-                    to: "faa1s6v9qgu8ye7d884s8kpye64x66znndg8t6eztj",
-                    coins: [
-                        {
-                            denom: "iris-atto",
-                            amount: 10000000000000000000
-                        }
-                    ]
-                }
-            };
-
-            simulate(tx);
-        });
-
+        let seq = common.getSequence(host,from);
         it('test transfer', function () {
             let tx = {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 7,
+                sequence: seq,
                 fees: fees,
                 gas: gas,
                 memo: memo,
@@ -74,11 +50,12 @@ describe('iris transaction', function () {
         });
 
         it('test delegate', function () {
+            let seq = common.getSequence(host,from);
             let tx = {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 2,
+                sequence: seq,
                 fees: fees,
                 gas: gas,
                 memo: memo,
@@ -96,11 +73,12 @@ describe('iris transaction', function () {
         });
 
         it('test undelegate', function () {
+            let seq = common.getSequence(host,from);
             let tx = {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 9,
+                sequence: seq,
                 fees: fees,
                 gas: gas,
                 memo: memo,
@@ -118,18 +96,19 @@ describe('iris transaction', function () {
         });
 
         it('test beginRedelegate', function () {
+            let seq = common.getSequence(host,from);
             let tx = {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 22,
+                sequence: seq,
                 fees: fees,
                 gas: gas,
                 memo: memo,
                 type: Irisnet.config.iris.tx.beginRedelegate.type,
                 msg: {
-                    validator_src_addr: "fva1kca5vw7r2k72d5zy0demszmrhdz4dp8t4uat0c",
-                    validator_dst_addr: "fva1rz7jxmgsgyjwa6erusxlzrmg2aw3cvyf3c3x6v",
+                    validator_src_addr: "iva1t25zmvq8qvzqut4xwxgnhhzdpj9sg4jf3k3ad0",
+                    validator_dst_addr: "iva1t25zmvq8qvzqut4xwxgnhhzdpj9sg4jf3k3ad0",
                     amount: {
                         denom: "stake",
                         amount: "5"
@@ -140,65 +119,13 @@ describe('iris transaction', function () {
             common.verifyTx(url,tx,privateKey,chainName,verify);
         });
 
-        it('test MsgWithdrawValidatorRewardsAll', function () {
-            let tx = {
-                chain_id: chain_id,
-                from: from,
-                account_number: account_number,
-                sequence: 32,
-                fees: fees,
-                gas: gas,
-                memo: memo,
-                type: Irisnet.config.iris.tx.withdrawValidatorRewardsAll.type,
-                msg: {
-                    validator_addr: "fva186qhtc62cf6ejlt3erw6zk28mgw8ne7grhmyfn",
-                }
-                //mode: Irisnet.config.iris.mode.try
-            };
-            // extracted(tx);
-            common.verifyTx(url,tx,privateKey,chainName,verify);
-        });
-
-        it('test MsgWithdrawDelegatorRewardsAll', function () {
-            let tx = {
-                chain_id: chain_id,
-                from: from,
-                account_number: account_number,
-                sequence: 25,
-                fees: fees,
-                gas: gas,
-                memo: memo,
-                type: Irisnet.config.iris.tx.withdrawDelegationRewardsAll.type,
-                //mode: Irisnet.config.iris.mode.try
-            };
-
-            common.verifyTx(url,tx,privateKey,chainName,verify);
-        });
-
-        it('test MsgWithdrawDelegatorReward', function () {
-            let tx = {
-                chain_id: chain_id,
-                from: from,
-                account_number: account_number,
-                sequence: 94,
-                fees: fees,
-                gas: gas,
-                memo: memo,
-                type: Irisnet.config.iris.tx.withdrawDelegationReward.type,
-                msg: {
-                    validator_addr: "fva16jr2kxm8xwaux7tkv0sux0qgn8xqp9nkj27ane",
-                }
-            };
-
-            common.verifyTx(url,tx,privateKey,chainName,verify);
-        });
-
         it('test MsgSetWithdrawAddress', function () {
+            let seq = common.getSequence(host,from);
             let tx = {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 121,
+                sequence: seq,
                 fees: fees,
                 gas: gas,
                 memo: memo,
@@ -211,17 +138,18 @@ describe('iris transaction', function () {
             common.verifyTx(url,tx,privateKey,chainName,verify);
         });
         it('test MsgDeposit', function () {
+            let seq = common.getSequence(host,from);
             let tx = {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 5,
+                sequence: seq,
                 fees: fees,
                 gas: gas,
                 memo: memo,
                 type: Irisnet.config.iris.tx.deposit.type,
                 msg: {
-                    proposal_id : 6,
+                    proposal_id : 8,
                     amount : [
                         {
                             denom: "stake",
@@ -246,7 +174,7 @@ describe('iris transaction', function () {
                 memo: memo,
                 type: Irisnet.config.iris.tx.vote.type,
                 msg: {
-                    proposal_id : 6,
+                    proposal_id : 8,
                     option: 0x01
                 }
             };

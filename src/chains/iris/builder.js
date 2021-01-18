@@ -6,12 +6,12 @@ const Bank = require('./bank');
 const Stake = require('./stake');
 const Distribution = require('./distribution');
 const Gov = require('./gov');
-const CosmosKeypair = require('./keypair');
+const IrisKeypair = require('./keypair');
 const Codec = require("../../util/codec");
 const Config = require('../../../config');
 const StdTx = require("./stdTx");
 
-class CosmosBuilder extends Builder {
+class IrisBuilder extends Builder {
 
 
     /**
@@ -44,14 +44,6 @@ class CosmosBuilder extends Builder {
                 msg = Distribution.CreateMsgSetWithdrawAddress(req);
                 break;
             }
-            // case Config.iris.tx.withdrawDelegatorReward.type: {
-            //     msg = Distribution.CreateMsgWithdrawDelegatorReward(req);
-            //     break;
-            // }
-            // case Config.iris.tx.withdrawValidatorCommission.type: {
-            //     msg = Distribution.CreateMsgWithdrawValidatorCommission(req);
-            //     break;
-            // }
             case Config.iris.tx.deposit.type: {
                 msg = Gov.createMsgDeposit(req);
                 break;
@@ -78,8 +70,8 @@ class CosmosBuilder extends Builder {
         if (typeof data === "string") {
             data = JSON.parse(data);
         }
-        let signbyte = CosmosKeypair.sign(privateKey, data);
-        let keypair = CosmosKeypair.import(privateKey);
+        let signbyte = IrisKeypair.sign(privateKey, data);
+        let keypair = IrisKeypair.import(privateKey);
 
         return {
             pub_key:Codec.Hex.hexToBytes(keypair.publicKey),
@@ -104,4 +96,4 @@ class CosmosBuilder extends Builder {
         return stdTx
     }
 }
-module.exports = Old(CosmosBuilder);
+module.exports = Old(IrisBuilder);
