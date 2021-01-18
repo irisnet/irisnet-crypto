@@ -33,29 +33,27 @@ class TxSerializer {
         let msgBytes = msgClass.encode(sendMsg).finish();
 
         let fee = object.fee;
-        let StdFee = root.irisnet.tx.StdFee;
+        let StdFee =  root.irisnet.StdFee;
         let feeMsg = StdFee.create(fee);
 
-
-        let StdSignature = root.irisnet.tx.StdSignature;
+        let StdSignature =  root.irisnet.StdSignature;
         let signature;
-        if (object.signatures) {
+        if (object.signatures){
             signature = [StdSignature.create({
-                pubKey: object.signatures[0].pub_key,
+                pubKey: object.signatures[0].pubKey,
                 signature: object.signatures[0].signature,
-                accountNumber: object.signatures[0].account_number,
-                sequence: object.signatures[0].sequence
             })];
         }
 
         let memo = object.memo;
 
-        let StdTx = root.irisnet.tx.StdTx;
-        let tx = StdTx.create({msgs: [msgBytes], fee: feeMsg, signatures: signature, memo: memo});
+        let StdTx =  root.irisnet.StdTx;
+        let tx = StdTx.create({msg: [msgBytes], fee: feeMsg, signatures: signature, memo: memo});
         let txMsgBuf = StdTx.encode(tx).finish();
 
+
         //stdTx amion编码前缀[auth/StdTx]
-        let txPreBuf = Buffer.from(amino.GetRegisterInfo(config.iris.tx.stdTx.prefix).prefix);
+        let txPreBuf = Buffer.from(amino.GetRegisterInfo(config.cosmos.tx.stdTx.prefix).prefix);
         let msgPreBuf = Buffer.from(info.prefix);
 
         let buf = Buffer.from("");
@@ -68,6 +66,7 @@ class TxSerializer {
 
         let t = codec.Uvarint.decode(txMsgBuf.slice(1));
 
+        //填充txMsgBuf加入前缀后的编码长度
         let uvintMsgBuf = codec.Uvarint.encode(msgPreBuf.length + t.u);
         buf = Buffer.concat([buf, uvintMsgBuf]);
 
@@ -79,7 +78,6 @@ class TxSerializer {
 
         let uvarintBuf = Buffer.from(codec.Uvarint.encode(buf.length));
         let bz = Buffer.concat([uvarintBuf, buf]);
-
 
         const crypto = require('crypto');
         const hash = crypto.createHash('sha256');

@@ -54,7 +54,7 @@ describe('iris transaction', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 2,
+                sequence: 6,
                 fees: fees,
                 gas: gas,
                 memo: memo,
@@ -78,16 +78,16 @@ describe('iris transaction', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 12,
+                sequence: 8,
                 fees: fees,
                 gas: gas,
                 memo: memo,
                 type: Irisnet.config.iris.tx.delegate.type,
                 msg: {
-                    validator_addr: "fva1aake3umjllpd9es5d3qmry4egcne0f8ajd7vdp",
+                    validator_addr: "iva1t25zmvq8qvzqut4xwxgnhhzdpj9sg4jf3k3ad0",
                     delegation: {
-                        denom: "iris-atto",
-                        amount: 1000000000000000000000000
+                        denom: "stake",
+                        amount: 10
                     }
                 }
             };

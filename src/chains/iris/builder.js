@@ -1,16 +1,17 @@
 'use strict';
+
 const Builder = require("../../builder").Builder;
 const Old = require('old');
 const Bank = require('./bank');
 const Stake = require('./stake');
 const Distribution = require('./distribution');
 const Gov = require('./gov');
-const IrisKeypair = require('./keypair');
+const CosmosKeypair = require('./keypair');
 const Codec = require("../../util/codec");
 const Config = require('../../../config');
-const Utils = require("../../util/utils");
+const StdTx = require("./stdTx");
 
-class IrisBuilder extends Builder {
+class CosmosBuilder extends Builder {
 
 
     /**
@@ -23,43 +24,39 @@ class IrisBuilder extends Builder {
         let req = super.buildParam(tx);
         let msg;
         switch (req.type) {
-            case Config.iris.tx.transfer.type: {
-                msg = Bank.createMsgSend(req);
+            case Config.cosmos.tx.transfer.type: {
+                msg = Bank.create(req);
                 break;
             }
             case Config.iris.tx.delegate.type: {
                 msg = Stake.createMsgDelegate(req);
                 break;
             }
-            case Config.iris.tx.undelegate.type: {
-                msg = Stake.createMsgBeginUnbonding(req);
+            case Config.cosmos.tx.undelegate.type: {
+                msg = Stake.createMsgUndelegate(req);
                 break;
             }
-            case Config.iris.tx.redelegate.type: {
+            case Config.cosmos.tx.beginRedelegate.type: {
                 msg = Stake.createMsgBeginRedelegate(req);
                 break;
             }
-            case Config.iris.tx.withdrawValidatorRewardsAll.type: {
-                msg = Distribution.createMsgWithdrawValidatorRewardsAll(req);
+            case Config.cosmos.tx.setWithdrawAddress.type: {
+                msg = Distribution.CreateMsgSetWithdrawAddress(req);
                 break;
             }
-            case Config.iris.tx.withdrawDelegationRewardsAll.type: {
-                msg = Distribution.createMsgWithdrawDelegatorRewardsAll(req);
+            case Config.cosmos.tx.withdrawDelegatorReward.type: {
+                msg = Distribution.CreateMsgWithdrawDelegatorReward(req);
                 break;
             }
-            case Config.iris.tx.withdrawDelegationReward.type: {
-                msg = Distribution.createMsgWithdrawDelegatorReward(req);
+            case Config.cosmos.tx.withdrawValidatorCommission.type: {
+                msg = Distribution.CreateMsgWithdrawValidatorCommission(req);
                 break;
             }
-            case Config.iris.tx.setWithdrawAddress.type: {
-                msg = Distribution.createMsgSetWithdrawAddress(req);
-                break;
-            }
-            case Config.iris.tx.deposit.type: {
+            case Config.cosmos.tx.deposit.type: {
                 msg = Gov.createMsgDeposit(req);
                 break;
             }
-            case Config.iris.tx.vote.type: {
+            case Config.cosmos.tx.vote.type: {
                 msg = Gov.createMsgVote(req);
                 break;
             }
@@ -67,10 +64,7 @@ class IrisBuilder extends Builder {
                 throw new Error("not exist tx type");
             }
         }
-        let stdFee = Bank.NewStdFee(req.fees, req.gas);
-        let signMsg = Bank.NewStdSignMsg(req.chain_id, req.account_number, req.sequence, stdFee, msg, req.memo, req.type);
-        signMsg.ValidateBasic();
-        return Bank.NewStdTx(signMsg);
+        return StdTx.create(req,msg);
     }
 
     /**
@@ -84,8 +78,8 @@ class IrisBuilder extends Builder {
         if (typeof data === "string") {
             data = JSON.parse(data);
         }
-        let signbyte = IrisKeypair.sign(privateKey, data);
-        let keypair = IrisKeypair.import(privateKey);
+        let signbyte = CosmosKeypair.sign(privateKey, data);
+        let keypair = CosmosKeypair.import(privateKey);
 
         return {
             pub_key:Codec.Hex.hexToBytes(keypair.publicKey),
@@ -104,16 +98,10 @@ class IrisBuilder extends Builder {
      */
     buildAndSignTx(tx, privateKey) {
         let stdTx = this.buildTx(tx);
-        let mode = tx.mode ? tx.mode : Config.iris.mode.normal;
         let signature;
-        if (mode === Config.iris.mode.normal) {
-            if (Utils.isEmpty(privateKey)) {
-                throw new Error("privateKey is  empty");
-            }
-            signature = this.sign(stdTx.GetSignBytes(),privateKey);
-            stdTx.SetSignature(signature);
-        }
+        signature = this.sign(stdTx.GetSignBytes(),privateKey);
+        stdTx.SetSignature(signature);
         return stdTx
     }
 }
-module.exports = Old(IrisBuilder);
+module.exports = Old(CosmosBuilder);

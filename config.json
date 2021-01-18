@@ -3,19 +3,19 @@
     "tx": {
       "transfer": {
         "type": "transfer",
-        "prefix": "cosmos-sdk/MsgMultiSend"
+        "prefix": "cosmos-sdk/MsgSend"
       },
       "delegate": {
         "type": "delegate",
-        "prefix": "irishub/stake/MsgDelegate"
+        "prefix": "cosmos-sdk/MsgDelegate"
       },
       "undelegate": {
         "type": "begin_unbonding",
         "prefix": "irishub/stake/BeginUnbonding"
       },
-      "redelegate": {
-        "type": "redelegate",
-        "prefix": "irishub/stake/BeginRedelegate"
+      "beginRedelegate": {
+        "type": "begin_redelegate",
+        "prefix": "cosmos-sdk/MsgBeginRedelegate"
       },
       "withdrawValidatorRewardsAll": {
         "type": "withdraw_validator_rewards_all",
@@ -43,7 +43,7 @@
       },
       "stdTx": {
         "type": "",
-        "prefix": "irishub/bank/StdTx"
+        "prefix": "cosmos-sdk/StdTx"
       }
     },
     "mode":{

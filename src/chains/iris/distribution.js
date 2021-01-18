@@ -1,199 +1,160 @@
-'use strict';
-
-const Builder = require("../../builder");
+const Root = require('./tx/tx');
+const Amino = require("../base");
 const Utils = require('../../util/utils');
-const Amino = require('../base');
 const Config = require('../../../config');
+const BECH32 = require('bech32');
+const MsgSetWithdrawAddress = Root.irisnet.MsgSetWithdrawAddress;
+const MsgWithdrawDelegatorReward = Root.irisnet.MsgWithdrawDelegatorReward;
+const MsgWithdrawValidatorCommission = Root.irisnet.MsgWithdrawValidatorCommission;
 
-class MsgWithdrawValidatorRewardsAll extends Builder.Msg {
-    constructor(validatorAddr) {
-        super(Config.iris.tx.withdrawValidatorRewardsAll.prefix);
-        this.validator_addr = validatorAddr;
+MsgSetWithdrawAddress.prototype.type = Config.cosmos.tx.setWithdrawAddress.prefix;
+MsgSetWithdrawAddress.prototype.GetSignBytes = function () {
+    let msg = {
+        delegator_address: BECH32.encode(Config.cosmos.bech32.accAddr,this.DelegatorAddress),
+        withdraw_address: BECH32.encode(Config.cosmos.bech32.accAddr,this.WithdrawAddress),
+    };
+    let sortMsg = Utils.sortObjectKeys(msg);
+    return Amino.MarshalJSON(this.type, sortMsg)
+};
+
+MsgSetWithdrawAddress.prototype.ValidateBasic = function () {
+    if (Utils.isEmpty(this.DelegatorAddress)) {
+        throw new Error("delegatorAddr is  empty");
     }
-
-    GetSignBytes() {
-        let msg = {
-            "validator_addr": this.validator_addr,
-        };
-        let sortMsg = Utils.sortObjectKeys(msg);
-        return Amino.MarshalJSON(this.type, sortMsg)
+    if (Utils.isEmpty(this.WithdrawAddress)) {
+        throw new Error("WithdrawAddr is  empty");
     }
+};
 
-    ValidateBasic() {
-        if (Utils.isEmpty(this.validator_addr)) {
-            throw new Error("validatorAddr is empty");
-        }
+MsgSetWithdrawAddress.prototype.GetMsg = function(){
+    let delegator_addr = BECH32.fromWords(this.DelegatorAddress);
+    let withdraw_addr = BECH32.fromWords(this.WithdrawAddress);
+
+    return {
+        DelegatorAddress: delegator_addr,
+        WithdrawAddress: withdraw_addr,
     }
+};
 
-    GetMsg() {
-        const BECH32 = require('bech32');
-        let validator_key = BECH32.decode(this.validator_addr);
-        let validator_addr = BECH32.fromWords(validator_key.words);
-
-        return {
-            validatorAddr: validator_addr,
-        }
+MsgSetWithdrawAddress.prototype.toJSON = function(){
+    let delegator_addr = BECH32.encode(Config.cosmos.bech32.accAddr,this.DelegatorAddress);
+    let withdraw_addr = BECH32.encode(Config.cosmos.bech32.accAddr,this.WithdrawAddress);
+    return {
+        DelegatorAddress: delegator_addr,
+        WithdrawAddress: withdraw_addr,
     }
+};
 
-    GetDisplayContent(){
-        return {
-            i18n_tx_type:"i18n_rwithdraw_validator_rewards_all",
-            i18n_validator_addr:this.validator_addr,
-        }
+MsgSetWithdrawAddress.prototype.GetDisplayContent = function (){
+    let delegator_addr = BECH32.encode(Config.cosmos.bech32.accAddr,this.DelegatorAddress);
+    let withdraw_addr = BECH32.encode(Config.cosmos.bech32.accAddr,this.WithdrawAddress);
+    return {
+        i18n_tx_type:"i18n_set_withdraw_address",
+        i18n_delegator_addr:delegator_addr,
+        i18n_withdraw_addr:withdraw_addr,
+    };
+};
+
+MsgWithdrawDelegatorReward.prototype.type = Config.cosmos.tx.withdrawDelegatorReward.prefix;
+MsgWithdrawDelegatorReward.prototype.GetSignBytes = function () {
+    let msg = {
+        delegator_address: BECH32.encode(Config.cosmos.bech32.accAddr,this.DelegatorAddress),
+        validator_address: BECH32.encode(Config.cosmos.bech32.valAddr,this.ValidatorAddress),
+    };
+    let sortMsg = Utils.sortObjectKeys(msg);
+    return Amino.MarshalJSON(this.type, sortMsg)
+};
+
+MsgWithdrawDelegatorReward.prototype.toJSON = function(){
+    let delegatorAddr = BECH32.encode(Config.cosmos.bech32.accAddr,this.DelegatorAddress);
+    let validatorAddress = BECH32.encode(Config.cosmos.bech32.accAddr,this.ValidatorAddress);
+    return {
+        DelegatorAddress: delegatorAddr,
+        ValidatorAddress: validatorAddress,
     }
-}
+};
 
-class MsgWithdrawDelegatorRewardsAll extends Builder.Msg {
-    constructor(delegatorAddr) {
-        super(Config.iris.tx.withdrawDelegationRewardsAll.prefix);
-        this.delegator_addr = delegatorAddr;
+MsgWithdrawDelegatorReward.prototype.ValidateBasic = function () {
+    if (Utils.isEmpty(this.DelegatorAddress)) {
+        throw new Error("delegatorAddr is  empty");
     }
-
-    GetSignBytes() {
-        let msg = {
-            "delegator_addr": this.delegator_addr,
-        };
-        let sortMsg = Utils.sortObjectKeys(msg);
-        return Amino.MarshalJSON(this.type, sortMsg)
+    if (Utils.isEmpty(this.ValidatorAddress)) {
+        throw new Error("validatorAddr is  empty");
     }
+};
 
-    ValidateBasic() {
-        if (Utils.isEmpty(this.delegator_addr)) {
-            throw new Error("delegatorAddr is empty");
-        }
+MsgWithdrawDelegatorReward.prototype.GetMsg = function(){
+    let delegator_addr = BECH32.fromWords(this.DelegatorAddress);
+    let validator_addr = BECH32.fromWords(this.ValidatorAddress);
+
+    return {
+        DelegatorAddress: delegator_addr,
+        ValidatorAddress: validator_addr
     }
+};
+MsgWithdrawDelegatorReward.prototype.GetDisplayContent = function (){
+    let delegatorAddress = BECH32.encode(Config.cosmos.bech32.accAddr,this.DelegatorAddress);
+    let validatorAddress = BECH32.encode(Config.cosmos.bech32.valAddr,this.ValidatorAddress);
 
-    GetMsg() {
-        const BECH32 = require('bech32');
-        let delegator_key = BECH32.decode(this.delegator_addr);
-        let delegator_addr = BECH32.fromWords(delegator_key.words);
-
-        return {
-            delegatorAddr: delegator_addr,
-        }
+    return {
+        i18n_tx_type:"i18n_withdraw_delegation_reward",
+        i18n_delegator_addr:delegatorAddress,
+        i18n_validator_addr:validatorAddress,
     }
+};
 
-    GetDisplayContent(){
-        return {
-            i18n_tx_type:"i18n_rwithdraw_delegation_rewards_all",
-            i18n_delegator_addr:this.delegator_addr,
-        }
+
+MsgWithdrawValidatorCommission.prototype.type = Config.cosmos.tx.withdrawValidatorCommission.prefix;
+MsgWithdrawValidatorCommission.prototype.GetSignBytes = function () {
+    let msg = {
+        validator_address: BECH32.encode(Config.cosmos.bech32.valAddr,this.ValidatorAddress),
+    };
+    let sortMsg = Utils.sortObjectKeys(msg);
+    return Amino.MarshalJSON(this.type, sortMsg)
+};
+
+MsgWithdrawValidatorCommission.prototype.ValidateBasic = function () {
+    if (Utils.isEmpty(this.ValidatorAddress)) {
+        throw new Error("validatorAddr is  empty");
     }
-}
+};
 
-class MsgWithdrawDelegatorReward extends Builder.Msg {
-    constructor(delegatorAddr,validator_addr) {
-        super(Config.iris.tx.withdrawDelegationReward.prefix);
-        this.delegator_addr = delegatorAddr;
-        this.validator_addr = validator_addr;
+MsgWithdrawValidatorCommission.prototype.GetMsg = function(){
+    let validator_addr = BECH32.fromWords(this.ValidatorAddress);
+
+    return {
+        ValidatorAddress: validator_addr,
     }
-
-    GetSignBytes() {
-        let msg = {
-            "delegator_addr": this.delegator_addr,
-            "validator_addr": this.validator_addr,
-        };
-        let sortMsg = Utils.sortObjectKeys(msg);
-        return Amino.MarshalJSON(this.type, sortMsg)
+};
+MsgWithdrawValidatorCommission.prototype.GetDisplayContent = function (){};
+MsgWithdrawValidatorCommission.prototype.toJSON = function(){
+    let validatorAddress = BECH32.encode(Config.cosmos.bech32.accAddr,this.ValidatorAddress);
+    return {
+        ValidatorAddress: validatorAddress,
     }
-
-    ValidateBasic() {
-        if (Utils.isEmpty(this.delegator_addr)) {
-            throw new Error("delegatorAddr is empty");
-        }
-        if (Utils.isEmpty(this.validator_addr)) {
-            throw new Error("validator_addr is empty");
-        }
-    }
-
-
-    GetMsg() {
-        const BECH32 = require('bech32');
-        let delegator_key = BECH32.decode(this.delegator_addr);
-        let delegator_addr = BECH32.fromWords(delegator_key.words);
-
-        let validator_key = BECH32.decode(this.validator_addr);
-        let validator_addr = BECH32.fromWords(validator_key.words);
-
-        return {
-            delegatorAddr: delegator_addr,
-            validatorAddr: validator_addr,
-        }
-    }
-
-    GetDisplayContent(){
-        return {
-            i18n_tx_type:"i18n_withdraw_delegation_reward",
-            i18n_delegator_addr:this.delegator_addr,
-            i18n_validator_addr:this.validator_addr,
-        }
-    }
-}
-
-class MsgSetWithdrawAddress extends Builder.Msg {
-    constructor(delegatorAddr,withdraw_addr) {
-        super(Config.iris.tx.setWithdrawAddress.prefix);
-        this.delegator_addr = delegatorAddr;
-        this.withdraw_addr = withdraw_addr;
-    }
-
-    GetSignBytes() {
-        let msg = {
-            "delegator_addr": this.delegator_addr,
-            "withdraw_addr": this.withdraw_addr,
-        };
-        let sortMsg = Utils.sortObjectKeys(msg);
-        return Amino.MarshalJSON(this.type, sortMsg)
-    }
-
-    ValidateBasic() {
-        if (Utils.isEmpty(this.delegator_addr)) {
-            throw new Error("delegatorAddr is empty");
-        }
-        if (Utils.isEmpty(this.withdraw_addr)) {
-            throw new Error("withdraw_addr is empty");
-        }
-    }
-
-
-    GetMsg() {
-        const BECH32 = require('bech32');
-        let delegator_key = BECH32.decode(this.delegator_addr);
-        let delegator_addr = BECH32.fromWords(delegator_key.words);
-
-        let withdraw_key = BECH32.decode(this.withdraw_addr);
-        let withdraw_addr = BECH32.fromWords(withdraw_key.words);
-
-        return {
-            delegatorAddr: delegator_addr,
-            withdrawAddr: withdraw_addr,
-        }
-    }
-
-    GetDisplayContent(){
-        return {
-            i18n_tx_type:"i18n_set_withdraw_address",
-            i18n_delegator_addr:this.delegator_addr,
-            i18n_withdraw_addr:this.withdraw_addr,
-        }
-    }
-}
+};
 
 module.exports = class Distribution {
-
-    static createMsgWithdrawValidatorRewardsAll(req) {
-        return new MsgWithdrawValidatorRewardsAll(req.msg.validator_addr);
+    static CreateMsgSetWithdrawAddress(req) {
+        let delegator_addr = BECH32.decode(req.from).words;
+        let withdraw_addr = BECH32.decode(req.msg.withdraw_addr).words;
+        return new MsgSetWithdrawAddress({
+            DelegatorAddress:delegator_addr,
+            WithdrawAddress:withdraw_addr,
+        });
     }
-
-    static createMsgWithdrawDelegatorRewardsAll(req) {
-        return new MsgWithdrawDelegatorRewardsAll(req.from);
+    static CreateMsgWithdrawDelegatorReward(req) {
+        let delegator_addr = BECH32.decode(req.from).words;
+        let validator_addr = BECH32.decode(req.msg.validator_addr).words;
+        return new MsgWithdrawDelegatorReward({
+            DelegatorAddress:delegator_addr,
+            ValidatorAddress:validator_addr,
+        });
     }
-
-    static createMsgWithdrawDelegatorReward(req) {
-        return new MsgWithdrawDelegatorReward(req.from,req.msg.validator_addr);
-    }
-
-    static createMsgSetWithdrawAddress(req) {
-        return new MsgSetWithdrawAddress(req.from,req.msg.withdraw_addr);
+    static CreateMsgWithdrawValidatorCommission(req) {
+        let validator_addr = BECH32.decode(req.from).words;
+        return new MsgWithdrawValidatorCommission({
+            ValidatorAddress:validator_addr,
+        });
     }
 };

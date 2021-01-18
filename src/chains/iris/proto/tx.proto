@@ -1,61 +1,48 @@
-package irisnet.tx;
-//syntax = "proto3";
+package irisnet;
 
 //pbjs -t static-module -w commonjs -o tx.js tx.proto
 message Coin {
     required string denom = 1;
     required string amount = 2;
 }
-message Input {
-    required bytes address = 1;
-    repeated Coin coins = 2;
-}
-
-message Output {
-    required bytes address = 1;
-    repeated Coin coins = 2;
-}
 
 message MsgSend {
-    repeated Input  input = 1;
-    repeated Output output = 2;
+    required bytes FromAddress = 1;
+    required bytes ToAddress = 2;
+    repeated Coin Amount = 3;
 }
 
 message MsgDelegate {
-    required bytes delegatorAddr = 1;
-    required bytes validatorAddr = 2;
-    required Coin delegation = 3;
+    required bytes DelegatorAddress = 1;
+    required bytes ValidatorAddress = 2;
+    required Coin Amount = 3;
 }
 
-message MsgBeginUnbonding {
-    required bytes  delegatorAddr = 1;
-    required bytes  validatorAddr = 2;
-    required string  sharesAmount = 3;
+message MsgUndelegate {
+    required bytes DelegatorAddress = 1;
+    required bytes ValidatorAddress = 2;
+    required Coin Amount = 3;
 }
 
 message MsgBeginRedelegate {
-    required bytes  delegatorAddr = 1;
-    required bytes  validatorSrcAddr = 2;
-    required bytes  validatorDstAddr = 3;
-    required string  sharesAmount = 4;
-}
-
-message MsgWithdrawValidatorRewardsAll {
-    required bytes  validator_addr = 1;
-}
-
-message MsgWithdrawDelegatorRewardsAll {
-    required bytes  delegatorAddr = 1;
-}
-
-message MsgWithdrawDelegatorReward {
-    required bytes  delegatorAddr = 1;
-    required bytes  validatorAddr = 2;
+    required bytes DelegatorAddress = 1;
+    required bytes ValidatorSrcAddress = 2;
+    required bytes ValidatorDstAddress = 3;
+    required Coin Amount = 4;
 }
 
 message MsgSetWithdrawAddress {
-    required bytes  delegatorAddr = 1;
-    required bytes  withdrawAddr = 2;
+    required bytes DelegatorAddress = 1;
+    required bytes WithdrawAddress = 2;
+}
+
+message MsgWithdrawDelegatorReward {
+    required bytes DelegatorAddress = 1;
+    required bytes ValidatorAddress = 2;
+}
+
+message MsgWithdrawValidatorCommission {
+    required bytes ValidatorAddress = 1;
 }
 
 message MsgDeposit {
