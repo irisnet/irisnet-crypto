@@ -75,20 +75,13 @@ class MsgSend extends Builder.Msg {
     }
 
     GetSignBytes() {
-        let inputs = [];
-        let outputs = [];
-        this.inputs.forEach(function(item) {
-            inputs.push(item.GetSignBytes())
-        });
-        this.outputs.forEach(function(item) {
-            outputs.push(item.GetSignBytes())
-        });
         let msg = {
-            "inputs": inputs,
-            "outputs": outputs
+            "inputs": this.inputs,
+            "outputs": this.outputs
         };
 
-        return Utils.sortObjectKeys(msg);
+        let sortMsg = Utils.sortObjectKeys(msg);
+        return Amino.MarshalJSON(this.type, sortMsg);
     }
 
     ValidateBasic() {
@@ -297,7 +290,8 @@ class StdTx {
                 fee: fee,
                 signatures: signatures,
                 memo: this.memo
-            }
+            },
+            mode: 'block'
         }
     }
 

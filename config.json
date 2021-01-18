@@ -3,7 +3,7 @@
     "tx": {
       "transfer": {
         "type": "transfer",
-        "prefix": "irishub/bank/Send"
+        "prefix": "cosmos-sdk/MsgMultiSend"
       },
       "delegate": {
         "type": "delegate",

@@ -40,7 +40,8 @@ async function verifyTx(url, tx, privateKey, chainName,callback) {
     let stdTx = builder.buildAndSignTx(tx, privateKey);
     let exp = stdTx.Hash();
     let payload = stdTx.GetData();
-    let response = await sendByAsync("POST",url,payload);
+    console.log(JSON.stringify(payload));
+    let response = sendBySync("POST",url,payload);
     callback(response,exp,payload);
 
 }

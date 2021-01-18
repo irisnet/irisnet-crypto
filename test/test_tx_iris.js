@@ -3,20 +3,21 @@ const chai = require('chai');
 const assert = chai.assert;
 
 const common = require('./common');
-const url ="https://irisnet-lcd.dev.bianjie.ai/tx/broadcast?commit=true";
+//const url ="http://irisnet-lcd.dev.rainbow.one/tx/broadcast";
+const url ="http://localhost:1317/txs";
 const chainName ="iris";
 
 
 describe('iris transaction', function () {
 
-    let chain_id = "rainbow-dev";
-    let from = "faa176dd0tgn38grpc8hpxfmwl6sl8jfmknesgawx7";
-    let gas = 100000;
-    let account_number = 3;
-    let fees = {denom: "iris-atto", amount: 600000000000000000};
+    let chain_id = "test";
+    let from = "iaa1ljemm0yznz58qxxs8xyak7fashcfxf5lgl4zjx";
+    let gas = 200000;
+    let account_number = 8;
+    let fees = {denom: "uiris", amount: 3000000};
     let memo = "1";
-    let privateKey = "A3ACB76D1047ED290D3D1E3ABB51375F16D2887DBC6821F43B9965C4D11F00FA";
-    let pubKey = "fap1addwnpepqwqw5pshzzswemf6t00xvf0ccf2fxslaz40dp76uyad5mgujfju4zt8km3u";
+    let privateKey = "55A3160577979EC014A2CE85C430E1FF0FF06EFD230B7CE41AEAE2EF00EDF175";
+    let pubKey = "iap1addwnpepqtdme789cpm8zww058ndlhzpwst3s0mxnhdhu5uyps0wjucaufha6q8j7uk";
     let chain = Irisnet.config.chain.iris;
 
 
@@ -53,17 +54,17 @@ describe('iris transaction', function () {
                 chain_id: chain_id,
                 from: from,
                 account_number: account_number,
-                sequence: 57,
+                sequence: 1,
                 fees: fees,
                 gas: gas,
                 memo: memo,
                 type: Irisnet.config.iris.tx.transfer.type,
                 msg: {
-                    to: "faa1s6v9qgu8ye7d884s8kpye64x66znndg8t6eztj",
+                    to: "iaa1t25zmvq8qvzqut4xwxgnhhzdpj9sg4jfy8mjsg",
                     coins: [
                         {
-                            denom: "iris-atto",
-                            amount: 10000000000000000000
+                            denom: "uiris",
+                            amount: 10000000
                         }
                     ]
                 }
