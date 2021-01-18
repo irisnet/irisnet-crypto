@@ -71,20 +71,18 @@ message MsgVote {
 }
 
 message StdFee {
-   repeated Coin amount = 1;
-   required int64 gas = 2;
+    repeated Coin amount = 1;
+    required int64 gas = 2;
 }
 
 message StdSignature {
     required bytes pubKey = 1;
     required bytes signature = 2;
-    required int64 accountNumber = 3;
-    required int64 sequence = 4;
 }
 
 message StdTx {
-    repeated bytes msgs = 1;
-    required StdFee fee   = 2;
+    repeated bytes msg = 1;
+    required StdFee fee = 2;
     repeated StdSignature signatures = 3;
     optional string memo = 4; //空值需要处理
 }
